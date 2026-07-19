@@ -1,0 +1,24 @@
+---
+description: Mobile gameplay UX, accessibility, recovery, and native verification requirements
+globs:
+  - "apps/mobile/**"
+  - "packages/ui/**"
+  - "packages/game-engine/**"
+alwaysApply: false
+---
+
+# Mobile UX requirements
+
+Application work is allowed only after `node tools/designops/enforce.mjs --intent implementation` exits `0`.
+
+Use `.designops/00-ux-ui-plan.md`, `.designops/02-experience-strategy.md`, `docs/gameplay-spec.md`, and `docs/testing-strategy.md` as requirements.
+
+- Preserve equivalent round, scoring, result, review, and report outcomes for motion, tap-only, VoiceOver, and TalkBack paths.
+- Never encode meaning only in color, animation, audio, or haptics.
+- Preserve the round through recoverable sensor, orientation, lifecycle, and connectivity failures without duplicate answers.
+- Keep pre-answer uncertainty separate from post-answer truth disclosure.
+- Support bundled/cached offline play and explicit recovery for unavailable, corrupt, removed, disputed, and queued-report states.
+- Release evidence must cover iOS and Android accessibility, sensors, lifecycle, offline behavior, and performance.
+
+Do not select or implement visual tokens until current direction and handoff artifacts are signed and approved.
+

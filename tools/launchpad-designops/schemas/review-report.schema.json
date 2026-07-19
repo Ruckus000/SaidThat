@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://launchpad-designops.local/schemas/review-report.schema.json",
+  "title": "LaunchPad phase quality report",
+  "type": "object",
+  "required": ["schemaVersion", "status", "phase", "mode", "provenanceNotice", "findings", "checks", "artifacts", "digests", "run"],
+  "properties": {
+    "schemaVersion": { "const": "0.2" },
+    "status": { "enum": ["blocked", "review-required", "approved"] },
+    "phase": { "enum": ["strategy", "direction", "handoff", "release"] },
+    "mode": { "enum": ["audit", "proposal", "demo", "proposal-demo"] },
+    "provenanceNotice": { "const": "Hashes establish artifact identity and freshness only; they do not prove evidence quality, usability, or design merit." },
+    "findings": { "type": "array", "items": { "$ref": "#/$defs/finding" } },
+    "checks": { "type": "array", "items": { "$ref": "#/$defs/check" } },
+    "artifacts": { "type": "object", "additionalProperties": { "$ref": "#/$defs/artifact" } },
+    "digests": {
+      "type": "object",
+      "required": ["design", "approval"],
+      "properties": {
+        "design": { "$ref": "#/$defs/digest" },
+        "implementation": { "type": ["string", "null"], "pattern": "^sha256:[a-f0-9]{64}$" },
+        "verificationInput": { "type": ["string", "null"], "pattern": "^sha256:[a-f0-9]{64}$" },
+        "approval": { "$ref": "#/$defs/digest" }
+      },
+      "additionalProperties": false
+    },
+    "review": { "type": ["object", "null"] },
+    "run": {
+      "type": "object",
+      "required": ["version", "runId", "generatedAt"],
+      "properties": {
+        "version": { "const": "0.2.0" },
+        "runId": { "type": "string", "minLength": 1 },
+        "generatedAt": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "artifact": {
+      "type": "object",
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      },
+      "additionalProperties": false
+    },
+    "finding": {
+      "type": "object",
+      "required": ["id", "severity", "category", "message", "evidence", "recommendation"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "severity": { "enum": ["P0", "P1", "P2"] },
+        "category": { "type": "string", "minLength": 1 },
+        "message": { "type": "string", "minLength": 1 },
+        "evidence": { "type": "string", "minLength": 1 },
+        "recommendation": { "type": "string", "minLength": 1 },
+        "exception": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "check": {
+      "type": "object",
+      "required": ["id", "status", "required"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["pass", "fail", "not-applicable", "not-configured"] },
+        "required": { "type": "boolean" },
+        "evidence": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

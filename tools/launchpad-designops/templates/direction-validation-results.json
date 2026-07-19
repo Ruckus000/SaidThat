@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "0.2",
+  "researchMode": "independent-study",
+  "planDigest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "selectedId": "replace-with-selected-territory",
+  "territoryDigest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "sessions": [],
+  "summary": {
+    "status": "inconclusive",
+    "completedSessions": 0,
+    "triggeredCriteria": [],
+    "comparativeFindings": "No participant sessions have been recorded; no comparative conclusion is available.",
+    "limitations": ["The signed protocol has not yet been completed."]
+  },
+  "createdAt": "1970-01-01T00:00:00.000Z"
+}

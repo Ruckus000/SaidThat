@@ -1,0 +1,12 @@
+{
+  "phase": "direction",
+  "source": "explicit-user-attestation",
+  "decision": "reject",
+  "reviewer": "pending explicit user decision",
+  "dimensions": { "taskFit": 1, "subjectSpecificity": 1, "distinctiveness": 1 },
+  "evidenceRefs": ["territories"],
+  "acknowledgedFindings": [],
+  "rationale": "This placeholder is not approval and must be replaced only after an explicit user decision.",
+  "approvalDigest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "createdAt": "1970-01-01T00:00:00.000Z"
+}

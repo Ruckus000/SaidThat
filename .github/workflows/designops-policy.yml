@@ -1,0 +1,63 @@
+name: DesignOps policy
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  enforce:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: tools/launchpad-designops/package-lock.json
+
+      - name: Install DesignOps gate dependencies
+        run: npm ci --prefix tools/launchpad-designops --omit=dev --ignore-scripts
+
+      - name: Materialize trusted reviewer public key outside the workspace
+        env:
+          REVIEWER_PUBLIC_KEY: ${{ secrets.DESIGNOPS_REVIEWER_PUBLIC_KEY_PEM }}
+        run: |
+          if [ -n "$REVIEWER_PUBLIC_KEY" ]; then
+            printf '%s' "$REVIEWER_PUBLIC_KEY" > "$RUNNER_TEMP/designops-reviewer-public.pem"
+            chmod 600 "$RUNNER_TEMP/designops-reviewer-public.pem"
+          fi
+
+      - name: Determine changed range
+        id: changes
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BEFORE_SHA: ${{ github.event.before }}
+          CURRENT_SHA: ${{ github.sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            range="$BASE_SHA..$HEAD_SHA"
+          elif [ "$BEFORE_SHA" = "0000000000000000000000000000000000000000" ]; then
+            range="4b825dc642cb6eb9a060e54bf8d69288fbee4904..$CURRENT_SHA"
+          else
+            range="$BEFORE_SHA..$CURRENT_SHA"
+          fi
+          echo "range=$range" >> "$GITHUB_OUTPUT"
+
+      - name: Test enforcement policy
+        run: node --test tools/designops/enforce.test.mjs
+
+      - name: Enforce DesignOps phase and approvals
+        env:
+          DESIGNOPS_TRUSTED_PUBLIC_KEY_FILE: ${{ runner.temp }}/designops-reviewer-public.pem
+        run: node tools/designops/enforce.mjs --range "${{ steps.changes.outputs.range }}"

@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "0.2",
+  "project": {
+    "name": "Did They Tweet That?",
+    "mode": "proposal",
+    "origin": "existing-repo"
+  },
+  "stack": {
+    "family": "unknown",
+    "styling": "not implemented; planned Expo React Native styling system remains undecided"
+  },
+  "workflow": {
+    "currentPhase": "strategy",
+    "gates": {
+      "strategy": {
+        "status": "review-required",
+        "approvalDigest": "sha256:1938eba86796cafedcc06e47817373a6b52ed76010f64324767d0e3c17f3402b",
+        "runId": "gate-mrr7khe4-6064",
+        "updatedAt": "2026-07-19T03:00:33.126Z"
+      }
+    }
+  },
+  "quality": {
+    "accessibilityTarget": "WCAG 2.2 AA",
+    "performanceConstraints": [
+      "Cold start under 2.5 seconds",
+      "Cached first playable state under 5 seconds",
+      "60 frames per second during active play",
+      "Sensor answer processing under 50 milliseconds plus configured debounce",
+      "A full party round remains playable offline",
+      "Deck package under 1.5 MB for 150 cards",
+      "No memory growth across 10 rematches",
+      "Phase 1 crash-free sessions at or above 99.5 percent"
+    ],
+    "verificationMode": "artifact-only",
+    "scan": {
+      "includeRoots": [
+        "docs",
+        ".designops"
+      ],
+      "excludeRoots": [
+        ".designops/reviews"
+      ]
+    }
+  },
+  "artifacts": {
+    "evidenceBrief": "01-evidence-brief.md",
+    "experienceStrategy": "02-experience-strategy.md",
+    "requirementsMap": "03-requirements-map.json",
+    "territories": "04-creative-territories/territories.json",
+    "selectedDirection": "05-selected-direction.json",
+    "directionValidationPlan": "05-direction-validation/plan.json",
+    "directionValidationResults": "05-direction-validation/results.json",
+    "contentStateMap": "06-content-state-map.json",
+    "designDNA": "07-design-dna.json",
+    "tokens": "08-design-system/tokens.json",
+    "proposalSpec": "proposal-spec.md",
+    "demoSpec": "demo-spec.md",
+    "projectFingerprint": "project-fingerprint.json",
+    "verificationConfig": "verification-config.json",
+    "verificationReport": "verification-report.json",
+    "strategyReview": "reviews/strategy.json",
+    "directionReview": "reviews/direction.json",
+    "handoffReview": "reviews/handoff.json",
+    "releaseReview": "reviews/release.json"
+  }
+}

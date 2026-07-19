@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://launchpad-designops.local/schemas/verification-report.schema.json",
+  "title": "Project browser verification report",
+  "type": "object",
+  "required": ["schemaVersion", "status", "scope", "lane", "verificationInputDigest", "implementationDigest", "runner", "routes", "findings", "summary"],
+  "properties": {
+    "schemaVersion": { "const": "0.2" },
+    "status": { "enum": ["pass", "fail", "not-configured"] },
+    "scope": { "const": "project" },
+    "lane": { "enum": ["nextjs", "vite", "wordpress", "laravel", "unknown"] },
+    "verificationInputDigest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "implementationDigest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "runner": {
+      "type": "object",
+      "required": ["name", "version", "runId", "generatedAt", "commandDigest", "tools"],
+      "properties": {
+        "name": { "const": "launchpad-browser-verifier" },
+        "version": { "type": "string", "minLength": 1 },
+        "runId": { "type": "string", "minLength": 1 },
+        "generatedAt": { "type": "string", "format": "date-time" },
+        "commandDigest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "tools": {
+          "type": "object",
+          "required": ["node", "playwright", "axe"],
+          "properties": { "node": { "type": "string" }, "playwright": { "type": "string" }, "axe": { "type": "string" } },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "routes": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "required": ["path", "browser", "viewport", "checks", "findings", "screenshot"],
+        "properties": {
+          "path": { "type": "string", "pattern": "^/" },
+          "browser": { "enum": ["chromium", "firefox", "webkit"] },
+          "viewport": { "type": "object", "required": ["width", "height"], "properties": { "width": { "type": "integer" }, "height": { "type": "integer" } }, "additionalProperties": false },
+          "checks": { "type": "object", "minProperties": 1, "additionalProperties": { "enum": ["pass", "fail", "not-applicable"] } },
+          "findings": { "type": "array", "items": { "$ref": "#/$defs/finding" } },
+          "screenshot": {
+            "type": "object",
+            "required": ["path", "sha256"],
+            "properties": { "path": { "type": "string", "minLength": 1 }, "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" } },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "findings": { "type": "array", "items": { "$ref": "#/$defs/finding" } },
+    "taskTest": {
+      "type": "object",
+      "required": ["status", "commandDigest", "outputDigest", "taskIds", "modalities", "evidence"],
+      "properties": {
+        "status": { "enum": ["pass", "fail", "not-configured"] },
+        "commandDigest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "outputDigest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "taskIds": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "modalities": { "type": "array", "uniqueItems": true, "items": { "enum": ["keyboard", "touch"] } },
+        "evidence": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      },
+      "additionalProperties": false
+    },
+    "summary": {
+      "type": "object",
+      "required": ["p0", "p1", "routesChecked"],
+      "properties": {
+        "p0": { "type": "integer", "minimum": 0 },
+        "p1": { "type": "integer", "minimum": 0 },
+        "routesChecked": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "pass" } } },
+      "then": {
+        "properties": {
+          "routes": { "minItems": 1 },
+          "summary": { "properties": { "routesChecked": { "minimum": 1 } } }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "finding": {
+      "type": "object",
+      "required": ["id", "severity", "message", "evidence"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "severity": { "enum": ["P0", "P1", "P2"] },
+        "message": { "type": "string", "minLength": 1 },
+        "evidence": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

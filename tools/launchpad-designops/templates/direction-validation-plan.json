@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "0.2",
+  "researchMode": "independent-study",
+  "source": "explicit-user-attestation",
+  "selectedId": "replace-with-selected-territory",
+  "territoryDigest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "assumptionRefs": ["assumption:replace-with-triggering-assumption"],
+  "sharedContentPath": "05-direction-validation/shared-content.json",
+  "sharedContentDigest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "candidates": [
+    { "id": "replace-with-selected-territory", "role": "selected", "name": "Selected direction", "model": "Describe the frozen low-fidelity interaction model being tested.", "prototypePath": "05-direction-validation/selected-prototype.md", "prototypeDigest": "sha256:0000000000000000000000000000000000000000000000000000000000000000", "contentDigest": "sha256:0000000000000000000000000000000000000000000000000000000000000000" },
+    { "id": "countermodel", "role": "countermodel", "name": "Countermodel", "model": "Describe the strongest interaction model that challenges the selected assumption.", "prototypePath": "05-direction-validation/countermodel-prototype.md", "prototypeDigest": "sha256:0000000000000000000000000000000000000000000000000000000000000000", "contentDigest": "sha256:0000000000000000000000000000000000000000000000000000000000000000" }
+  ],
+  "protocol": {
+    "sessionTarget": 5,
+    "sessionKind": "moderated-participant",
+    "sessionProfile": "Recruit actual target users with varied digital confidence and access needs.",
+    "scenarios": [
+      { "id": "overlapping-need", "description": "Test a need that may cross more than one municipal service category.", "successCriteria": "The participant reaches a plausible service or an honest supported escalation path." },
+      { "id": "no-fit", "description": "Test a need that does not match the language presented by the interface.", "successCriteria": "The participant recovers without being trapped or falsely routed." },
+      { "id": "eligibility", "description": "Test interpretation of a possible service match with incomplete policy evidence.", "successCriteria": "The participant understands that the interface has not confirmed eligibility and identifies a safe next action." }
+    ],
+    "measures": ["path-recognition", "task-completion", "recovery", "eligibility-comprehension", "safe-next-action", "trust"],
+    "counterbalance": "difference-at-most-one"
+  },
+  "killCriteria": [
+    { "id": "eligibility-misunderstood", "type": "eligibility-misunderstanding", "threshold": 1, "observationPrompt": "Did the participant leave believing the candidate confirmed eligibility?", "rationale": "A single false belief that eligibility was confirmed is a truthfulness and safety failure." },
+    { "id": "path-recovery-failed", "type": "unrecovered-path-failure", "threshold": 2, "observationPrompt": "Did the participant fail to find or recover a viable path in the selected candidate?", "rationale": "Two unrecovered failures indicate a repeated route-fit problem rather than an isolated observation." }
+  ],
+  "limitations": ["A five-participant formative test identifies severe patterns but does not establish population-level effectiveness."],
+  "createdAt": "1970-01-01T00:00:00.000Z"
+}

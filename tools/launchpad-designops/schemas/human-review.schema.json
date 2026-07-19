@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://launchpad-designops.local/schemas/human-review.schema.json",
+  "title": "LaunchPad signed human review attestation",
+  "type": "object",
+  "required": ["phase", "source", "decision", "reviewer", "dimensions", "evidenceRefs", "acknowledgedFindings", "rationale", "approvalDigest", "createdAt", "signature"],
+  "properties": {
+    "phase": { "enum": ["strategy", "direction", "handoff", "release"] },
+    "source": { "const": "explicit-user-attestation" },
+    "decision": { "enum": ["approve", "reject"] },
+    "reviewer": { "type": "string", "minLength": 2 },
+    "dimensions": {
+      "type": "object",
+      "minProperties": 1,
+      "properties": {
+        "taskFit": { "$ref": "#/$defs/score" },
+        "informationHierarchy": { "$ref": "#/$defs/score" },
+        "contentQuality": { "$ref": "#/$defs/score" },
+        "subjectSpecificity": { "$ref": "#/$defs/score" },
+        "distinctiveness": { "$ref": "#/$defs/score" },
+        "visualCraft": { "$ref": "#/$defs/score" },
+        "systemConsistency": { "$ref": "#/$defs/score" },
+        "implementationFeasibility": { "$ref": "#/$defs/score" },
+        "responsiveBehavior": { "$ref": "#/$defs/score" },
+        "evaluatorComprehension": { "$ref": "#/$defs/score" },
+        "traceability": { "$ref": "#/$defs/score" },
+        "problemFraming": { "$ref": "#/$defs/score" },
+        "evidenceQuality": { "$ref": "#/$defs/score" },
+        "assumptionRisk": { "$ref": "#/$defs/score" }
+      },
+      "additionalProperties": false
+    },
+    "evidenceRefs": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "acknowledgedFindings": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "rationale": { "type": "string", "minLength": 20 },
+    "approvalDigest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "signature": {
+      "type": "object",
+      "required": ["algorithm", "keyId", "value"],
+      "properties": {
+        "algorithm": { "const": "Ed25519" },
+        "keyId": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "value": { "type": "string", "minLength": 80, "maxLength": 100, "pattern": "^[A-Za-z0-9+/]+={0,2}$" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": { "score": { "type": "integer", "minimum": 1, "maximum": 5 } },
+  "additionalProperties": false
+}

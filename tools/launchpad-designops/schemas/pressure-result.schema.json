@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://launchpad-designops.local/schemas/pressure-result.schema.json",
+  "title": "LaunchPad pressure scenario result",
+  "type": "object",
+  "required": ["scenarioId", "status", "gatePreserved", "evidence"],
+  "properties": {
+    "scenarioId": { "type": "string", "minLength": 1 },
+    "status": { "type": "string", "enum": ["blocked", "pass", "error"] },
+    "gatePreserved": { "type": "boolean", "const": true },
+    "evidence": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}

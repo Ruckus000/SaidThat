@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://launchpad-designops.local/schemas/project-fingerprint.schema.json",
+  "title": "Project design fingerprint",
+  "type": "object",
+  "required": ["typography", "palette", "composition", "density", "geometry", "imagery", "signature", "motion"],
+  "properties": {
+    "typography": { "type": "string", "minLength": 1 },
+    "palette": { "type": "string", "minLength": 1 },
+    "composition": { "type": "string", "minLength": 1 },
+    "density": { "type": "string", "minLength": 1 },
+    "geometry": { "type": "string", "minLength": 1 },
+    "imagery": { "type": "string", "minLength": 1 },
+    "signature": { "type": "string", "minLength": 1 },
+    "motion": { "type": "string", "minLength": 1 }
+  },
+  "additionalProperties": true
+}

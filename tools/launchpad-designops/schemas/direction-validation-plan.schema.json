@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://launchpad-designops.local/schemas/direction-validation-plan.schema.json",
+  "title": "Signed pre-direction validation plan",
+  "type": "object",
+  "required": ["schemaVersion", "researchMode", "source", "selectedId", "territoryDigest", "assumptionRefs", "sharedContentPath", "sharedContentDigest", "candidates", "protocol", "killCriteria", "limitations", "createdAt"],
+  "properties": {
+    "schemaVersion": { "const": "0.2" },
+    "researchMode": { "enum": ["solo-formative", "independent-study"] },
+    "source": { "enum": ["solo-formative-author", "explicit-user-attestation"] },
+    "selectedId": { "type": "string", "minLength": 1 },
+    "territoryDigest": { "$ref": "#/$defs/digest" },
+    "assumptionRefs": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^assumption:[A-Za-z][A-Za-z0-9_-]*$" } },
+    "sharedContentPath": { "$ref": "#/$defs/path" },
+    "sharedContentDigest": { "$ref": "#/$defs/digest" },
+    "candidates": {
+      "type": "array", "minItems": 1, "maxItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["id", "role", "name", "model", "prototypePath", "prototypeDigest", "contentDigest"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "role": { "enum": ["selected", "countermodel"] },
+          "name": { "type": "string", "minLength": 1 },
+          "model": { "type": "string", "minLength": 20 },
+          "prototypePath": { "$ref": "#/$defs/path" },
+          "prototypeDigest": { "$ref": "#/$defs/digest" },
+          "contentDigest": { "$ref": "#/$defs/digest" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "protocol": {
+      "type": "object",
+      "required": ["sessionTarget", "sessionKind", "sessionProfile", "scenarios", "measures", "counterbalance"],
+      "properties": {
+        "sessionTarget": { "type": "integer", "minimum": 1 },
+        "sessionKind": { "enum": ["solo-author-walkthrough", "moderated-participant"] },
+        "sessionProfile": { "type": "string", "minLength": 20 },
+        "scenarios": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object", "required": ["id", "description", "successCriteria"],
+            "properties": {
+              "id": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_-]*$" },
+              "description": { "type": "string", "minLength": 20 },
+              "successCriteria": { "type": "string", "minLength": 20 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "measures": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": { "enum": ["path-recognition", "task-completion", "recovery", "eligibility-comprehension", "safe-next-action", "trust", "hypothesis-audit"] }
+        },
+        "counterbalance": { "enum": ["difference-at-most-one", "not-applicable"] }
+      },
+      "additionalProperties": false
+    },
+    "killCriteria": {
+      "type": "array", "minItems": 1, "maxItems": 2,
+      "items": {
+        "type": "object", "required": ["id", "type", "threshold", "observationPrompt", "rationale"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_-]*$" },
+          "type": { "enum": ["eligibility-misunderstanding", "unrecovered-path-failure", "human-observed", "no-fit-discovery"] },
+          "threshold": { "type": "integer", "minimum": 1 },
+          "observationPrompt": { "type": "string", "minLength": 20 },
+          "rationale": { "type": "string", "minLength": 20 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "limitations": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 10 } },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "signature": { "$ref": "#/$defs/signature" }
+  },
+  "$defs": {
+    "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "path": { "type": "string", "minLength": 1, "pattern": "^(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$)).+" },
+    "signature": {
+      "type": "object", "required": ["algorithm", "keyId", "value"],
+      "properties": {
+        "algorithm": { "const": "Ed25519" },
+        "keyId": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+        "value": { "type": "string", "minLength": 80, "maxLength": 100, "pattern": "^[A-Za-z0-9+/]+={0,2}$" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "researchMode": { "const": "solo-formative" } } },
+      "then": {
+        "properties": {
+          "source": { "const": "solo-formative-author" },
+          "candidates": {
+            "minItems": 1,
+            "maxItems": 1,
+            "items": { "properties": { "role": { "const": "selected" } } }
+          },
+          "protocol": {
+            "properties": {
+              "sessionTarget": { "const": 1 },
+              "sessionKind": { "const": "solo-author-walkthrough" },
+              "counterbalance": { "const": "not-applicable" }
+            }
+          },
+          "killCriteria": {
+            "minItems": 1,
+            "maxItems": 1,
+            "items": { "properties": { "type": { "const": "no-fit-discovery" } } }
+          }
+        },
+        "not": { "required": ["signature"] }
+      }
+    },
+    {
+      "if": { "properties": { "researchMode": { "const": "independent-study" } } },
+      "then": {
+        "required": ["signature"],
+        "properties": {
+          "source": { "const": "explicit-user-attestation" },
+          "candidates": { "minItems": 2, "maxItems": 2 },
+          "protocol": {
+            "properties": {
+              "sessionTarget": { "minimum": 5 },
+              "sessionKind": { "const": "moderated-participant" },
+              "counterbalance": { "const": "difference-at-most-one" }
+            }
+          },
+          "killCriteria": { "minItems": 2, "maxItems": 2 }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

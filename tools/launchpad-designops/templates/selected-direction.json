@@ -1,0 +1,11 @@
+{
+  "selectedId": "replace-with-territory-id",
+  "territoryDigest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "rationale": "Replace with task and evidence rationale before running the direction gate.",
+  "decisionBasis": { "verifiedRefs": ["task:primary-task"], "assumptionRefs": [], "criterionRefs": ["criterion:primary-task-fit"] },
+  "acceptedRisks": [{ "id": "replace-risk", "severity": "high", "consequence": "Replace with the concrete consequence if this direction assumption is wrong.", "mitigation": "Replace with a bounded mitigation that does not pretend to prove the direction.", "validationRefs": ["criterion:primary-task-fit"] }],
+  "rejectedAlternatives": [
+    { "id": "alternative-a", "rationale": "Replace with a concrete evidence-backed rejection rationale.", "criterionRefs": ["criterion:primary-task-fit"] },
+    { "id": "alternative-b", "rationale": "Replace with a concrete evidence-backed rejection rationale.", "criterionRefs": ["criterion:primary-task-fit"] }
+  ]
+}

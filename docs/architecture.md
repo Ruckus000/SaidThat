@@ -10,13 +10,15 @@
 
 | Topic | Decision |
 |---|---|
+| Engineering package / bundle id | **SaidThat** (`com.saidthat.app` provisional); store brand pending counsel |
 | Phase 0 content | **Bundled deck JSON only** — no Supabase required to play |
 | Forehead motion | **Phase 0 must-have** (tap remains accessibility fallback) |
 | Answer secrecy | Authenticity on-device in plaintext is **OK** (party game, not competitive anti-cheat) |
-| Kill switches | **Both:** manifest/bundled tombstones **and** PostHog flags |
+| Kill switches | **Both:** manifest/bundled tombstones **and** PostHog flags (PostHog after debug-log Phase 0) |
 | Local DB | **Raw `expo-sqlite`** — no Drizzle until query pain is real |
 | Editorial tooling | **JSON + PR review** until rematch is proven — no Next.js admin yet |
 | Reduce Motion | **Animation only** — does **not** disable tilt |
+| First analytics | **Debug event log only** — no PostHog in first scaffold |
 
 ---
 

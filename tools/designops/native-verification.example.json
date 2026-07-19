@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "1",
+  "status": "pass",
+  "commit": "replace-with-the-verified-40-character-git-commit",
+  "handoffApprovalDigest": "sha256:replace-with-current-handoff-approval-digest",
+  "platforms": {
+    "ios": {
+      "status": "pass",
+      "evidence": [{ "path": "artifacts/ios-task-report.json", "sha256": "replace-with-64-character-sha256" }]
+    },
+    "android": {
+      "status": "pass",
+      "evidence": [{ "path": "artifacts/android-task-report.json", "sha256": "replace-with-64-character-sha256" }]
+    }
+  },
+  "checks": {
+    "accessibility": {
+      "status": "pass",
+      "evidence": [{ "path": "artifacts/accessibility-report.json", "sha256": "replace-with-64-character-sha256" }]
+    },
+    "sensors": {
+      "status": "pass",
+      "evidence": [{ "path": "artifacts/sensor-report.json", "sha256": "replace-with-64-character-sha256" }]
+    },
+    "lifecycle": {
+      "status": "pass",
+      "evidence": [{ "path": "artifacts/lifecycle-report.json", "sha256": "replace-with-64-character-sha256" }]
+    },
+    "offline": {
+      "status": "pass",
+      "evidence": [{ "path": "artifacts/offline-report.json", "sha256": "replace-with-64-character-sha256" }]
+    },
+    "performance": {
+      "status": "pass",
+      "evidence": [{ "path": "artifacts/performance-report.json", "sha256": "replace-with-64-character-sha256" }]
+    }
+  }
+}
+

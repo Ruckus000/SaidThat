@@ -1,0 +1,70 @@
+{
+  "territories": [
+    {
+      "id": "territory-a",
+      "name": "Civic Wayfinding",
+      "thesis": "Public information organized with the clarity of a navigational system.",
+      "audienceFit": "Residents who need a clear next step without understanding city structure.",
+      "taskFit": "Supports fast orientation, filtering, and service selection.",
+      "contentStructure": "Task-first service index with status bands and a persistent orientation rail.",
+      "structure": { "hierarchy": "Task and next action dominate department context.", "navigationModel": "Persistent service index and location datum.", "contentOrder": ["task", "eligibility", "documents", "action"], "interactionModel": "Progressive disclosure in predictable service pages." },
+      "evidenceRefs": ["task:primary-task"],
+      "risks": ["The datum could become decorative if it does not connect related content."],
+      "assumptionDependencies": [],
+      "criterionEvaluations": [{ "criterionRef": "criterion:primary-task-fit", "outcome": "meets", "rationale": "Replace with a comparison against the predeclared primary-task criterion." }],
+      "axes": {
+        "typography": "humanist sans with compact utility labels",
+        "composition": "asymmetric datum line and left-aligned sections",
+        "density": "mixed-tempo operational density",
+        "geometry": "ruled, sharp, infrastructural",
+        "color": "deep civic blue with high-visibility safety accents",
+        "imagery": "documentary place photography and map fragments",
+        "signature": "continuous civic datum connecting navigation and content"
+      }
+    },
+    {
+      "id": "territory-b",
+      "name": "Public Ledger",
+      "thesis": "Transparent service information presented as a legible public record.",
+      "audienceFit": "Evaluators and residents who need confidence in source, status, and accountability.",
+      "taskFit": "Supports comparison, traceability, and evidence-led decisions.",
+      "contentStructure": "Evidence bands, source notes, and comparison columns organize the narrative.",
+      "structure": { "hierarchy": "Conclusions are visibly linked to supporting evidence.", "navigationModel": "Numbered record index with source cross-links.", "contentOrder": ["question", "evidence", "source", "conclusion"], "interactionModel": "Stable anchors and cross-reference expansion." },
+      "evidenceRefs": ["source:brief"],
+      "risks": ["Dense record treatment could slow urgent service tasks."],
+      "assumptionDependencies": [],
+      "criterionEvaluations": [{ "criterionRef": "criterion:primary-task-fit", "outcome": "risk", "rationale": "Replace with a comparison against the predeclared primary-task criterion." }],
+      "axes": {
+        "typography": "editorial serif display with neutral reading face",
+        "composition": "modular columns with explicit evidence bands",
+        "density": "dense information with deliberate breathing zones",
+        "geometry": "paper-like blocks and measured hairlines",
+        "color": "archival ivory, ink, and restrained vermilion",
+        "imagery": "scanned documents, civic marks, and annotated diagrams",
+        "signature": "source notes and evidence markers integrated into the layout"
+      }
+    },
+    {
+      "id": "territory-c",
+      "name": "Living Commons",
+      "thesis": "A welcoming service surface shaped by local participation and shared places.",
+      "audienceFit": "Residents who need reassurance, plain language, and a welcoming route into services.",
+      "taskFit": "Supports discovery through place, story, and contextual guidance.",
+      "contentStructure": "Image-led entry points flow into contextual task panels and local guidance.",
+      "structure": { "hierarchy": "Life situations precede internal program categories.", "navigationModel": "Contextual paths connected by a neighborhood map.", "contentOrder": ["place", "situation", "questions", "resources"], "interactionModel": "Reversible guided branching questions." },
+      "evidenceRefs": ["user:primary-user"],
+      "risks": ["Welcoming imagery could compete with task clarity if overused."],
+      "assumptionDependencies": [],
+      "criterionEvaluations": [{ "criterionRef": "criterion:primary-task-fit", "outcome": "unknown", "rationale": "Replace with a comparison against the predeclared primary-task criterion." }],
+      "axes": {
+        "typography": "rounded display face paired with open humanist body text",
+        "composition": "layered editorial flow with contextual side notes",
+        "density": "spacious, conversational, and image-led",
+        "geometry": "soft organic shapes with selective hard anchors",
+        "color": "landscape greens, warm clay, and clear sky neutrals",
+        "imagery": "people, local materials, and place-based close details",
+        "signature": "contextual neighborhood trail that changes with the task"
+      }
+    }
+  ]
+}

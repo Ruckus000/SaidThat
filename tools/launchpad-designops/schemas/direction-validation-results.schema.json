@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://launchpad-designops.local/schemas/direction-validation-results.schema.json",
+  "title": "Pre-direction validation results",
+  "type": "object",
+  "required": ["schemaVersion", "researchMode", "planDigest", "selectedId", "territoryDigest", "sessions", "summary", "createdAt"],
+  "properties": {
+    "schemaVersion": { "const": "0.2" },
+    "researchMode": { "enum": ["solo-formative", "independent-study"] },
+    "planDigest": { "$ref": "#/$defs/digest" },
+    "selectedId": { "type": "string", "minLength": 1 },
+    "territoryDigest": { "$ref": "#/$defs/digest" },
+    "sessions": {
+      "type": "array",
+      "items": {
+        "type": "object", "required": ["id", "subject", "completed", "candidateOrder", "observations", "criterionOutcomes", "notes"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^session-[0-9]{2,}$" },
+          "subject": { "enum": ["author", "participant"] },
+          "completed": { "type": "boolean" },
+          "candidateOrder": { "type": "array", "minItems": 1, "maxItems": 2, "items": { "type": "string", "minLength": 1 } },
+          "observations": {
+            "type": "array", "minItems": 1, "maxItems": 2,
+            "items": {
+              "type": "object", "required": ["candidateId", "pathOutcome", "recovered", "eligibilityComprehension", "safeNextAction", "trustObservation"],
+              "properties": {
+                "candidateId": { "type": "string", "minLength": 1 },
+                "pathOutcome": { "enum": ["success", "failure"] },
+                "recovered": { "type": "boolean" },
+                "eligibilityComprehension": { "enum": ["understood", "misunderstood"] },
+                "safeNextAction": { "enum": ["identified", "not-identified"] },
+                "trustObservation": { "type": "string", "minLength": 10 }
+              },
+              "additionalProperties": false
+            }
+          },
+          "criterionOutcomes": {
+            "type": "array", "minItems": 1,
+            "items": {
+              "type": "object", "required": ["criterionId", "triggered", "evidence"],
+              "properties": {
+                "criterionId": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_-]*$" },
+                "triggered": { "type": "boolean" },
+                "evidence": { "type": "string", "minLength": 10 }
+              },
+              "additionalProperties": false
+            }
+          },
+          "notes": { "type": "string", "minLength": 10 }
+        },
+        "allOf": [
+          {
+            "if": { "properties": { "subject": { "const": "participant" } } },
+            "then": {
+              "properties": {
+                "candidateOrder": { "minItems": 2 },
+                "observations": { "minItems": 2 }
+              }
+            }
+          }
+        ],
+        "additionalProperties": false
+      }
+    },
+    "summary": {
+      "type": "object", "required": ["status", "completedSessions", "triggeredCriteria", "comparativeFindings", "limitations"],
+      "properties": {
+        "status": { "enum": ["pass", "invalidated", "inconclusive", "hypothesis-only"] },
+        "completedSessions": { "type": "integer", "minimum": 0 },
+        "triggeredCriteria": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+        "comparativeFindings": { "type": "string", "minLength": 20 },
+        "limitations": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 10 } }
+      },
+      "additionalProperties": false
+    },
+    "createdAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": { "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" } },
+  "allOf": [
+    {
+      "if": { "properties": { "researchMode": { "const": "solo-formative" } } },
+      "then": {
+        "properties": {
+          "sessions": { "maxItems": 1, "items": { "properties": { "subject": { "const": "author" } } } },
+          "summary": { "properties": { "status": { "const": "hypothesis-only" } } }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "researchMode": { "const": "independent-study" } } },
+      "then": {
+        "properties": {
+          "sessions": { "minItems": 1, "items": { "properties": { "subject": { "const": "participant" } } } },
+          "summary": { "properties": { "status": { "enum": ["pass", "invalidated", "inconclusive"] } } }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

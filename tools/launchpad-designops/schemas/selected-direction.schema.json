@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://launchpad-designops.local/schemas/selected-direction.schema.json",
+  "title": "Selected creative direction",
+  "type": "object",
+  "required": ["selectedId", "territoryDigest", "rationale", "decisionBasis", "acceptedRisks", "rejectedAlternatives"],
+  "properties": {
+    "selectedId": { "type": "string", "minLength": 1 },
+    "territoryDigest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
+    "rationale": { "type": "string", "minLength": 20 },
+    "decisionBasis": {
+      "type": "object", "required": ["verifiedRefs", "assumptionRefs", "criterionRefs"],
+      "properties": {
+        "verifiedRefs": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^(source|task|claim|criterion):[A-Za-z][A-Za-z0-9_-]*$" } },
+        "assumptionRefs": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^assumption:[A-Za-z][A-Za-z0-9_-]*$" } },
+        "criterionRefs": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^criterion:[A-Za-z][A-Za-z0-9_-]*$" } }
+      },
+      "additionalProperties": false
+    },
+    "acceptedRisks": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "required": ["id", "severity", "consequence", "mitigation", "validationRefs"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_-]*$" },
+          "severity": { "enum": ["low", "medium", "high", "critical"] },
+          "consequence": { "type": "string", "minLength": 20 },
+          "mitigation": { "type": "string", "minLength": 20 },
+          "validationRefs": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^(assumption|criterion):[A-Za-z][A-Za-z0-9_-]*$" } }
+        },
+        "additionalProperties": false
+      }
+    },
+    "rejectedAlternatives": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["id", "rationale", "criterionRefs"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "rationale": { "type": "string", "minLength": 20 },
+          "criterionRefs": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^criterion:[A-Za-z][A-Za-z0-9_-]*$" } }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

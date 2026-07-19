@@ -1,0 +1,38 @@
+{
+  "name": "launchpad-designops",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/launchpad-designops.test.mjs",
+    "validate": "node scripts/validate-designops-artifacts.mjs --root tests/fixtures/valid-project/.designops --phase handoff && node scripts/validate-schema.mjs --root tests/fixtures/valid-project/.designops --phase handoff && node scripts/validate-territory-divergence.mjs --input tests/fixtures/valid-project/.designops/04-creative-territories/territories.json --requirements tests/fixtures/valid-project/.designops/03-requirements-map.json && node scripts/validate-token-contract.mjs --tokens tests/fixtures/valid-project/.designops/08-design-system/tokens.json && node scripts/audit-content-states.mjs --input tests/fixtures/valid-project/.designops/06-content-state-map.json --requirements tests/fixtures/valid-project/.designops/03-requirements-map.json && node scripts/validate-reddit-evidence.mjs --input references/reddit-design-skill-evidence.json && node scripts/validate-benchmark-definitions.mjs",
+    "validate:requirements": "node scripts/validate-requirements.mjs --input tests/fixtures/valid-project/.designops/03-requirements-map.json --mode proposal",
+    "test:browser": "playwright test",
+    "test:benchmark:definitions": "node scripts/validate-benchmark-definitions.mjs",
+    "test:benchmark:login": "node scripts/login-benchmark-chatgpt.mjs",
+    "test:benchmark:doctor": "node scripts/benchmark-doctor.mjs --require-execution",
+    "test:benchmark:execute": "node scripts/run-benchmark.mjs --case all --runs 3 --pressure",
+    "test:benchmark:prepare-review": "node scripts/prepare-benchmark-review-packets.mjs",
+    "test:benchmark:recorded": "node scripts/validate-recorded-benchmarks.mjs",
+    "test:lanes": "node --test tests/lane-verification.test.mjs",
+    "validate:plugin": "node scripts/validate-plugin.mjs",
+    "doctor": "node scripts/plugin-doctor.mjs",
+    "validate:reddit": "node scripts/validate-reddit-evidence.mjs --input references/reddit-design-skill-evidence.json",
+    "validate:reddit:links": "node scripts/validate-reddit-evidence.mjs --input references/reddit-design-skill-evidence.json --check-links"
+  },
+  "dependencies": {
+    "ajv": "^8.20.0",
+    "axe-core": "^4.12.1",
+    "playwright": "^1.61.1"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.12.1",
+    "@playwright/test": "^1.61.1",
+    "next": "^16.2.10",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "vite": "^7.3.6"
+  },
+  "overrides": {
+    "postcss": "^8.5.10"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://launchpad-designops.local/schemas/benchmark-comparison.schema.json",
+  "title": "Human paired benchmark comparison",
+  "type": "object",
+  "required": ["caseId", "runId", "source", "reviewer", "decision", "dimensions", "evidenceRefs", "rationale", "artifactDigests", "createdAt", "signature"],
+  "properties": {
+    "caseId": { "type": "string", "minLength": 1 },
+    "runId": { "type": "string", "pattern": "^run-[1-3]$" },
+    "source": { "const": "explicit-user-attestation" },
+    "reviewer": { "type": "string", "minLength": 2 },
+    "decision": { "enum": ["launchpad-better", "baseline-better", "equivalent", "inconclusive"] },
+    "dimensions": {
+      "type": "object",
+      "required": ["taskClarity", "trust", "subjectSpecificity", "originality", "visualCraft", "implementationFeasibility"],
+      "properties": {
+        "taskClarity": { "$ref": "#/$defs/preference" },
+        "trust": { "$ref": "#/$defs/preference" },
+        "subjectSpecificity": { "$ref": "#/$defs/preference" },
+        "originality": { "$ref": "#/$defs/preference" },
+        "visualCraft": { "$ref": "#/$defs/preference" },
+        "implementationFeasibility": { "$ref": "#/$defs/preference" }
+      },
+      "additionalProperties": false
+    },
+    "evidenceRefs": { "type": "array", "minItems": 2, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "rationale": { "type": "string", "minLength": 50 },
+    "artifactDigests": {
+      "type": "object",
+      "required": ["baseline", "launchpad", "evaluationBaseline", "evaluationLaunchpad"],
+      "properties": {
+        "baseline": { "$ref": "#/$defs/digest" },
+        "launchpad": { "$ref": "#/$defs/digest" },
+        "evaluationBaseline": { "$ref": "#/$defs/digest" },
+        "evaluationLaunchpad": { "$ref": "#/$defs/digest" }
+      },
+      "additionalProperties": false
+    },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "signature": {
+      "type": "object",
+      "required": ["algorithm", "keyId", "value"],
+      "properties": {
+        "algorithm": { "const": "Ed25519" },
+        "keyId": { "$ref": "#/$defs/digest" },
+        "value": { "type": "string", "minLength": 80, "maxLength": 100, "pattern": "^[A-Za-z0-9+/]+={0,2}$" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "preference": { "enum": ["baseline", "launchpad", "tie", "not-applicable"] },
+    "digest": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" }
+  },
+  "additionalProperties": false
+}

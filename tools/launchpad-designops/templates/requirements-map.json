@@ -1,0 +1,10 @@
+{
+  "sources": [{ "id": "brief", "title": "Supplied project brief", "type": "document", "locator": "BRIEF.md", "status": "verified", "confidence": "high", "criticality": "critical" }],
+  "users": [{ "id": "primary-user", "description": "Replace with an evidence-backed primary user.", "evidenceRefs": ["source:brief"], "priority": "primary" }],
+  "tasks": [{ "id": "primary-task", "description": "Replace with an evidence-backed primary task.", "evidenceRefs": ["source:brief", "user:primary-user"], "priority": "primary" }],
+  "claims": [],
+  "assumptions": [],
+  "unknowns": [],
+  "deliverables": [],
+  "directionCriteria": [{ "id": "primary-task-fit", "description": "The direction must support the registered primary task without relying on internal organizational knowledge.", "kind": "hard", "evidenceRefs": ["task:primary-task"], "measurement": "Compare every territory against the same observable task-start and completion behavior." }]
+}

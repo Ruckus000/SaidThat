@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://launchpad-designops.local/schemas/design-dna.schema.json",
+  "title": "Design DNA contract",
+  "type": "object",
+  "required": ["thesis", "signature", "typography", "composition", "surfaces", "imagery", "motion", "contentVoice", "prohibitedDefaults", "exceptions", "decisionRationale", "evidenceRefs"],
+  "properties": {
+    "thesis": { "type": "string", "minLength": 20 },
+    "signature": { "$ref": "#/$defs/rule" },
+    "typography": { "$ref": "#/$defs/ruleSet" },
+    "composition": { "$ref": "#/$defs/ruleSet" },
+    "surfaces": { "$ref": "#/$defs/ruleSet" },
+    "imagery": { "$ref": "#/$defs/ruleSet" },
+    "motion": { "$ref": "#/$defs/ruleSet" },
+    "contentVoice": { "type": "string", "minLength": 10 },
+    "prohibitedDefaults": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "exceptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["pattern", "ruleRef", "affectedRefs", "reason", "evidenceRefs", "decision"],
+        "properties": {
+          "pattern": { "type": "string", "minLength": 1 },
+          "ruleRef": { "type": "string", "minLength": 1 },
+          "affectedRefs": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+          "reason": { "type": "string", "minLength": 20 },
+          "evidenceRefs": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+          "decision": { "const": "retain" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "decisionRationale": { "type": "string", "minLength": 20 },
+    "evidenceRefs": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+  },
+  "$defs": {
+    "rule": {
+      "type": "object",
+      "required": ["name", "rule", "reason"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "rule": { "type": "string", "minLength": 10 },
+        "reason": { "type": "string", "minLength": 10 }
+      },
+      "additionalProperties": false
+    },
+    "ruleSet": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": "string", "minLength": 3 }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,21 @@
+---
+description: Editorial content, truth labeling, reporting, source integrity, and removal requirements
+globs:
+  - "content/**"
+  - "packages/content-validation/**"
+  - "supabase/**"
+  - "apps/admin/**"
+alwaysApply: false
+---
+
+# Content and trust requirements
+
+Read `.designops/02-experience-strategy.md`, `docs/content-operations.md`, `docs/legal-and-platform-risks.md`, and `docs/security-and-moderation.md` before changing content or trust behavior.
+
+- Authentic, fabricated-for-the-game, disputed, removed, and source-unavailable states must remain semantically distinct.
+- Fabricated content must never detach from its game labeling in review or sharing.
+- Do not imitate platform verification chrome, social-post screenshots, or news authority cues.
+- Preserve two-person editorial review, source metadata, report context, offline queueing, tombstones, and removal precedence.
+- Do not add live X hydration, scraping, public UGC, harmful fabrications, profile photos, or AI impersonation without a new approved requirement and counsel decision.
+- Registered planning sources and their SHA-256 values must remain current.
+

@@ -1,0 +1,12 @@
+# DesignOps policy and evidence require explicit owner review.
+/.designops/ @jphilistin
+/.cursor/ @jphilistin
+/.githooks/ @jphilistin
+/.github/ @jphilistin
+/tools/designops/ @jphilistin
+/tools/launchpad-designops/ @jphilistin
+/AGENTS.md @jphilistin
+/.gitignore @jphilistin
+/docs/ @jphilistin
+/README.md @jphilistin
+

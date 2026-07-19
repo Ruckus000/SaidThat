@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://launchpad-designops.local/schemas/reddit-evidence.schema.json",
+  "title": "LaunchPad DesignOps Reddit evidence review",
+  "type": "object",
+  "required": ["schemaVersion", "researchQuestion", "sources", "synthesis", "proofPolicy", "proofReferences"],
+  "properties": {
+    "schemaVersion": { "const": "0.2" },
+    "researchQuestion": { "type": "string", "minLength": 1 },
+    "proofPolicy": {
+      "type": "object",
+      "required": ["redditRole", "implementationRule"],
+      "properties": {
+        "redditRole": { "const": "qualitative hypothesis evidence" },
+        "implementationRule": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": true
+    },
+    "proofReferences": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "kind", "source", "status"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^P[0-9]{2}$" },
+          "title": { "type": "string", "minLength": 1 },
+          "kind": { "enum": ["reddit", "official-standard", "official-documentation", "local-test", "benchmark-requirement"] },
+          "source": { "type": "string", "minLength": 1 },
+          "status": { "enum": ["context", "primary", "reproducible", "not-proof"] }
+        },
+        "additionalProperties": true
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 20,
+      "items": {
+        "type": "object",
+        "required": ["id", "url", "title", "subreddit", "dateText", "postType", "authorClaim", "commentThemes", "contradictions", "evidenceQuality", "confidence", "proofRefs", "disposition", "implementationDecision"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^R[0-9]{2}$" },
+          "url": { "type": "string", "pattern": "^https://www\\.reddit\\.com/r/[^\\s]+$" },
+          "title": { "type": "string", "minLength": 1 },
+          "subreddit": { "type": "string", "pattern": "^r/" },
+          "dateText": { "type": "string", "minLength": 1 },
+          "postType": { "enum": ["skill-share", "plugin-share", "workflow-share", "question", "comparison", "review", "showcase"] },
+          "authorClaim": {
+            "type": "object",
+            "required": ["summary", "evidenceStatus", "proofRefs"],
+            "properties": {
+              "summary": { "type": "string", "minLength": 1 },
+              "evidenceStatus": { "enum": ["anecdotal", "independently-supported", "unverified"] },
+              "proofRefs": { "type": "array", "items": { "type": "string" } }
+            },
+            "additionalProperties": true
+          },
+          "commentThemes": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["summary", "stance", "evidenceStatus", "proofRefs"],
+              "properties": {
+                "summary": { "type": "string", "minLength": 1 },
+                "stance": { "enum": ["support", "challenge", "mixed", "no-substantive-comments"] },
+                "evidenceStatus": { "enum": ["anecdotal", "independently-supported", "unverified"] },
+                "proofRefs": { "type": "array", "items": { "type": "string" } }
+              },
+              "additionalProperties": true
+            }
+          },
+          "contradictions": { "type": "array", "items": { "type": "string" } },
+          "evidenceQuality": { "enum": ["low", "medium", "high"] },
+          "confidence": { "enum": ["low", "medium", "high"] },
+          "proofRefs": { "type": "array", "items": { "type": "string" } },
+          "disposition": { "enum": ["implementable", "research-only", "rejected"] },
+          "implementationDecision": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": true
+      }
+    },
+    "synthesis": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "hypothesis", "sourceRefs", "independentEvidenceRefs", "status", "decision"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "hypothesis": { "type": "string", "minLength": 1 },
+          "sourceRefs": { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^R[0-9]{2}$" } },
+          "independentEvidenceRefs": { "type": "array", "items": { "type": "string" } },
+          "status": { "enum": ["reddit-only", "independently-supported", "contradicted", "needs-benchmark"] },
+          "decision": { "enum": ["implementable", "research-only", "rejected"] }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": false
+}

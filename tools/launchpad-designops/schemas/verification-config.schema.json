@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://launchpad-designops.local/schemas/verification-config.schema.json",
+  "title": "Project browser verification configuration",
+  "type": "object",
+  "required": ["lane", "server", "baseUrl", "healthPath", "sourceRoots", "routes", "taskTest", "browsers", "viewports", "timeoutMs", "unsupportedBehavior"],
+  "properties": {
+    "lane": { "enum": ["nextjs", "vite", "wordpress", "laravel", "unknown"] },
+    "server": {
+      "type": "object",
+      "required": ["command", "args"],
+      "properties": {
+        "command": { "type": "string", "minLength": 1 },
+        "args": { "type": "array", "items": { "type": "string" } },
+        "cwd": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "baseUrl": { "type": "string", "pattern": "^https?://(127\\.0\\.0\\.1|localhost|\\[::1\\])(?::[0-9]+)?/?$" },
+    "healthPath": { "type": "string", "pattern": "^/(?!/)" },
+    "sourceRoots": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "environmentAllowlist": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$" } },
+    "routes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string", "pattern": "^/(?!/)" },
+          "taskIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+          "stateSelectors": {
+            "type": "object",
+            "additionalProperties": { "type": "string", "minLength": 1 },
+            "propertyNames": { "enum": ["normal", "loading", "empty", "error", "success", "permission-unavailable", "long-content"] }
+          },
+          "recoverySelectors": {
+            "type": "object",
+            "additionalProperties": { "type": "string", "minLength": 1 },
+            "propertyNames": { "enum": ["loading", "empty", "error", "success", "permission-unavailable"] }
+          },
+          "focusSelector": { "type": "string", "minLength": 1 }
+        },
+        "required": ["path", "taskIds", "stateSelectors", "recoverySelectors", "focusSelector"],
+        "additionalProperties": false
+      }
+    },
+    "taskTest": {
+      "type": "object",
+      "required": ["command", "args", "sourceFiles"],
+      "properties": {
+        "command": { "type": "string", "minLength": 1 },
+        "args": { "type": "array", "items": { "type": "string" } },
+        "cwd": { "type": "string", "minLength": 1 },
+        "sourceFiles": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } }
+      },
+      "additionalProperties": false
+    },
+    "browsers": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["chromium", "firefox", "webkit"] } },
+    "viewports": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": ["width", "height"],
+        "properties": {
+          "width": { "type": "integer", "minimum": 320 },
+          "height": { "type": "integer", "minimum": 480 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "timeoutMs": { "type": "integer", "minimum": 1000, "maximum": 300000 },
+    "unsupportedBehavior": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+  },
+  "additionalProperties": false
+}

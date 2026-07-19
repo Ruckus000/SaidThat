@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1",
+  "name": "launchpad-designops",
+  "version": "0.2.0",
+  "algorithm": "sha256(sorted(relativePath + NUL + fileSha256 + LF))",
+  "included": [
+    "LICENSE",
+    "package-lock.json",
+    "package.json",
+    "references",
+    "schemas",
+    "scripts",
+    "templates"
+  ],
+  "fileCount": 77,
+  "sha256": "d2f4d3900911aed1546494e70258c01ea97dd23f490b4cb33c076b670e1260b3"
+}
+

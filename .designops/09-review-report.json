@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "0.2",
+  "status": "review-required",
+  "phase": "strategy",
+  "mode": "proposal",
+  "provenanceNotice": "Hashes establish artifact identity and freshness only; they do not prove evidence quality, usability, or design merit.",
+  "findings": [],
+  "checks": [
+    {
+      "id": "provenance",
+      "status": "pass",
+      "required": true,
+      "evidence": [
+        "4 phase artifacts hashed."
+      ]
+    },
+    {
+      "id": "schemas",
+      "status": "pass",
+      "required": true,
+      "evidence": []
+    },
+    {
+      "id": "requirements",
+      "status": "pass",
+      "required": true,
+      "evidence": []
+    },
+    {
+      "id": "verification",
+      "status": "not-applicable",
+      "required": false,
+      "evidence": [
+        "This gate profile does not require rendered verification."
+      ]
+    }
+  ],
+  "artifacts": {
+    "project": {
+      "path": "project.json",
+      "sha256": "19ea9572f155e7813da7a7240952bc3eea4be5ab5896e3c4fd770b7a8dc2975a"
+    },
+    "evidenceBrief": {
+      "path": "01-evidence-brief.md",
+      "sha256": "77d74120b1094809beafccb45b8164df45a3fcea32e08ddc8be732cb4e0c7889"
+    },
+    "experienceStrategy": {
+      "path": "02-experience-strategy.md",
+      "sha256": "a68b7b42c924ae9745f220fbf027303b2c434debbcb4a865914248140c8743ee"
+    },
+    "requirementsMap": {
+      "path": "03-requirements-map.json",
+      "sha256": "afda2a6db355a8e2de1ddedbfdbc36a2f5ec5832db10b01c3bcb532aafc64bfc"
+    }
+  },
+  "digests": {
+    "design": "sha256:be33c42d617ae2c2611f26f5d73d09aea47f9a606ed102bb350ea8099ad09416",
+    "implementation": null,
+    "verificationInput": null,
+    "approval": "sha256:1938eba86796cafedcc06e47817373a6b52ed76010f64324767d0e3c17f3402b"
+  },
+  "review": null,
+  "run": {
+    "version": "0.2.0",
+    "runId": "gate-mrr7khe4-6064",
+    "generatedAt": "2026-07-19T03:00:33.111Z"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "0.2",
+  "project": { "name": "", "mode": "proposal-demo", "origin": "existing-repo" },
+  "stack": { "family": "unknown", "styling": "unknown" },
+  "workflow": { "currentPhase": "strategy" },
+  "quality": {
+    "accessibilityTarget": "WCAG 2.2 AA",
+    "performanceConstraints": [],
+    "verificationMode": "browser",
+    "scan": { "includeRoots": ["src"], "excludeRoots": ["tests", "fixtures", "docs", "generated"] }
+  },
+  "artifacts": {
+    "evidenceBrief": "01-evidence-brief.md",
+    "experienceStrategy": "02-experience-strategy.md",
+    "requirementsMap": "03-requirements-map.json",
+    "territories": "04-creative-territories/territories.json",
+    "selectedDirection": "05-selected-direction.json",
+    "directionValidationPlan": "05-direction-validation/plan.json",
+    "directionValidationResults": "05-direction-validation/results.json",
+    "contentStateMap": "06-content-state-map.json",
+    "designDNA": "07-design-dna.json",
+    "tokens": "08-design-system/tokens.json",
+    "proposalSpec": "proposal-spec.md",
+    "demoSpec": "demo-spec.md",
+    "projectFingerprint": "project-fingerprint.json",
+    "verificationConfig": "verification-config.json",
+    "verificationReport": "verification-report.json",
+    "strategyReview": "reviews/strategy.json",
+    "directionReview": "reviews/direction.json",
+    "handoffReview": "reviews/handoff.json",
+    "releaseReview": "reviews/release.json"
+  }
+}

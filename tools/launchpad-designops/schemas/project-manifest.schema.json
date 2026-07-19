@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://launchpad-designops.local/schemas/project-manifest.schema.json",
+  "title": "LaunchPad DesignOps 0.2 project manifest",
+  "type": "object",
+  "required": ["schemaVersion", "project", "stack", "workflow", "quality", "artifacts"],
+  "properties": {
+    "schemaVersion": { "const": "0.2" },
+    "project": {
+      "type": "object",
+      "required": ["name", "mode", "origin"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "mode": { "enum": ["audit", "proposal", "demo", "proposal-demo"] },
+        "origin": { "enum": ["greenfield", "brownfield", "brief", "existing-repo"] }
+      },
+      "additionalProperties": false
+    },
+    "stack": {
+      "type": "object",
+      "required": ["family", "styling"],
+      "properties": {
+        "family": { "enum": ["nextjs", "vite", "wordpress", "laravel", "unknown"] },
+        "styling": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "workflow": {
+      "type": "object",
+      "required": ["currentPhase"],
+      "properties": {
+        "currentPhase": { "enum": ["strategy", "direction", "handoff", "implementation", "verification", "release", "complete"] },
+        "gates": {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/$defs/gateState" },
+          "propertyNames": { "enum": ["strategy", "direction", "handoff", "release"] }
+        }
+      },
+      "additionalProperties": false
+    },
+    "quality": {
+      "type": "object",
+      "required": ["accessibilityTarget", "performanceConstraints", "verificationMode"],
+      "properties": {
+        "accessibilityTarget": { "const": "WCAG 2.2 AA" },
+        "performanceConstraints": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "verificationMode": { "enum": ["artifact-only", "browser"] },
+        "scan": {
+          "type": "object",
+          "properties": {
+            "includeRoots": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+            "excludeRoots": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "artifacts": {
+      "type": "object",
+      "properties": {
+        "evidenceBrief": { "$ref": "#/$defs/path" },
+        "experienceStrategy": { "$ref": "#/$defs/path" },
+        "requirementsMap": { "$ref": "#/$defs/path" },
+        "territories": { "$ref": "#/$defs/path" },
+        "selectedDirection": { "$ref": "#/$defs/path" },
+        "directionValidationPlan": { "$ref": "#/$defs/path" },
+        "directionValidationResults": { "$ref": "#/$defs/path" },
+        "contentStateMap": { "$ref": "#/$defs/path" },
+        "designDNA": { "$ref": "#/$defs/path" },
+        "tokens": { "$ref": "#/$defs/path" },
+        "proposalSpec": { "$ref": "#/$defs/path" },
+        "demoSpec": { "$ref": "#/$defs/path" },
+        "projectFingerprint": { "$ref": "#/$defs/path" },
+        "verificationConfig": { "$ref": "#/$defs/path" },
+        "verificationReport": { "$ref": "#/$defs/path" },
+        "strategyReview": { "$ref": "#/$defs/path" },
+        "directionReview": { "$ref": "#/$defs/path" },
+        "handoffReview": { "$ref": "#/$defs/path" },
+        "releaseReview": { "$ref": "#/$defs/path" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "path": { "type": "string", "minLength": 1, "pattern": "^(?!/)(?![A-Za-z]:)(?!.*\\\\)(?!.*(?:^|/)\\.\\.(?:/|$)).+" },
+    "gateState": {
+      "type": "object",
+      "required": ["status", "approvalDigest", "runId", "updatedAt"],
+      "properties": {
+        "status": { "enum": ["blocked", "review-required", "approved"] },
+        "approvalDigest": { "type": ["string", "null"], "pattern": "^sha256:[a-f0-9]{64}$" },
+        "runId": { "type": "string", "minLength": 1 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

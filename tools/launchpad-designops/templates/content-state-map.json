@@ -1,0 +1,14 @@
+{
+  "states": [
+    { "name": "normal", "applicability": "applicable", "content": "Representative content for the primary task.", "implementationRef": "route#normal", "recovery": "Continue the primary task.", "evidenceRefs": ["task:primary-task"] },
+    { "name": "loading", "applicability": "applicable", "content": "Explain what is loading without losing context.", "implementationRef": "route#loading", "recovery": "Wait or safely return.", "evidenceRefs": ["task:primary-task"] },
+    { "name": "empty", "applicability": "applicable", "content": "Explain why no results are shown.", "implementationRef": "route#empty", "recovery": "Revise the query or use guidance.", "evidenceRefs": ["task:primary-task"] },
+    { "name": "error", "applicability": "applicable", "content": "Explain the failure in plain language.", "implementationRef": "route#error", "recovery": "Retry or use a support path.", "evidenceRefs": ["source:brief"] },
+    { "name": "success", "applicability": "applicable", "content": "Confirm what happened and what comes next.", "implementationRef": "route#success", "recovery": "Continue to the next relevant step.", "evidenceRefs": ["task:primary-task"] },
+    { "name": "permission-unavailable", "applicability": "applicable", "content": "Explain why access is unavailable.", "implementationRef": "route#permission", "recovery": "Use a safe alternative or support path.", "evidenceRefs": ["source:brief"] }
+  ],
+  "verificationConditions": {
+    "mobile": { "implementationRef": "viewport:375x812", "evidenceRefs": ["source:brief"] },
+    "long-content": { "implementationRef": "route#long-content", "evidenceRefs": ["source:brief"] }
+  }
+}

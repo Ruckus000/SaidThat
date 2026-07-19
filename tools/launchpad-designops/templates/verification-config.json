@@ -1,0 +1,21 @@
+{
+  "lane": "unknown",
+  "server": { "command": "npm", "args": ["run", "dev", "--", "--host", "127.0.0.1", "--port", "4173"], "cwd": "." },
+  "baseUrl": "http://127.0.0.1:4173",
+  "healthPath": "/",
+  "sourceRoots": ["src"],
+  "routes": [
+    {
+      "path": "/",
+      "taskIds": ["primary-task-id"],
+      "stateSelectors": { "normal": "[data-state=normal]", "long-content": "[data-state-action=long-content]" },
+      "recoverySelectors": {},
+      "focusSelector": "main a, main button, main input"
+    }
+  ],
+  "taskTest": { "command": "npm", "args": ["run", "test:primary-task"], "cwd": ".", "sourceFiles": ["tests/primary-task.spec.ts"] },
+  "browsers": ["chromium", "firefox", "webkit"],
+  "viewports": [{ "width": 375, "height": 812 }, { "width": 768, "height": 1024 }, { "width": 1024, "height": 768 }, { "width": 1440, "height": 1000 }],
+  "timeoutMs": 30000,
+  "unsupportedBehavior": ["Replace this entry with explicit project limitations before verification."]
+}

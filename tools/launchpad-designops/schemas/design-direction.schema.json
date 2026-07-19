@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://launchpad-designops.local/schemas/design-direction.schema.json",
+  "title": "Creative territory collection",
+  "type": "object",
+  "required": ["territories"],
+  "properties": {
+    "territories": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "thesis", "audienceFit", "taskFit", "contentStructure", "structure", "axes", "evidenceRefs", "risks", "assumptionDependencies", "criterionEvaluations"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "name": { "type": "string", "minLength": 1 },
+          "thesis": { "type": "string", "minLength": 20 },
+          "audienceFit": { "type": "string", "minLength": 20 },
+          "taskFit": { "type": "string", "minLength": 20 },
+          "contentStructure": { "type": "string", "minLength": 20 },
+          "evidenceRefs": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^(source|user|task|claim|assumption|unknown|deliverable|criterion):[A-Za-z][A-Za-z0-9_-]*$" } },
+          "risks": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 10 } },
+          "assumptionDependencies": {
+            "type": "array",
+            "items": {
+              "type": "object", "required": ["ref", "relationship", "rationale"],
+              "properties": {
+                "ref": { "type": "string", "pattern": "^assumption:[A-Za-z][A-Za-z0-9_-]*$" },
+                "relationship": { "enum": ["relies-on", "challenges", "neutral"] },
+                "rationale": { "type": "string", "minLength": 20 }
+              },
+              "additionalProperties": false
+            }
+          },
+          "criterionEvaluations": {
+            "type": "array", "minItems": 1,
+            "items": {
+              "type": "object", "required": ["criterionRef", "outcome", "rationale"],
+              "properties": {
+                "criterionRef": { "type": "string", "pattern": "^criterion:[A-Za-z][A-Za-z0-9_-]*$" },
+                "outcome": { "enum": ["meets", "risk", "unknown"] },
+                "rationale": { "type": "string", "minLength": 20 }
+              },
+              "additionalProperties": false
+            }
+          },
+          "structure": {
+            "type": "object",
+            "required": ["hierarchy", "navigationModel", "contentOrder", "interactionModel"],
+            "properties": {
+              "hierarchy": { "type": "string", "minLength": 10 },
+              "navigationModel": { "type": "string", "minLength": 10 },
+              "contentOrder": { "type": "array", "minItems": 3, "items": { "type": "string", "minLength": 1 } },
+              "interactionModel": { "type": "string", "minLength": 10 }
+            },
+            "additionalProperties": false
+          },
+          "axes": {
+            "type": "object",
+            "required": ["typography", "composition", "density", "geometry", "color", "imagery", "signature"],
+            "properties": {
+              "typography": { "type": "string", "minLength": 3 },
+              "composition": { "type": "string", "minLength": 3 },
+              "density": { "type": "string", "minLength": 3 },
+              "geometry": { "type": "string", "minLength": 3 },
+              "color": { "type": "string", "minLength": 3 },
+              "imagery": { "type": "string", "minLength": 3 },
+              "signature": { "type": "string", "minLength": 3 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

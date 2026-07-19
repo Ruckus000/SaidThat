@@ -1,0 +1,582 @@
+{
+  "sources": [
+    {
+      "id": "readme",
+      "title": "Did They Tweet That? repository README",
+      "type": "repository",
+      "locator": "README.md",
+      "status": "verified",
+      "confidence": "high",
+      "criticality": "high",
+      "sha256": "3fc5dd8a195e912213d6c48c0af9887841a6413aa0d4685588f441a8de77e781"
+    },
+    {
+      "id": "master-plan",
+      "title": "Full Product Plan",
+      "type": "document",
+      "locator": "docs/00-full-product-plan.md",
+      "status": "stakeholder-provided",
+      "confidence": "high",
+      "criticality": "critical",
+      "sha256": "f028b4a8995ee4755bfbed796b5fefedd478bc1db1dcaf198c306ba6e5cb3ab2"
+    },
+    {
+      "id": "product-brief",
+      "title": "Product Brief",
+      "type": "document",
+      "locator": "docs/product-brief.md",
+      "status": "stakeholder-provided",
+      "confidence": "high",
+      "criticality": "critical",
+      "sha256": "d13c4cf4ede00ff1453676590f24adecaed2dd0abbe332c0adc9bf12c6bb1186"
+    },
+    {
+      "id": "market-research",
+      "title": "Market Research",
+      "type": "research",
+      "locator": "docs/market-research.md",
+      "status": "stakeholder-provided",
+      "confidence": "medium",
+      "criticality": "medium",
+      "sha256": "f93e11a3b82c4973247356b4f8209449e090d612747a938a56528445c1ac0dea"
+    },
+    {
+      "id": "gameplay-spec",
+      "title": "Gameplay Specification",
+      "type": "document",
+      "locator": "docs/gameplay-spec.md",
+      "status": "stakeholder-provided",
+      "confidence": "high",
+      "criticality": "critical",
+      "sha256": "ee1ec2ebdff6ebb47c1737decdb20b1bd7cd569030dc2a1cac4db319b622f90f"
+    },
+    {
+      "id": "ux-spec",
+      "title": "UX and Accessibility Spec",
+      "type": "document",
+      "locator": "docs/ux-spec.md",
+      "status": "stakeholder-provided",
+      "confidence": "medium",
+      "criticality": "critical",
+      "sha256": "e4a6a5a80925ed26ed9f492cd42e488c8b0aecc1c90827146b3720a505315222"
+    },
+    {
+      "id": "legal-risks",
+      "title": "Legal and Platform-Policy Analysis",
+      "type": "document",
+      "locator": "docs/legal-and-platform-risks.md",
+      "status": "stakeholder-provided",
+      "confidence": "medium",
+      "criticality": "critical",
+      "sha256": "e4a425ae3202b143c47ba45f66f396f263f29b72e6c8abe792f14dcf46b551f3"
+    },
+    {
+      "id": "content-operations",
+      "title": "Content Operations",
+      "type": "document",
+      "locator": "docs/content-operations.md",
+      "status": "stakeholder-provided",
+      "confidence": "high",
+      "criticality": "critical",
+      "sha256": "2442b3ea77cb35cfcaeedf56f32db2cea92d3495899f79c8d9e6b03231223288"
+    },
+    {
+      "id": "architecture",
+      "title": "Technical Architecture",
+      "type": "document",
+      "locator": "docs/architecture.md",
+      "status": "stakeholder-provided",
+      "confidence": "high",
+      "criticality": "high",
+      "sha256": "47ff03e0a64e97f61c1d741d98cc125c6448c088daee93fbe71b9bd10865020c"
+    },
+    {
+      "id": "data-model",
+      "title": "Data Model",
+      "type": "document",
+      "locator": "docs/data-model.md",
+      "status": "stakeholder-provided",
+      "confidence": "high",
+      "criticality": "medium",
+      "sha256": "cdee97521106de34502d4aaa3d6384c34a38ab21426f224c953bb70a9c914b06"
+    },
+    {
+      "id": "security-moderation",
+      "title": "Security and Moderation Model",
+      "type": "document",
+      "locator": "docs/security-and-moderation.md",
+      "status": "stakeholder-provided",
+      "confidence": "high",
+      "criticality": "high",
+      "sha256": "0ae1a38b10cf6f2b5ea3efd7e53acf652d279c396a0ab1dabdf0f774b7932150"
+    },
+    {
+      "id": "analytics-plan",
+      "title": "Analytics Plan",
+      "type": "document",
+      "locator": "docs/analytics-plan.md",
+      "status": "stakeholder-provided",
+      "confidence": "high",
+      "criticality": "high",
+      "sha256": "f53969718a922c581c9b0497f5dabadf8af6812ce6cfbe498181118066740a26"
+    },
+    {
+      "id": "roadmap",
+      "title": "Delivery Roadmap",
+      "type": "document",
+      "locator": "docs/roadmap.md",
+      "status": "stakeholder-provided",
+      "confidence": "high",
+      "criticality": "high",
+      "sha256": "3aec835894e48cee524581a30b6aa414d21097103b615884dec57bf91785bfc4"
+    },
+    {
+      "id": "backlog",
+      "title": "Prioritized Engineering Backlog",
+      "type": "document",
+      "locator": "docs/backlog.md",
+      "status": "stakeholder-provided",
+      "confidence": "high",
+      "criticality": "medium",
+      "sha256": "532aa9ec66d4c1b41f7e34f2c3623aa195bdbc67a82b98921b5014eed37d8a4c"
+    },
+    {
+      "id": "testing-strategy",
+      "title": "Testing Strategy",
+      "type": "document",
+      "locator": "docs/testing-strategy.md",
+      "status": "stakeholder-provided",
+      "confidence": "high",
+      "criticality": "high",
+      "sha256": "4d063a72aa91a70ae8789d93d05cb18df97b5c081fa57b9512fdb8a1fbad7a15"
+    },
+    {
+      "id": "risk-register",
+      "title": "Risk Register",
+      "type": "document",
+      "locator": "docs/risk-register.md",
+      "status": "stakeholder-provided",
+      "confidence": "high",
+      "criticality": "critical",
+      "sha256": "3a2d12c05d0d7ca8c8d59972d276536bd20249d3452f383729ee36d6e98e3840"
+    },
+    {
+      "id": "open-questions",
+      "title": "Open Questions",
+      "type": "document",
+      "locator": "docs/open-questions.md",
+      "status": "stakeholder-provided",
+      "confidence": "high",
+      "criticality": "high",
+      "sha256": "546d14cb17a891db517fd08f6e4f707e96bc2b2183a7fe5d8c11a2ccbeeb6b82"
+    },
+    {
+      "id": "decision-log",
+      "title": "Architecture Decision Records",
+      "type": "document",
+      "locator": "docs/decision-log.md",
+      "status": "stakeholder-provided",
+      "confidence": "high",
+      "criticality": "high",
+      "sha256": "bc3128cbe7f963b6bb5b75c0ef47c2331de864f12e0609aa0039c9c6e001efdb"
+    }
+  ],
+  "users": [
+    {
+      "id": "session-starter",
+      "description": "The group member who launches the app and gets a one-phone party session to its first valid answer.",
+      "evidenceRefs": ["source:product-brief", "source:gameplay-spec"],
+      "priority": "primary"
+    },
+    {
+      "id": "forehead-holder",
+      "description": "The player holding the phone outward who must understand and operate the round without seeing the active card.",
+      "evidenceRefs": ["source:product-brief", "source:gameplay-spec", "source:ux-spec"],
+      "priority": "primary"
+    },
+    {
+      "id": "screen-facing-group",
+      "description": "The friends who can see the active statement, read it at party distance, and participate in the social judgment ritual.",
+      "evidenceRefs": ["source:product-brief", "source:gameplay-spec", "source:ux-spec"],
+      "priority": "primary"
+    },
+    {
+      "id": "pass-play-player",
+      "description": "The current local player or team member who answers, receives a score, and hands the device to the next participant.",
+      "evidenceRefs": ["source:product-brief", "source:gameplay-spec"],
+      "priority": "primary"
+    },
+    {
+      "id": "accessible-player",
+      "description": "A participant who requires tap-only, no-motion, screen-reader, reduced-motion, color-independent, no-audio, or no-haptic play.",
+      "evidenceRefs": ["source:ux-spec", "source:gameplay-spec", "source:testing-strategy"],
+      "priority": "primary"
+    },
+    {
+      "id": "editorial-operator",
+      "description": "The operator who sources, previews, verifies, approves, publishes, reviews reports about, and removes cards.",
+      "evidenceRefs": ["source:content-operations", "source:security-moderation"],
+      "priority": "secondary"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "start-round",
+      "description": "Reach a valid first answer with one phone, minimal setup, and no facilitator explanation.",
+      "evidenceRefs": ["source:product-brief", "source:roadmap", "user:session-starter"],
+      "priority": "primary"
+    },
+    {
+      "id": "understand-role",
+      "description": "Know who can see the content, who answers, which control is active, and what happens next.",
+      "evidenceRefs": ["source:gameplay-spec", "source:ux-spec", "user:forehead-holder", "user:screen-facing-group"],
+      "priority": "primary"
+    },
+    {
+      "id": "judge-card",
+      "description": "Read or hear an attributed statement, discuss it socially, and register exactly one intended authentic-or-fabricated guess under time pressure.",
+      "evidenceRefs": ["source:gameplay-spec", "user:screen-facing-group", "user:pass-play-player", "user:accessible-player"],
+      "priority": "primary"
+    },
+    {
+      "id": "recover-control",
+      "description": "Continue the same round after sensor, motion, orientation, interruption, or connectivity failure without losing state or duplicating an answer.",
+      "evidenceRefs": ["source:architecture", "source:ux-spec", "source:testing-strategy", "user:forehead-holder", "user:accessible-player"],
+      "priority": "primary"
+    },
+    {
+      "id": "understand-reveal",
+      "description": "After guessing, identify whether the statement is authentic, fabricated, disputed, removed, or unavailable and understand the product's truth posture.",
+      "evidenceRefs": ["source:gameplay-spec", "source:legal-risks", "source:content-operations", "user:screen-facing-group"],
+      "priority": "primary"
+    },
+    {
+      "id": "continue-session",
+      "description": "Rematch or hand the phone to the correct next player without losing pace, score, or turn ownership.",
+      "evidenceRefs": ["source:product-brief", "source:analytics-plan", "source:gameplay-spec", "user:session-starter", "user:pass-play-player"],
+      "priority": "primary"
+    },
+    {
+      "id": "report-content",
+      "description": "Report an incorrect, harmful, offensive, or rights-sensitive card and return to the same review context, including while offline.",
+      "evidenceRefs": ["source:ux-spec", "source:content-operations", "source:security-moderation", "user:screen-facing-group"],
+      "priority": "secondary"
+    },
+    {
+      "id": "operate-content",
+      "description": "Preview realistic cards, record evidence, apply safety rules, publish a version, triage reports, and remove content within policy targets.",
+      "evidenceRefs": ["source:content-operations", "source:security-moderation", "user:editorial-operator"],
+      "priority": "secondary"
+    }
+  ],
+  "claims": [
+    {
+      "id": "planning-only",
+      "text": "The repository currently contains planning documents and no application code.",
+      "status": "verified",
+      "sourceRefs": ["source:readme"],
+      "approvedUsage": ["proposalSpec"]
+    },
+    {
+      "id": "party-first",
+      "text": "The intended MVP is a local one-phone party game rather than a news product, public UGC platform, or realtime multiplayer product.",
+      "status": "stakeholder",
+      "sourceRefs": ["source:master-plan", "source:product-brief", "source:decision-log"],
+      "approvedUsage": ["proposalSpec"]
+    },
+    {
+      "id": "phase-zero-scope",
+      "text": "Phase 0 is intended to test forehead and tap play with one bundled editorial deck, no accounts, and no backend dependency.",
+      "status": "stakeholder",
+      "sourceRefs": ["source:roadmap", "source:architecture", "source:decision-log"],
+      "approvedUsage": ["proposalSpec"]
+    },
+    {
+      "id": "truth-label-required",
+      "text": "Every played card requires an explicit post-answer authenticity state, and fabricated content must be identified as made for the game.",
+      "status": "stakeholder",
+      "sourceRefs": ["source:gameplay-spec", "source:legal-risks", "source:content-operations"],
+      "approvedUsage": ["proposalSpec"]
+    },
+    {
+      "id": "offline-required",
+      "text": "Bundled or cached party play must remain available without network access.",
+      "status": "stakeholder",
+      "sourceRefs": ["source:master-plan", "source:architecture", "source:roadmap"],
+      "approvedUsage": ["proposalSpec"]
+    },
+    {
+      "id": "equivalent-access",
+      "text": "Tap-only, no-motion, and screen-reader players must be able to complete the same core round and truth-review tasks.",
+      "status": "stakeholder",
+      "sourceRefs": ["source:ux-spec", "source:gameplay-spec", "source:testing-strategy"],
+      "approvedUsage": ["proposalSpec"]
+    },
+    {
+      "id": "validation-thresholds",
+      "text": "Stakeholders propose at least 70 percent of Phase 0 groups completing two or more rounds unaided, at least 80 percent control usability, and at least 40 percent Phase 1 rematch rate.",
+      "status": "stakeholder",
+      "sourceRefs": ["source:product-brief", "source:roadmap", "source:analytics-plan"],
+      "approvedUsage": ["proposalSpec"]
+    },
+    {
+      "id": "planned-mobile-stack",
+      "text": "The planned mobile implementation uses Expo and React Native with TypeScript, but no implementation manifest or styling system exists yet.",
+      "status": "stakeholder",
+      "sourceRefs": ["source:readme", "source:architecture", "source:decision-log"],
+      "approvedUsage": ["proposalSpec"]
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "forehead-social-value",
+      "description": "Forehead play creates enough additional social energy and memorability to justify motion complexity and role asymmetry.",
+      "sourceRefs": ["source:product-brief", "source:market-research", "task:judge-card"],
+      "confidence": "low",
+      "risk": "high",
+      "affectedDecisions": ["primary-task", "interaction-model"],
+      "validation": {
+        "requiredAt": "direction",
+        "hypothesis": "Representative groups will prefer or clearly value the forehead version over an otherwise equivalent tap countermodel without a material increase in unrecovered task failure.",
+        "killCriteria": [
+          "More than one of five moderated sessions has an unrecovered forehead-path failure that does not occur in the tap countermodel.",
+          "A majority of moderated groups prefer the tap countermodel and cannot identify compensating social value in forehead play."
+        ]
+      }
+    },
+    {
+      "id": "unaided-start",
+      "description": "A new group can understand roles and controls and reach a valid first answer with little or no facilitation.",
+      "sourceRefs": ["source:product-brief", "source:roadmap", "task:start-round", "task:understand-role"],
+      "confidence": "low",
+      "risk": "high",
+      "affectedDecisions": ["primary-task", "interaction-model"],
+      "validation": {
+        "requiredAt": "direction",
+        "hypothesis": "At least four of five moderated sessions will reach a valid first answer without moderator instruction beyond the prepared study prompt.",
+        "killCriteria": [
+          "Two or more of five sessions require moderator explanation to identify who sees the card or how the active player answers.",
+          "Any repeated setup step causes two or more sessions to abandon or restart before the first valid answer."
+        ]
+      }
+    },
+    {
+      "id": "truth-recovery",
+      "description": "Explicit reveal language can restore trust after the game intentionally withholds authenticity during the guess.",
+      "sourceRefs": ["source:legal-risks", "source:content-operations", "task:understand-reveal"],
+      "confidence": "low",
+      "risk": "critical",
+      "affectedDecisions": ["safety", "trust", "content-structure"],
+      "validation": {
+        "requiredAt": "direction",
+        "hypothesis": "After review, at least four of five participants will correctly explain whether each tested card was authentic, fabricated for the game, disputed, or unavailable without relying on color alone.",
+        "killCriteria": [
+          "Two or more of five participants describe a tested fabricated card as verified or real after seeing its completed reveal state.",
+          "A proposed share or review treatment allows a fabricated attribution to be captured without its game-fabrication meaning remaining explicit."
+        ]
+      }
+    },
+    {
+      "id": "distance-readability",
+      "description": "Representative statement lengths and attributions can be understood quickly from the viewing distances, angles, and lighting of group play.",
+      "sourceRefs": ["source:gameplay-spec", "source:ux-spec", "task:judge-card"],
+      "confidence": "low",
+      "risk": "high",
+      "affectedDecisions": ["primary-task", "content-structure", "representative-content"],
+      "validation": {
+        "requiredAt": "direction",
+        "hypothesis": "At least four of five moderated groups will correctly read representative short, median, and maximum-length cards at the predeclared test distance and lighting before the decision window expires.",
+        "killCriteria": [
+          "Two or more of five groups cannot correctly read a median-length card at the predeclared distance and lighting.",
+          "Any territory requires hiding attribution, truth status, or a critical control to fit representative maximum-length content."
+        ]
+      }
+    },
+    {
+      "id": "accessible-equivalence",
+      "description": "Tap-only and screen-reader paths can preserve task completion, truth understanding, scoring, and the social rhythm of the core game.",
+      "sourceRefs": ["source:ux-spec", "source:testing-strategy", "task:judge-card", "task:recover-control"],
+      "confidence": "low",
+      "risk": "high",
+      "affectedDecisions": ["primary-task", "interaction-model"],
+      "validation": {
+        "requiredAt": "direction",
+        "hypothesis": "Participants using the non-motion path will complete setup, a full round, results, and review without missing truth information or receiving different scoring semantics.",
+        "killCriteria": [
+          "Any required non-motion or screen-reader path cannot complete the same round, result, and truth-review sequence as the default path.",
+          "Two or more moderated sessions require sighted or motion-capable assistance for a primary task that is designated as accessible."
+        ]
+      }
+    },
+    {
+      "id": "editorial-readiness",
+      "description": "The team can supply enough safe, funny, sourceable, representative content to validate the interaction and later sustain multiple decks.",
+      "sourceRefs": ["source:content-operations", "source:risk-register", "task:operate-content"],
+      "confidence": "low",
+      "risk": "critical",
+      "affectedDecisions": ["safety", "content-structure", "representative-content"],
+      "validation": {
+        "requiredAt": "direction",
+        "hypothesis": "Before direction testing, an accountable editorial owner will approve a representative set covering length, difficulty, authenticity, fabrication, sensitivity, source, disputed, removed, and offline conditions.",
+        "killCriteria": [
+          "No accountable editorial owner or two-person review path exists before participant direction sessions begin.",
+          "The study cannot use representative approved content without relying on unreviewed harmful fabrication or an unresolved source-rights pattern."
+        ]
+      }
+    },
+    {
+      "id": "audience-fit",
+      "description": "The proposed 18 to 28 friend-group audience is the most promising launch segment for the one-phone authenticity party ritual.",
+      "sourceRefs": ["source:product-brief", "source:market-research"],
+      "confidence": "low",
+      "risk": "medium",
+      "affectedDecisions": ["visual-expression", "representative-content"],
+      "validation": {
+        "requiredAt": "none",
+        "hypothesis": "Observed Phase 0 groups in the proposed launch segment will complete and rematch at the stakeholder-defined thresholds.",
+        "killCriteria": [
+          "Observed Phase 0 behavior does not meet the stakeholder-defined completion and rematch thresholds for the proposed segment."
+        ]
+      }
+    }
+  ],
+  "unknowns": [
+    {
+      "id": "direct-user-evidence",
+      "description": "No interviews, group observations, usability sessions, or accessibility participant evidence exists for this product.",
+      "risk": "high",
+      "blocking": false,
+      "rationale": "Strategy may proceed with bounded hypotheses, but direction approval requires the registered validation evidence."
+    },
+    {
+      "id": "legal-clearance",
+      "description": "Trademark, publicity, defamation, copyright, store-policy, and fabrication patterns have not received counsel approval.",
+      "risk": "critical",
+      "blocking": false,
+      "rationale": "Problem framing and reversible exploration may proceed, but implementation claims and store release remain blocked pending counsel decisions."
+    },
+    {
+      "id": "source-rights",
+      "description": "The allowed source, storage, display, and deletion pattern for authentic statements is unresolved.",
+      "risk": "critical",
+      "blocking": false,
+      "rationale": "Strategy can define trust states without asserting a legal solution, but representative content and implementation need an approved rights pattern."
+    },
+    {
+      "id": "editorial-owner",
+      "description": "No accountable editorial owner, monthly capacity, or participant-study content approver is identified.",
+      "risk": "high",
+      "blocking": false,
+      "rationale": "Strategy can proceed, but direction validation cannot begin until the editorial-readiness kill criteria are cleared."
+    },
+    {
+      "id": "launch-context",
+      "description": "Launch markets, languages, age rating, content filters, and analytics-consent rules are undecided.",
+      "risk": "medium",
+      "blocking": false,
+      "rationale": "Initial strategy is locale-agnostic, while handoff and release must resolve the applicable content and consent requirements."
+    },
+    {
+      "id": "native-verification",
+      "description": "The LaunchPad lane matrix does not qualify Expo React Native, and no project-owned native verification configuration exists.",
+      "risk": "high",
+      "blocking": false,
+      "rationale": "The current artifact-only proposal can proceed, but implementation and release need iOS and Android task, sensor, accessibility, offline, lifecycle, and performance evidence."
+    },
+    {
+      "id": "test-distance",
+      "description": "The representative viewing distance, lighting, angle, device-size matrix, and content-length fixtures have not been predeclared.",
+      "risk": "high",
+      "blocking": false,
+      "rationale": "Territory generation may wait for strategy review, and the independent direction-validation plan must bind these conditions before sessions."
+    }
+  ],
+  "deliverables": [
+    {
+      "id": "ux-ui-proposal",
+      "artifact": "proposalSpec",
+      "claimRefs": [
+        "planning-only",
+        "party-first",
+        "phase-zero-scope",
+        "truth-label-required",
+        "offline-required",
+        "equivalent-access",
+        "validation-thresholds",
+        "planned-mobile-stack"
+      ]
+    }
+  ],
+  "directionCriteria": [
+    {
+      "id": "unaided-start-fit",
+      "description": "The direction must enable a new group to reach a valid first answer without hidden product knowledge or moderator instruction.",
+      "kind": "hard",
+      "evidenceRefs": ["task:start-round", "task:understand-role", "assumption:unaided-start"],
+      "measurement": "Use the same prepared prompt and representative setup in every territory; record assistance, restarts, abandonment, and time to first valid answer."
+    },
+    {
+      "id": "group-readability",
+      "description": "The direction must preserve statement, attribution, time status, and required control meaning across representative content and group viewing conditions.",
+      "kind": "hard",
+      "evidenceRefs": ["task:judge-card", "assumption:distance-readability", "unknown:test-distance"],
+      "measurement": "Test short, median, and maximum-length content at predeclared phone sizes, distances, angles, and lighting; record correct first-read completion."
+    },
+    {
+      "id": "control-reliability",
+      "description": "The direction must register one intended answer, make control readiness understandable, and provide a recoverable non-motion path.",
+      "kind": "hard",
+      "evidenceRefs": ["task:judge-card", "task:recover-control", "assumption:forehead-social-value"],
+      "measurement": "Compare accidental answers, duplicate commits, control misunderstandings, fallback use, and unrecovered failures across the candidate and countermodel."
+    },
+    {
+      "id": "truth-comprehension",
+      "description": "The direction must make authentic, fabricated, disputed, removed, and source-unavailable meanings explicit after the guess without relying on color or platform imitation.",
+      "kind": "hard",
+      "evidenceRefs": ["task:understand-reveal", "assumption:truth-recovery", "claim:truth-label-required"],
+      "measurement": "Ask participants to explain each completed truth state in their own words and inspect review/share captures for detached false-attribution risk."
+    },
+    {
+      "id": "accessible-equivalence",
+      "description": "The direction must support the same primary round, result, review, and report outcomes through tap-only and screen-reader-compatible paths.",
+      "kind": "hard",
+      "evidenceRefs": ["task:judge-card", "task:understand-reveal", "task:recover-control", "assumption:accessible-equivalence"],
+      "measurement": "Run the same critical-task script through motion, tap-only, VoiceOver, and TalkBack paths and compare completion, information, scoring, and recovery semantics."
+    },
+    {
+      "id": "party-tempo",
+      "description": "The direction should minimize setup and transition friction while keeping current actor, turn ownership, and next action clear.",
+      "kind": "comparative",
+      "evidenceRefs": ["task:start-round", "task:continue-session", "claim:validation-thresholds"],
+      "measurement": "Compare setup time, transition hesitation, assistance, handoff errors, rematch choice, and participant comments using the same content and session structure."
+    },
+    {
+      "id": "subject-specificity",
+      "description": "The direction should feel specific to a social authenticity-guessing ritual without reproducing social-feed chrome, news authority cues, or generic trivia conventions.",
+      "kind": "comparative",
+      "evidenceRefs": ["claim:party-first", "task:judge-card", "task:understand-reveal"],
+      "measurement": "Ask evaluators what the experience is specifically about, what evidence supports that interpretation, and whether any authority cue could misrepresent fabricated content."
+    },
+    {
+      "id": "state-resilience",
+      "description": "The direction must explain playable, offline, loading, corrupt, interrupted, sensor-failed, disputed, removed, queued-report, and recovery conditions without dead ends.",
+      "kind": "hard",
+      "evidenceRefs": ["task:recover-control", "task:report-content", "claim:offline-required"],
+      "measurement": "Walk every registered non-normal state through an executable recovery path and fail any territory that loses round context or blocks available offline play."
+    },
+    {
+      "id": "implementation-feasibility",
+      "description": "The direction must be feasible within planned Expo React Native performance, offline, sensor, content-size, and native accessibility constraints.",
+      "kind": "hard",
+      "evidenceRefs": ["source:architecture", "source:roadmap", "claim:planned-mobile-stack", "unknown:native-verification"],
+      "measurement": "Require engineering review against startup, frame-rate, sensor, offline, package-size, memory, lifecycle, and native accessibility constraints before handoff approval."
+    },
+    {
+      "id": "editorial-operability",
+      "description": "The direction must allow realistic cards and all trust states to be previewed, reviewed, reported, and removed without one-off design exceptions.",
+      "kind": "hard",
+      "evidenceRefs": ["task:operate-content", "assumption:editorial-readiness", "unknown:editorial-owner"],
+      "measurement": "Pressure-test the same representative content set and operational states, then require editorial review of preview accuracy, source meaning, and removal behavior."
+    }
+  ]
+}
