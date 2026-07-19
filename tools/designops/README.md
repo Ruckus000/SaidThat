@@ -30,7 +30,7 @@ After an explicit human decision, the agent may prepare an unsigned review draft
 When this repository is connected to GitHub:
 
 1. Add `DESIGNOPS_REVIEWER_PUBLIC_KEY_PEM` as a GitHub Actions secret containing only the public key.
-2. Protect `master` and require pull requests, the `DesignOps policy` check, one CODEOWNER approval, dismissal of stale approvals, and no force pushes or bypass.
+2. Protect `main` and require pull requests, the `DesignOps policy` check, one CODEOWNER approval, dismissal of stale approvals, and no force pushes or bypass.
 3. Connect the protected GitHub repository to Cursor Cloud Agents.
 
 Until those remote settings exist, local Git hooks are active but cannot substitute for protected-branch enforcement.
