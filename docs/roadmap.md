@@ -1,5 +1,7 @@
 # Delivery Roadmap
 
+> Historical product roadmap. The current owner-authorized execution scope is the local-first fixture MVP in [`docs/mvp-build-queue.md`](mvp-build-queue.md); its research and production-release dependencies are not build prerequisites for that scope.
+
 **Date:** 2026-07-18
 
 ---

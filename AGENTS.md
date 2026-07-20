@@ -11,8 +11,12 @@ Read these files before editing:
 3. `.designops/02-experience-strategy.md`
 4. `.designops/03-requirements-map.json`
 5. `.designops/09-review-report.json`
+6. `.designops/mvp-build-status.md`
+7. `.designops/06-content-state-map.json`, `.designops/07-design-dna.json`, and `.designops/08-design-system/tokens.json` for in-scope mobile work
 
-The current strategy is `review-required`. The active owner exception at `.designops/10-owner-implementation-exception.json` narrowly permits the documented local-first Expo MVP under `apps/mobile/`, bound to the AI tabletop simulation. It does not create participant evidence, legal clearance, a signed Direction/Handoff approval, or release readiness.
+The current strategy review remains unresolved, but it is **not an MVP build blocker**. The active owner exception at `.designops/10-owner-implementation-exception.json` and the decision record at `.designops/11-simulation-owner-handoff-decision.json` explicitly permit the documented local-first Expo MVP under `apps/mobile/`. Do not start or require further participant studies, external research, signed Direction/Handoff reviews, or evidence-gathering tasks merely to continue that scoped MVP build.
+
+These records do not create participant evidence, legal clearance, an authentic playable public-figure card, a signed Direction/Handoff approval, or release readiness. Those are release conditions only.
 
 ## Mandatory gate
 
@@ -40,7 +44,7 @@ After edits, run:
 node tools/designops/enforce.mjs --working-tree
 ```
 
-Exit `0` permits the requested work. Exits `1`, `2`, or `3` require stopping. Do not work around a nonzero result. The current exception grants `0` only for in-scope `apps/mobile/` MVP changes; all other implementation paths remain fail-closed.
+Exit `0` permits the requested work. Exits `1`, `2`, or `3` require stopping. Do not work around a nonzero result. The current exception grants `0` for the in-scope `apps/mobile/` MVP; do not invent a research or signature prerequisite for that work. All other implementation paths remain fail-closed until explicitly scoped.
 
 ## Non-negotiable rules
 

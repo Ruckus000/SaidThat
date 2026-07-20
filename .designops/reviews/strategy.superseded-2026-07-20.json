@@ -24,5 +24,6 @@
     "algorithm": "Ed25519",
     "keyId": "sha256:f6113e1a71bf331acde736c05aac8d2977d838434fa0ba14f430e6bbc0115553",
     "value": "FwvI8Iz601Za8t2tZHQVq/V+IDRGGWNphOION3U6/tta93iDI27nf5EF8pikIt6YCrDGz2aF3IJ6uaGJvMLCDg=="
-  }
+  },
+  "supersededReason": "The requirements registry changed for the simulation-backed MVP package, so this signature cannot attest to the current digest. It is retained as history and is not an active approval."
 }

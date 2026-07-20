@@ -18,7 +18,7 @@ Run the repository gate before acting:
 Phase boundary:
 
 - `strategy`, `direction`, `handoff`: planning/enforcement paths only.
-- Application changes require a current externally signed handoff approval and gate exit `0`, except for the active, scoped owner exception at `.designops/10-owner-implementation-exception.json`. That exception permits only the local-first Expo MVP under `apps/mobile/`; it never turns AI simulation into human evidence or release approval.
+- Application changes require a current externally signed handoff approval and gate exit `0`, except for the active, scoped owner exception at `.designops/10-owner-implementation-exception.json` and its companion owner decision at `.designops/11-simulation-owner-handoff-decision.json`. Together they permit the local-first Expo MVP under `apps/mobile/` now: no additional participant study, external research, or signed Direction/Handoff review is a prerequisite to that scoped build. They never turn AI simulation into human evidence or release approval.
 - Release requires a current externally signed release approval plus current iOS and Android verification evidence.
 
 Stop on gate exits `1`, `2`, or `3`. Never bypass, weaken, or disable the gate, Git hooks, integrity manifest, source hashes, CODEOWNERS, or CI.
@@ -29,4 +29,4 @@ This private repository's current GitHub plan does not enforce a protected branc
 
 Before merging any pull request to `main`, complete an evidence-based code review and security review. Inspect the diff against `main`, run the smallest relevant checks and DesignOps range check, assess correctness, maintainability, integration impact, secrets/data exposure, authorization, and unsafe defaults, and resolve or explicitly accept every finding. A green workflow alone is not merge approval; once the DesignOps check and both reviews are clear, an authorized agent may merge without a separate human merge decision.
 
-The existing visual tokens and aesthetic suggestions in `docs/ux-spec.md` are unvalidated hypotheses. Do not implement them before approved direction and handoff artifacts exist.
+Use the simulation-backed Design DNA, content-state map, tokens, and demo specification for the scoped MVP. Do not describe them as human-validated or approved for release.

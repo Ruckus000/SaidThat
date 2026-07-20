@@ -3,7 +3,7 @@
 > Engineering package id: **SaidThat** (`com.saidthat.app` provisional). Store brand still pending trademark counsel.  
 > Party game: decide whether a public figure **really said/posted** a statement.
 
-**Project status:** Planning + DesignOps strategy review. **Application implementation is gated** (`AGENTS.md` / LaunchPad DesignOps). A partial `apps/mobile` Expo stub exists from an early scaffold attempt — do not expand it until the implementation gate is signed.
+**Project status:** Local-first fixture MVP in active development. `apps/mobile` contains the playable Expo baseline: Room Beacon, Private Relay, fixture-only cards, offline report queueing, and deterministic resilience tests. The owner-authorized MVP path permits this scoped work now; see [MVP build status](.designops/mvp-build-status.md) and [the Cursor task queue](docs/mvp-build-queue.md).
 
 **Repository-control status:** Local DesignOps checks and tracked Git hooks are fail-closed. GitHub Actions displays the policy result, but this private repository's current GitHub plan does not enforce branch protection; use feature branches and pull requests, then verify the workflow before merge. See [DesignOps enforcement](tools/designops/README.md).
 
@@ -60,14 +60,17 @@ A Heads Up–inspired social party game. MVP: local forehead play + pass-and-pla
 
 ---
 
-## Prerequisites before writing more production code
+## Building the MVP with Cursor
 
-1. **Clear DesignOps implementation gate** (signed strategy/direction approval per `AGENTS.md`).  
-2. Counsel kickoff — trademark + fabrication/publicity.  
-3. Editorial review of [`docs/content/phase0-deck.candidates.json`](docs/content/phase0-deck.candidates.json).  
-4. Phase 0 success bar agreed.
+Read [`AGENTS.md`](AGENTS.md), then [`docs/mvp-build-queue.md`](docs/mvp-build-queue.md). Before app changes, run:
 
-Then: monorepo packages + Expo Router Home shell + Zod validation of the deck (still no full game loop until you greenlight it).
+```bash
+node tools/designops/enforce.mjs --intent implementation
+```
+
+The local-first, fixture-only MVP under `apps/mobile/` is authorized. Do not add paid research, external validation, or signed Direction/Handoff review as an implementation prerequisite. Do not add public-figure cards, accounts, live social integrations, public uploads, or release claims.
+
+For each focused change: run the mobile checks, run DesignOps enforcement, open a PR, complete code and security review, and merge only after both reviews and the policy workflow pass.
 
 ---
 

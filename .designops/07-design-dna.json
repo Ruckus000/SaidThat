@@ -1,0 +1,51 @@
+{
+  "thesis": "Room Beacon turns a one-phone authenticity prompt into a shared, truth-safe party ritual: the room can read together, the holder can commit once without seeing the card, and the reveal never pretends that a game prompt is a verified public claim.",
+  "signature": {
+    "name": "persistent room beacon",
+    "rule": "Every active Room Beacon round carries a compact, high-contrast game-context marker above the shared statement; it is content-neutral before reveal and remains legible without color, sound, motion, or a timer.",
+    "reason": "The marker reduces capture ambiguity and keeps the product's game context salient when attention is divided."
+  },
+  "typography": {
+    "game-context": "Compact uppercase system sans with high contrast; never truncate the words that establish game context.",
+    "statement": "Large, calm, multiline system type sized for a shared phone; maximum content length must preserve attribution and controls.",
+    "truth-review": "Use plain-language semantic labels before explanation; never encode authentic, fabricated, disputed, removed, or unavailable by color alone."
+  },
+  "composition": {
+    "shared-distance-hierarchy": "One primary quote, one attribution, one current-role instruction, and two answer actions; suppress decoration that competes with these elements.",
+    "protected-transition": "Private Relay uses a full-screen shutter with one ready action before a new player sees card or score.",
+    "recovery": "Recovery stays in the same visual frame when safe; when privacy is at risk, replace the frame with a neutral protected transition."
+  },
+  "surfaces": {
+    "base": "Dark, low-glare background establishes a room-readable stage rather than a social feed.",
+    "signal": "Lime is reserved for current game state and primary action; it never alone communicates truth, safety, or access.",
+    "geometry": "Use generous rounded touch surfaces and visible spacing that support a minimum 56 dp tap target in the current MVP."
+  },
+  "imagery": {
+    "policy": "No public-figure imagery, profile mimicry, social-post chrome, screenshot facsimiles, or AI celebrity impersonation in the local-first fixture MVP.",
+    "content": "The statement itself is the shared object; any future source evidence belongs in post-answer editorial review, not the active game card."
+  },
+  "motion": {
+    "purpose": "Motion may orient a transition only when it does not convey truth, completion, or an answer requirement.",
+    "reduced-motion": "Reduced-motion and tap-only completion retain the same answer, score, review, report, and rematch semantics.",
+    "interruption": "Background interruption never animates private information back into view; private state is discarded before recovery."
+  },
+  "contentVoice": "Direct, neutral, and non-accusatory. The product says what is known, what is withheld, and what safe action remains without blaming the holder, player, or reporter.",
+  "prohibitedDefaults": [
+    "Social-feed chrome, likes, repost counts, public profile cards, or any cue that makes a fixture look like a live post.",
+    "A countdown, shake, or tilt requirement that makes tap-only play second-class.",
+    "Confetti, red-versus-green truth signaling, or celebratory copy that turns a mistaken answer into social punishment.",
+    "Any visual treatment implying an authentic public-figure claim before retained source evidence and two human editorial approvals exist."
+  ],
+  "exceptions": [
+    {
+      "pattern": "private relay shutter",
+      "ruleRef": "composition.protected-transition",
+      "affectedRefs": ["task:continue-session", "task:recover-control"],
+      "reason": "Private handoff intentionally interrupts the shared-stage composition because showing the prior card or score to the next player would violate the privacy contract.",
+      "evidenceRefs": ["task:continue-session", "source:simulation-evidence-ledger"],
+      "decision": "retain"
+    }
+  ],
+  "decisionRationale": "Room Beacon is the owner-selected primary ritual; Private Relay remains the required access and recovery countermodel. The decision is simulation-backed and constrained by mechanism research, not a conclusion from human validation.",
+  "evidenceRefs": ["task:judge-card", "task:understand-role", "task:understand-reveal", "user:accessible-player", "source:simulation-evidence-ledger"]
+}

@@ -7,6 +7,8 @@ import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 
+import { isPlayableCard } from "../../apps/mobile/src/domain/game.js";
+
 import {
   EnforcementError,
   PROJECT_ROOT,
@@ -63,6 +65,17 @@ test("review-required gates permit planning but block implementation", () => {
     () => assertGateDecision("release", "release", { exitCode: 1, stdout: "blocked", stderr: "" }),
     (error) => error instanceof EnforcementError && error.exitCode === 1
   );
+});
+
+test("review-required planning reports the active MVP exception without widening it", async () => {
+  const result = spawnSync(process.execPath, ["tools/designops/enforce.mjs", "--intent", "design", "--json"], {
+    cwd: PROJECT_ROOT,
+    encoding: "utf8"
+  });
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  const payload = JSON.parse(result.stdout);
+  assert.equal(payload.decision, "allowed");
+  assert.match(payload.message, /scoped local-first MVP under apps\/mobile/);
 });
 
 test("pre-push hook classifies a new feature branch relative to origin/main", () => {
@@ -220,7 +233,25 @@ test("Cursor policy files preserve the required UX, trust, and gate instructions
   for (const required of ["Authentic", "fabricated-for-the-game", "disputed", "removed", "source-unavailable", "tombstones"]) {
     assert.ok(contentRule.includes(required), `missing trust requirement: ${required}`);
   }
-  assert.equal(environment.install, "npm ci --prefix tools/launchpad-designops --omit=dev --ignore-scripts");
+  assert.equal(environment.install, "npm ci --prefix tools/launchpad-designops --omit=dev --ignore-scripts && npm ci --prefix apps/mobile --ignore-scripts");
+});
+
+test("Cursor handoff points to the active fixture-MVP queue and no longer states that it is blocked", async () => {
+  const rootReadme = await readFile(path.join(PROJECT_ROOT, "README.md"), "utf8");
+  const mobileAgents = await readFile(path.join(PROJECT_ROOT, "apps/mobile/AGENTS.md"), "utf8");
+  const mobileRule = await readFile(path.join(PROJECT_ROOT, ".cursor/rules/mobile-ux-requirements.mdc"), "utf8");
+  const queue = await readFile(path.join(PROJECT_ROOT, "docs/mvp-build-queue.md"), "utf8");
+  const command = await readFile(path.join(PROJECT_ROOT, ".cursor/commands/mvp-next.md"), "utf8");
+
+  for (const textValue of [rootReadme, mobileAgents, mobileRule, command]) {
+    assert.match(textValue, /mvp-build-queue\.md/);
+    assert.match(textValue, /fixture-only/i);
+  }
+  assert.match(queue, /fixture-only/i);
+  assert.doesNotMatch(rootReadme, /do not expand it until the implementation gate is signed/i);
+  assert.match(mobileRule, /simulation-backed token contract/i);
+  assert.match(queue, /MVP-01/);
+  assert.match(queue, /MVP-07/);
 });
 
 test("AI tabletop human-psychology gates retain peer-reviewed provenance", async () => {
@@ -240,4 +271,62 @@ test("AI tabletop human-psychology gates retain peer-reviewed provenance", async
     assert.ok(item.mechanismRefs.length >= 1, `simulation gate ${item.id} must name a peer-reviewed mechanism`);
     for (const ref of item.mechanismRefs) assert.ok(sources.has(ref), `simulation gate ${item.id} references unknown source ${ref}`);
   }
+});
+
+test("simulation-backed handoff is complete, non-deceptive, and unblocks only the fixture MVP", async () => {
+  const root = path.join(PROJECT_ROOT, ".designops");
+  const matrix = JSON.parse(await readFile(path.join(root, "05-direction-validation/ai-tabletop-simulation/simulation-matrix.json"), "utf8"));
+  const decision = JSON.parse(await readFile(path.join(root, "11-simulation-owner-handoff-decision.json"), "utf8"));
+  const ledger = JSON.parse(await readFile(path.join(root, "05-direction-validation/simulation-evidence-ledger.json"), "utf8"));
+  const catalog = await readFile(path.join(PROJECT_ROOT, "apps/mobile/src/content/catalog.js"), "utf8");
+  const agents = await readFile(path.join(PROJECT_ROOT, "AGENTS.md"), "utf8");
+  const status = await readFile(path.join(root, "mvp-build-status.md"), "utf8");
+
+  assert.equal(matrix.status, "locked-qualitative-simulation-not-human-evidence");
+  assert.equal(matrix.cells.length, 48, "2 models × 4 conditions × 6 psychology gates must remain locked");
+  const expectedModels = new Set(["room-beacon", "private-relay"]);
+  const expectedConditions = new Set(matrix.conditions.map((condition) => condition.id));
+  const expectedGates = new Set(["salient-context-and-truth", "one-intended-commit", "dissent-before-consensus", "noise-and-memory-budget", "role-privacy-and-access-parity", "repair-without-shame"]);
+  const observed = new Set();
+  for (const cell of matrix.cells) {
+    assert.ok(expectedModels.has(cell.model), `unknown model ${cell.model}`);
+    assert.ok(expectedConditions.has(cell.condition), `unknown condition ${cell.condition}`);
+    assert.ok(expectedGates.has(cell.gate), `unknown gate ${cell.gate}`);
+    assert.match(cell.risk, /\S/);
+    assert.match(cell.safeConstraint, /\S/);
+    assert.match(cell.countermodelComparison, /\S/);
+    assert.equal(cell.limitation, "not human evidence");
+    observed.add(`${cell.model}/${cell.condition}/${cell.gate}`);
+  }
+  assert.equal(observed.size, 48, "each model/condition/gate cell must occur exactly once");
+  assert.equal(ledger.status, "simulation-backed-owner-decision");
+  assert.ok(ledger.evidenceClasses.every((item) => item.permittedConclusion && item.prohibitedConclusion));
+
+  for (const record of decision.evidenceRecords) {
+    const content = await readFile(path.join(PROJECT_ROOT, record.path), "utf8");
+    assert.equal(digest(content), record.sha256, `stale owner-decision evidence: ${record.path}`);
+  }
+  assert.ok(decision.scope.included.includes("apps/mobile/"));
+  assert.ok(decision.scope.excluded.includes("authentic playable public-figure cards"));
+  assert.match(agents, /not an MVP build blocker/);
+  assert.match(status, /What is not an MVP prerequisite/);
+  assert.match(catalog, /fixtureOnly: true/);
+  assert.equal(isPlayableCard({
+    publicFigure: true,
+    contentState: "authentic",
+    sourceRecord: { retained: false, url: "https://example.invalid/source" },
+    editorialApprovals: ["one"]
+  }), false, "an unapproved public-figure record must never be playable");
+
+  const artifactText = [
+    JSON.stringify(matrix),
+    JSON.stringify(ledger),
+    await readFile(path.join(root, "06-content-state-map.json"), "utf8"),
+    await readFile(path.join(root, "07-design-dna.json"), "utf8"),
+    await readFile(path.join(root, "proposal-spec.md"), "utf8"),
+    await readFile(path.join(root, "demo-spec.md"), "utf8")
+  ].join("\n");
+  assert.doesNotMatch(artifactText, /participants?\s+(said|reported|observed|completed|preferred)/i, "simulation drafts must not fabricate participant evidence");
+  assert.doesNotMatch(artifactText, /"signature"\s*:\s*"|"signedAt"\s*:/i, "simulation drafts must not create a signed review");
+  assert.doesNotMatch(artifactText, /release (is )?(ready|approved)/i, "simulation drafts must not weaken release evidence requirements");
 });
