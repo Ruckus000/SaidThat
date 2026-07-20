@@ -164,3 +164,22 @@ test("Cursor policy files preserve the required UX, trust, and gate instructions
   }
   assert.equal(environment.install, "npm ci --prefix tools/launchpad-designops --omit=dev --ignore-scripts");
 });
+
+test("AI tabletop human-psychology gates retain peer-reviewed provenance", async () => {
+  const gate = JSON.parse(await readFile(
+    path.join(PROJECT_ROOT, ".designops/05-direction-validation/ai-tabletop-simulation/human-psychology-gate.json"),
+    "utf8"
+  ));
+  const sources = new Map(gate.peerReviewedSources.map((source) => [source.id, source]));
+
+  assert.ok(sources.size >= 1, "human-psychology gate must register peer-reviewed sources");
+  for (const [id, source] of sources) {
+    assert.match(source.citation, /\S/, `source ${id} must have a citation`);
+    assert.match(source.doi, /^10\.\S+/, `source ${id} must have a DOI`);
+    assert.match(source.url, /^https:\/\//, `source ${id} must have a stable URL`);
+  }
+  for (const item of gate.gates) {
+    assert.ok(item.mechanismRefs.length >= 1, `simulation gate ${item.id} must name a peer-reviewed mechanism`);
+    for (const ref of item.mechanismRefs) assert.ok(sources.has(ref), `simulation gate ${item.id} references unknown source ${ref}`);
+  }
+});

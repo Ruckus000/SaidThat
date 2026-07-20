@@ -8,6 +8,7 @@
 - The editorial owner approves the fixture's actual study cards and confirms the two-person review path.
 - The research lead freezes the small/large iOS/Android devices, primary/stress distances and angles, platform text size, lighting/noise conditions, and capture procedure in `shared-content.json`.
 - The accessibility lead confirms recruitment and facilitation for participants who regularly use screen readers or non-motion controls, including VoiceOver and TalkBack coverage.
+- The facilitator reviews the [AI tabletop simulation](ai-tabletop-simulation/README.md) and its [human-psychology gate](ai-tabletop-simulation/human-psychology-gate.json) as a hypothesis checklist; it may refine probes but can never be recorded as participant evidence.
 - The independent reviewer verifies this exact plan and signs it with the external private key. The private key must not enter the workspace.
 
 ## Recruitment and session structure
@@ -22,8 +23,9 @@ Record one anonymized session ID per group in `results.json`. Keep individual co
 2. Run the candidate's unaided-start scenario.
 3. Run readability, control-recovery, and access scenarios from the frozen prototype.
 4. Present all required review, reporting, offline, removal, and capture conditions.
-5. Ask participants to explain state meaning and their next safe action in their own words.
-6. Record structured outcomes against the signed kill criteria immediately after the session.
+5. Use the human-psychology prompts to observe dissent, cue salience, one-intended-commit, noise/memory, access parity, and non-shaming recovery without steering a preferred answer.
+6. Ask participants to explain state meaning and their next safe action in their own words.
+7. Record structured outcomes against the signed kill criteria immediately after the session.
 
 ## Stop rules
 
