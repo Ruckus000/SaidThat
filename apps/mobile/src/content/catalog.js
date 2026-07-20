@@ -3,7 +3,7 @@
  * public-figure attribution. Release content must come from the editorial
  * pipeline and satisfy isPlayableCard() without allowLocalFixtures.
  */
-export const DECK_VERSION = "0.1.0-local-fixture";
+export const DECK_VERSION = "0.2.0-local-fixture";
 
 export const catalog = [
   {
@@ -37,6 +37,33 @@ export const catalog = [
     id: "fixture-jonah-04",
     quote: "My secret talent is finding the one squeaky floorboard in every room.",
     person: "Jonah Pike",
+    authentic: true,
+    contentState: "fixture-authentic",
+    fixtureOnly: true,
+    explanation: "Simulated-authentic development fixture. It is not a public-figure claim or a source-verified production card.",
+  },
+  {
+    id: "fixture-mira-05",
+    quote: "I write my to-do list in rhymes so procrastination feels poetic.",
+    person: "Mira Holt",
+    authentic: false,
+    contentState: "fabricated-for-game",
+    fixtureOnly: true,
+    explanation: "Fabricated for this local development game fixture.",
+  },
+  {
+    id: "fixture-cole-06",
+    quote: "I rehearse handshakes in mirrors and still miss every time.",
+    person: "Cole Wynn",
+    authentic: false,
+    contentState: "fabricated-for-game",
+    fixtureOnly: true,
+    explanation: "Fabricated for this local development game fixture.",
+  },
+  {
+    id: "fixture-ember-07",
+    quote: "I keep a spreadsheet ranking every snack by crunch volume.",
+    person: "Ember Lane",
     authentic: true,
     contentState: "fixture-authentic",
     fixtureOnly: true,
