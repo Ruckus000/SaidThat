@@ -5,6 +5,7 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",
     "expo": "~57.0.7",
+    "expo-sensors": "~57.0.2",
     "expo-status-bar": "~57.0.1",
     "react": "19.2.3",
     "react-native": "0.86.0"
@@ -19,7 +20,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-default-type=module --test src/domain/game.test.mjs src/components/uiState.test.mjs"
+    "test": "node --experimental-default-type=module --test src/domain/game.test.mjs src/components/uiState.test.mjs src/sensors/roomBeaconMotion.test.mjs"
   },
   "private": true
 }
