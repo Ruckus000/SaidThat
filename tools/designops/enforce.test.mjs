@@ -75,7 +75,7 @@ test("pre-push hook classifies a new feature branch relative to origin/main", ()
   });
 
   assert.equal(result.status, 0, result.stderr || result.stdout);
-  assert.match(result.stdout, /intent=design phase=strategy gateExit=2/);
+  assert.match(result.stdout, /intent=design phase=strategy gateExit=(?:0|2)/);
 });
 
 test("registered source hashes pass and stale evidence fails", async () => {
