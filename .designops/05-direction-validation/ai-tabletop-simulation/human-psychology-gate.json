@@ -1,0 +1,104 @@
+{
+  "schemaVersion": "0.1",
+  "status": "simulation-only-not-direction-evidence",
+  "purpose": "Constrain an AI tabletop role-play with peer-reviewed behavioral mechanisms and turn those mechanisms into observable human-study risks. No source proves product performance or replaces participant evidence.",
+  "evidencePolicy": {
+    "minimum": "Every simulation behavior assumption must cite at least one peer-reviewed source below.",
+    "interpretation": "Sources support mechanisms and study design only. Product-specific outcomes remain unverified assumptions until recorded in the signed independent study.",
+    "alcoholSafety": "Model alcohol as a variable cognitive-load condition only. Do not encourage drinking, administer alcohol, or infer impairment from identity or appearance."
+  },
+  "peerReviewedSources": [
+    {
+      "id": "acute-response-inhibition-meta-analysis",
+      "citation": "McPhee, M. D., & Hendershot, C. S. (2023). Meta-analysis of acute alcohol effects on response inhibition. Neuroscience & Biobehavioral Reviews, 152, 105274.",
+      "doi": "10.1016/j.neubiorev.2023.105274",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/37277010/",
+      "supports": "Acute alcohol exposure has a pooled detrimental effect on response inhibition in laboratory Go/No-Go and Stop-Signal studies; effect magnitude and moderators vary."
+    },
+    {
+      "id": "alcohol-myopia-review",
+      "citation": "Steele, C. M., & Josephs, R. A. (1990). Alcohol myopia: Its prized and dangerous effects. American Psychologist, 45(8), 921–933.",
+      "doi": "10.1037/0003-066X.45.8.921",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/2221564/",
+      "supports": "Alcohol-myopia theory frames acute alcohol effects as narrowed attention to salient cues; it does not license a deterministic prediction about any individual."
+    },
+    {
+      "id": "conformity-meta-analysis",
+      "citation": "Bond, R., & Smith, P. B. (1996). Culture and conformity: A meta-analysis of studies using Asch's line judgment task. Psychological Bulletin, 119(1), 111–137.",
+      "doi": "10.1037/0033-2909.119.1.111",
+      "url": "https://doi.org/10.1037/0033-2909.119.1.111",
+      "supports": "Conformity effects have been studied across many Asch-type experiments and vary by context and culture; a loud first answer is a study risk, not an assumed group outcome."
+    },
+    {
+      "id": "public-private-conformity-study",
+      "citation": "Sowden, S., et al. (2018). Quantifying compliance and acceptance through public and private social conformity. Consciousness and Cognition, 65, 359–367.",
+      "doi": "10.1016/j.concog.2018.08.009",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/30219289/",
+      "supports": "Public compliance and private acceptance are distinct social-influence phenomena, motivating a comparison between a shared group commit and a private relay commit."
+    },
+    {
+      "id": "listening-effort-review",
+      "citation": "Peelle, J. E. (2018). Listening effort: How the cognitive consequences of acoustic challenge are reflected in brain and behavior. Ear and Hearing, 39(2), 204–214.",
+      "doi": "10.1097/AUD.0000000000000494",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/28938250/",
+      "supports": "Acoustically degraded speech can impose cognitive demand and interfere with other operations; it motivates high-noise readability and comprehension tests, not a universal failure prediction."
+    },
+    {
+      "id": "social-information-integration-study",
+      "citation": "Granovskiy, B., Gold, J. M., Sumpter, D. J. T., & Goldstone, R. L. (2015). Integration of Social Information by Human Groups. Topics in Cognitive Science, 7(3), 469–493.",
+      "doi": "10.1111/tops.12150",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/26189568/",
+      "supports": "Social information can shift individual judgments, with heterogeneous susceptibility; this supports observing dissent and turn-taking rather than declaring consensus inherently good or bad."
+    }
+  ],
+  "gates": [
+    {
+      "id": "salient-context-and-truth",
+      "mechanismRefs": ["alcohol-myopia-review"],
+      "risk": "A salient quote, attribution, timer, or loud group reaction can eclipse game context or completed truth meaning.",
+      "simulationPrompt": "Can every role state the game context before reveal and the complete truth status after reveal when attention is deliberately divided?",
+      "humanStudyEvidence": "Individual explanation of authentic, fabricated-for-game, disputed, source-unavailable, and removed states; screenshot, recording, photograph, and reasonable-crop inspection.",
+      "failClosedRule": "Any real participant truth or game-context misunderstanding remains a stop signal under the signed plan."
+    },
+    {
+      "id": "one-intended-commit",
+      "mechanismRefs": ["acute-response-inhibition-meta-analysis"],
+      "risk": "Fast movement, a prepotent response, or fragmented attention can produce accidental or duplicate answers.",
+      "simulationPrompt": "Does each candidate make readiness, the current control, and recovery visible without exposing the forehead card or changing score semantics?",
+      "humanStudyEvidence": "Accidental commits, duplicate commits, fallback use, and unrecovered selected-path failures by condition and access path.",
+      "failClosedRule": "Two unrecovered selected-direction path failures remain a stop signal under the signed plan."
+    },
+    {
+      "id": "dissent-before-consensus",
+      "mechanismRefs": ["conformity-meta-analysis", "public-private-conformity-study", "social-information-integration-study"],
+      "risk": "A loud or early speaker can suppress disagreement, especially when the holder is blind and must act on group guidance.",
+      "simulationPrompt": "Can a quiet dissenting role contribute before a shared commit, and does the private countermodel change the pressure pattern rather than merely hide it?",
+      "humanStudyEvidence": "Facilitator observation of who speaks before commit, whether disagreement is acknowledged, and whether participants can explain who is entitled to commit.",
+      "failClosedRule": "Do not treat speed, shouting, peer pressure, or alcohol as product success metrics."
+    },
+    {
+      "id": "noise-and-memory-budget",
+      "mechanismRefs": ["listening-effort-review"],
+      "risk": "Noise and divided attention can make a statement seem readable while degrading comprehension, role memory, and next-action recall.",
+      "simulationPrompt": "Do maximum-length text, attribution, role instruction, recovery copy, and truth labels remain understandable when social audio competes for attention?",
+      "humanStudyEvidence": "Correct first-read, role recall, state explanation, and recovery completion at frozen distance, angle, light, and noise conditions.",
+      "failClosedRule": "Never use subjective confidence alone as proof of comprehension."
+    },
+    {
+      "id": "role-privacy-and-access-parity",
+      "mechanismRefs": ["acute-response-inhibition-meta-analysis", "public-private-conformity-study"],
+      "risk": "Fast social transitions can leak the forehead card, prior result, or turn ownership; a nominal tap or screen-reader alternative can become socially second-class.",
+      "simulationPrompt": "Can every role complete the same score, review, report, and rematch semantics through tap-only, no-motion, VoiceOver, and TalkBack paths without protected-information leakage?",
+      "humanStudyEvidence": "Role-specific task completion and privacy checks with participants who regularly use the relevant access paths.",
+      "failClosedRule": "Any accessibility route that leaks the active forehead card or cannot complete the role-appropriate round blocks approval."
+    },
+    {
+      "id": "repair-without-shame",
+      "mechanismRefs": ["conformity-meta-analysis", "acute-response-inhibition-meta-analysis"],
+      "risk": "A confusing misfire can turn into blame, social pressure, or a perceived unfair score rather than a recoverable moment.",
+      "simulationPrompt": "Does recovery use plain, neutral language, preserve round context, and avoid an unsafe undo that changes the truth or score record?",
+      "humanStudyEvidence": "Observed recovery after sensor, interruption, orientation, offline report, and protected-handoff states; participant explanation of the next safe action.",
+      "failClosedRule": "A recovery path may not silently reinterpret a tilt, expose a protected card, or claim a queued report was adjudicated."
+    }
+  ]
+}
