@@ -23,7 +23,23 @@ No trace is a claim that people will behave this way. It is a structured way to 
 | Recovery | Blind tilt/tap creates a meaningful duplicate-commit risk; feedback must be useful to holder and group without leaking the card. | Direct tap reduces ambiguous movement but shifts risk to premature handoff and exposed prior result. | One-commit reliability, fallback comprehension, protected handoff. |
 | Rematch | Shared spectacle may create stronger collective momentum if it remains legible. | Orderly turns may improve fairness but need a shared result payoff to avoid feeling like solo trivia. | Rematch choice and stated reason, never an AI-predicted rate. |
 
-## Trace B — alcohol-affected, high noise/distraction
+## Trace B — sober, high noise/distraction
+
+| Pressure point | Room Beacon hypothesis | Private Relay hypothesis | Must test with people |
+|---|---|---|---|
+| Shared comprehension | Screen reading may remain possible while spoken consensus, role feedback, and full attribution compete with ambient conversation. | Private reading protects the active player’s comprehension, but the group has fewer shared cues and can drift into side conversation. | Correct first-read, role recall, and post-round explanation at frozen noise, distance, and lighting conditions. |
+| Social participation | A loud group can create energy but blur whose guidance the blind holder should follow. | Sequential turns limit talk-over during the decision but can leave waiting players disengaged. | Participation distribution, commit authority, and whether dissent is heard before answer. |
+| Recovery | Audio instructions are unreliable as a primary recovery channel; visual readiness and a blind-safe tap fallback must stand alone. | Labeled tap controls remain usable without audio, but handoff and next-player state need clear visual and assistive-technology cues. | Recovery without audio, accidental/duplicate commits, and protected-handoff comprehension. |
+
+## Trace C — alcohol-affected, ordinary party distraction
+
+| Pressure point | Room Beacon hypothesis | Private Relay hypothesis | Must test with people |
+|---|---|---|---|
+| Cue salience | The shared quote, timer, and group reaction can dominate attention, making contextual and recovery language easier to miss unless equally prominent. | The active player has fewer simultaneous cues, but may skip a role or privacy instruction when eager to continue. | Game-context and completed-truth explanations, plus readiness and recovery comprehension. |
+| One intended answer | Grip changes and exaggerated tilt can make neutral return and debouncing essential; the blind tap path must remain equally scored and socially valid. | A direct tap reduces motion ambiguity but can still be premature; the commit boundary must be unambiguous without punitive undo. | Misfire, duplicate, fallback, and unrecovered-path observations by candidate. |
+| Handoff and privacy | A large visible result can linger long enough to spoil the next player if the transition is not protected. | The shutter better fits the model, but an impatient pass can bypass its meaning if the state is not unmistakable. | Prior-card/result leakage, next-actor understanding, and focus restoration. |
+
+## Trace D — alcohol-affected, high noise/distraction
 
 | Pressure point | Room Beacon hypothesis | Private Relay hypothesis | Must test with people |
 |---|---|---|---|
