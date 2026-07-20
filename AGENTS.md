@@ -59,3 +59,9 @@ This private repository's current GitHub plan cannot enforce a ruleset or protec
 The repository-owned enforcement command, signed reviews, and installed local Git hooks are the authoritative local controls. GitHub Actions reports the DesignOps result, and CODEOWNERS routes review requests, but neither is a remote merge or push gate today. Use feature branches and pull requests, inspect the DesignOps workflow result before merging, and never treat a green workflow as proof that GitHub enforced the merge path.
 
 If this repository later gains an eligible GitHub plan, configure and activate branch protection before describing remote enforcement as active. Cursor rules and commands provide context; they do not replace local gates.
+
+## Mandatory pre-merge review
+
+Every pull request headed to `main` requires an evidence-based **code review and security review** before merge, even when GitHub does not technically require it. The reviewer must inspect the diff against `main`, run the smallest relevant tests and DesignOps range check, assess correctness, maintainability, integration impact, secrets/data exposure, authorization, and unsafe defaults, and resolve or explicitly accept every finding in the PR.
+
+Do not merge on a green workflow alone. The required sequence is: local hooks and DesignOps check → GitHub `DesignOps policy / enforce` pass → code/security review → human merge decision. This is an operating requirement; it remains manual until GitHub-side branch protection becomes available.

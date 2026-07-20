@@ -14,9 +14,9 @@
     "gates": {
       "strategy": {
         "status": "review-required",
-        "approvalDigest": "sha256:2608aba74ce0c5c3ace51f9ae3ecc39f95dbaa55d5e5d6a9c92ff92ce425b649",
-        "runId": "gate-mrsi6wvm-40524",
-        "updatedAt": "2026-07-20T00:45:41.938Z"
+        "approvalDigest": "sha256:65711ff661ea85b4a70214838fb0015647d1ebf515b02a827ba06854561fb229",
+        "runId": "gate-mrsit7sk-85900",
+        "updatedAt": "2026-07-20T01:03:02.514Z"
       }
     }
   },

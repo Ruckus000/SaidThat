@@ -11,6 +11,16 @@
       "sha256": "62fadf0e172ed0f6403fbb314c9ca23f699b8944ff740cceee54c7f9419f4cc7"
     },
     {
+      "id": "ux-ui-plan",
+      "title": "Comprehensive UX/UI Plan",
+      "type": "document",
+      "locator": ".designops/00-ux-ui-plan.md",
+      "status": "verified",
+      "confidence": "high",
+      "criticality": "critical",
+      "sha256": "51ca3efc183f3ecf065bebec5575d8b917968f7298d8110583538d96f0cd6950"
+    },
+    {
       "id": "master-plan",
       "title": "Full Product Plan",
       "type": "document",
@@ -190,26 +200,26 @@
     },
     {
       "id": "forehead-holder",
-      "description": "The player holding the phone outward who must understand and operate the round without seeing the active card.",
-      "evidenceRefs": ["source:product-brief", "source:gameplay-spec", "source:ux-spec"],
+      "description": "The player holding the phone outward who cannot perceive the active card, makes the single physical tilt-or-tap commit, and contributes to the group result without individual score ownership.",
+      "evidenceRefs": ["source:product-brief", "source:gameplay-spec", "source:ux-spec", "source:ux-ui-plan"],
       "priority": "primary"
     },
     {
       "id": "screen-facing-group",
-      "description": "The friends who can see the active statement, read it at party distance, and participate in the social judgment ritual.",
-      "evidenceRefs": ["source:product-brief", "source:gameplay-spec", "source:ux-spec"],
+      "description": "The friends who see and read the active statement, discuss and relay the collective judgment, and share the forehead-mode group result.",
+      "evidenceRefs": ["source:product-brief", "source:gameplay-spec", "source:ux-spec", "source:ux-ui-plan"],
       "priority": "primary"
     },
     {
       "id": "pass-play-player",
-      "description": "The current local player or team member who answers, receives a score, and hands the device to the next participant.",
-      "evidenceRefs": ["source:product-brief", "source:gameplay-spec"],
+      "description": "The current local player or team member who privately sees and commits an answer, owns the player or team score, and hands off without exposing prior content or outcome.",
+      "evidenceRefs": ["source:product-brief", "source:gameplay-spec", "source:ux-ui-plan"],
       "priority": "primary"
     },
     {
       "id": "accessible-player",
-      "description": "A participant who requires tap-only, no-motion, screen-reader, reduced-motion, color-independent, no-audio, or no-haptic play.",
-      "evidenceRefs": ["source:ux-spec", "source:gameplay-spec", "source:testing-strategy"],
+      "description": "A participant who requires tap-only, no-motion, screen-reader, reduced-motion, color-independent, no-audio, or no-haptic play while retaining role, privacy, score, answer, and truth-review semantics.",
+      "evidenceRefs": ["source:ux-spec", "source:gameplay-spec", "source:testing-strategy", "source:ux-ui-plan"],
       "priority": "primary"
     },
     {
@@ -228,14 +238,14 @@
     },
     {
       "id": "understand-role",
-      "description": "Know who can see the content, who answers, which control is active, and what happens next.",
-      "evidenceRefs": ["source:gameplay-spec", "source:ux-spec", "user:forehead-holder", "user:screen-facing-group"],
+      "description": "Know who can perceive the content, who may commit an answer, whose score changes, which control is active, what remains private, and what happens next.",
+      "evidenceRefs": ["source:gameplay-spec", "source:ux-spec", "source:ux-ui-plan", "user:forehead-holder", "user:screen-facing-group"],
       "priority": "primary"
     },
     {
       "id": "judge-card",
-      "description": "Read or hear an attributed statement, discuss it socially, and register exactly one intended authentic-or-fabricated guess under time pressure.",
-      "evidenceRefs": ["source:gameplay-spec", "user:screen-facing-group", "user:pass-play-player", "user:accessible-player"],
+      "description": "Perceive or receive an attributed statement according to the active role, discuss when social play applies, and register exactly one intended authentic-or-fabricated guess without leaking protected card information.",
+      "evidenceRefs": ["source:gameplay-spec", "source:ux-ui-plan", "user:screen-facing-group", "user:pass-play-player", "user:accessible-player"],
       "priority": "primary"
     },
     {
@@ -272,7 +282,7 @@
   "claims": [
     {
       "id": "planning-only",
-      "text": "The repository currently contains planning documents and no application code.",
+      "text": "The repository contains planning documents and an early Expo/React Native scaffold under apps/mobile; its expansion remains blocked until the signed implementation gate permits it.",
       "status": "verified",
       "sourceRefs": ["source:readme"],
       "approvedUsage": ["proposalSpec"]
@@ -321,7 +331,7 @@
     },
     {
       "id": "planned-mobile-stack",
-      "text": "The planned mobile implementation uses Expo and React Native with TypeScript, but no implementation manifest or styling system exists yet.",
+      "text": "The mobile scaffold uses Expo and React Native with TypeScript, but no qualified LaunchPad browser lane or approved styling system exists yet.",
       "status": "stakeholder",
       "sourceRefs": ["source:readme", "source:architecture", "source:decision-log"],
       "approvedUsage": ["proposalSpec"]
@@ -337,10 +347,10 @@
       "affectedDecisions": ["primary-task", "interaction-model"],
       "validation": {
         "requiredAt": "direction",
-        "hypothesis": "Representative groups will prefer or clearly value the forehead version over an otherwise equivalent tap countermodel without a material increase in unrecovered task failure.",
+        "hypothesis": "At least four of six representative group sessions will identify compensating social value in forehead play over the equivalent tap countermodel without a material increase in unrecovered task failure.",
         "killCriteria": [
-          "More than one of five moderated sessions has an unrecovered forehead-path failure that does not occur in the tap countermodel.",
-          "A majority of moderated groups prefer the tap countermodel and cannot identify compensating social value in forehead play."
+          "More than one of six moderated group sessions has an unrecovered forehead-path failure that does not occur in the tap countermodel.",
+          "A majority of moderated group sessions prefer the tap countermodel and cannot identify compensating social value in forehead play."
         ]
       }
     },
@@ -353,10 +363,10 @@
       "affectedDecisions": ["primary-task", "interaction-model"],
       "validation": {
         "requiredAt": "direction",
-        "hypothesis": "At least four of five moderated sessions will reach a valid first answer without moderator instruction beyond the prepared study prompt.",
+        "hypothesis": "At least five of six moderated group sessions will reach a valid first answer without moderator instruction beyond the prepared study prompt.",
         "killCriteria": [
-          "Two or more of five sessions require moderator explanation to identify who sees the card or how the active player answers.",
-          "Any repeated setup step causes two or more sessions to abandon or restart before the first valid answer."
+          "Two or more of six group sessions require moderator explanation to identify who sees the card, who may answer, or how the active player commits.",
+          "Any repeated setup step causes two or more group sessions to abandon or restart before the first valid answer."
         ]
       }
     },
@@ -369,10 +379,10 @@
       "affectedDecisions": ["safety", "trust", "content-structure"],
       "validation": {
         "requiredAt": "direction",
-        "hypothesis": "After review, at least four of five participants will correctly explain whether each tested card was authentic, fabricated for the game, disputed, or unavailable without relying on color alone.",
+        "hypothesis": "After review, at least 80 percent of participating individuals will correctly explain each tested authentic, fabricated-for-game, disputed, source-unavailable, and removed state without relying on color alone.",
         "killCriteria": [
-          "Two or more of five participants describe a tested fabricated card as verified or real after seeing its completed reveal state.",
-          "A proposed share or review treatment allows a fabricated attribution to be captured without its game-fabrication meaning remaining explicit."
+          "More than 20 percent of participating individuals describe a tested fabricated card as verified or real after its completed reveal state.",
+          "Any active pre-reveal, review, or share capture permits a fabricated attribution to appear without its game-round context or its completed fabrication meaning, as applicable."
         ]
       }
     },
@@ -385,9 +395,9 @@
       "affectedDecisions": ["primary-task", "content-structure", "representative-content"],
       "validation": {
         "requiredAt": "direction",
-        "hypothesis": "At least four of five moderated groups will correctly read representative short, median, and maximum-length cards at the predeclared test distance and lighting before the decision window expires.",
+        "hypothesis": "At least five of six moderated group sessions will correctly read representative short, median, and maximum-length cards at the predeclared test distance and lighting before the selected decision window expires.",
         "killCriteria": [
-          "Two or more of five groups cannot correctly read a median-length card at the predeclared distance and lighting.",
+          "Two or more of six group sessions cannot correctly read a median-length card at the predeclared distance and lighting.",
           "Any territory requires hiding attribution, truth status, or a critical control to fit representative maximum-length content."
         ]
       }
@@ -401,10 +411,10 @@
       "affectedDecisions": ["primary-task", "interaction-model"],
       "validation": {
         "requiredAt": "direction",
-        "hypothesis": "Participants using the non-motion path will complete setup, a full round, results, and review without missing truth information or receiving different scoring semantics.",
+        "hypothesis": "Participants who regularly use screen readers or non-motion controls will complete their role-appropriate setup, full round, results, and review without leaked forehead-card information, missing truth information, or different scoring semantics.",
         "killCriteria": [
-          "Any required non-motion or screen-reader path cannot complete the same round, result, and truth-review sequence as the default path.",
-          "Two or more moderated sessions require sighted or motion-capable assistance for a primary task that is designated as accessible."
+          "Any required non-motion or screen-reader path cannot complete the same role-appropriate round, result, and truth-review sequence as the default path.",
+          "Any forehead-holder screen-reader path exposes the active statement before review, or any accessible participant requires sighted or motion-capable assistance for a designated primary task."
         ]
       }
     },
@@ -432,10 +442,27 @@
       "risk": "medium",
       "affectedDecisions": ["visual-expression", "representative-content"],
       "validation": {
-        "requiredAt": "none",
-        "hypothesis": "Observed Phase 0 groups in the proposed launch segment will complete and rematch at the stakeholder-defined thresholds.",
+        "requiredAt": "direction",
+        "hypothesis": "Observed Phase 0 groups in the proposed launch segment will complete and rematch at the stakeholder-defined thresholds, yielding a recorded product-owner go/no-go decision before direction approval.",
         "killCriteria": [
-          "Observed Phase 0 behavior does not meet the stakeholder-defined completion and rematch thresholds for the proposed segment."
+          "Observed Phase 0 behavior does not meet the stakeholder-defined completion and rematch thresholds for the proposed segment.",
+          "No product-owner go/no-go decision is recorded against the predeclared Phase 0 protocol and segment."
+        ]
+      }
+    },
+    {
+      "id": "capture-safe-ambiguity",
+      "description": "A persistent, content-neutral game-round marker can keep every pre-reveal state recognizable as play when captured without revealing authenticity.",
+      "sourceRefs": ["source:ux-ui-plan", "source:legal-risks", "task:understand-reveal"],
+      "confidence": "low",
+      "risk": "critical",
+      "affectedDecisions": ["safety", "trust", "content-structure"],
+      "validation": {
+        "requiredAt": "direction",
+        "hypothesis": "All ordinary screenshots, recordings, and photographs of tested active pre-reveal states will retain the game-round context marker while revealing no authenticity outcome or source-authority cue.",
+        "killCriteria": [
+          "Any tested active pre-reveal capture can be reasonably read as an authentic public statement because it lacks a game-round context marker.",
+          "Any proposed context marker discloses authenticity, source status, or editorial confidence before the answer."
         ]
       }
     }
@@ -485,10 +512,24 @@
     },
     {
       "id": "test-distance",
-      "description": "The representative viewing distance, lighting, angle, device-size matrix, and content-length fixtures have not been predeclared.",
+      "description": "The representative viewing distance, lighting, angle, device-size matrix, capture conditions, and content/state fixture have not been frozen for comparison.",
       "risk": "high",
       "blocking": false,
-      "rationale": "Territory generation may wait for strategy review, and the independent direction-validation plan must bind these conditions before sessions."
+      "rationale": "Territory generation may wait for strategy review, and the independent direction-validation plan must freeze these conditions before sessions so territories are compared on the same task and state pressure."
+    },
+    {
+      "id": "accessible-recruitment",
+      "description": "No participant recruitment plan commits to people who regularly use screen readers or non-motion controls.",
+      "risk": "high",
+      "blocking": false,
+      "rationale": "Direction approval requires participant evidence for the role-specific screen-reader and non-motion paths; an evaluator-only script cannot clear the accessibility-equivalence assumption."
+    },
+    {
+      "id": "research-owners",
+      "description": "The named product, research, accessibility, and editorial decision owners have not yet accepted their study responsibilities.",
+      "risk": "high",
+      "blocking": false,
+      "rationale": "Direction validation cannot begin until the product owner, research lead, accessibility lead, and editorial owner are recorded against the predeclared protocol and fixture."
     }
   ],
   "deliverables": [
@@ -531,17 +572,17 @@
     },
     {
       "id": "truth-comprehension",
-      "description": "The direction must make authentic, fabricated, disputed, removed, and source-unavailable meanings explicit after the guess without relying on color or platform imitation.",
+      "description": "The direction must make authentic, fabricated, disputed, removed, and source-unavailable meanings explicit after the guess without relying on color or platform imitation, and must retain content-neutral game context before the guess.",
       "kind": "hard",
-      "evidenceRefs": ["task:understand-reveal", "assumption:truth-recovery", "claim:truth-label-required"],
-      "measurement": "Ask participants to explain each completed truth state in their own words and inspect review/share captures for detached false-attribution risk."
+      "evidenceRefs": ["task:understand-reveal", "assumption:truth-recovery", "assumption:capture-safe-ambiguity", "claim:truth-label-required"],
+      "measurement": "Ask individual participants to explain each completed truth state in their own words and inspect ordinary pre-reveal, review, and share captures for detached false-attribution risk."
     },
     {
       "id": "accessible-equivalence",
-      "description": "The direction must support the same primary round, result, review, and report outcomes through tap-only and screen-reader-compatible paths.",
+      "description": "The direction must support role-appropriate primary-round, result, review, and report outcomes through tap-only and screen-reader-compatible paths without breaking forehead-card privacy.",
       "kind": "hard",
-      "evidenceRefs": ["task:judge-card", "task:understand-reveal", "task:recover-control", "assumption:accessible-equivalence"],
-      "measurement": "Run the same critical-task script through motion, tap-only, VoiceOver, and TalkBack paths and compare completion, information, scoring, and recovery semantics."
+      "evidenceRefs": ["task:judge-card", "task:understand-reveal", "task:recover-control", "assumption:accessible-equivalence", "unknown:accessible-recruitment"],
+      "measurement": "Run role-specific critical-task scripts with participants who regularly use screen readers or non-motion controls through motion, tap-only, VoiceOver, and TalkBack paths; compare completion, privacy, information, scoring, timing choice, and recovery semantics."
     },
     {
       "id": "party-tempo",
@@ -562,7 +603,7 @@
       "description": "The direction must explain playable, offline, loading, corrupt, interrupted, sensor-failed, disputed, removed, queued-report, and recovery conditions without dead ends.",
       "kind": "hard",
       "evidenceRefs": ["task:recover-control", "task:report-content", "claim:offline-required"],
-      "measurement": "Walk every registered non-normal state through an executable recovery path and fail any territory that loses round context or blocks available offline play."
+      "measurement": "Walk the frozen fixture's non-normal states through an executable recovery path and fail any territory that loses round context, blocks available offline play, leaks a protected handoff, or lets disputed, source-unavailable, or removed content remain a binary playable claim."
     },
     {
       "id": "implementation-feasibility",
@@ -577,6 +618,13 @@
       "kind": "hard",
       "evidenceRefs": ["task:operate-content", "assumption:editorial-readiness", "unknown:editorial-owner"],
       "measurement": "Pressure-test the same representative content set and operational states, then require editorial review of preview accuracy, source meaning, and removal behavior."
+    },
+    {
+      "id": "data-minimization",
+      "description": "The direction must make local debug logging, future analytics, and queued reporting compatible with the documented data-minimization and privacy contract.",
+      "kind": "hard",
+      "evidenceRefs": ["source:security-moderation", "source:ux-ui-plan", "task:report-content"],
+      "measurement": "Inspect the fixture's report, offline, error, and settings paths to confirm raw motion, statement content, identities, source URLs, transcripts, and free text are absent by default, while a queued report retains only the documented operational fields."
     }
   ]
 }
