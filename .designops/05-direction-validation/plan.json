@@ -1,0 +1,91 @@
+{
+  "schemaVersion": "0.2",
+  "researchMode": "independent-study",
+  "source": "explicit-user-attestation",
+  "selectedId": "room-beacon",
+  "territoryDigest": "sha256:168c74c1945faa0af0a37791da72ee97333c4b539039072fe592e0f38a1c2e56",
+  "assumptionRefs": [
+    "assumption:forehead-social-value",
+    "assumption:unaided-start",
+    "assumption:truth-recovery",
+    "assumption:distance-readability",
+    "assumption:accessible-equivalence",
+    "assumption:editorial-readiness",
+    "assumption:capture-safe-ambiguity"
+  ],
+  "sharedContentPath": "05-direction-validation/shared-content.json",
+  "sharedContentDigest": "sha256:22eecd0aca157fdecc09bb0347077ed8e75ae2d8898ce126ed7a5f5b9aa1d193",
+  "candidates": [
+    {
+      "id": "room-beacon",
+      "role": "selected",
+      "name": "Room Beacon",
+      "model": "A forehead-first, group-visible shared board with one holder commit, an equal blind tap path, explicit sensor recovery, and a separate truth-review panel.",
+      "prototypePath": "05-direction-validation/room-beacon-prototype.md",
+      "prototypeDigest": "sha256:cd6046462577ec213eb7a843a3cf2be30b722ab0d07d439a3a53ed53aaaca0ea",
+      "contentDigest": "sha256:22eecd0aca157fdecc09bb0347077ed8e75ae2d8898ce126ed7a5f5b9aa1d193"
+    },
+    {
+      "id": "private-relay",
+      "role": "countermodel",
+      "name": "Private Relay",
+      "model": "A tap-first, role-explicit private relay with protected handoff, predictable recovery, and the same score and truth-review semantics as the selected direction.",
+      "prototypePath": "05-direction-validation/private-relay-prototype.md",
+      "prototypeDigest": "sha256:df4822fed9d3ce71e51fcbea91dfd393149a601e4d62d617055725d26bcd7645",
+      "contentDigest": "sha256:22eecd0aca157fdecc09bb0347077ed8e75ae2d8898ce126ed7a5f5b9aa1d193"
+    }
+  ],
+  "protocol": {
+    "sessionTarget": 6,
+    "sessionKind": "moderated-participant",
+    "sessionProfile": "Six moderated proposed friend-group sessions, including role-appropriate screen-reader and non-motion participant evidence; exact owners, devices, conditions, and approved cards must be frozen before signing.",
+    "scenarios": [
+      {
+        "id": "unaided-first-answer",
+        "description": "Using the prepared neutral prompt and median-length fixture card, the group identifies roles and reaches one valid answer without moderator explanation.",
+        "successCriteria": "The group reaches one intended answer with no role, control, score, or privacy misunderstanding and without an avoidable restart."
+      },
+      {
+        "id": "readability-and-recovery",
+        "description": "The group reads short, median, and maximum-length fixture cards across frozen viewing conditions, then recovers from a sensor, interruption, or orientation failure.",
+        "successCriteria": "Statement, attribution, context, and essential controls remain understandable; recovery records one intended answer without duplicate commit or card disclosure."
+      },
+      {
+        "id": "truth-capture-and-access",
+        "description": "Participants explain completed truth states, inspect reasonable captures, and complete the frozen tap-only, screen-reader, no-motion, offline, report, and protected-handoff paths.",
+        "successCriteria": "Truth and game context are explained correctly, pre-reveal captures do not imply authenticity, and every role-appropriate access path preserves task, score, review, and privacy semantics."
+      }
+    ],
+    "measures": [
+      "path-recognition",
+      "task-completion",
+      "recovery",
+      "eligibility-comprehension",
+      "safe-next-action",
+      "trust"
+    ],
+    "counterbalance": "difference-at-most-one"
+  },
+  "killCriteria": [
+    {
+      "id": "truth-or-context-misunderstood",
+      "type": "eligibility-misunderstanding",
+      "threshold": 1,
+      "observationPrompt": "Did any participant misstate completed truth meaning or treat a pre-reveal capture as an authentic public statement rather than a game round?",
+      "rationale": "One truth or context misunderstanding can create false-attribution harm, so the selected direction must stop rather than normalize the risk."
+    },
+    {
+      "id": "unrecovered-selected-path-failure",
+      "type": "unrecovered-path-failure",
+      "threshold": 2,
+      "observationPrompt": "Did the selected candidate fail a role-appropriate primary path without recovery, including setup, commit, accessibility, review, report, or protected handoff?",
+      "rationale": "Two unrecovered selected-direction failures show a repeated structural problem rather than an isolated facilitation or device anomaly."
+    }
+  ],
+  "limitations": [
+    "This plan is unsigned and may not be used for participant sessions until an independent reviewer signs the unchanged file with the external private key.",
+    "The shared fixture still requires accountable editorial approval of actual study cards and research-lead freezing of devices, distances, environment, and capture procedure.",
+    "Six formative group sessions can expose severe risks and compare the two models but cannot establish population-level effectiveness or legal clearance."
+  ],
+  "createdAt": "2026-07-20T01:57:52Z"
+}
