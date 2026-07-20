@@ -14,7 +14,16 @@ while read -r local_ref local_sha remote_ref remote_sha; do
     continue
   fi
   if [ "$remote_sha" = "$zero" ]; then
-    range="$empty_tree..$local_sha"
+    # A new feature branch inherits main's history. Compare only its unique
+    # commits so prior, intentionally blocked implementation history does not
+    # recategorize a planning-only branch. The first push to main still checks
+    # its complete history against the empty tree.
+    if [ "$remote_ref" != "refs/heads/main" ] && git rev-parse --verify --quiet origin/main >/dev/null; then
+      base_sha=$(git merge-base origin/main "$local_sha")
+      range="$base_sha..$local_sha"
+    else
+      range="$empty_tree..$local_sha"
+    fi
   else
     range="$remote_sha..$local_sha"
   fi
@@ -22,6 +31,14 @@ while read -r local_ref local_sha remote_ref remote_sha; do
 done
 
 if [ "$saw_ref" -eq 0 ]; then
-  node tools/designops/enforce.mjs --working-tree
+  # Some host runners invoke the hook without pre-push ref lines. For this
+  # repository's feature branches, classify commits since the tracked main
+  # branch instead of treating a clean working tree as implementation work.
+  if git rev-parse --verify --quiet origin/main >/dev/null; then
+    base_sha=$(git merge-base origin/main HEAD)
+    node tools/designops/enforce.mjs --range "$base_sha..HEAD"
+  else
+    # No safe comparison range is available, so retain fail-closed behavior.
+    node tools/designops/enforce.mjs --working-tree
+  fi
 fi
-

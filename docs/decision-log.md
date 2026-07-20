@@ -139,3 +139,14 @@
 - **Alternatives:** Encrypt answers; server-side reveal only.  
 - **Why:** Local party game; anti-cheat adds complexity without product value.  
 - **Change if:** Competitive ranked multiplayer requires hidden answers.
+
+---
+
+## ADR-015 — Local DesignOps enforcement with GitHub visibility
+
+- **Decision:** Keep the repository private and use fail-closed local DesignOps enforcement, tracked Git hooks, and GitHub Actions visibility. Do not represent `main` as remotely protected while the current GitHub plan cannot enforce private-repository rulesets or branch protection.
+- **Context:** The repository has a trusted reviewer public key in GitHub Actions and a successful DesignOps workflow, but the available GitHub plan cannot make that check, pull requests, or CODEOWNERS server-enforced merge controls.
+- **Alternatives:** Make the repository public; upgrade or move to an eligible GitHub plan; claim GitHub Actions alone protects `main`.
+- **Why:** Preserve repository privacy and accurately distinguish local controls from remote visibility without incurring a plan or ownership change.
+- **Consequences:** A writer with repository access can directly update `main`; contributors must use feature branches, pull requests, local gates/hooks, and inspect the Actions result as operating discipline. CODEOWNERS routes review requests but is not mandatory.
+- **Change if:** The repository gains an eligible GitHub plan and branch protection is actually activated for `main`.

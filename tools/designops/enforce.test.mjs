@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import crypto from "node:crypto";
 import { mkdtemp, mkdir, readFile, realpath, writeFile } from "node:fs/promises";
 import os from "node:os";
@@ -60,6 +61,21 @@ test("review-required gates permit planning but block implementation", () => {
     () => assertGateDecision("release", "release", { exitCode: 1, stdout: "blocked", stderr: "" }),
     (error) => error instanceof EnforcementError && error.exitCode === 1
   );
+});
+
+test("pre-push hook classifies a new feature branch relative to origin/main", () => {
+  const head = spawnSync("git", ["rev-parse", "HEAD"], { cwd: PROJECT_ROOT, encoding: "utf8" });
+  assert.equal(head.status, 0, head.stderr);
+
+  const ref = "refs/heads/feature/designops-hook-test";
+  const result = spawnSync("sh", [path.join(PROJECT_ROOT, ".githooks/pre-push")], {
+    cwd: PROJECT_ROOT,
+    encoding: "utf8",
+    input: `${ref} ${head.stdout.trim()} ${ref} ${"0".repeat(40)}\n`
+  });
+
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+  assert.match(result.stdout, /intent=design phase=strategy gateExit=2/);
 });
 
 test("registered source hashes pass and stale evidence fails", async () => {

@@ -232,15 +232,16 @@ docs/
 **API boundary:** PostgREST + Edge Functions only; no service keys on device.  
 **Shared types:** Zod in `content-validation`, types inferred.  
 **Env:** `EXPO_PUBLIC_*` for public; secrets in EAS/Supabase.  
-**Branching:** `main` protected; `feature/*`; PR required.  
-**CI/CD:** typecheck/lint/unit/schema on PR; EAS preview on main; prod promote manual.  
+**Branching (current):** `main` is not remotely protected on the current private-GitHub plan. `feature/*` branches and pull requests are required operating practice, but GitHub cannot technically prevent a direct update.
+**CI/CD (current):** DesignOps policy runs in GitHub Actions for push/PR visibility, but is advisory rather than a server-enforced merge gate. Run local hooks and inspect the workflow before merge; typecheck/lint/unit/schema and EAS preview remain planned delivery checks. Production promotion remains manual.
+**Future remote enforcement:** If an eligible GitHub plan becomes available, protect `main` and require pull requests, the DesignOps status check, approval/CODEOWNER review, stale-approval dismissal, and blocked force pushes/deletions before calling the branch protected.
 **Channels:** development / preview / staging / production.
 
 ---
 
 ## 24. Architecture decision records
 
-See `decision-log.md` (ADR-001 … ADR-012).
+See `decision-log.md` (ADR-001 … ADR-015).
 
 ---
 

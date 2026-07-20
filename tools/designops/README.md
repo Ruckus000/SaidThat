@@ -25,15 +25,19 @@ Override it with `DESIGNOPS_TRUSTED_PUBLIC_KEY_FILE`. The private key must never
 
 After an explicit human decision, the agent may prepare an unsigned review draft. The reviewer signs it outside the agent workflow with the vendored `sign-review.mjs`. Run the applicable gate with `--write` only when deliberately refreshing `.designops/09-review-report.json` and the manifest gate state.
 
-## CI and branch protection
+## GitHub visibility and future branch protection
 
-When this repository is connected to GitHub:
+The repository has the `DESIGNOPS_REVIEWER_PUBLIC_KEY_PEM` Actions secret and a successful `DesignOps policy` workflow run. The workflow validates changed ranges and exposes the policy result in GitHub Actions.
 
-1. Add `DESIGNOPS_REVIEWER_PUBLIC_KEY_PEM` as a GitHub Actions secret containing only the public key.
-2. Protect `main` and require pull requests, the `DesignOps policy` check, one CODEOWNER approval, dismissal of stale approvals, and no force pushes or bypass.
-3. Connect the protected GitHub repository to Cursor Cloud Agents.
+This repository is private and its current GitHub plan cannot enforce repository rulesets or protected branches. GitHub Actions therefore cannot block a direct update to `main`, and CODEOWNERS only requests/routs review; neither is a hard remote control.
 
-Until those remote settings exist, local Git hooks are active but cannot substitute for protected-branch enforcement.
+Current operating practice:
+
+1. Create feature branches and submit pull requests for every change.
+2. Run the local DesignOps gate and allow the tracked hooks to run before committing and pushing.
+3. Confirm the `DesignOps policy / enforce` result for the pull request before merging.
+
+If the repository later has an eligible GitHub plan, activate branch protection for `main` and require pull requests, the `DesignOps policy / enforce` status check, one approval, CODEOWNER review, dismissal of stale approvals, and blocked force pushes and deletions. Only then is GitHub-side enforcement active. Cursor Cloud Agents must not be treated as remotely protected until that configuration is active.
 
 ## Release evidence
 
