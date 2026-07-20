@@ -22,6 +22,10 @@ export const STAGES = {
 const NON_PLAYABLE_STATES = new Set(["disputed", "source-unavailable", "removed"]);
 const REPORT_REASONS = new Set(["wrong-attribution", "harmful-content", "other"]);
 
+function hasTwoDistinctApprovals(card) {
+  return new Set(card.editorialApprovals ?? []).size >= 2;
+}
+
 /**
  * An authentic record is never playable just because a URL exists. It needs a
  * retained source and two distinct editorial approvals. Local fixtures are
@@ -35,7 +39,7 @@ export function isPlayableCard(card, { allowLocalFixtures = false } = {}) {
   }
 
   if (card.contentState === "fabricated-for-game") {
-    return card.editorialApprovals?.length >= 2;
+    return hasTwoDistinctApprovals(card);
   }
 
   return (
@@ -43,7 +47,7 @@ export function isPlayableCard(card, { allowLocalFixtures = false } = {}) {
     card.sourceRecord?.retained === true &&
     typeof card.sourceRecord.url === "string" &&
     card.sourceRecord.url.startsWith("https://") &&
-    new Set(card.editorialApprovals ?? []).size >= 2
+    hasTwoDistinctApprovals(card)
   );
 }
 

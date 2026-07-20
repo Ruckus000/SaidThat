@@ -12,6 +12,7 @@ import {
   reportPayload,
   shouldConcealScore,
 } from "./game.js";
+import { MAX_QUEUED_REPORTS, appendQueuedReport } from "./reportPolicy.js";
 
 const fixture = {
   id: "fixture",
@@ -34,6 +35,7 @@ test("chaos: unapproved, disputed, removed, and malformed authentic records fail
   assert.equal(isPlayableCard({ ...fixture, contentState: "disputed" }, { allowLocalFixtures: true }), false);
   assert.equal(createSession({ cards: [{ contentState: "authentic" }], deckVersion: "test" }).stage, STAGES.CONTENT_UNAVAILABLE);
   assert.equal(createSession({ cards: null, deckVersion: "test" }).stage, STAGES.CONTENT_UNAVAILABLE);
+  assert.equal(isPlayableCard({ contentState: "fabricated-for-game", editorialApprovals: ["same", "same"] }), false);
   assert.equal(isPlayableCard({ ...fixture, authentic: true, contentState: "fixture-authentic" }), false);
   assert.equal(isPlayableCard({ ...fixture, authentic: true, contentState: "fixture-authentic" }, { allowLocalFixtures: true }), true);
 });
@@ -93,6 +95,14 @@ test("chaos: report records minimize data and corrupted decks halt play", () => 
 
 test("chaos: malformed report reasons are reduced to a safe category", () => {
   assert.equal(reportPayload(started(), "<script>alert(1)</script>", "2026-07-20T00:00:00.000Z").reason, "other");
+});
+
+test("chaos: report floods retain only the bounded, most recent queue", () => {
+  const queue = Array.from({ length: MAX_QUEUED_REPORTS + 10 }, (_, index) => ({ cardId: String(index) }))
+    .reduce((records, report) => appendQueuedReport(records, report), []);
+  assert.equal(queue.length, MAX_QUEUED_REPORTS);
+  assert.equal(queue[0].cardId, "10");
+  assert.equal(queue.at(-1).cardId, String(MAX_QUEUED_REPORTS + 9));
 });
 
 test("chaos: arbitrary event storms do not create invalid stages or duplicate commits", () => {

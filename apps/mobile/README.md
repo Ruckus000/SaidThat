@@ -14,8 +14,8 @@ approvals; release content remains blocked until the editorial workflow exists.
 
 Disputed, removed, and source-unavailable records are excluded from binary
 play. Reports are queued locally with only `cardId`, reason category, deck
-version, and timestamp. No identity, statement text, source URL, free text,
-motion data, or transcript is persisted.
+version, and timestamp. The local queue is capped at 100 records. No identity,
+statement text, source URL, free text, motion data, or transcript is persisted.
 
 ## Resilience and chaos checks
 
