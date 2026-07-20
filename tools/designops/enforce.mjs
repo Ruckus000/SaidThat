@@ -12,7 +12,6 @@ const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 export const PROJECT_ROOT = path.resolve(SCRIPT_DIR, "../..");
 export const DESIGNOPS_ROOT = path.join(PROJECT_ROOT, ".designops");
 export const VENDOR_ROOT = path.join(PROJECT_ROOT, "tools/launchpad-designops");
-const IMPLEMENTATION_EXCEPTION_FILE = path.join(DESIGNOPS_ROOT, "10-owner-implementation-exception.json");
 
 const PLANNING_PREFIXES = Object.freeze([
   ".cursor/",
@@ -351,9 +350,6 @@ export async function main(argv = process.argv.slice(2)) {
     const currentPhase = project.workflow?.currentPhase;
     const phase = gatePhaseForIntent(intent, currentPhase);
     const exception = intent === "implementation" ? await validateImplementationException(paths) : null;
-    if (intent === "release" && existsSync(IMPLEMENTATION_EXCEPTION_FILE)) {
-      // The exception is intentionally irrelevant to release: release always follows the signed gate path below.
-    }
     if (exception) {
       const result = {
         decision: "allowed",
