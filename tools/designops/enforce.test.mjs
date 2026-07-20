@@ -15,6 +15,7 @@ import {
   gatePhaseForIntent,
   inferIntent,
   resolveTrustedReviewerKey,
+  validateImplementationException,
   validateNativeVerification,
   verifySourceIntegrity,
   verifyVendorIntegrity
@@ -106,6 +107,33 @@ test("trusted reviewer keys must exist outside the project", async () => {
   await assert.rejects(
     resolveTrustedReviewerKey(root, internal, { required: true }),
     (error) => error instanceof EnforcementError && error.exitCode === 3
+  );
+});
+
+test("owner implementation exception is simulation-bound and limited to the mobile MVP", async () => {
+  const root = await mkdtemp(path.join(os.tmpdir(), "designops-owner-exception-test-"));
+  const simulation = path.join(root, ".designops/05-direction-validation/ai-tabletop-simulation");
+  await mkdir(simulation, { recursive: true });
+  const evidencePath = path.join(simulation, "trace.md");
+  const evidence = "simulation-only\n";
+  await writeFile(evidencePath, evidence);
+  await writeFile(path.join(root, ".designops/10-owner-implementation-exception.json"), JSON.stringify({
+    schemaVersion: "1",
+    status: "active",
+    scope: "full-mvp-local-first",
+    allowedImplementationPrefixes: ["apps/mobile/"],
+    simulationEvidence: [{ path: ".designops/05-direction-validation/ai-tabletop-simulation/trace.md", sha256: digest(evidence) }],
+    constraints: ["This exception does not convert AI simulation output into participant evidence."]
+  }));
+  assert.equal((await validateImplementationException(["apps/mobile/App.tsx"], root)).scope, "full-mvp-local-first");
+  await assert.rejects(
+    validateImplementationException(["supabase/schema.sql"], root),
+    (error) => error instanceof EnforcementError && error.exitCode === 1
+  );
+  await writeFile(evidencePath, "stale simulation\n");
+  await assert.rejects(
+    validateImplementationException(["apps/mobile/App.tsx"], root),
+    (error) => error instanceof EnforcementError && error.exitCode === 1
   );
 });
 

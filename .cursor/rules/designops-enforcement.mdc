@@ -18,7 +18,7 @@ Run the repository gate before acting:
 Phase boundary:
 
 - `strategy`, `direction`, `handoff`: planning/enforcement paths only.
-- Application changes require a current externally signed handoff approval and gate exit `0`.
+- Application changes require a current externally signed handoff approval and gate exit `0`, except for the active, scoped owner exception at `.designops/10-owner-implementation-exception.json`. That exception permits only the local-first Expo MVP under `apps/mobile/`; it never turns AI simulation into human evidence or release approval.
 - Release requires a current externally signed release approval plus current iOS and Android verification evidence.
 
 Stop on gate exits `1`, `2`, or `3`. Never bypass, weaken, or disable the gate, Git hooks, integrity manifest, source hashes, CODEOWNERS, or CI.
