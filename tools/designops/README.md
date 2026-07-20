@@ -36,7 +36,7 @@ Current operating practice:
 1. Create feature branches and submit pull requests for every change.
 2. Run the local DesignOps gate and allow the tracked hooks to run before committing and pushing.
 3. Confirm the `DesignOps policy / enforce` result for the pull request before merging.
-4. Complete and resolve an evidence-based code review and security review before merging. Review the diff against `main`, run the smallest relevant checks, and assess correctness, maintainability, integration impact, secrets/data exposure, authorization, and unsafe defaults. A green workflow alone is not merge approval.
+4. Complete and resolve an evidence-based code review and security review before merging. Review the diff against `main`, run the smallest relevant checks, and assess correctness, maintainability, integration impact, secrets/data exposure, authorization, and unsafe defaults. A green workflow alone is not merge approval; once the DesignOps result and both reviews are clear, an authorized agent may merge without a separate human merge decision.
 
 If the repository later has an eligible GitHub plan, activate branch protection for `main` and require pull requests, the `DesignOps policy / enforce` status check, one approval, CODEOWNER review, dismissal of stale approvals, and blocked force pushes and deletions. Only then is GitHub-side enforcement active. Cursor Cloud Agents must not be treated as remotely protected until that configuration is active.
 
