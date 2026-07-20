@@ -1,0 +1,78 @@
+{
+  "schemaVersion": "0.1",
+  "status": "draft-fixture-pending-editorial-and-research-owner-confirmation",
+  "purpose": "One solution-neutral Direction comparison fixture. It defines equivalent content, roles, states, environments, and observations for every territory; it is not participant evidence or an approved study plan.",
+  "sourceDeck": {
+    "path": "docs/content/phase0-deck.candidates.json",
+    "sha256": "199f024fa654492b3557ef6a2a7822db5350212addc1dc9ee4293367868ddc2f",
+    "use": "Candidate IDs only; editorial approval is required before any participant use."
+  },
+  "contentSets": {
+    "playable": {
+      "requiredMix": "Two authentic and two fabricated-for-game cards at short, median, and maximum approved statement/attribution lengths.",
+      "constraints": [
+        "Use difficult attributions and sensitive-but-allowed material only after two-person editorial review.",
+        "Use the same seeded order, card text, attribution, timer, answer labels, and score semantics in all territories.",
+        "Do not use a disputed, source-unavailable, or removed record as a binary playable card."
+      ]
+    },
+    "nonPlayableReviewRecords": [
+      "disputed",
+      "source-unavailable",
+      "removed"
+    ]
+  },
+  "roleScripts": [
+    "Forehead group: screen-facing participants read and discuss; holder commits one group answer by tilt or tap without perceiving the active statement.",
+    "Pass-and-play: current player privately reads and commits; score belongs to that player or team; protected handoff hides prior card and outcome.",
+    "Screen-reader contribution: a screen-reader participant may be the screen-facing contributor in forehead play or complete private pass-and-play; a forehead holder must never receive the active statement through speech, audio route, haptic, interruption, or handoff."
+  ],
+  "requiredStates": [
+    "unaided-start",
+    "active-pre-reveal",
+    "answer-commit",
+    "result",
+    "review-authentic",
+    "review-fabricated-for-game",
+    "review-disputed",
+    "review-source-unavailable",
+    "review-removed",
+    "report",
+    "report-queued-offline",
+    "offline-playable",
+    "loading",
+    "corrupt-deck",
+    "sensor-failure",
+    "background-resume",
+    "orientation-change",
+    "timeout",
+    "protected-handoff",
+    "rematch"
+  ],
+  "accessPaths": [
+    "forehead-motion",
+    "forehead-tap",
+    "pass-and-play-tap",
+    "no-motion",
+    "extended-timer",
+    "untimed",
+    "reduced-motion",
+    "no-audio",
+    "no-haptic",
+    "VoiceOver-screen-facing-contributor",
+    "VoiceOver-private-pass-and-play",
+    "TalkBack-private-pass-and-play"
+  ],
+  "environment": {
+    "phoneSizes": "Freeze one small and one large representative iOS/Android device before prototype production.",
+    "viewing": "Freeze primary and stress viewing distances, angles, and maximum platform text size before the study plan is signed.",
+    "conditions": ["normal light", "low light", "glare", "party noise", "one-handed use"],
+    "capture": ["OS screenshot", "screen-recording still", "ordinary external photograph", "reasonable quote-and-attribution crop"]
+  },
+  "observations": {
+    "groupUnit": ["assistance", "time-to-valid-first-answer", "reading-success", "control-recovery", "rematch-choice"],
+    "individualUnit": ["truth-state-explanation", "capture-context-comprehension", "screen-reader-or-non-motion-task-completion"],
+    "safetyChecks": ["pre-reveal capture retains game context without authenticity leakage", "protected handoff does not leak prior content", "queued report and debug/analytics proposals respect the data-minimization allowlist"]
+  },
+  "freezeRule": "Any participant study must bind this file's SHA-256 into a signed independent-study plan. Changing a card, state, role script, access path, environment, or observation requires a new fixture digest and new plan signature."
+}
