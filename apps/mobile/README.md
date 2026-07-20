@@ -33,8 +33,11 @@ Run:
 ```bash
 npm run typecheck
 npm test
-npx expo export --platform ios --output-dir /private/tmp/said-that-ios-export
+npm run export:ios
+npm run export:android
 ```
+
+See `native-verification-checklist.md` for the manual device verification template. It makes no release pass claim.
 
 Native iOS/Android accessibility and lifecycle evidence is still required for
 release under the repository's DesignOps policy.
