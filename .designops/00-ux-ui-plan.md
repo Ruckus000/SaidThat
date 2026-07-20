@@ -45,6 +45,13 @@ The experience must preserve three qualities simultaneously:
 
 No demographic persona is invented here. The planning documents identify 18–28 friend groups as the intended launch audience, but no direct user study yet validates that segment, its contexts, or its accessibility needs.
 
+### Role and answer-agency contract
+
+- In **forehead play**, the holder cannot see or hear the active statement. The screen-facing group reads it, discusses it, and relays its collective judgment; the holder makes the single physical commit by tilt or tap. The round earns one **group** result, never an individual holder score.
+- In **pass-and-play**, the active player privately receives the statement, makes the judgment, owns the resulting player or team score, and must receive a protected handoff before the next player sees any prior card or outcome.
+- An accessibility path preserves the same role and score semantics. It must not reveal the active forehead card to its holder through a screen reader, audio route, haptic, or handoff announcement. A participant who needs screen-reader access may be the screen-facing reader/group contributor in forehead play or use pass-and-play; the study must test both role assignments.
+- Every role instruction names: who can perceive the statement, who is permitted to commit an answer, whose score changes, and what information must remain private until review.
+
 ## 4. Critical journeys
 
 ### Journey A — First party round
@@ -139,9 +146,11 @@ These are requirements, not layout prescriptions.
 
 ### Before an answer
 
-- Present only the statement, attributed identity, time/round status, and required control affordance.
+- Present only the statement, attributed identity, time/round status, required control affordance, and a persistent content-neutral **game-round context marker**.
 - Do not imply verification through platform chrome, account badges, screenshots, or news-like framing.
 - Do not expose authenticity, source metadata, or an editorial confidence signal.
+
+The context marker must survive ordinary screenshots, recordings, and photographs of every pre-reveal state without implying either authenticity outcome. Direction research must test this with capture review, not just an in-app share surface.
 
 ### After an answer
 
@@ -150,6 +159,16 @@ These are requirements, not layout prescriptions.
 - For fabricated content, state that it was made for the game.
 - For disputed or removed content, stop presenting a binary truth claim and explain the status.
 - Keep reporting available and return the user to their prior context.
+
+### Truth-state transition rules
+
+- **Authentic** means editorial review has retained an eligible source record for the attributed statement; it may be played and revealed as authentic.
+- **Fabricated for the game** means an editorially approved game decoy, never a claim that was published by the attributed person; it may be played and must be revealed with that meaning in words.
+- **Disputed** means credible evidence conflicts or editorial review cannot resolve the claim; it is not playable as a binary card and must stop any existing binary presentation.
+- **Source unavailable** means a previously eligible source cannot currently be shown. It is not playable until editorial review restores an eligible source or removes it; review history may describe the availability problem without asserting authenticity.
+- **Removed** means a card was withdrawn for rights, safety, factual, or policy reasons. It is never playable, must supersede cached play when a tombstone is available, and may only appear in history with its removal status.
+
+These are product-semantic requirements, not a substitute for legal or editorial clearance.
 
 ### Representative content requirement
 
@@ -163,8 +182,10 @@ Required acceptance paths:
 
 - Complete one full party round with tap-only controls.
 - Complete one full pass-and-play round with VoiceOver and TalkBack scripts.
+- Preserve forehead information asymmetry: a holder's screen reader, audio route, haptic, and handoff announcement must not disclose the active card; test a screen-reader participant both as a screen-facing contributor and in private pass-and-play.
 - Understand correct/incorrect and authentic/fabricated without color.
 - Complete setup and recover from a sensor failure without motion, audio, or haptics.
+- Keep setup, handoff, reveal, review, report, pause, and recovery non-time-limited. For the timed answer mechanic, provide a pre-round extended-timer or untimed accessibility option with equivalent answer, score, and truth-review semantics.
 - Use platform text-size settings without hiding the primary action or truth label.
 - Pause and exit with predictable focus restoration.
 - Maintain touch targets of at least 48 dp for game controls.
@@ -181,7 +202,9 @@ Review this strategy against the product, gameplay, content, legal, and technica
 
 ### Stage 2 — Phase 0 behavioral study
 
-Use a paper or neutral low-fidelity prototype with representative cards and 8–12 groups as already planned. Capture:
+Use a paper or neutral low-fidelity prototype with representative cards and **8–12 group sessions**. This is a behavioral go/no-go study, not a territory comparison. Record the group as the unit for shared-play outcomes and each participant as the unit for individual comprehension outcomes. The product owner decides whether results support Phase 0 continuation; the research lead owns the protocol; the accessibility lead owns accessible-task acceptance; and the editorial owner approves study cards.
+
+Define before recruiting: a *valid first answer* is one committed answer after the prepared prompt without moderator explanation; *assistance* is any moderator clarification beyond that prompt; and a *recovered control failure* is a failure followed by one intended answer without restart or duplicate commit. Capture:
 
 - time and assistance needed to first valid answer;
 - whether holder and visible group understand their different roles;
@@ -191,11 +214,17 @@ Use a paper or neutral low-fidelity prototype with representative cards and 8–
 - truth-label misunderstanding and screenshot/deception concerns;
 - accessibility-path completion and preference.
 
+Purposefully recruit people who regularly use screen readers and non-motion controls, report their task outcomes separately, and do not substitute a sighted evaluator script for participant evidence.
+
 Do not report “laughs per minute” or demographic fit as fact unless an agreed observation protocol is used.
 
 ### Stage 3 — Direction comparison
 
-Create exactly three materially divergent territories against the same content, tasks, states, and hard criteria. Select one candidate and one countermodel. Because primary-task, trust, safety, and interaction assumptions are high risk, direction approval requires a pre-signed independent-study plan, at least five moderated sessions, counterbalanced ordering, thresholded kill criteria, and signed review. A solo walkthrough remains hypothesis-only.
+Create exactly three materially divergent territories against the same content, tasks, states, and hard criteria. Select one candidate and one countermodel. This is a separate comparison with **at least six moderated group sessions**, counterbalanced territory order, the same predeclared fixture, and separate group and individual denominators. Because primary-task, trust, safety, and interaction assumptions are high risk, direction approval requires a pre-signed independent-study plan, thresholded kill criteria, completed participant records, and signed review. A solo walkthrough remains hypothesis-only.
+
+### Pre-direction comparison fixture
+
+Before territories exist, the research lead and editorial owner must freeze one solution-neutral fixture. It includes short, median, and maximum-length statements; difficult attributions; authentic, fabricated, disputed, source-unavailable, and removed records; active pre-reveal, result, review, report, queued-report, offline, loading, corrupt, sensor-failure, background, orientation, timeout, and handoff states; forehead, tap-only, pass-and-play, screen-reader, reduced-motion, no-audio, and no-haptic paths; and the agreed device, distance, lighting, noise, and capture conditions. Territories may change expression and composition, never the fixture’s tasks, semantics, or pass/fail conditions.
 
 ### Stage 4 — Handoff validation
 
@@ -216,6 +245,7 @@ The DesignOps 0.2 lane matrix does not qualify Expo/React Native browser verific
 | Does the group want another round? | observed rematch choice after completed round | Phase 0/1 go-no-go |
 | Does accessibility preserve the game? | equivalent task completion and preference | reject non-equivalent territory |
 | Does reporting preserve context? | report completion and return-to-review success | revise report journey |
+| Is the audience hypothesis supported? | Phase 0 group completion/rematch against the predeclared segment and protocol | continue, revise, or stop the launch-segment hypothesis |
 
 Product metrics remain: at least 70% of Phase 0 groups complete two or more rounds unaided, control usability at least 80%, Phase 1 rematch rate at least 40%, round completion at least 75%, and crash-free sessions at least 99.5%. These are stakeholder-defined thresholds, not achieved results.
 
@@ -255,7 +285,7 @@ Before Phase 0 implementation:
 1. Confirm strategy framing and high-risk assumption ownership.
 2. Define the Phase 0 research protocol, observation sheet, representative-card set, and accessible alternatives.
 3. Story-map the first party round, pass-and-play handoff, control recovery, truth review/report, and offline journey.
-4. Define state-transition and data-retention policy for pause, background, orientation, sensor loss, timeout, and exit.
+4. Define state-transition and data-minimization policy for pause, background, orientation, sensor loss, timeout, exit, analytics, and queued reports.
 5. Define content length and attribution test fixtures rather than committing typography values early.
 6. Define semantic labels and copy tests for authentic, fabricated, disputed, removed, queued report, and offline status.
 
@@ -277,6 +307,7 @@ Before Phase 1 implementation:
 - Representative source-rights pattern for authentic cards.
 - Launch markets, languages, age rating, and consent requirements.
 - Final Phase 0 thresholds and owners for interpreting the results.
+- The product owner's explicit Phase 0 audience-segment go/no-go decision, based on the registered protocol and thresholds.
 - Expo/React Native implementation verification plan outside the plugin's qualified browser lanes.
 
 ## 14. Next artifact

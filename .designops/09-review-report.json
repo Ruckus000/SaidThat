@@ -42,27 +42,27 @@
     },
     "evidenceBrief": {
       "path": "01-evidence-brief.md",
-      "sha256": "77d74120b1094809beafccb45b8164df45a3fcea32e08ddc8be732cb4e0c7889"
+      "sha256": "5fce54846c3bbdef0352f2be7831b3e37baab25814e455b18c0ed61507730077"
     },
     "experienceStrategy": {
       "path": "02-experience-strategy.md",
-      "sha256": "a68b7b42c924ae9745f220fbf027303b2c434debbcb4a865914248140c8743ee"
+      "sha256": "4a1a44d491fd07c54c3baa33ca257bd4154f52d295a1b75949430978c5ef86e4"
     },
     "requirementsMap": {
       "path": "03-requirements-map.json",
-      "sha256": "ac3fbf3d2711cb4a180d34c0d2533b84b6fe7147cdbebf76051075fa2a5b7eaa"
+      "sha256": "b07945321213f42a30653b3d574b842e8518fcc8a7071bc1174fdd8944ffb79f"
     }
   },
   "digests": {
-    "design": "sha256:92369416524f2443efcb8524503a0da6ffe14f802efb58d3d42363da25d8d2f2",
+    "design": "sha256:397636341c1a806202e5a1bbeea3f60cda42fff6711716543a07e2098fc944d7",
     "implementation": null,
     "verificationInput": null,
-    "approval": "sha256:2608aba74ce0c5c3ace51f9ae3ecc39f95dbaa55d5e5d6a9c92ff92ce425b649"
+    "approval": "sha256:65711ff661ea85b4a70214838fb0015647d1ebf515b02a827ba06854561fb229"
   },
   "review": null,
   "run": {
     "version": "0.2.0",
-    "runId": "gate-mrsi6wvm-40524",
-    "generatedAt": "2026-07-20T00:45:41.924Z"
+    "runId": "gate-mrsit7sk-85900",
+    "generatedAt": "2026-07-20T01:03:02.501Z"
   }
 }

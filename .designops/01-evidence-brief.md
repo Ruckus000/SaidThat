@@ -3,19 +3,19 @@
 **Status:** Draft  
 **Date:** 2026-07-18  
 **Phase:** Strategy  
-**Evidence basis:** Repository planning documents only; no application code, interviews, usability sessions, analytics, legal opinion, or current production evidence was supplied.
+**Evidence basis:** Repository planning documents plus an early Expo/React Native scaffold; no interviews, usability sessions, production analytics, legal opinion, or current production evidence was supplied.
 
 ## 1. Project context
 
 - **Mode:** Proposal
-- **Origin:** Existing repository containing planning documents, with no application code
-- **Detector result:** `family: unknown`, `styling: unknown`; no package manifest, Next.js, Vite, WordPress, Laravel, Tailwind, Composer, or nested implementation manifest detected
-- **Planned stack, not detected implementation:** Expo/React Native with TypeScript for mobile; a later Next.js admin is discussed but deferred in current decisions
+- **Origin:** Existing repository containing planning documents and a partial, gated Expo/React Native mobile scaffold under `apps/mobile`
+- **Detector result:** `family: unknown`, `styling: unknown` for LaunchPad's qualified browser lanes. The repository includes `apps/mobile/package.json`, but no Next.js, Vite, WordPress, Laravel, Tailwind, or Composer lane is detected.
+- **Implementation status:** The Expo/React Native TypeScript scaffold is present but must not be expanded until the signed implementation gate permits it; a later Next.js admin remains deferred.
 - **Styling lane:** Undecided and not implemented
 - **Accessibility target:** WCAG 2.2 AA plus native iOS/Android accessibility behavior
 - **Verification mode for the current proposal:** Artifact-only
 
-The LaunchPad 0.2 browser lane matrix qualifies Next.js/Tailwind, Vite/React, WordPress, and Laravel for their bounded fixtures. Expo/React Native is outside that matrix. Detection is therefore accurate as `unknown`, and any later release claim will need project-owned native verification.
+The LaunchPad 0.2 browser lane matrix qualifies Next.js/Tailwind, Vite/React, WordPress, and Laravel for their bounded fixtures. Expo/React Native is outside that matrix. The scaffold therefore does not qualify a browser verification lane, and any later release claim will need project-owned native verification.
 
 ## 2. Evidence available
 
@@ -41,7 +41,7 @@ These are explicit requirements. No disabled-user research, accessibility audit,
 
 The repository defines offline-first play, no account for Phase 0, bundled content, later manifest/tombstone sync, a motion state machine with neutral return, and targets for startup, first playability, frame rate, sensor processing, package size, memory, and crash-free sessions.
 
-No implementation exists, so all targets remain unverified constraints.
+The partial scaffold is not evidence that these targets work. All experience, sensor, accessibility, offline, lifecycle, and performance targets remain unverified constraints.
 
 ### Market evidence
 
@@ -124,6 +124,8 @@ Formal research absence does not block strategy drafting. It does block treating
 - Users will understand the difference between pre-answer game ambiguity and post-answer editorial truth.
 - Tap-only and screen-reader paths can preserve the game's core social value.
 - Editorial operations can supply safe, funny, sourceable cards at the required cadence.
+- Pre-reveal game context can remain capture-safe without leaking the answer.
+- The proposed launch segment can meet the registered Phase 0 completion and rematch bar.
 
 Each high-risk core assumption is registered with a falsifiable hypothesis and kill criteria in `03-requirements-map.json`.
 
