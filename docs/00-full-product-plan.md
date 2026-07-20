@@ -241,7 +241,7 @@ docs/
 
 ## 24. Architecture decision records
 
-See `decision-log.md` (ADR-001 … ADR-012).
+See `decision-log.md` (ADR-001 … ADR-015).
 
 ---
 

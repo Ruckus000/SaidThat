@@ -50,19 +50,19 @@
     },
     "requirementsMap": {
       "path": "03-requirements-map.json",
-      "sha256": "81bd19593cfe11c4f1bbf4b45c6dd0b96b62f1bdab61014e753fcf0cf48779e4"
+      "sha256": "ac3fbf3d2711cb4a180d34c0d2533b84b6fe7147cdbebf76051075fa2a5b7eaa"
     }
   },
   "digests": {
-    "design": "sha256:9a820c18b5d28d7bae80b81784b7b247b405173c6bafc727bfe5aefe95f08eb3",
+    "design": "sha256:92369416524f2443efcb8524503a0da6ffe14f802efb58d3d42363da25d8d2f2",
     "implementation": null,
     "verificationInput": null,
-    "approval": "sha256:ffc7af2f1f53088064c73e056920c8832b2878f21a886326cd5a29dea6ff0b66"
+    "approval": "sha256:2608aba74ce0c5c3ace51f9ae3ecc39f95dbaa55d5e5d6a9c92ff92ce425b649"
   },
   "review": null,
   "run": {
     "version": "0.2.0",
-    "runId": "gate-mrsh9syy-84188",
-    "generatedAt": "2026-07-20T00:19:57.207Z"
+    "runId": "gate-mrsi6wvm-40524",
+    "generatedAt": "2026-07-20T00:45:41.924Z"
   }
 }
