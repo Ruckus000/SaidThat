@@ -1,0 +1,76 @@
+{
+  "selectedId": "room-beacon",
+  "territoryDigest": "sha256:168c74c1945faa0af0a37791da72ee97333c4b539039072fe592e0f38a1c2e56",
+  "rationale": "The stakeholder selected Room Beacon because its shared, forehead-first stage directly expresses the product's one-phone group ritual while preserving a tap path with the same answer and score semantics.",
+  "decisionBasis": {
+    "verifiedRefs": [
+      "source:ux-ui-plan",
+      "task:judge-card",
+      "task:understand-role"
+    ],
+    "assumptionRefs": [
+      "assumption:forehead-social-value",
+      "assumption:distance-readability",
+      "assumption:accessible-equivalence",
+      "assumption:capture-safe-ambiguity"
+    ],
+    "criterionRefs": [
+      "criterion:group-readability",
+      "criterion:control-reliability",
+      "criterion:accessible-equivalence",
+      "criterion:subject-specificity",
+      "criterion:state-resilience"
+    ]
+  },
+  "acceptedRisks": [
+    {
+      "id": "forehead-ritual-value",
+      "severity": "high",
+      "consequence": "If a group-visible forehead ritual does not produce more social value than a private relay, Room Beacon adds motion and orientation complexity without a defensible player benefit.",
+      "mitigation": "Test Room Beacon against Private Relay as the required accessibility and low-motion countermodel before direction approval; retain the same answer and group-score semantics in blind tap paths.",
+      "validationRefs": [
+        "assumption:forehead-social-value",
+        "criterion:accessible-equivalence",
+        "criterion:control-reliability"
+      ]
+    },
+    {
+      "id": "room-distance-legibility",
+      "severity": "high",
+      "consequence": "Realistic long statements, attribution, and game context may not remain readable at party distance, undermining the shared-board premise and slowing every round.",
+      "mitigation": "Validate maximum-length shared-content fixtures at representative viewing distances and reject the direction if the hierarchy cannot preserve the required text without truncation or hidden context.",
+      "validationRefs": [
+        "assumption:distance-readability",
+        "criterion:group-readability"
+      ]
+    },
+    {
+      "id": "capture-and-recovery-clarity",
+      "severity": "high",
+      "consequence": "The perimeter beacon may be cropped from a captured claim or fail to explain sensor, offline, interruption, and removal recovery states, leaving game ambiguity mistaken for authenticity ambiguity.",
+      "mitigation": "Test ordinary captures and recovery states with explicit game-context wording, text-plus-shape state meaning, and the common truth-review contract before direction approval.",
+      "validationRefs": [
+        "assumption:capture-safe-ambiguity",
+        "criterion:state-resilience"
+      ]
+    }
+  ],
+  "rejectedAlternatives": [
+    {
+      "id": "tabletop-deck",
+      "rationale": "Tabletop Deck provides a strong truth-reveal object but was not selected because its card-bound hierarchy risks reducing shared distance readability and immediate rematch tempo.",
+      "criterionRefs": [
+        "criterion:group-readability",
+        "criterion:subject-specificity"
+      ]
+    },
+    {
+      "id": "private-relay",
+      "rationale": "Private Relay remains the required countermodel for accessible, tap-first play, but it was not selected as the primary direction because its utility-forward ritual carries a higher risk of losing the product's distinctive shared-stage energy.",
+      "criterionRefs": [
+        "criterion:accessible-equivalence",
+        "criterion:subject-specificity"
+      ]
+    }
+  ]
+}
