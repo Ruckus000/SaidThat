@@ -22,3 +22,7 @@ export async function queueReport(report) {
   await AsyncStorage.setItem(REPORT_QUEUE_KEY, JSON.stringify(next));
   return next.length;
 }
+
+export async function clearReportQueue() {
+  await AsyncStorage.removeItem(REPORT_QUEUE_KEY);
+}

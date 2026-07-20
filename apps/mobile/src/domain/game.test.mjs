@@ -105,6 +105,21 @@ test("chaos: report floods retain only the bounded, most recent queue", () => {
   assert.equal(queue.at(-1).cardId, String(MAX_QUEUED_REPORTS + 9));
 });
 
+test("chaos: reset local session returns to a fresh home state", () => {
+  let state = started();
+  state = gameReducer(state, { type: "ANSWER", guessAuthentic: false });
+  assert.equal(state.score, 100);
+  state = gameReducer(state, {
+    type: "RESET_LOCAL_SESSION",
+    cards: [fixture],
+    allowLocalFixtures: true,
+    deckVersion: "test",
+  });
+  assert.equal(state.stage, STAGES.HOME);
+  assert.equal(state.score, 0);
+  assert.equal(state.roundIndex, 0);
+});
+
 test("chaos: arbitrary event storms do not create invalid stages or duplicate commits", () => {
   const events = [
     { type: "ANSWER", guessAuthentic: false },

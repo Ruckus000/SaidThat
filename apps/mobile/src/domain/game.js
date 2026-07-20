@@ -185,6 +185,12 @@ export function gameReducer(state, action) {
       return { ...state, stage: STAGES.CONTENT_UNAVAILABLE, cards: [], fault: "corrupt-deck" };
     case "GO_HOME":
       return { ...state, stage: STAGES.HOME, reportStatus: null, resumeStage: null };
+    case "RESET_LOCAL_SESSION":
+      return createSession({
+        cards: action.cards,
+        allowLocalFixtures: action.allowLocalFixtures,
+        deckVersion: action.deckVersion,
+      });
     default:
       return state;
   }

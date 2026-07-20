@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
-import { AppState, SafeAreaView, View } from "react-native";
+import { Alert, AppState, SafeAreaView, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
 import { ContentUnavailableScreen } from "./src/components/ContentUnavailableScreen";
@@ -11,6 +11,7 @@ import { ResultScreen } from "./src/components/ResultScreen";
 import { ReviewScreen } from "./src/components/ReviewScreen";
 import { RoundScreen } from "./src/components/RoundScreen";
 import { SetupScreen } from "./src/components/SetupScreen";
+import { SettingsScreen } from "./src/components/SettingsScreen";
 import { s } from "./src/components/styles";
 import { catalog, DECK_VERSION } from "./src/content/catalog";
 import {
@@ -24,7 +25,8 @@ import {
   shouldConcealScore,
 } from "./src/domain/game";
 import { calibrateNeutral, readMotionSample, useRoomBeaconMotion } from "./src/sensors/useRoomBeaconMotion";
-import { queueReport } from "./src/storage/reportQueue";
+import { motionAllowed } from "./src/settings/settingsPolicy";
+import { clearReportQueue, queueReport } from "./src/storage/reportQueue";
 
 const allowLocalFixtures = typeof __DEV__ !== "undefined" && __DEV__;
 
@@ -37,6 +39,9 @@ export default function App() {
   const [reportBusy, setReportBusy] = useState(false);
   const [motionOptIn, setMotionOptIn] = useState(false);
   const [motionNeutralZ, setMotionNeutralZ] = useState<number | null>(null);
+  const [showSettings, setShowSettings] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const [noMotion, setNoMotion] = useState(false);
   const card = currentCard(state);
 
   const submitAnswer = useCallback((guessAuthentic: boolean) => {
@@ -44,7 +49,7 @@ export default function App() {
   }, []);
 
   useRoomBeaconMotion({
-    enabled: motionOptIn && state.stage === STAGES.ROUND,
+    enabled: motionAllowed({ motionOptIn, noMotion }) && state.stage === STAGES.ROUND,
     mode: state.mode,
     neutralZ: motionNeutralZ,
     onAnswer: submitAnswer,
@@ -78,6 +83,35 @@ export default function App() {
     if (neutral != null) setMotionNeutralZ(neutral);
   }
 
+  function setNoMotionEnabled(enabled: boolean) {
+    setNoMotion(enabled);
+    if (enabled) setMotionNeutralZ(null);
+  }
+
+  function confirmResetLocalSession() {
+    Alert.alert(
+      "Reset local session?",
+      "This clears the current room progress and locally queued reports on this device.",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "Reset", style: "destructive", onPress: () => void resetLocalSession() },
+      ],
+    );
+  }
+
+  async function resetLocalSession() {
+    await clearReportQueue();
+    setMotionOptIn(false);
+    setMotionNeutralZ(null);
+    setShowSettings(false);
+    dispatch({
+      type: "RESET_LOCAL_SESSION",
+      cards: catalog,
+      allowLocalFixtures,
+      deckVersion: DECK_VERSION,
+    });
+  }
+
   function goHome() {
     setMotionNeutralZ(null);
     dispatch({ type: "GO_HOME" });
@@ -101,8 +135,22 @@ export default function App() {
       <StatusBar style="light" />
       <View style={s.app}>
         <Header score={state.score} concealScore={shouldConcealScore(state)} onHome={goHome} />
-        {state.stage === STAGES.HOME && (
-          <HomeScreen onStart={() => dispatch({ type: "OPEN_SETUP" })} localFixtures={allowLocalFixtures} />
+        {state.stage === STAGES.HOME && !showSettings && (
+          <HomeScreen
+            onStart={() => dispatch({ type: "OPEN_SETUP" })}
+            onOpenSettings={() => setShowSettings(true)}
+            localFixtures={allowLocalFixtures}
+          />
+        )}
+        {state.stage === STAGES.HOME && showSettings && (
+          <SettingsScreen
+            reducedMotion={reducedMotion}
+            noMotion={noMotion}
+            onReducedMotion={setReducedMotion}
+            onNoMotion={setNoMotionEnabled}
+            onReset={confirmResetLocalSession}
+            onClose={() => setShowSettings(false)}
+          />
         )}
         {state.stage === STAGES.SETUP && (
           <SetupScreen
@@ -121,7 +169,7 @@ export default function App() {
             mode={state.mode}
             hideCardFromAssistiveTech={!canExposeCardToAssistiveTech(state)}
             round={state.roundIndex + 1}
-            motionOptIn={motionOptIn}
+            motionOptIn={motionAllowed({ motionOptIn, noMotion })}
             motionCalibrated={motionNeutralZ != null}
             onCalibrate={calibrateMotion}
             onAnswer={submitAnswer}
