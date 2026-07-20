@@ -73,8 +73,14 @@ test("pre-push hook classifies a new feature branch relative to origin/main", ()
   const cloneDirectory = mkdtempSync(path.join(os.tmpdir(), "designops-hook-repo-"));
   const repo = path.join(cloneDirectory, "repo");
   try {
-    const clone = spawnSync("git", ["clone", "--quiet", "--no-hardlinks", "--branch", "main", PROJECT_ROOT, repo], { encoding: "utf8" });
+    const clone = spawnSync("git", ["clone", "--quiet", "--no-hardlinks", PROJECT_ROOT, repo], { encoding: "utf8" });
     assert.equal(clone.status, 0, clone.stderr);
+    // GitHub Actions checks out the PR at a detached commit, so its source
+    // repository may have origin/main only as a remote-tracking ref. The
+    // disposable clone uses its checked-out base as an explicit origin/main
+    // reference; the tested range remains exactly one planning-only commit.
+    const baseRef = spawnSync("git", ["update-ref", "refs/remotes/origin/main", "HEAD"], { cwd: repo, encoding: "utf8" });
+    assert.equal(baseRef.status, 0, baseRef.stderr);
     const sourceDependencies = path.join(PROJECT_ROOT, "tools", "launchpad-designops", "node_modules");
     assert.equal(existsSync(sourceDependencies), true, "The vendored DesignOps dependencies must be installed before the hook regression test runs.");
     symlinkSync(sourceDependencies, path.join(repo, "tools", "launchpad-designops", "node_modules"), "dir");
