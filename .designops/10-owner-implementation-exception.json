@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "1",
+  "status": "active",
+  "scope": "full-mvp-local-first",
+  "authorizedBy": "Repository owner explicit decision in this Codex task on 2026-07-20.",
+  "decision": "Use the documented AI tabletop simulation as a scoped unblocker for building the full local-first MVP.",
+  "allowedImplementationPrefixes": [
+    "apps/mobile/"
+  ],
+  "simulationEvidence": [
+    {
+      "path": ".designops/05-direction-validation/ai-tabletop-simulation/README.md",
+      "sha256": "a009c6a6bec1be1d3b4e6361576a5d5499dbfa1a63cf14b5fcf16248970ecd98"
+    },
+    {
+      "path": ".designops/05-direction-validation/ai-tabletop-simulation/human-psychology-gate.json",
+      "sha256": "02543f3b9daa9bb5c0865a31dfdf46e9ff87d45002b42744de37f07fb80f6c88"
+    },
+    {
+      "path": ".designops/05-direction-validation/ai-tabletop-simulation/tabletop-trace.md",
+      "sha256": "7a4a4100c2dda5ecc43c8b0b7a512349d3307247f93d03918eb3fbbb44822d94"
+    }
+  ],
+  "constraints": [
+    "This exception does not convert AI simulation output into participant evidence, accessibility evidence, legal clearance, or a signed DesignOps direction or handoff approval.",
+    "Only the local-first Expo MVP under apps/mobile is authorized; accounts, public UGC, live X integration, multiplayer rooms, political breaking-news decks, and AI celebrity impersonation remain excluded.",
+    "Release remains fail-closed and still requires signed handoff and release approvals plus current iOS/Android native verification evidence.",
+    "Every pull request still requires repository enforcement, GitHub visibility, code review, and security review."
+  ]
+}

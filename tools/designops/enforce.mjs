@@ -193,6 +193,28 @@ export async function resolveTrustedReviewerKey(projectRoot = PROJECT_ROOT, requ
   return resolved;
 }
 
+export async function validateImplementationException(paths, projectRoot = PROJECT_ROOT) {
+  const file = path.join(projectRoot, ".designops/10-owner-implementation-exception.json");
+  if (!existsSync(file)) return null;
+  const exception = await readJson(file);
+  if (exception.schemaVersion !== "1" || exception.status !== "active" || exception.scope !== "full-mvp-local-first") {
+    throw new EnforcementError("The owner implementation exception is incomplete or inactive.", 1);
+  }
+  if (!Array.isArray(exception.allowedImplementationPrefixes) || exception.allowedImplementationPrefixes.length === 0) {
+    throw new EnforcementError("The owner implementation exception has no allowed implementation paths.", 1);
+  }
+  const implementationPaths = paths.filter((filePath) => classifyPath(filePath) === "implementation");
+  const outsideScope = implementationPaths.filter((filePath) => !exception.allowedImplementationPrefixes.some((prefix) => normalizeRelativePath(filePath).startsWith(prefix)));
+  if (outsideScope.length) {
+    throw new EnforcementError("Implementation changes exceed the owner exception scope.", 1, outsideScope);
+  }
+  await verifyEvidenceRecords(exception.simulationEvidence, projectRoot, "simulationEvidence");
+  if (!Array.isArray(exception.constraints) || !exception.constraints.some((value) => String(value).includes("does not convert AI simulation output into participant evidence"))) {
+    throw new EnforcementError("The owner implementation exception must preserve the simulation-evidence boundary.", 1);
+  }
+  return exception;
+}
+
 async function changedPaths(selector) {
   if (selector.staged) {
     return runGit(["diff", "--cached", "--name-only", "--diff-filter=ACMR", "--"])
@@ -327,6 +349,24 @@ export async function main(argv = process.argv.slice(2)) {
     const project = await readJson(path.join(DESIGNOPS_ROOT, "project.json"));
     const currentPhase = project.workflow?.currentPhase;
     const phase = gatePhaseForIntent(intent, currentPhase);
+    const exception = intent === "implementation" ? await validateImplementationException(paths) : null;
+    if (exception) {
+      const result = {
+        decision: "allowed",
+        intent,
+        phase: "owner-exception",
+        currentPhase,
+        gateExit: 0,
+        reviewRequired: false,
+        paths,
+        sourcesChecked: sources.checked,
+        vendorFiles: vendor.fileCount,
+        message: "The scoped owner exception permits local-first MVP implementation; it does not establish human evidence or release readiness.",
+        details: exception.constraints
+      };
+      process.stdout.write(formatResult(result, args.json));
+      return 0;
+    }
     const keyRequired = intent !== "design" || reviewExists(project, phase);
     const trustedReviewerKey = await resolveTrustedReviewerKey(PROJECT_ROOT, args.trustedReviewerKey, { required: keyRequired });
     const gate = runQualityGate(phase, trustedReviewerKey);

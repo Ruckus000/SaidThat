@@ -1,6 +1,6 @@
 # AI tabletop simulation — Room Beacon versus Private Relay
 
-**Status:** Simulation-only design pressure test. It is not participant evidence, a signed validation plan, a Direction decision, or implementation permission.
+**Status:** Simulation-only design pressure test. It is not participant evidence, a signed validation plan, or a Direction decision. The repository owner separately authorized a scoped local-first MVP implementation exception in `../../10-owner-implementation-exception.json`; that exception does not change this simulation's evidentiary status.
 
 ## Purpose
 
@@ -11,7 +11,7 @@ The simulation must never be used to:
 - represent AI output as user research, accessibility testing, or a completed study session;
 - estimate human success rates, fun, accessibility, safety, or market fit;
 - justify alcohol use, administer alcohol, or recruit intoxicated people;
-- clear a Direction gate, replace the signed independent-study plan, or create `results.json`.
+- clear a Direction gate, replace the signed independent-study plan, create `results.json`, or establish release readiness.
 
 ## What it does
 

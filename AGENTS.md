@@ -12,7 +12,7 @@ Read these files before editing:
 4. `.designops/03-requirements-map.json`
 5. `.designops/09-review-report.json`
 
-The current strategy is `review-required`. Planning and DesignOps work may continue, but application implementation is blocked until current strategy, direction, and handoff approvals are explicitly reviewed and externally signed.
+The current strategy is `review-required`. The active owner exception at `.designops/10-owner-implementation-exception.json` narrowly permits the documented local-first Expo MVP under `apps/mobile/`, bound to the AI tabletop simulation. It does not create participant evidence, legal clearance, a signed Direction/Handoff approval, or release readiness.
 
 ## Mandatory gate
 
@@ -40,7 +40,7 @@ After edits, run:
 node tools/designops/enforce.mjs --working-tree
 ```
 
-Exit `0` permits the requested work. Exits `1`, `2`, or `3` require stopping. Do not work around a nonzero result.
+Exit `0` permits the requested work. Exits `1`, `2`, or `3` require stopping. Do not work around a nonzero result. The current exception grants `0` only for in-scope `apps/mobile/` MVP changes; all other implementation paths remain fail-closed.
 
 ## Non-negotiable rules
 
