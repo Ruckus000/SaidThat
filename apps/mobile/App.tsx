@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import { AppState, SafeAreaView, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 
@@ -14,6 +14,7 @@ import { SetupScreen } from "./src/components/SetupScreen";
 import { s } from "./src/components/styles";
 import { catalog, DECK_VERSION } from "./src/content/catalog";
 import {
+  MODES,
   STAGES,
   canExposeCardToAssistiveTech,
   createSession,
@@ -22,6 +23,7 @@ import {
   reportPayload,
   shouldConcealScore,
 } from "./src/domain/game";
+import { calibrateNeutral, readMotionSample, useRoomBeaconMotion } from "./src/sensors/useRoomBeaconMotion";
 import { queueReport } from "./src/storage/reportQueue";
 
 const allowLocalFixtures = typeof __DEV__ !== "undefined" && __DEV__;
@@ -33,7 +35,20 @@ export default function App() {
     () => createSession({ cards: catalog, allowLocalFixtures, deckVersion: DECK_VERSION }),
   );
   const [reportBusy, setReportBusy] = useState(false);
+  const [motionOptIn, setMotionOptIn] = useState(false);
+  const [motionNeutralZ, setMotionNeutralZ] = useState<number | null>(null);
   const card = currentCard(state);
+
+  const submitAnswer = useCallback((guessAuthentic: boolean) => {
+    dispatch({ type: "ANSWER", guessAuthentic });
+  }, []);
+
+  useRoomBeaconMotion({
+    enabled: motionOptIn && state.stage === STAGES.ROUND,
+    mode: state.mode,
+    neutralZ: motionNeutralZ,
+    onAnswer: submitAnswer,
+  });
 
   useEffect(() => {
     const subscription = AppState.addEventListener("change", (nextState) => {
@@ -57,11 +72,35 @@ export default function App() {
     }
   }
 
+  async function calibrateMotion() {
+    const sample = await readMotionSample();
+    const neutral = calibrateNeutral(sample);
+    if (neutral != null) setMotionNeutralZ(neutral);
+  }
+
+  function goHome() {
+    setMotionNeutralZ(null);
+    dispatch({ type: "GO_HOME" });
+  }
+
+  function setMode(mode: string) {
+    if (mode !== MODES.ROOM_BEACON) {
+      setMotionOptIn(false);
+      setMotionNeutralZ(null);
+    }
+    dispatch({ type: "SET_MODE", mode });
+  }
+
+  function setMotionOptInEnabled(enabled: boolean) {
+    setMotionOptIn(enabled);
+    if (!enabled) setMotionNeutralZ(null);
+  }
+
   return (
     <SafeAreaView style={s.safe}>
       <StatusBar style="light" />
       <View style={s.app}>
-        <Header score={state.score} concealScore={shouldConcealScore(state)} onHome={() => dispatch({ type: "GO_HOME" })} />
+        <Header score={state.score} concealScore={shouldConcealScore(state)} onHome={goHome} />
         {state.stage === STAGES.HOME && (
           <HomeScreen onStart={() => dispatch({ type: "OPEN_SETUP" })} localFixtures={allowLocalFixtures} />
         )}
@@ -69,8 +108,10 @@ export default function App() {
           <SetupScreen
             mode={state.mode}
             accessRole={state.accessRole}
-            onMode={(mode) => dispatch({ type: "SET_MODE", mode })}
+            motionOptIn={motionOptIn}
+            onMode={setMode}
             onRole={(accessRole) => dispatch({ type: "SET_ACCESS_ROLE", accessRole })}
+            onMotionOptIn={setMotionOptInEnabled}
             onStart={() => dispatch({ type: "START_ROUND" })}
           />
         )}
@@ -80,7 +121,10 @@ export default function App() {
             mode={state.mode}
             hideCardFromAssistiveTech={!canExposeCardToAssistiveTech(state)}
             round={state.roundIndex + 1}
-            onAnswer={(guessAuthentic) => dispatch({ type: "ANSWER", guessAuthentic })}
+            motionOptIn={motionOptIn}
+            motionCalibrated={motionNeutralZ != null}
+            onCalibrate={calibrateMotion}
+            onAnswer={submitAnswer}
             onPause={() => dispatch({ type: "APP_BACKGROUND" })}
           />
         )}

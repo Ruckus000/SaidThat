@@ -9,12 +9,22 @@ import { s } from "./styles";
 export type SetupScreenProps = {
   mode: string;
   accessRole: string;
+  motionOptIn: boolean;
   onMode: (mode: string) => void;
   onRole: (role: string) => void;
+  onMotionOptIn: (enabled: boolean) => void;
   onStart: () => void;
 };
 
-export function SetupScreen({ mode, accessRole, onMode, onRole, onStart }: SetupScreenProps) {
+export function SetupScreen({
+  mode,
+  accessRole,
+  motionOptIn,
+  onMode,
+  onRole,
+  onMotionOptIn,
+  onStart,
+}: SetupScreenProps) {
   const roomBeacon = mode === MODES.ROOM_BEACON;
   return (
     <ScrollView contentContainerStyle={s.setup}>
@@ -31,7 +41,18 @@ export function SetupScreen({ mode, accessRole, onMode, onRole, onStart }: Setup
       ) : (
         <Text style={s.copy}>Tap-only, untimed play. The active player may use VoiceOver or TalkBack; no content is shown during handoff.</Text>
       )}
-      <Text style={s.note}>Untimed by design. Controls are at least 56 dp and never depend on motion, audio, or haptics.</Text>
+      {roomBeacon && (
+        <>
+          <Text style={s.sectionLabel}>OPTIONAL TILT</Text>
+          <Choice
+            active={motionOptIn}
+            title="Enable tilt answer"
+            body="Holder may tilt to answer after calibration. Tap buttons always work immediately."
+            onPress={() => onMotionOptIn(!motionOptIn)}
+          />
+        </>
+      )}
+      <Text style={s.note}>Untimed by design. Controls are at least 56 dp; tap paths remain complete with or without tilt.</Text>
       <PrimaryButton label="Begin round" onPress={onStart} />
     </ScrollView>
   );
