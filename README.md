@@ -5,6 +5,8 @@
 
 **Project status:** Planning + DesignOps strategy review. **Application implementation is gated** (`AGENTS.md` / LaunchPad DesignOps). A partial `apps/mobile` Expo stub exists from an early scaffold attempt — do not expand it until the implementation gate is signed.
 
+**Repository-control status:** Local DesignOps checks and tracked Git hooks are fail-closed. GitHub Actions displays the policy result, but this private repository's current GitHub plan does not enforce branch protection; use feature branches and pull requests, then verify the workflow before merge. See [DesignOps enforcement](tools/designops/README.md).
+
 **Phase 0 content (planning):** researched card candidates live under [`docs/content/`](docs/content/) with sources. Analytics for first playable build: **debug event log only** (no PostHog yet).
 
 ---

@@ -8,7 +8,7 @@
       "status": "verified",
       "confidence": "high",
       "criticality": "high",
-      "sha256": "3fc5dd8a195e912213d6c48c0af9887841a6413aa0d4685588f441a8de77e781"
+      "sha256": "62fadf0e172ed0f6403fbb314c9ca23f699b8944ff740cceee54c7f9419f4cc7"
     },
     {
       "id": "master-plan",
@@ -18,7 +18,7 @@
       "status": "stakeholder-provided",
       "confidence": "high",
       "criticality": "critical",
-      "sha256": "f028b4a8995ee4755bfbed796b5fefedd478bc1db1dcaf198c306ba6e5cb3ab2"
+      "sha256": "3b25e9b0318355058079f29fa461b7b1456b73d379e6917186c18b3c86cbd344"
     },
     {
       "id": "product-brief",
@@ -158,7 +158,7 @@
       "status": "stakeholder-provided",
       "confidence": "high",
       "criticality": "critical",
-      "sha256": "3a2d12c05d0d7ca8c8d59972d276536bd20249d3452f383729ee36d6e98e3840"
+      "sha256": "6b4a3b6d177b8c39dfe2d341b65695ff2c793e47ef0bb7f51f1cee6e39082025"
     },
     {
       "id": "open-questions",
@@ -178,7 +178,7 @@
       "status": "stakeholder-provided",
       "confidence": "high",
       "criticality": "high",
-      "sha256": "bc3128cbe7f963b6bb5b75c0ef47c2331de864f12e0609aa0039c9c6e001efdb"
+      "sha256": "253617290bba1c322063a6e864b504591799f42dadabd17e97e65ecd08c9d5c7"
     }
   ],
   "users": [

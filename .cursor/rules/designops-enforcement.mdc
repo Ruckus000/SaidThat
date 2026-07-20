@@ -25,5 +25,6 @@ Stop on gate exits `1`, `2`, or `3`. Never bypass, weaken, or disable the gate, 
 
 Never infer approval, access a private reviewer key, sign a review, or create an approval record without the user's explicit decision. Reviewer keys must remain outside the repository.
 
-The existing visual tokens and aesthetic suggestions in `docs/ux-spec.md` are unvalidated hypotheses. Do not implement them before approved direction and handoff artifacts exist.
+This private repository's current GitHub plan does not enforce a protected branch or ruleset. Do not assume `main` is remotely protected, that a pull request is mandatory, or that a green GitHub Actions result blocked a direct update. Run the local gate and respect the tracked hooks; use feature branches and pull requests as the required operating practice. GitHub Actions and CODEOWNERS provide visibility and review routing only until remote branch protection can be activated on an eligible plan.
 
+The existing visual tokens and aesthetic suggestions in `docs/ux-spec.md` are unvalidated hypotheses. Do not implement them before approved direction and handoff artifacts exist.

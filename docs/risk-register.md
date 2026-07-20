@@ -23,5 +23,6 @@
 | R16 | Monetization reduces fun | M | M | Rematch drop after IAP | No ads in rounds; validate free first | Soften paywall |
 | R17 | Name / trademark conflicts (“Tweet”) | H | H | USPTO/X ToS signals | Neutral master brand | Rename before store submit |
 | R18 | Privacy / sensor misuse perception | L | M | App Store questions | On-device only; clear purpose string | Disable motion entirely |
+| R19 | Remote `main` is not technically protected | M | H | Direct push or merge without a reviewed PR / DesignOps check | Use feature branches and PRs; require local gate and tracked hooks; inspect GitHub Actions before merge | Activate protected-branch rules when an eligible GitHub plan becomes available |
 
 **Top five risks:** R1, R2/R3 (content legal), R6 (quality), R17 (name), R7 (motion).

@@ -52,5 +52,10 @@ Exit `0` permits the requested work. Exits `1`, `2`, or `3` require stopping. Do
 - Legitimate planning-source changes must update the typed evidence registry and invalidate/re-run affected downstream reviews.
 - Accessibility, truth labeling, offline recovery, sensor failure, native lifecycle, and content-removal states are release requirements, not optional polish.
 
-The repository-owned enforcement command, signed reviews, protected branch, and CI are authoritative. Cursor rules and commands provide context but do not replace those gates.
+## Remote GitHub status
 
+This private repository's current GitHub plan cannot enforce a ruleset or protected branch. Do not assume that `main` is remotely protected or that GitHub will block a direct push or merge.
+
+The repository-owned enforcement command, signed reviews, and installed local Git hooks are the authoritative local controls. GitHub Actions reports the DesignOps result, and CODEOWNERS routes review requests, but neither is a remote merge or push gate today. Use feature branches and pull requests, inspect the DesignOps workflow result before merging, and never treat a green workflow as proof that GitHub enforced the merge path.
+
+If this repository later gains an eligible GitHub plan, configure and activate branch protection before describing remote enforcement as active. Cursor rules and commands provide context; they do not replace local gates.
