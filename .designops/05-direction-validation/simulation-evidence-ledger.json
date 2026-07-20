@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1",
+  "status": "simulation-backed-owner-decision",
+  "purpose": "Bound the internal Room Beacon handoff draft with mechanism research and accessibility standards. This ledger does not contain participant observations, product-performance evidence, legal clearance, or release evidence.",
+  "evidenceClasses": [
+    {
+      "id": "response-inhibition",
+      "class": "peer-reviewed-mechanism",
+      "confidence": "high-for-mechanism-low-for-product-outcome",
+      "sourceIds": ["acute-response-inhibition-meta-analysis", "alcohol-myopia-review"],
+      "permittedConclusion": "Make one answer commit visible, idempotent, and recoverable; provide a tap path that does not depend on motion.",
+      "prohibitedConclusion": "Do not infer an error rate, intoxication level, or individual behavior."
+    },
+    {
+      "id": "social-judgment-pressure",
+      "class": "peer-reviewed-mechanism",
+      "confidence": "medium-for-mechanism-low-for-product-outcome",
+      "sourceIds": ["conformity-meta-analysis", "public-private-conformity-study", "social-information-integration-study"],
+      "permittedConclusion": "Keep the group decision and the private countermodel distinct, allow a non-shaming dissent moment, and never optimize for speed or loudness as a proxy for fun.",
+      "prohibitedConclusion": "Do not claim that Room Beacon improves consensus, inclusion, or enjoyment."
+    },
+    {
+      "id": "listening-and-attention-load",
+      "class": "peer-reviewed-mechanism",
+      "confidence": "medium-for-mechanism-low-for-product-outcome",
+      "sourceIds": ["listening-effort-review", "alcohol-myopia-review"],
+      "permittedConclusion": "Preserve a persistent game-context beacon, concise role instruction, and an untimed tap-only recovery path under divided attention.",
+      "prohibitedConclusion": "Do not claim that content is readable or understood at a particular party distance or noise level."
+    },
+    {
+      "id": "native-accessibility",
+      "class": "accessibility-standard",
+      "confidence": "high-for-requirement-not-user-outcome",
+      "sourceUrls": [
+        "https://www.w3.org/WAI/WCAG22/quickref/",
+        "https://developer.apple.com/documentation/accessibility",
+        "https://developer.android.com/guide/topics/ui/accessibility"
+      ],
+      "permittedConclusion": "Provide text-plus-shape truth states, target-size constraints, reduced motion, VoiceOver/TalkBack-compatible role privacy, and native-device verification before release.",
+      "prohibitedConclusion": "Do not label the app accessible or WCAG-conformant without native verification."
+    }
+  ],
+  "sourceIndex": "ai-tabletop-simulation/human-psychology-gate.json",
+  "productDecisionBoundary": "The following direction and handoff artifacts are owner-authorized internal drafts. They guide the local-first MVP only and must remain explicitly simulation-backed until an external reviewer signs current Direction and Handoff records."
+}

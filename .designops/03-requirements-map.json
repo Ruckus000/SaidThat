@@ -8,7 +8,7 @@
       "status": "verified",
       "confidence": "high",
       "criticality": "high",
-      "sha256": "62fadf0e172ed0f6403fbb314c9ca23f699b8944ff740cceee54c7f9419f4cc7"
+      "sha256": "103daaa25428c3d28faa064321831a6055ab3605abed81e017ec52c1bb48afc6"
     },
     {
       "id": "ux-ui-plan",
@@ -138,7 +138,7 @@
       "status": "stakeholder-provided",
       "confidence": "high",
       "criticality": "high",
-      "sha256": "3aec835894e48cee524581a30b6aa414d21097103b615884dec57bf91785bfc4"
+      "sha256": "6f57ad2579a5c99321bc571b512f32e862df009085c5db119c313e2e7d66905e"
     },
     {
       "id": "backlog",
@@ -148,7 +148,7 @@
       "status": "stakeholder-provided",
       "confidence": "high",
       "criticality": "medium",
-      "sha256": "532aa9ec66d4c1b41f7e34f2c3623aa195bdbc67a82b98921b5014eed37d8a4c"
+      "sha256": "c71ee007328eaac75287b7df6b2b4383df6dd75366f8dfaac23d6c91f0590d9e"
     },
     {
       "id": "testing-strategy",
@@ -189,6 +189,36 @@
       "confidence": "high",
       "criticality": "high",
       "sha256": "253617290bba1c322063a6e864b504591799f42dadabd17e97e65ecd08c9d5c7"
+    },
+    {
+      "id": "simulation-evidence-ledger",
+      "title": "Simulation Evidence Ledger",
+      "type": "research",
+      "locator": ".designops/05-direction-validation/simulation-evidence-ledger.json",
+      "status": "bounded-assumption",
+      "confidence": "medium",
+      "criticality": "high",
+      "sha256": "975a39b5e9dbfa8fb2519d9d23af837e78f4646ed2f389bcd074e50ac71e21ba"
+    },
+    {
+      "id": "mvp-build-status",
+      "title": "MVP Build Status",
+      "type": "stakeholder",
+      "locator": ".designops/mvp-build-status.md",
+      "status": "stakeholder-provided",
+      "confidence": "high",
+      "criticality": "critical",
+      "sha256": "6091d4259791011cee1683cadec5737cf82e6bb9b7d9263265b88050235eb7e6"
+    },
+    {
+      "id": "mvp-build-queue",
+      "title": "Cursor MVP Build Queue",
+      "type": "stakeholder",
+      "locator": "docs/mvp-build-queue.md",
+      "status": "stakeholder-provided",
+      "confidence": "high",
+      "criticality": "critical",
+      "sha256": "3db984d9d144bcd4f8234d9533be975481832ff40446be172d0ab10205c8912d"
     }
   ],
   "users": [

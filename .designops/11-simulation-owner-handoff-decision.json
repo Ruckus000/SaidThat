@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "1",
+  "status": "active-mvp-build-authorization",
+  "authorizedBy": "Repository owner explicit instruction in this Codex task on 2026-07-20.",
+  "decision": "End additional evidence gathering for the local-first MVP. Treat the simulation-backed Direction and Handoff drafts as sufficient internal implementation guidance and continue building apps/mobile without participant studies or signed Direction/Handoff reviews.",
+  "scope": {
+    "included": ["apps/mobile/", "fixture-only local content", "Room Beacon primary flow", "Private Relay accessibility and recovery countermodel"],
+    "excluded": ["public uploads", "accounts", "live social feeds", "authentic playable public-figure cards", "release claims"]
+  },
+  "evidenceRecords": [
+    { "path": ".designops/05-direction-validation/simulation-evidence-ledger.json", "sha256": "975a39b5e9dbfa8fb2519d9d23af837e78f4646ed2f389bcd074e50ac71e21ba" },
+    { "path": ".designops/05-direction-validation/ai-tabletop-simulation/simulation-matrix.json", "sha256": "85192350bb1acbfcaba545819f7d6bb6ecc5f11811e7d6c328f561ad51e3907e" },
+    { "path": ".designops/05-direction-validation/ai-tabletop-simulation/implementation-chaos-appendix.md", "sha256": "32eeeac66a1830b14ead96fa0fd479993ef4c3528d9ba4fcb126c4e1a809bdad" },
+    { "path": ".designops/06-content-state-map.json", "sha256": "97397a037beb9710c57a2ee51762a3546cead418fb3e741122ab89c1f75d23f8" },
+    { "path": ".designops/07-design-dna.json", "sha256": "cf0e3fc875238e48bd2a020738db25b6c05aa60ecf3629bec08eec68912b8d70" },
+    { "path": ".designops/08-design-system/tokens.json", "sha256": "ad14fa453d9149b6127846abb44655ac44fda8b2df666ddd4a389af1802189e7" }
+  ],
+  "nonClaims": [
+    "This decision is not participant research, a usability result, or a claim about real group behavior.",
+    "This decision is not a legal, editorial, accessibility-conformance, Direction-gate, Handoff-gate, or Release-gate approval.",
+    "Release still requires real human editorial approval for non-fixture content and current native iOS/Android verification evidence."
+  ],
+  "expirationCondition": "Supersede this record only when scope expands beyond the local-first fixture MVP or an official signed Direction/Handoff/Release review supersedes it."
+}

@@ -349,8 +349,8 @@ export async function main(argv = process.argv.slice(2)) {
     const project = await readJson(path.join(DESIGNOPS_ROOT, "project.json"));
     const currentPhase = project.workflow?.currentPhase;
     const phase = gatePhaseForIntent(intent, currentPhase);
-    const exception = intent === "implementation" ? await validateImplementationException(paths) : null;
-    if (exception) {
+    const exception = ["design", "implementation"].includes(intent) ? await validateImplementationException(paths) : null;
+    if (intent === "implementation" && exception) {
       const result = {
         decision: "allowed",
         intent,
@@ -383,7 +383,11 @@ export async function main(argv = process.argv.slice(2)) {
       paths,
       sourcesChecked: sources.checked,
       vendorFiles: vendor.fileCount,
-      message: gate.exitCode === 2 ? "Planning work may continue, but application implementation remains blocked pending signed approval." : "The requested intent is permitted by the current DesignOps policy.",
+      message: gate.exitCode === 2
+        ? exception
+          ? "Planning work may continue; the active owner exception also permits the scoped local-first MVP under apps/mobile/."
+          : "Planning work may continue, but application implementation remains blocked pending signed approval."
+        : "The requested intent is permitted by the current DesignOps policy.",
       details: []
     };
     process.stdout.write(formatResult(result, args.json));

@@ -1,0 +1,62 @@
+{
+  "states": [
+    {
+      "name": "normal",
+      "applicability": "applicable",
+      "content": "A fixture-only playable Room Beacon or Private Relay round presents one game prompt, one role-appropriate answer path, and a persistent game-context beacon; authentic public-figure records are excluded.",
+      "implementationRef": "apps/mobile/App.tsx#Round; apps/mobile/src/domain/game.js#createSession",
+      "recovery": "Commit exactly one answer, reveal the explicit fixture truth state, then continue or start a protected handoff.",
+      "evidenceRefs": ["task:judge-card", "task:understand-role", "source:simulation-evidence-ledger"]
+    },
+    {
+      "name": "loading",
+      "applicability": "applicable",
+      "content": "A future reviewed deck update must state that content is being checked while retaining the last known safe local deck; no unverifiable record becomes playable during refresh.",
+      "implementationRef": "apps/mobile/src/content/catalog.js; docs/content-operations.md#publication",
+      "recovery": "Continue with the retained safe deck or show the empty state if no safe local card exists.",
+      "evidenceRefs": ["task:start-round", "task:operate-content", "source:content-operations"]
+    },
+    {
+      "name": "empty",
+      "applicability": "applicable",
+      "content": "No safe playable cards are available because the deck is fixture-disabled, all records are withheld, removed, disputed, source-unavailable, or filtered by editorial policy.",
+      "implementationRef": "apps/mobile/App.tsx#ContentUnavailable; apps/mobile/src/domain/game.js#createSession",
+      "recovery": "Return home and wait for a reviewed deck; never substitute a withheld or candidate public-figure record.",
+      "evidenceRefs": ["task:start-round", "task:understand-reveal", "source:content-operations"]
+    },
+    {
+      "name": "error",
+      "applicability": "applicable",
+      "content": "A corrupt deck, failed local report write, interrupted protected transition, or unavailable offline report delivery is described in plain language without exposing protected content.",
+      "implementationRef": "apps/mobile/src/domain/game.js#SIMULATE_CORRUPT_DECK; apps/mobile/src/storage/reportQueue.js",
+      "recovery": "Use the safe home, content-unavailable, queue-locally, or fresh protected-turn path; never silently retry a committed answer.",
+      "evidenceRefs": ["task:recover-control", "task:report-content", "source:architecture"]
+    },
+    {
+      "name": "success",
+      "applicability": "applicable",
+      "content": "After one answer, the review labels the card as fabricated-for-game or simulated-authentic fixture and explains that fixtures are not source-verified production claims; a locally queued report confirms only local storage.",
+      "implementationRef": "apps/mobile/App.tsx#Review; apps/mobile/src/domain/reportPolicy.js#reportPayload",
+      "recovery": "Continue to the next Room Beacon prompt or reach the Private Relay shutter before the next player sees content.",
+      "evidenceRefs": ["task:understand-reveal", "task:continue-session", "source:simulation-evidence-ledger"]
+    },
+    {
+      "name": "permission-unavailable",
+      "applicability": "applicable",
+      "content": "Motion, audio, haptics, screen-reader focus, network delivery, or a source record may be unavailable. The MVP never requires motion, audio, haptics, an account, or network access to complete a fixture round.",
+      "implementationRef": "apps/mobile/App.tsx#Setup; apps/mobile/src/domain/game.js#protectPrivateState",
+      "recovery": "Use tap-only untimed play, text-plus-shape states, local report queueing, or content-unavailable; preserve the same score and review semantics.",
+      "evidenceRefs": ["task:recover-control", "user:accessible-player", "source:ux-ui-plan"]
+    }
+  ],
+  "verificationConditions": {
+    "mobile": {
+      "implementationRef": "apps/mobile/App.tsx; native iOS/Android evidence required before release",
+      "evidenceRefs": ["user:accessible-player", "source:simulation-evidence-ledger"]
+    },
+    "long-content": {
+      "implementationRef": "apps/mobile/App.tsx#Round; fixture maximum-length pressure test is not yet human validated",
+      "evidenceRefs": ["task:judge-card", "source:simulation-evidence-ledger"]
+    }
+  }
+}

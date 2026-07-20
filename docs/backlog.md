@@ -1,5 +1,7 @@
 # Prioritized Engineering Backlog
 
+> Historical long-range backlog. For the current local-first fixture MVP, Cursor must follow [`docs/mvp-build-queue.md`](mvp-build-queue.md). Backend, real-content, analytics, account, and release items below are not currently authorized MVP work.
+
 **Date:** 2026-07-18  
 **Priority:** P0 must for Phase 0/1 · P1 should · P2 later  
 **Complexity:** S / M / L / XL

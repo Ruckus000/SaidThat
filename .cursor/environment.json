@@ -1,5 +1,4 @@
 {
-  "install": "npm ci --prefix tools/launchpad-designops --omit=dev --ignore-scripts",
+  "install": "npm ci --prefix tools/launchpad-designops --omit=dev --ignore-scripts && npm ci --prefix apps/mobile --ignore-scripts",
   "terminals": []
 }
-

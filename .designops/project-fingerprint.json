@@ -1,0 +1,10 @@
+{
+  "typography": "Platform system sans with compact game-context marker, large shared statement, and plain-language truth labels.",
+  "palette": "Dark low-glare stage with lime action signal; semantic text-plus-shape states never rely on color alone.",
+  "composition": "One shared card, one persistent beacon, role instruction, two large answer actions, and a separate post-answer review; Private Relay replaces the card with a shutter at handoff.",
+  "density": "Sparse active-round hierarchy that preserves attribution, role, next action, and game context under divided attention.",
+  "geometry": "Generous rounded panels, visible spacing, and a 56 dp MVP touch-control minimum.",
+  "imagery": "No social-post chrome, public-figure imagery, screenshots, or profile mimicry; content is a fixture statement until editorial approval exists.",
+  "signature": "Persistent room beacon that makes the prompt unmistakably a game before reveal.",
+  "motion": "Minimal orientation-only transitions; tap-only and reduced-motion routes keep equivalent game semantics."
+}
