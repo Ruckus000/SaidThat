@@ -55,6 +55,8 @@ jobs:
           echo "range=$range" >> "$GITHUB_OUTPUT"
 
       - name: Test enforcement policy
+        env:
+          DESIGNOPS_TRUSTED_PUBLIC_KEY_FILE: ${{ runner.temp }}/designops-reviewer-public.pem
         run: node --test tools/designops/enforce.test.mjs
 
       - name: Enforce DesignOps phase and approvals
