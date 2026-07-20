@@ -11,6 +11,7 @@ import {
 import { StatusBar } from "expo-status-bar";
 
 import { catalog, DECK_VERSION } from "./src/content/catalog";
+import { tokens as t } from "./src/theme/tokens";
 import {
   MODES,
   STAGES,
@@ -295,5 +296,39 @@ function Choice({ active, title, body, onPress }: { active: boolean; title: stri
 }
 
 const s = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#111" }, app: { flex: 1, padding: 24 }, header: { flexDirection: "row", justifyContent: "space-between", paddingTop: 8 }, brand: { color: "#fff", fontWeight: "900", letterSpacing: 1.5 }, score: { color: "#b9f227", fontSize: 12, fontWeight: "800" }, center: { flex: 1, justifyContent: "center", gap: 18 }, setup: { flexGrow: 1, justifyContent: "center", gap: 18, paddingVertical: 28 }, eyebrow: { color: "#b9f227", fontSize: 12, fontWeight: "900", letterSpacing: 1.4 }, title: { color: "#fff", fontSize: 38, fontWeight: "900", lineHeight: 43 }, copy: { color: "#d6d6d6", fontSize: 17, lineHeight: 24 }, note: { color: "#b8b8b8", fontSize: 14, lineHeight: 20 }, fixture: { color: "#ffca6a", fontSize: 12, fontWeight: "800", letterSpacing: 0.8 }, button: { backgroundColor: "#b9f227", minHeight: 56, justifyContent: "center", alignItems: "center", paddingHorizontal: 18, borderRadius: 6 }, buttonText: { color: "#111", fontSize: 17, fontWeight: "900", textAlign: "center" }, secondary: { backgroundColor: "transparent", borderWidth: 2, borderColor: "#fff" }, secondaryText: { color: "#fff" }, disabled: { opacity: 0.55 }, link: { color: "#fff", textAlign: "center", fontWeight: "700", padding: 10 }, choice: { borderWidth: 2, borderColor: "#4c4c4c", padding: 18, borderRadius: 8, gap: 6 }, choiceActive: { borderColor: "#b9f227", backgroundColor: "#242b15" }, choiceTitle: { color: "#fff", fontSize: 21, fontWeight: "900" }, choiceBody: { color: "#d6d6d6", fontSize: 15, lineHeight: 21 }, sectionLabel: { color: "#b9f227", fontSize: 13, fontWeight: "900", letterSpacing: 1 }, round: { flex: 1, paddingTop: 36, gap: 18 }, mode: { color: "#b9f227", fontWeight: "900", letterSpacing: 1 }, beacon: { borderTopWidth: 4, borderBottomWidth: 4, borderColor: "#b9f227", paddingVertical: 8 }, game: { color: "#fff", fontWeight: "900", letterSpacing: 1, textAlign: "center", fontSize: 12 }, card: { flexGrow: 1, justifyContent: "center", gap: 18 }, quote: { color: "#fff", fontSize: 36, fontWeight: "800", lineHeight: 43 }, person: { color: "#d6d6d6", fontSize: 20, fontWeight: "700" }, instruction: { color: "#d6d6d6", fontSize: 16, lineHeight: 22 }, actions: { gap: 12 }, report: { borderTopWidth: 1, borderColor: "#4c4c4c", paddingTop: 18, gap: 12 }, success: { color: "#b9f227", fontSize: 14, lineHeight: 20 }, error: { color: "#ffb4ab", fontSize: 14, lineHeight: 20 },
+  safe: { flex: 1, backgroundColor: t.color.canvas },
+  app: { flex: 1, padding: t.spacing.md },
+  header: { flexDirection: "row", justifyContent: "space-between", paddingTop: t.spacing.xs },
+  brand: { color: t.color.text.primary, fontWeight: t.typography.weight.bold, letterSpacing: 1.5 },
+  score: { color: t.color.signal, fontSize: t.typography.size.beacon, fontWeight: t.typography.weight.bold },
+  center: { flex: 1, justifyContent: "center", gap: t.spacing.sm },
+  setup: { flexGrow: 1, justifyContent: "center", gap: t.spacing.sm, paddingVertical: t.spacing.md + t.spacing.xs },
+  eyebrow: { color: t.color.signal, fontSize: t.typography.size.beacon, fontWeight: t.typography.weight.bold, letterSpacing: 1.4 },
+  title: { color: t.color.text.primary, fontSize: t.typography.size.statement + 6, fontWeight: t.typography.weight.bold, lineHeight: t.typography.size.statement + 11 },
+  copy: { color: t.color.text.muted, fontSize: t.typography.size.body, lineHeight: t.typography.size.body + 6 },
+  note: { color: t.color.text.muted, fontSize: t.typography.size.beacon + 2, lineHeight: t.typography.size.beacon + 8 },
+  fixture: { color: t.color.status.warning, fontSize: t.typography.size.beacon, fontWeight: t.typography.weight.bold, letterSpacing: 0.8 },
+  button: { backgroundColor: t.color.action.primary, minHeight: t.target.minimum, justifyContent: "center", alignItems: "center", paddingHorizontal: t.spacing.sm + 2, borderRadius: t.radius.control },
+  buttonText: { color: t.color.canvas, fontSize: t.typography.size.body, fontWeight: t.typography.weight.bold, textAlign: "center" },
+  secondary: { backgroundColor: "transparent", borderWidth: 2, borderColor: t.color.text.primary },
+  secondaryText: { color: t.color.text.primary },
+  disabled: { opacity: 0.55 },
+  link: { color: t.color.text.primary, textAlign: "center", fontWeight: t.typography.weight.semibold, padding: t.spacing.xs + 2 },
+  choice: { borderWidth: 2, borderColor: t.color.action.secondary, padding: t.spacing.sm + 2, borderRadius: t.radius.control, gap: 6 },
+  choiceActive: { borderColor: t.color.signal, backgroundColor: t.color.surface },
+  choiceTitle: { color: t.color.text.primary, fontSize: t.typography.size.body + 3, fontWeight: t.typography.weight.bold },
+  choiceBody: { color: t.color.text.muted, fontSize: t.typography.size.body - 3, lineHeight: t.typography.size.body + 3 },
+  sectionLabel: { color: t.color.signal, fontSize: t.typography.size.beacon + 1, fontWeight: t.typography.weight.bold, letterSpacing: 1 },
+  round: { flex: 1, paddingTop: t.spacing.lg - 4, gap: t.spacing.sm },
+  mode: { color: t.color.signal, fontWeight: t.typography.weight.bold, letterSpacing: 1 },
+  beacon: { borderTopWidth: 4, borderBottomWidth: 4, borderColor: t.color.signal, paddingVertical: t.spacing.xs },
+  game: { color: t.color.text.primary, fontWeight: t.typography.weight.bold, letterSpacing: 1, textAlign: "center", fontSize: t.typography.size.beacon },
+  card: { flexGrow: 1, justifyContent: "center", gap: t.spacing.sm },
+  quote: { color: t.color.text.primary, fontSize: t.typography.size.statement + 4, fontWeight: t.typography.weight.bold, lineHeight: t.typography.size.statement + 11 },
+  person: { color: t.color.text.muted, fontSize: t.typography.size.body + 2, fontWeight: t.typography.weight.semibold },
+  instruction: { color: t.color.text.muted, fontSize: t.typography.size.body - 2, lineHeight: t.typography.size.body + 4 },
+  actions: { gap: t.spacing.sm - 4 },
+  report: { borderTopWidth: 1, borderColor: t.color.action.secondary, paddingTop: t.spacing.sm + 2, gap: t.spacing.sm - 4 },
+  success: { color: t.color.status.safe, fontSize: t.typography.size.beacon + 2, lineHeight: t.typography.size.beacon + 8 },
+  error: { color: t.color.status.danger, fontSize: t.typography.size.beacon + 2, lineHeight: t.typography.size.beacon + 8 },
 });
