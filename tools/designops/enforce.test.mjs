@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import crypto from "node:crypto";
+import { existsSync, mkdtempSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { mkdtemp, mkdir, readFile, realpath, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -65,18 +66,41 @@ test("review-required gates permit planning but block implementation", () => {
 });
 
 test("pre-push hook classifies a new feature branch relative to origin/main", () => {
-  const head = spawnSync("git", ["rev-parse", "HEAD"], { cwd: PROJECT_ROOT, encoding: "utf8" });
-  assert.equal(head.status, 0, head.stderr);
+  // Isolate the synthetic planning commit in a disposable clone. Borrowing
+  // HEAD made this assertion depend on whether the current feature branch had
+  // application changes; writing an unreachable object to the real checkout
+  // breaks sandboxed and read-only test environments.
+  const cloneDirectory = mkdtempSync(path.join(os.tmpdir(), "designops-hook-repo-"));
+  const repo = path.join(cloneDirectory, "repo");
+  try {
+    const clone = spawnSync("git", ["clone", "--quiet", "--no-hardlinks", "--branch", "main", PROJECT_ROOT, repo], { encoding: "utf8" });
+    assert.equal(clone.status, 0, clone.stderr);
+    const sourceDependencies = path.join(PROJECT_ROOT, "tools", "launchpad-designops", "node_modules");
+    assert.equal(existsSync(sourceDependencies), true, "The vendored DesignOps dependencies must be installed before the hook regression test runs.");
+    symlinkSync(sourceDependencies, path.join(repo, "tools", "launchpad-designops", "node_modules"), "dir");
+    const branch = spawnSync("git", ["switch", "-c", "feature/designops-hook-test"], { cwd: repo, encoding: "utf8" });
+    assert.equal(branch.status, 0, branch.stderr);
+    const fixturePath = path.join(repo, "docs", "pre-push-fixture.md");
+    writeFileSync(fixturePath, "planning-only pre-push fixture\n");
+    const add = spawnSync("git", ["add", "docs/pre-push-fixture.md"], { cwd: repo, encoding: "utf8" });
+    assert.equal(add.status, 0, add.stderr);
+    const commit = spawnSync("git", ["-c", "user.name=DesignOps test", "-c", "user.email=designops-test@example.invalid", "commit", "-m", "test: planning-only hook fixture"], { cwd: repo, encoding: "utf8" });
+    assert.equal(commit.status, 0, commit.stderr);
+    const head = spawnSync("git", ["rev-parse", "HEAD"], { cwd: repo, encoding: "utf8" });
+    assert.equal(head.status, 0, head.stderr);
 
-  const ref = "refs/heads/feature/designops-hook-test";
-  const result = spawnSync("sh", [path.join(PROJECT_ROOT, ".githooks/pre-push")], {
-    cwd: PROJECT_ROOT,
-    encoding: "utf8",
-    input: `${ref} ${head.stdout.trim()} ${ref} ${"0".repeat(40)}\n`
-  });
+    const ref = "refs/heads/feature/designops-hook-test";
+    const result = spawnSync("sh", [path.join(repo, ".githooks/pre-push")], {
+      cwd: repo,
+      encoding: "utf8",
+      input: `${ref} ${head.stdout.trim()} ${ref} ${"0".repeat(40)}\n`
+    });
 
-  assert.equal(result.status, 0, result.stderr || result.stdout);
-  assert.match(result.stdout, /intent=design phase=strategy gateExit=(?:0|2)/);
+    assert.equal(result.status, 0, result.stderr || result.stdout);
+    assert.match(result.stdout, /intent=design phase=strategy gateExit=(?:0|2)/);
+  } finally {
+    rmSync(cloneDirectory, { recursive: true, force: true });
+  }
 });
 
 test("registered source hashes pass and stale evidence fails", async () => {
