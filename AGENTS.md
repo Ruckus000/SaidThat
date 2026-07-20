@@ -69,3 +69,13 @@ If this repository later gains an eligible GitHub plan, configure and activate b
 Every pull request headed to `main` requires an evidence-based **code review and security review** before merge, even when GitHub does not technically require it. The reviewer must inspect the diff against `main`, run the smallest relevant tests and DesignOps range check, assess correctness, maintainability, integration impact, secrets/data exposure, authorization, and unsafe defaults, and resolve or explicitly accept every finding in the PR.
 
 Do not merge on a green workflow alone. The required sequence is: local hooks and DesignOps check → GitHub `DesignOps policy / enforce` pass → code/security review with no unresolved findings → merge. No separate human merge decision is required once those conditions are met; an authorized agent may merge. This is an operating requirement; it remains manual until GitHub-side branch protection becomes available.
+
+## Cursor Cloud specific instructions
+
+The only application is the local-first Expo SDK 57 app under `apps/mobile/` (React 19 / React Native 0.86, npm, no backend/accounts/network). The startup update script already runs `npm install` in `apps/mobile` and `npm ci` for the DesignOps tooling in `tools/launchpad-designops`, so dependencies are ready when a session starts.
+
+- Run app/lint/test/build from `apps/mobile`. Standard commands live in `apps/mobile/README.md` and `apps/mobile/package.json`: `npm run typecheck`, `npm test`, and `npx expo export --platform <ios|android|web>`.
+- This VM has no iOS/Android simulator. To see and interact with the UI, run the web target: `npm --prefix apps/mobile run web` (Metro/web serves at `http://localhost:8081`). The `web` target requires `react-dom` and `react-native-web`, which are declared in `apps/mobile/package.json`.
+- `expo start` in this VM was run with `CI=1` to avoid the interactive TTY and file watching; drop `CI` when you want hot reload while developing.
+- DesignOps gate: `node tools/designops/enforce.mjs --intent implementation` returns exit `0` for `apps/mobile/` work via the active owner exception; `--intent design` needs the `tools/launchpad-designops` deps (installed by the update script). Run `--intent implementation --working-tree` after edits.
+- The repository's `.githooks` are not active here: Cursor points `core.hooksPath` at its own managed hooks directory, so the pre-commit/pre-push DesignOps checks do not run automatically. Run the gate manually before committing and pushing.
