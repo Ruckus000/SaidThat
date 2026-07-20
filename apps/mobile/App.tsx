@@ -14,6 +14,7 @@ import { SetupScreen } from "./src/components/SetupScreen";
 import { SettingsScreen } from "./src/components/SettingsScreen";
 import { s } from "./src/components/styles";
 import { catalog, DECK_VERSION } from "./src/content/catalog";
+import { playableFixtureDeck } from "./src/content/validateDeck";
 import {
   MODES,
   STAGES,
@@ -34,7 +35,11 @@ export default function App() {
   const [state, dispatch] = useReducer(
     gameReducer,
     undefined,
-    () => createSession({ cards: catalog, allowLocalFixtures, deckVersion: DECK_VERSION }),
+    () => createSession({
+      cards: playableFixtureDeck(catalog, { allowLocalFixtures }),
+      allowLocalFixtures,
+      deckVersion: DECK_VERSION,
+    }),
   );
   const [reportBusy, setReportBusy] = useState(false);
   const [motionOptIn, setMotionOptIn] = useState(false);
@@ -106,7 +111,7 @@ export default function App() {
     setShowSettings(false);
     dispatch({
       type: "RESET_LOCAL_SESSION",
-      cards: catalog,
+      cards: playableFixtureDeck(catalog, { allowLocalFixtures }),
       allowLocalFixtures,
       deckVersion: DECK_VERSION,
     });
