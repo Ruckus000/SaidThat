@@ -1,5 +1,6 @@
 import { ScrollView, Text, View } from "react-native";
 
+import { reviewSourceStatus, reviewTruthLabel } from "./presentationLabels";
 import { PrimaryButton } from "./PrimaryButton";
 import { s } from "./styles";
 
@@ -19,13 +20,13 @@ export type ReviewScreenProps = {
 };
 
 export function ReviewScreen({ card, reportStatus, reportBusy, onReport, onContinue }: ReviewScreenProps) {
-  const truth = card.contentState === "fixture-authentic" ? "SIMULATED AUTHENTIC FIXTURE" : card.authentic ? "AUTHENTIC" : "FABRICATED FOR THIS GAME";
+  const truth = reviewTruthLabel(card);
   return (
     <ScrollView contentContainerStyle={s.setup}>
       <Text style={s.eyebrow}>{truth}</Text>
       <Text style={s.title}>“{card.quote}”</Text>
       <Text style={s.copy}>{card.explanation}</Text>
-      <Text style={s.note}>Source status: {card.contentState === "fixture-authentic" ? "development simulation — not a source-verified production card" : card.authentic ? "editorial source record required" : "game fixture"}.</Text>
+      <Text style={s.note}>Source status: {reviewSourceStatus(card)}.</Text>
       <View style={s.report}>
         <Text style={s.sectionLabel}>SEE A CONTENT ISSUE?</Text>
         <Text style={s.note}>Reports save locally with only card ID, reason, deck version, and timestamp. No player identity or free text is collected.</Text>

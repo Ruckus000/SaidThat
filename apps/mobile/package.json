@@ -19,7 +19,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-default-type=module --test src/domain/game.test.mjs"
+    "test": "node --experimental-default-type=module --test src/domain/game.test.mjs src/components/uiState.test.mjs"
   },
   "private": true
 }

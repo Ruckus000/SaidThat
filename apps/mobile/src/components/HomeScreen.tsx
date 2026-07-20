@@ -1,5 +1,6 @@
 import { Text, View } from "react-native";
 
+import { FIXTURE_DISCLOSURE } from "./presentationLabels";
 import { PrimaryButton } from "./PrimaryButton";
 import { s } from "./styles";
 
@@ -16,7 +17,7 @@ export function HomeScreen({ onStart, localFixtures }: HomeScreenProps) {
       <Text style={s.copy}>A local, tap-only party game about public voice—not a social feed.</Text>
       <PrimaryButton label="Start a room" onPress={onStart} />
       <Text style={s.note}>No account. No live social feed. No telemetry.</Text>
-      {localFixtures && <Text style={s.fixture}>LOCAL DEVELOPMENT FIXTURES · NOT EDITORIAL CONTENT</Text>}
+      {localFixtures && <Text style={s.fixture}>{FIXTURE_DISCLOSURE}</Text>}
     </View>
   );
 }
