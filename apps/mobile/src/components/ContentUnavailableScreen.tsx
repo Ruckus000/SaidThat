@@ -1,5 +1,6 @@
 import { Text, View } from "react-native";
 
+import { CONTENT_UNAVAILABLE_GUARD, contentUnavailableMessage } from "./presentationLabels";
 import { s } from "./styles";
 
 export type ContentUnavailableScreenProps = {
@@ -11,8 +12,8 @@ export function ContentUnavailableScreen({ fault }: ContentUnavailableScreenProp
     <View style={s.center}>
       <Text style={s.eyebrow}>CONTENT PAUSED</Text>
       <Text style={s.title}>This deck is not safe to play.</Text>
-      <Text style={s.copy}>{fault === "corrupt-deck" ? "The deck failed an integrity check." : "No reviewed, playable content is available on this device."}</Text>
-      <Text style={s.note}>Disputed, removed, and source-unavailable records are never used as binary game prompts.</Text>
+      <Text style={s.copy}>{contentUnavailableMessage(fault)}</Text>
+      <Text style={s.note}>{CONTENT_UNAVAILABLE_GUARD}</Text>
     </View>
   );
 }

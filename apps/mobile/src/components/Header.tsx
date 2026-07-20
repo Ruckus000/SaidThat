@@ -1,5 +1,6 @@
 import { Pressable, Text, View } from "react-native";
 
+import { headerScoreLabel } from "./presentationLabels";
 import { s } from "./styles";
 
 export type HeaderProps = {
@@ -15,7 +16,7 @@ export function Header({ score, concealScore, onHome }: HeaderProps) {
         <Text style={s.brand}>SAID THAT?</Text>
       </Pressable>
       <Text accessibilityLiveRegion="polite" style={s.score}>
-        {concealScore ? "PRIVATE HANDOFF" : `ROOM SCORE · ${score}`}
+        {headerScoreLabel({ score, concealScore })}
       </Text>
     </View>
   );
