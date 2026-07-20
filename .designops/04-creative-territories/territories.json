@@ -1,0 +1,145 @@
+{
+  "territories": [
+    {
+      "id": "room-beacon",
+      "name": "Room Beacon",
+      "thesis": "Turn the phone into a shared stage prop: the visible group reads and debates a giant game claim while the holder performs one unmistakable group commit.",
+      "audienceFit": "Fits a friend group seeking fast, performative shared play without requiring profiles, private devices, or social-feed literacy.",
+      "taskFit": "Optimizes forehead play, distance reading, and rematch tempo while retaining a tap fallback with the same answer and group-score semantics.",
+      "contentStructure": "An active game board carries only game context, statement, attribution, time, and readiness; review becomes a structurally distinct truth panel with explanation, source status, and reporting.",
+      "structure": {
+        "hierarchy": "Statement dominates; attribution, game context, timer, and commit readiness follow in that order.",
+        "navigationModel": "One forward social loop with an adjacent review queue and a retained-session rematch action.",
+        "contentOrder": ["role cue", "game-round context", "statement", "attribution", "time and readiness", "group result", "review or rematch"],
+        "interactionModel": "Forehead tilt is the signature commit, backed by an equally scored blind tap path and explicit sensor recovery."
+      },
+      "axes": {
+        "typography": "large condensed display face with plain utility labels",
+        "composition": "wide asymmetric room-board field",
+        "density": "very low density during active play",
+        "geometry": "hard rectangular perimeter and directional bands",
+        "color": "high-contrast energetic fields without pre-reveal truth mapping",
+        "imagery": "no portraits; typographic signal and abstract light only",
+        "signature": "persistent perimeter game beacon that also communicates neutral, ready, committed, and recovery states"
+      },
+      "evidenceRefs": ["task:judge-card", "task:understand-role", "task:continue-session", "assumption:forehead-social-value", "criterion:group-readability", "source:ux-ui-plan"],
+      "risks": ["The beacon may be cropped from captured claims.", "Long statements may undermine the stage-like hierarchy.", "Spectacle may overstate motion value before accessible evidence exists."],
+      "assumptionDependencies": [
+        {"ref":"assumption:forehead-social-value","relationship":"relies-on","rationale":"The territory makes group-visible forehead play the primary social ritual and must earn its extra control complexity."},
+        {"ref":"assumption:unaided-start","relationship":"challenges","rationale":"Explicit role rehearsal tests whether a room-scale board removes moderator explanation rather than adding spectacle."},
+        {"ref":"assumption:truth-recovery","relationship":"neutral","rationale":"Truth is deliberately deferred to the common review contract rather than proven by the active board."},
+        {"ref":"assumption:distance-readability","relationship":"relies-on","rationale":"The territory depends on several-feet group reading of realistic statement and attribution lengths."},
+        {"ref":"assumption:accessible-equivalence","relationship":"challenges","rationale":"Blind tap, non-motion, and screen-reader role scripts must retain the same group outcome without leaking the card."},
+        {"ref":"assumption:editorial-readiness","relationship":"neutral","rationale":"The common fixture, not the stage treatment, supplies approved representative content."},
+        {"ref":"assumption:capture-safe-ambiguity","relationship":"challenges","rationale":"The perimeter marker must remain game context in normal crops without exposing authenticity."}
+      ],
+      "criterionEvaluations": [
+        {"criterionRef":"criterion:unaided-start-fit","outcome":"unknown","rationale":"The role rehearsal is plausible but requires group sessions without moderator explanation."},
+        {"criterionRef":"criterion:group-readability","outcome":"risk","rationale":"Large active type helps, but maximum-length cards and distance conditions may collapse the sparse hierarchy."},
+        {"criterionRef":"criterion:control-reliability","outcome":"risk","rationale":"Tilt remains prominent, so duplicate-commit and sensor-recovery evidence is essential."},
+        {"criterionRef":"criterion:truth-comprehension","outcome":"unknown","rationale":"The distinct review panel can clarify truth only if captured pre-reveal states remain clearly game-owned."},
+        {"criterionRef":"criterion:accessible-equivalence","outcome":"risk","rationale":"The holder cannot see the board; equivalent blind controls and role-specific audio behavior must be tested."},
+        {"criterionRef":"criterion:party-tempo","outcome":"meets","rationale":"A single forward room loop and retained-session rematch directly support fast group continuation."},
+        {"criterionRef":"criterion:subject-specificity","outcome":"meets","rationale":"A shared claim board and holder commit are specific to this one-phone authenticity ritual, not a feed."},
+        {"criterionRef":"criterion:state-resilience","outcome":"unknown","rationale":"The perimeter state language must cover sensor, offline, interruption, and tombstone recovery without becoming decorative."},
+        {"criterionRef":"criterion:implementation-feasibility","outcome":"risk","rationale":"Readable landscape posture, motion handling, and orientation recovery require native device validation."},
+        {"criterionRef":"criterion:editorial-operability","outcome":"unknown","rationale":"Review panels must contain every canonical truth state without special cases."},
+        {"criterionRef":"criterion:data-minimization","outcome":"meets","rationale":"The territory uses no identity, source, or sensor data on active play beyond the shared reporting contract."}
+      ]
+    },
+    {
+      "id": "tabletop-deck",
+      "name": "Tabletop Deck",
+      "thesis": "Make every round an authored game object whose question face and truth back perform visibly different jobs: playful ambiguity first, accountable explanation after.",
+      "audienceFit": "Fits groups familiar with physical party games who want a tangible shared object without mistaking it for a public post or a fact-check product.",
+      "taskFit": "Balances forehead, tap, and pass-and-play by using the same card semantics across formats and making review a deliberate collective choice.",
+      "contentStructure": "A clearly marked game claim face contains the active prompt; a separate truth back begins with the explicit classification, then explanation, allowed source status, report, and next action.",
+      "structure": {
+        "hierarchy": "Question face prioritizes game context and claim; truth back prioritizes full classification before result and evidence.",
+        "navigationModel": "A seeded deck sequence leads to an ordered review stack that preserves place after source and report actions.",
+        "contentOrder": ["game-claim face", "statement", "attribution", "answer readiness", "result", "truth back", "explanation", "report or continue"],
+        "interactionModel": "Tilt and large labeled taps are equal commits; a semantic face replacement replaces any card-turn motion under Reduce Motion."
+      },
+      "axes": {
+        "typography": "expressive editorial display with monospaced evidence labels",
+        "composition": "centered card-within-screen composition",
+        "density": "medium density with a sparse question face and denser review back",
+        "geometry": "layered rectangular card stack and printed edge treatments",
+        "color": "restrained deck-specific patterns with truth expressed in words and shapes",
+        "imagery": "abstract printed textures only; no posts, screenshots, or public-figure photos",
+        "signature": "front-to-back claim object that becomes an explicit truth record after the round"
+      },
+      "evidenceRefs": ["task:understand-reveal", "task:report-content", "assumption:truth-recovery", "assumption:editorial-readiness", "criterion:truth-comprehension", "source:content-operations"],
+      "risks": ["A quote card may look authoritative when photographed.", "The truth back may slow rematch tempo.", "Evidence labels may drift toward newsroom or verification-badge cues."],
+      "assumptionDependencies": [
+        {"ref":"assumption:forehead-social-value","relationship":"neutral","rationale":"The same card semantics work in forehead and private formats without assuming one is preferred."},
+        {"ref":"assumption:unaided-start","relationship":"challenges","rationale":"The face distinction must explain guess-now versus verify-later without an instruction-heavy lobby."},
+        {"ref":"assumption:truth-recovery","relationship":"challenges","rationale":"The territory tests whether an explicit truth back and explanation actually restore trust after intentional pre-answer ambiguity."},
+        {"ref":"assumption:distance-readability","relationship":"challenges","rationale":"The centered card must hold realistic maximum content without shrinking attribution or context."},
+        {"ref":"assumption:accessible-equivalence","relationship":"neutral","rationale":"Semantic replacement and equal taps are designed into the shared access contract but still require participant evidence."},
+        {"ref":"assumption:editorial-readiness","relationship":"challenges","rationale":"Every review back must express authentic, fabricated, disputed, unavailable, and removed semantics from real editorial records."},
+        {"ref":"assumption:capture-safe-ambiguity","relationship":"challenges","rationale":"The game-context phrase must survive a reasonable crop of the question face without leaking truth status."}
+      ],
+      "criterionEvaluations": [
+        {"criterionRef":"criterion:unaided-start-fit","outcome":"unknown","rationale":"The question/truth distinction needs unaided group comprehension evidence."},
+        {"criterionRef":"criterion:group-readability","outcome":"risk","rationale":"A bounded card can constrain maximum-length copy at party distance."},
+        {"criterionRef":"criterion:control-reliability","outcome":"meets","rationale":"Large labeled taps and semantic state replacement provide a clear non-motion path."},
+        {"criterionRef":"criterion:truth-comprehension","outcome":"meets","rationale":"A truth back beginning with a full classification directly serves post-answer explanation."},
+        {"criterionRef":"criterion:accessible-equivalence","outcome":"unknown","rationale":"VoiceOver, TalkBack, and private handoff order must be tested with regular users."},
+        {"criterionRef":"criterion:party-tempo","outcome":"risk","rationale":"A deliberate review stack may compete with immediate rematch momentum."},
+        {"criterionRef":"criterion:subject-specificity","outcome":"meets","rationale":"Game claim and truth back avoid feed and news authority while centering the product's transition."},
+        {"criterionRef":"criterion:state-resilience","outcome":"unknown","rationale":"Nonplayable states and queued reports must be intelligible without treating them as cards to answer."},
+        {"criterionRef":"criterion:implementation-feasibility","outcome":"meets","rationale":"The bounded structure can use native semantic replacement rather than complex visual motion."},
+        {"criterionRef":"criterion:editorial-operability","outcome":"risk","rationale":"Source and removal semantics must not force a one-off back-face design for every exception."},
+        {"criterionRef":"criterion:data-minimization","outcome":"meets","rationale":"The review object exposes only allowed explanation and report actions; payload policy stays shared."}
+      ]
+    },
+    {
+      "id": "private-relay",
+      "name": "Private Relay",
+      "thesis": "Challenge forehead primacy with a tap-first, role-explicit relay in which predictable control, protected handoff, and accessible private judgment create the social confidence.",
+      "audienceFit": "Fits mixed-ability groups and pass-and-play sessions that value clear ownership, privacy, and low-friction continuation over theatrical motion.",
+      "taskFit": "Makes the active actor, private answer, score ownership, and next-player handoff explicit while retaining forehead play as an equivalent optional format.",
+      "contentStructure": "A persistent role strip frames private prompt, timer, and labeled verdict controls; a protected shutter precedes every handoff, interruption recovery, and next-player reveal.",
+      "structure": {
+        "hierarchy": "Current role and game context precede statement, attribution, timer, controls, then the protected next action.",
+        "navigationModel": "Turn-by-turn relay with a privacy checkpoint between players and a calm review sheet after outcomes.",
+        "contentOrder": ["role and game context", "private statement", "attribution", "timer and controls", "commit", "privacy shutter", "result or handoff", "review"],
+        "interactionModel": "Labeled taps are primary; extended and untimed choices occur before the round; forehead tilt remains available without changing score semantics."
+      },
+      "axes": {
+        "typography": "high-legibility humanist system with tabular timing",
+        "composition": "portrait stacked relay panels with a persistent role strip",
+        "density": "moderate functional density with explicit state labels",
+        "geometry": "flat bounded zones and privacy shutter rules",
+        "color": "quiet neutral base with one interaction accent and text-plus-shape meaning",
+        "imagery": "no decorative imagery; state and role language provide identity",
+        "signature": "role ribbon and protected privacy shutter across handoff, interruption, and recovery"
+      },
+      "evidenceRefs": ["task:understand-role", "task:recover-control", "task:continue-session", "assumption:accessible-equivalence", "criterion:accessible-equivalence", "source:ux-ui-plan"],
+      "risks": ["The utility-forward surface may resemble generic trivia.", "Tap-first play may lose the social value that justifies forehead mode.", "Role labels may add setup clutter."],
+      "assumptionDependencies": [
+        {"ref":"assumption:forehead-social-value","relationship":"challenges","rationale":"The countermodel tests whether tap-first private relay can retain enough social value to displace forehead primacy."},
+        {"ref":"assumption:unaided-start","relationship":"relies-on","rationale":"Explicit current-role labels must simplify, rather than lengthen, first-round understanding."},
+        {"ref":"assumption:truth-recovery","relationship":"neutral","rationale":"The common calm review sheet carries truth semantics independently of the active relay design."},
+        {"ref":"assumption:distance-readability","relationship":"neutral","rationale":"Private portrait play reduces group-distance dependence but forehead mode still uses the shared fixture conditions."},
+        {"ref":"assumption:accessible-equivalence","relationship":"relies-on","rationale":"The territory's value depends on accessible, role-appropriate completion without hidden degraded paths."},
+        {"ref":"assumption:editorial-readiness","relationship":"neutral","rationale":"Editorial card quality remains shared across formats and is not established by relay structure."},
+        {"ref":"assumption:capture-safe-ambiguity","relationship":"challenges","rationale":"The role strip and game context must remain in capture while private prompts disclose no authenticity outcome."}
+      ],
+      "criterionEvaluations": [
+        {"criterionRef":"criterion:unaided-start-fit","outcome":"meets","rationale":"Persistent role ownership and a protected next action directly expose who does what first."},
+        {"criterionRef":"criterion:group-readability","outcome":"risk","rationale":"Portrait private play may not provide an equally compelling screen-facing group experience in forehead mode."},
+        {"criterionRef":"criterion:control-reliability","outcome":"meets","rationale":"Labeled taps, pre-round timer choices, and shuttered recovery reduce motion ambiguity."},
+        {"criterionRef":"criterion:truth-comprehension","outcome":"unknown","rationale":"A calm review sheet still needs testing for explicit fabricated and nonplayable state understanding."},
+        {"criterionRef":"criterion:accessible-equivalence","outcome":"meets","rationale":"Role-specific VoiceOver, TalkBack, no-motion, and protected handoff paths are central rather than fallback features."},
+        {"criterionRef":"criterion:party-tempo","outcome":"risk","rationale":"Privacy checkpoints may slow a lively group even as they prevent spoilers."},
+        {"criterionRef":"criterion:subject-specificity","outcome":"risk","rationale":"Without the room spectacle, the relay may feel like ordinary private trivia."},
+        {"criterionRef":"criterion:state-resilience","outcome":"meets","rationale":"The shutter and role strip are designed to explain interruption, handoff, and recovery without prior-card leakage."},
+        {"criterionRef":"criterion:implementation-feasibility","outcome":"meets","rationale":"Predictable native controls and focus restoration are more feasible than gesture-only dependence."},
+        {"criterionRef":"criterion:editorial-operability","outcome":"unknown","rationale":"Review, report, and nonplayable records must be pressure-tested with the shared editorial fixture."},
+        {"criterionRef":"criterion:data-minimization","outcome":"meets","rationale":"Private relay retains local role state without adding identity, transcript, or sensor collection."}
+      ]
+    }
+  ]
+}
