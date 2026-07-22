@@ -1,25 +1,24 @@
 import { Pressable, Text } from "react-native";
-import type { AccessibilityRole } from "react-native";
 
 import { s } from "./styles";
 
+/**
+ * A one-of-many selection card (mode, access role). It announces as a radio.
+ * For an independent on/off preference, use ToggleRow instead — that is the
+ * single toggle affordance in the app; do not add a switch variant here.
+ */
 export type ChoiceProps = {
   active: boolean;
   title: string;
   body: string;
   onPress: () => void;
-  /**
-   * "radio" for one-of-many selections (mode, access role); "switch" for
-   * independent on/off preferences (tilt, reduced motion). Defaults to radio.
-   */
-  role?: Extract<AccessibilityRole, "radio" | "switch">;
 };
 
-export function Choice({ active, title, body, onPress, role = "radio" }: ChoiceProps) {
+export function Choice({ active, title, body, onPress }: ChoiceProps) {
   return (
     <Pressable
-      accessibilityRole={role}
-      accessibilityState={role === "switch" ? { checked: active } : { selected: active }}
+      accessibilityRole="radio"
+      accessibilityState={{ selected: active }}
       onPress={onPress}
       android_ripple={{ color: "rgba(200,255,61,0.12)" }}
       style={({ pressed }) => [s.choice, active && s.choiceActive, pressed && s.pressed]}
