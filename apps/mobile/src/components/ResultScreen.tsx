@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Animated, Text, View } from "react-native";
 
+import { revealFeedback } from "../feedback/haptics";
 import { resultHeadline, resultMark, resultRewardLabel } from "./presentationLabels";
 import { PrimaryButton } from "./PrimaryButton";
 import { s } from "./styles";
@@ -9,13 +10,14 @@ export type ResultScreenProps = {
   correct: boolean;
   streak: number;
   reducedMotion: boolean;
+  haptics: boolean;
   onReview: () => void;
   onContinue: () => void;
 };
 
 const SUSPENSE_MS = 850;
 
-export function ResultScreen({ correct, streak, reducedMotion, onReview, onContinue }: ResultScreenProps) {
+export function ResultScreen({ correct, streak, reducedMotion, haptics, onReview, onContinue }: ResultScreenProps) {
   // Post-commit anticipation beat: the tap is already registered, so this never
   // makes tap-play second-class and adds no answer countdown. Reduced motion
   // skips straight to the verdict with the identical words and reward.
@@ -42,6 +44,12 @@ export function ResultScreen({ correct, streak, reducedMotion, onReview, onConti
       loop.stop();
     };
   }, [reducedMotion, reveal, pulse]);
+
+  // Fire the reveal haptic exactly when the verdict lands — on mount under reduced
+  // motion (revealed starts true), or when the suspense beat flips it true.
+  useEffect(() => {
+    if (revealed) revealFeedback(haptics);
+  }, [revealed, haptics]);
 
   if (!revealed) {
     return (
