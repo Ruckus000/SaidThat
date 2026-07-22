@@ -14,6 +14,11 @@ export function revealFeedback(enabled: boolean): void {
   fire(enabled, () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light));
 }
 
+/** The light contact tick — the press-in phase of the KICK doublet and generic taps. */
+export function selectionFeedback(enabled: boolean): void {
+  fire(enabled, () => Haptics.selectionAsync());
+}
+
 function fire(enabled: boolean, run: () => Promise<void>): void {
   if (!enabled) return;
   try {
