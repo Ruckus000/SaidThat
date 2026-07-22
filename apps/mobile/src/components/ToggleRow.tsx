@@ -11,9 +11,10 @@ export type ToggleRowProps = {
 };
 
 /**
- * A slim on/off row for optional preferences. Reads as a toggle (not a
- * one-of-many choice card), announces as a switch, and shows a text ON/OFF pill
- * so the state survives without color. Tap target stays at least 56dp.
+ * The single on/off control in the app: every boolean preference uses this.
+ * A slim row that reads as a toggle (not a one-of-many choice card), announces
+ * as a switch, and shows a text ON/OFF pill so the state survives without color.
+ * Tap target stays at least 56dp. For a one-of-many selection use Choice instead.
  */
 export function ToggleRow({ title, hint, value, onValueChange }: ToggleRowProps) {
   return (
