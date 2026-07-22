@@ -5,15 +5,15 @@ import { hotmic } from "./tokens";
 /**
  * Typography resolvers for the HOT MIC system.
  *
- * FONT SEAM: the display + Inter faces are loaded in Phase 1.5 (they are binary font
- * files). Until then `FONT_FAMILY` is `undefined` (the platform system face), and the
- * display voice is carried by weight + tracking, exactly as the direction's fallback
- * path specifies — the app never depends on a font that may be missing. When the faces
- * land, set these two values and every role picks them up.
+ * FONT SEAM: the faces are loaded in App via expo-font (assets/fonts) under these exact
+ * family keys, with render gated on load and a system-face fallback on error, so text
+ * never renders in a missing font. Display = Bricolage Grotesque (optical-size grotesque);
+ * body/counters = Inter. Weight/opsz rendering of the variable faces is a native-
+ * verification detail; the values below are what components consume in Phase 2.
  */
 export const FONT_FAMILY: { display?: string; body?: string } = {
-  display: undefined,
-  body: undefined,
+  display: "BricolageGrotesque",
+  body: "Inter",
 };
 
 export type TypeRole = keyof typeof hotmic.type;
