@@ -34,11 +34,13 @@ export function useFireEvent(kind: InteractionKind, options: FireEventOptions = 
   }, [policy.pressInHaptic, haptics, reducedMotion, kind, scale]);
 
   const onPressOut = useCallback(() => {
-    // The KICK settles on commit; other interactions relax on release.
-    if (kind !== "answerCommit" && !reducedMotion) {
+    // Always relax on release so a cancelled press (finger dragged off, no commit)
+    // never leaves the control stuck at the dip. A real commit fires next and the
+    // KICK's overshoot spring takes over from here.
+    if (!reducedMotion) {
       Animated.spring(scale, { toValue: 1, ...springConfig("snappy") }).start();
     }
-  }, [kind, reducedMotion, scale]);
+  }, [reducedMotion, scale]);
 
   const onCommit = useCallback(() => {
     if (policy.commitHaptic === "commit") commitFeedback(haptics);
