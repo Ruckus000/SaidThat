@@ -7,8 +7,10 @@ import { s } from "./styles";
 export type SettingsScreenProps = {
   reducedMotion: boolean;
   noMotion: boolean;
+  hapticsEnabled: boolean;
   onReducedMotion: (enabled: boolean) => void;
   onNoMotion: (enabled: boolean) => void;
+  onHaptics: (enabled: boolean) => void;
   onReset: () => void;
   onClose: () => void;
 };
@@ -16,8 +18,10 @@ export type SettingsScreenProps = {
 export function SettingsScreen({
   reducedMotion,
   noMotion,
+  hapticsEnabled,
   onReducedMotion,
   onNoMotion,
+  onHaptics,
   onReset,
   onClose,
 }: SettingsScreenProps) {
@@ -39,6 +43,12 @@ export function SettingsScreen({
           hint="Disable optional tilt answers. Tapping stays the primary path."
           value={noMotion}
           onValueChange={onNoMotion}
+        />
+        <ToggleRow
+          title="Haptic feedback"
+          hint="A subtle tap when the room commits and when the reveal lands."
+          value={hapticsEnabled}
+          onValueChange={onHaptics}
         />
       </View>
       <Text style={s.sectionLabel}>RESET</Text>

@@ -27,8 +27,9 @@ import {
   runLength,
   shouldConcealScore,
 } from "./src/domain/game";
+import { commitFeedback } from "./src/feedback/haptics";
 import { calibrateNeutral, readMotionSample, useRoomBeaconMotion } from "./src/sensors/useRoomBeaconMotion";
-import { motionAllowed } from "./src/settings/settingsPolicy";
+import { hapticsAllowed, motionAllowed } from "./src/settings/settingsPolicy";
 import { clearReportQueue, queueReport } from "./src/storage/reportQueue";
 
 const allowLocalFixtures = typeof __DEV__ !== "undefined" && __DEV__;
@@ -49,11 +50,13 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [noMotion, setNoMotion] = useState(false);
+  const [hapticsEnabled, setHapticsEnabled] = useState(true);
   const card = currentCard(state);
 
   const submitAnswer = useCallback((guessAuthentic: boolean) => {
+    commitFeedback(hapticsAllowed({ hapticsEnabled }));
     dispatch({ type: "ANSWER", guessAuthentic });
-  }, []);
+  }, [hapticsEnabled]);
 
   useRoomBeaconMotion({
     enabled: motionAllowed({ motionOptIn, noMotion }) && state.stage === STAGES.ROUND,
@@ -175,8 +178,10 @@ export default function App() {
           <SettingsScreen
             reducedMotion={reducedMotion}
             noMotion={noMotion}
+            hapticsEnabled={hapticsEnabled}
             onReducedMotion={setReducedMotion}
             onNoMotion={setNoMotionEnabled}
+            onHaptics={setHapticsEnabled}
             onReset={confirmResetLocalSession}
             onClose={() => setShowSettings(false)}
           />
@@ -211,6 +216,7 @@ export default function App() {
             correct={state.lastCorrect === true}
             streak={state.streak}
             reducedMotion={reducedMotion}
+            haptics={hapticsAllowed({ hapticsEnabled })}
             onReview={() => dispatch({ type: "OPEN_REVIEW" })}
             onContinue={() => dispatch({ type: "NEXT_ROUND" })}
           />
