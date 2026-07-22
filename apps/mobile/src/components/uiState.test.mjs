@@ -21,6 +21,7 @@ import {
   setupSectionLabel,
   setupShowsAccessRoles,
   streakBadgeLabel,
+  toggleStateLabel,
 } from "./presentationLabels.js";
 import {
   MODES,
@@ -61,6 +62,11 @@ test("ui: setup role labels follow Room Beacon vs Private Relay", () => {
   assert.equal(setupSectionLabel(MODES.PRIVATE_RELAY), "PRIVATE PLAY");
   assert.equal(setupShowsAccessRoles(MODES.ROOM_BEACON), true);
   assert.equal(setupShowsAccessRoles(MODES.PRIVATE_RELAY), false);
+});
+
+test("ui: toggle state reads as text, not color alone", () => {
+  assert.equal(toggleStateLabel(true), "ON");
+  assert.equal(toggleStateLabel(false), "OFF");
 });
 
 test("ui: round labels name the ritual and holder instruction", () => {

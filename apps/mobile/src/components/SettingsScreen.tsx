@@ -1,7 +1,7 @@
-import { ScrollView, Text } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 
-import { Choice } from "./Choice";
 import { PrimaryButton } from "./PrimaryButton";
+import { ToggleRow } from "./ToggleRow";
 import { s } from "./styles";
 
 export type SettingsScreenProps = {
@@ -27,20 +27,20 @@ export function SettingsScreen({
       <Text style={s.title}>Session settings</Text>
       <Text style={s.copy}>These preferences stay on this device only. Tap-only play remains complete.</Text>
       <Text style={s.sectionLabel}>ACCESS PREFERENCES</Text>
-      <Choice
-        active={reducedMotion}
-        role="switch"
-        title="Reduced motion"
-        body="Prefer minimal transition motion when the app animates."
-        onPress={() => onReducedMotion(!reducedMotion)}
-      />
-      <Choice
-        active={noMotion}
-        role="switch"
-        title="No motion / tap-only"
-        body="Disable optional tilt answers. Buttons remain the primary commit path."
-        onPress={() => onNoMotion(!noMotion)}
-      />
+      <View style={s.group}>
+        <ToggleRow
+          title="Reduced motion"
+          hint="Minimize transition motion when the app animates."
+          value={reducedMotion}
+          onValueChange={onReducedMotion}
+        />
+        <ToggleRow
+          title="No motion / tap-only"
+          hint="Disable optional tilt answers. Tapping stays the primary path."
+          value={noMotion}
+          onValueChange={onNoMotion}
+        />
+      </View>
       <Text style={s.sectionLabel}>RESET</Text>
       <Text style={s.note}>Clears the current room session and locally queued reports after confirmation.</Text>
       <PrimaryButton label="Reset local session and reports" secondary onPress={onReset} />
