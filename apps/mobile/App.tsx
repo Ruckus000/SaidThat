@@ -139,7 +139,13 @@ export default function App() {
     <SafeAreaView style={s.safe}>
       <StatusBar style="light" />
       <View style={s.app}>
-        <Header score={state.score} concealScore={shouldConcealScore(state)} onHome={goHome} />
+        <Header
+          score={state.score}
+          streak={state.streak}
+          concealScore={shouldConcealScore(state)}
+          reducedMotion={reducedMotion}
+          onHome={goHome}
+        />
         {state.stage === STAGES.HOME && !showSettings && (
           <HomeScreen
             onStart={() => dispatch({ type: "OPEN_SETUP" })}
@@ -184,6 +190,8 @@ export default function App() {
         {state.stage === STAGES.RESULT && (
           <ResultScreen
             correct={state.lastCorrect === true}
+            streak={state.streak}
+            reducedMotion={reducedMotion}
             onReview={() => dispatch({ type: "OPEN_REVIEW" })}
             onContinue={() => dispatch({ type: "NEXT_ROUND" })}
           />

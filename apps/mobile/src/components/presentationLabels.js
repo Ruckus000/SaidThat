@@ -7,6 +7,28 @@ export function headerScoreLabel({ score, concealScore }) {
   return concealScore ? "PRIVATE HANDOFF" : `ROOM SCORE · ${score}`;
 }
 
+// Game-layer reward copy. This celebrates skill at the game (reading the room),
+// never a truth verdict, so it stays warm without color-coding authenticity.
+export function resultHeadline(correct) {
+  return correct ? "NAILED IT" : "NOT THIS TIME";
+}
+
+export function resultRewardLabel(correct, streak) {
+  if (!correct) return "The room reads the next one.";
+  if (streak >= 2) return `+100 · ${streak} IN A ROW`;
+  return "+100 to the room";
+}
+
+// A non-color cue paired with the words, per the design DNA. Correct answers get
+// a filled mark, misses a hollow one — meaning survives without color.
+export function resultMark(correct) {
+  return correct ? "◆" : "○";
+}
+
+export function streakBadgeLabel(streak) {
+  return streak >= 2 ? `🔥 ${streak} STREAK` : null;
+}
+
 export function setupSectionLabel(mode) {
   return mode === MODES.ROOM_BEACON ? "ACCESS ROLE" : "PRIVATE PLAY";
 }

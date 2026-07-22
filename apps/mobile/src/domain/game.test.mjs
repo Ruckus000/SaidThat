@@ -48,6 +48,49 @@ test("chaos: duplicate taps score only once", () => {
   assert.deepEqual(duplicate, first);
 });
 
+test("reward: streak counts consecutive correct reads and resets on a miss", () => {
+  const authentic = { ...fixture, id: "authentic", authentic: true };
+  let state = createSession({ cards: [authentic], allowLocalFixtures: true, deckVersion: "test" });
+  state = gameReducer(state, { type: "START_ROUND" });
+
+  // Correct guess raises the streak and best streak.
+  state = gameReducer(state, { type: "ANSWER", guessAuthentic: true });
+  assert.equal(state.streak, 1);
+  assert.equal(state.bestStreak, 1);
+  assert.equal(state.score, 100);
+
+  // A duplicate tap cannot inflate the streak.
+  const duplicate = gameReducer(state, { type: "ANSWER", guessAuthentic: true });
+  assert.equal(duplicate.streak, 1);
+
+  // Second correct read continues the streak.
+  state = gameReducer(state, { type: "NEXT_ROUND" });
+  state = gameReducer(state, { type: "ANSWER", guessAuthentic: true });
+  assert.equal(state.streak, 2);
+  assert.equal(state.bestStreak, 2);
+
+  // A miss resets the current streak but preserves the best.
+  state = gameReducer(state, { type: "NEXT_ROUND" });
+  state = gameReducer(state, { type: "ANSWER", guessAuthentic: false });
+  assert.equal(state.streak, 0);
+  assert.equal(state.bestStreak, 2);
+  assert.equal(state.lastCorrect, false);
+});
+
+test("reward: reset clears the streak alongside the score", () => {
+  let state = started();
+  state = gameReducer(state, { type: "ANSWER", guessAuthentic: false });
+  assert.equal(state.streak, 1);
+  state = gameReducer(state, {
+    type: "RESET_LOCAL_SESSION",
+    cards: [fixture],
+    allowLocalFixtures: true,
+    deckVersion: "test",
+  });
+  assert.equal(state.streak, 0);
+  assert.equal(state.bestStreak, 0);
+});
+
 test("chaos: private relay never shows prior card or result during handoff", () => {
   let state = started(MODES.PRIVATE_RELAY);
   state = gameReducer(state, { type: "ANSWER", guessAuthentic: false });

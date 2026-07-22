@@ -65,6 +65,8 @@ export function createSession({ cards, allowLocalFixtures = false, deckVersion }
     deckVersion,
     roundIndex: 0,
     score: 0,
+    streak: 0,
+    bestStreak: 0,
     committedRound: null,
     resumeStage: null,
     reportStatus: null,
@@ -138,12 +140,17 @@ export function gameReducer(state, action) {
       if (state.stage !== STAGES.ROUND || state.committedRound === state.roundIndex) return state;
       const card = currentCard(state);
       const correct = Boolean(card?.authentic) === action.guessAuthentic;
+      // Streak is a pure game-skill reward (how many the room read correctly in
+      // a row). It never encodes or celebrates a truth verdict, only play skill.
+      const streak = correct ? (state.streak ?? 0) + 1 : 0;
       return {
         ...state,
         stage: STAGES.RESULT,
         committedRound: state.roundIndex,
         score: correct ? state.score + 100 : state.score,
         lastCorrect: correct,
+        streak,
+        bestStreak: Math.max(state.bestStreak ?? 0, streak),
       };
     }
     case "OPEN_REVIEW":

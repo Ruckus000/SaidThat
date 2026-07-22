@@ -5,9 +5,11 @@ import { tokens as t } from "../theme/tokens";
 export const s = StyleSheet.create({
   safe: { flex: 1, backgroundColor: t.color.canvas },
   app: { flex: 1, padding: t.spacing.md },
-  header: { flexDirection: "row", justifyContent: "space-between", paddingTop: t.spacing.xs },
-  brand: { color: t.color.text.primary, fontWeight: t.typography.weight.bold, letterSpacing: 1.5 },
-  score: { color: t.color.signal, fontSize: t.typography.size.beacon, fontWeight: t.typography.weight.bold },
+  header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingTop: t.spacing.xs, minHeight: t.target.minimum },
+  brand: { color: t.color.text.primary, fontSize: t.typography.size.body - 2, fontWeight: t.typography.weight.bold, letterSpacing: 1.5 },
+  scoreWrap: { alignItems: "flex-end" },
+  score: { color: t.color.signal, fontSize: t.typography.size.body + 2, fontWeight: t.typography.weight.bold, letterSpacing: 0.5 },
+  streakBadge: { color: t.color.status.warning, fontSize: t.typography.size.beacon, fontWeight: t.typography.weight.bold, letterSpacing: 0.6, marginTop: 2 },
   center: { flex: 1, justifyContent: "center", gap: t.spacing.sm },
   setup: { flexGrow: 1, justifyContent: "center", gap: t.spacing.sm, paddingVertical: t.spacing.md + t.spacing.xs },
   eyebrow: { color: t.color.signal, fontSize: t.typography.size.beacon, fontWeight: t.typography.weight.bold, letterSpacing: 1.4 },
@@ -20,7 +22,9 @@ export const s = StyleSheet.create({
   secondary: { backgroundColor: "transparent", borderWidth: 2, borderColor: t.color.text.primary },
   secondaryText: { color: t.color.text.primary },
   disabled: { opacity: 0.55 },
+  pressed: { opacity: 0.82, transform: [{ scale: 0.98 }] },
   link: { color: t.color.text.primary, textAlign: "center", fontWeight: t.typography.weight.semibold, padding: t.spacing.xs + 2 },
+  pauseTap: { minHeight: t.target.minimum, justifyContent: "center", alignItems: "center" },
   choice: { borderWidth: 2, borderColor: t.color.action.secondary, padding: t.spacing.sm + 2, borderRadius: t.radius.control, gap: 6 },
   choiceActive: { borderColor: t.color.signal, backgroundColor: t.color.surface },
   choiceTitle: { color: t.color.text.primary, fontSize: t.typography.size.body + 3, fontWeight: t.typography.weight.bold },
@@ -38,4 +42,16 @@ export const s = StyleSheet.create({
   report: { borderTopWidth: 1, borderColor: t.color.action.secondary, paddingTop: t.spacing.sm + 2, gap: t.spacing.sm - 4 },
   success: { color: t.color.status.safe, fontSize: t.typography.size.beacon + 2, lineHeight: t.typography.size.beacon + 8 },
   error: { color: t.color.status.danger, fontSize: t.typography.size.beacon + 2, lineHeight: t.typography.size.beacon + 8 },
+
+  // Reveal / reward
+  suspense: { color: t.color.signal, fontSize: t.typography.size.beacon + 2, fontWeight: t.typography.weight.bold, letterSpacing: 2, textAlign: "center" },
+  resultMark: { color: t.color.text.primary, fontSize: t.typography.size.statement + 20, fontWeight: t.typography.weight.bold, textAlign: "center", lineHeight: t.typography.size.statement + 24 },
+  reward: { color: t.color.signal, fontSize: t.typography.size.body + 6, fontWeight: t.typography.weight.bold, letterSpacing: 0.5, textAlign: "center" },
+
+  // Equal-weight answer buttons: both sides carry identical visual weight so the
+  // UI never nudges the room toward one verdict.
+  answers: { gap: t.spacing.sm - 4 },
+  answer: { minHeight: t.target.minimum + 8, justifyContent: "center", alignItems: "center", paddingHorizontal: t.spacing.sm + 2, borderRadius: t.radius.control, borderWidth: 2, borderColor: t.color.signal, backgroundColor: t.color.surface },
+  answerText: { color: t.color.text.primary, fontSize: t.typography.size.body + 1, fontWeight: t.typography.weight.bold, textAlign: "center" },
+  answerHint: { color: t.color.text.muted, fontSize: t.typography.size.beacon, fontWeight: t.typography.weight.semibold, textAlign: "center", marginTop: 2 },
 });
