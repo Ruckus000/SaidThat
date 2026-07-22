@@ -143,6 +143,29 @@ test("run: a full pass through the deck ends in recap, and play again resets the
   assert.equal(state.streak, 0);
 });
 
+test("run: play again fails closed when the provided deck has nothing playable", () => {
+  const a1 = { ...fixture, id: "a1", authentic: true };
+  let state = createSession({ cards: [a1], allowLocalFixtures: true, deckVersion: "test" });
+  state = gameReducer(state, { type: "START_ROUND" });
+  state = gameReducer(state, { type: "ANSWER", guessAuthentic: true });
+  state = gameReducer(state, { type: "NEXT_ROUND" });
+  assert.equal(state.stage, STAGES.RECAP);
+
+  // An empty deck cannot start a rematch.
+  const empty = gameReducer(state, { type: "PLAY_AGAIN", cards: [], allowLocalFixtures: true });
+  assert.equal(empty.stage, STAGES.CONTENT_UNAVAILABLE);
+  assert.equal(empty.fault, "no-safe-playable-content");
+
+  // A deck of only withheld (non-playable) records also fails closed.
+  const withheld = gameReducer(state, {
+    type: "PLAY_AGAIN",
+    cards: [{ ...fixture, id: "withheld-1", contentState: "disputed" }],
+    allowLocalFixtures: true,
+  });
+  assert.equal(withheld.stage, STAGES.CONTENT_UNAVAILABLE);
+  assert.equal(withheld.fault, "no-safe-playable-content");
+});
+
 test("run: private relay ends the final round in recap, not a shutter", () => {
   const a1 = { ...fixture, id: "a1", authentic: true };
   const a2 = { ...fixture, id: "a2", authentic: true };

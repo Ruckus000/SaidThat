@@ -55,12 +55,13 @@ export function accuracyPercent(correctCount, roundsPlayed) {
 
 // Positive, non-punishing run recap. It reports play, never a truth verdict,
 // and is framed around the room's progress rather than individual blame.
-export function runSummaryLabel({ roundsPlayed, correctCount, bestStreak }) {
+export function runSummaryLabel({ roundsPlayed, correctCount, bestStreak, complete = false }) {
   if (!roundsPlayed) return null;
   const reads = roundsPlayed === 1 ? "1 read" : `${roundsPlayed} reads`;
   const parts = [reads, `${accuracyPercent(correctCount, roundsPlayed)}% called`];
   if (bestStreak >= 2) parts.push(`best streak ${bestStreak}`);
-  return `THIS RUN · ${parts.join(" · ")}`;
+  const prefix = complete ? "LAST RUN" : "THIS RUN";
+  return `${prefix} · ${parts.join(" · ")}`;
 }
 
 export function setupSectionLabel(mode) {

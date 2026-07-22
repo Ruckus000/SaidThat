@@ -111,6 +111,15 @@ test("reward: run summary reports play positively without truth verdicts", () =>
     runSummaryLabel({ roundsPlayed: 2, correctCount: 1, bestStreak: 1 }),
     "THIS RUN · 2 reads · 50% called",
   );
+  // A finished run reads as "LAST RUN"; an in-progress/abandoned run as "THIS RUN".
+  assert.match(
+    runSummaryLabel({ roundsPlayed: 7, correctCount: 5, bestStreak: 3, complete: true }),
+    /^LAST RUN · /,
+  );
+  assert.match(
+    runSummaryLabel({ roundsPlayed: 3, correctCount: 2, bestStreak: 1, complete: false }),
+    /^THIS RUN · /,
+  );
 });
 
 test("reward: recap rank rates room skill without punishing a rough run", () => {
