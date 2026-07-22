@@ -29,6 +29,21 @@ export function streakBadgeLabel(streak) {
   return streak >= 2 ? `🔥 ${streak} STREAK` : null;
 }
 
+export function accuracyPercent(correctCount, roundsPlayed) {
+  if (!roundsPlayed) return 0;
+  return Math.round((correctCount / roundsPlayed) * 100);
+}
+
+// Positive, non-punishing run recap. It reports play, never a truth verdict,
+// and is framed around the room's progress rather than individual blame.
+export function runSummaryLabel({ roundsPlayed, correctCount, bestStreak }) {
+  if (!roundsPlayed) return null;
+  const reads = roundsPlayed === 1 ? "1 read" : `${roundsPlayed} reads`;
+  const parts = [reads, `${accuracyPercent(correctCount, roundsPlayed)}% called`];
+  if (bestStreak >= 2) parts.push(`best streak ${bestStreak}`);
+  return `THIS RUN · ${parts.join(" · ")}`;
+}
+
 export function setupSectionLabel(mode) {
   return mode === MODES.ROOM_BEACON ? "ACCESS ROLE" : "PRIVATE PLAY";
 }

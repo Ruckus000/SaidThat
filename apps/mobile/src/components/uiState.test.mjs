@@ -5,14 +5,20 @@ import {
   CONTENT_UNAVAILABLE_GUARD,
   FIXTURE_DISCLOSURE,
   PRIVATE_SHUTTER_RECOVERY,
+  accuracyPercent,
   contentUnavailableMessage,
   headerScoreLabel,
+  resultHeadline,
+  resultMark,
+  resultRewardLabel,
   reviewSourceStatus,
   reviewTruthLabel,
   roundInstruction,
   roundModeLabel,
+  runSummaryLabel,
   setupSectionLabel,
   setupShowsAccessRoles,
+  streakBadgeLabel,
 } from "./presentationLabels.js";
 import {
   MODES,
@@ -72,6 +78,34 @@ test("ui: review truth labels stay textual, not color-only", () => {
   assert.match(
     reviewSourceStatus({ authentic: true, contentState: "fixture-authentic" }),
     /not a source-verified production card/i,
+  );
+});
+
+test("reward: result copy celebrates skill with a non-color cue and never punishes a miss", () => {
+  assert.equal(resultHeadline(true), "NAILED IT");
+  assert.equal(resultHeadline(false), "NOT THIS TIME");
+  // Filled vs hollow mark carries meaning without relying on color.
+  assert.notEqual(resultMark(true), resultMark(false));
+  assert.equal(resultRewardLabel(true, 1), "+100 to the room");
+  assert.equal(resultRewardLabel(true, 3), "+100 · 3 IN A ROW");
+  // A miss reward line is forward-looking, not blaming.
+  assert.match(resultRewardLabel(false, 0), /next one/i);
+  assert.equal(streakBadgeLabel(1), null);
+  assert.match(streakBadgeLabel(4), /4 STREAK/);
+});
+
+test("reward: run summary reports play positively without truth verdicts", () => {
+  assert.equal(accuracyPercent(3, 4), 75);
+  assert.equal(accuracyPercent(0, 0), 0);
+  assert.equal(runSummaryLabel({ roundsPlayed: 0, correctCount: 0, bestStreak: 0 }), null);
+  assert.match(
+    runSummaryLabel({ roundsPlayed: 4, correctCount: 3, bestStreak: 3 }),
+    /THIS RUN · 4 reads · 75% called · best streak 3/,
+  );
+  // Does not append a streak brag when there was none.
+  assert.equal(
+    runSummaryLabel({ roundsPlayed: 2, correctCount: 1, bestStreak: 1 }),
+    "THIS RUN · 2 reads · 50% called",
   );
 });
 

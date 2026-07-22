@@ -67,6 +67,8 @@ export function createSession({ cards, allowLocalFixtures = false, deckVersion }
     score: 0,
     streak: 0,
     bestStreak: 0,
+    roundsPlayed: 0,
+    correctCount: 0,
     committedRound: null,
     resumeStage: null,
     reportStatus: null,
@@ -151,6 +153,8 @@ export function gameReducer(state, action) {
         lastCorrect: correct,
         streak,
         bestStreak: Math.max(state.bestStreak ?? 0, streak),
+        roundsPlayed: (state.roundsPlayed ?? 0) + 1,
+        correctCount: (state.correctCount ?? 0) + (correct ? 1 : 0),
       };
     }
     case "OPEN_REVIEW":

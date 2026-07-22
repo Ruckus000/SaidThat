@@ -1,6 +1,7 @@
 import { ScrollView, Text, View } from "react-native";
 
 import { reviewSourceStatus, reviewTruthLabel } from "./presentationLabels";
+import { FadeIn } from "./FadeIn";
 import { PrimaryButton } from "./PrimaryButton";
 import { s } from "./styles";
 
@@ -15,17 +16,23 @@ export type ReviewScreenProps = {
   card: ReviewCard;
   reportStatus: string | null;
   reportBusy: boolean;
+  reducedMotion: boolean;
   onReport: (reason: string) => void;
   onContinue: () => void;
 };
 
-export function ReviewScreen({ card, reportStatus, reportBusy, onReport, onContinue }: ReviewScreenProps) {
+export function ReviewScreen({ card, reportStatus, reportBusy, reducedMotion, onReport, onContinue }: ReviewScreenProps) {
   const truth = reviewTruthLabel(card);
   return (
     <ScrollView contentContainerStyle={s.setup}>
-      <Text style={s.eyebrow}>{truth}</Text>
-      <Text style={s.title}>“{card.quote}”</Text>
-      <Text style={s.copy}>{card.explanation}</Text>
+      {/* The reveal lands first as the payoff. The label is the same weight and
+          color regardless of authenticity — meaning lives in the words. */}
+      <FadeIn reducedMotion={reducedMotion} offset={14}>
+        <Text style={s.eyebrow}>THE REVEAL</Text>
+        <Text style={s.truthReveal}>{truth}</Text>
+        <Text style={s.quoteSmall}>“{card.quote}”</Text>
+        <Text style={s.copy}>{card.explanation}</Text>
+      </FadeIn>
       <Text style={s.note}>Source status: {reviewSourceStatus(card)}.</Text>
       <View style={s.report}>
         <Text style={s.sectionLabel}>SEE A CONTENT ISSUE?</Text>
@@ -36,7 +43,7 @@ export function ReviewScreen({ card, reportStatus, reportBusy, onReport, onConti
         {reportStatus === "queued" && <Text accessibilityLiveRegion="polite" style={s.success}>Saved locally. It will remain queued until a reviewed delivery path exists.</Text>}
         {reportStatus === "failed" && <Text accessibilityLiveRegion="polite" style={s.error}>Could not save the report. Your game can continue safely.</Text>}
       </View>
-      <PrimaryButton label="Next prompt" onPress={onContinue} />
+      <PrimaryButton label="Next round" onPress={onContinue} />
     </ScrollView>
   );
 }

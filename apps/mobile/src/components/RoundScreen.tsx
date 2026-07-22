@@ -2,6 +2,7 @@ import { Pressable, ScrollView, Text, View } from "react-native";
 
 import { MODES } from "../domain/game";
 import { roundInstruction, roundModeLabel } from "./presentationLabels";
+import { FadeIn } from "./FadeIn";
 import { PrimaryButton } from "./PrimaryButton";
 import { s } from "./styles";
 
@@ -17,6 +18,7 @@ export type RoundScreenProps = {
   hideCardFromAssistiveTech: boolean;
   motionOptIn: boolean;
   motionCalibrated: boolean;
+  reducedMotion: boolean;
   onCalibrate: () => void;
   onAnswer: (guessAuthentic: boolean) => void;
   onPause: () => void;
@@ -44,6 +46,7 @@ export function RoundScreen({
   hideCardFromAssistiveTech,
   motionOptIn,
   motionCalibrated,
+  reducedMotion,
   onCalibrate,
   onAnswer,
   onPause,
@@ -52,14 +55,16 @@ export function RoundScreen({
     <View style={s.round}>
       <Text style={s.mode}>{roundModeLabel(mode, round)}</Text>
       <View style={s.beacon}><Text style={s.game}>THIS IS A GAME PROMPT · THE REVEAL DECIDES TRUTH</Text></View>
-      <ScrollView
-        contentContainerStyle={s.card}
-        accessibilityElementsHidden={hideCardFromAssistiveTech}
-        importantForAccessibility={hideCardFromAssistiveTech ? "no-hide-descendants" : "auto"}
-      >
-        <Text style={s.quote}>“{card.quote}”</Text>
-        <Text style={s.person}>— {card.person}</Text>
-      </ScrollView>
+      <FadeIn key={round} reducedMotion={reducedMotion} style={s.cardFill}>
+        <ScrollView
+          contentContainerStyle={s.card}
+          accessibilityElementsHidden={hideCardFromAssistiveTech}
+          importantForAccessibility={hideCardFromAssistiveTech ? "no-hide-descendants" : "auto"}
+        >
+          <Text style={s.quote}>“{card.quote}”</Text>
+          <Text style={s.person}>— {card.person}</Text>
+        </ScrollView>
+      </FadeIn>
       <Text style={s.instruction}>{roundInstruction(mode)}</Text>
       {motionOptIn && mode === MODES.ROOM_BEACON && (
         <>

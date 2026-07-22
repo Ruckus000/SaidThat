@@ -77,6 +77,23 @@ test("reward: streak counts consecutive correct reads and resets on a miss", () 
   assert.equal(state.lastCorrect, false);
 });
 
+test("reward: run stats count plays and correct reads without double counting", () => {
+  const authentic = { ...fixture, id: "authentic", authentic: true };
+  let state = createSession({ cards: [authentic], allowLocalFixtures: true, deckVersion: "test" });
+  state = gameReducer(state, { type: "START_ROUND" });
+
+  state = gameReducer(state, { type: "ANSWER", guessAuthentic: true });
+  // A duplicate tap must not inflate the run totals.
+  state = gameReducer(state, { type: "ANSWER", guessAuthentic: true });
+  assert.equal(state.roundsPlayed, 1);
+  assert.equal(state.correctCount, 1);
+
+  state = gameReducer(state, { type: "NEXT_ROUND" });
+  state = gameReducer(state, { type: "ANSWER", guessAuthentic: false });
+  assert.equal(state.roundsPlayed, 2);
+  assert.equal(state.correctCount, 1);
+});
+
 test("reward: reset clears the streak alongside the score", () => {
   let state = started();
   state = gameReducer(state, { type: "ANSWER", guessAuthentic: false });

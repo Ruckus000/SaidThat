@@ -151,6 +151,10 @@ export default function App() {
             onStart={() => dispatch({ type: "OPEN_SETUP" })}
             onOpenSettings={() => setShowSettings(true)}
             localFixtures={allowLocalFixtures}
+            reducedMotion={reducedMotion}
+            roundsPlayed={state.roundsPlayed}
+            correctCount={state.correctCount}
+            bestStreak={state.bestStreak}
           />
         )}
         {state.stage === STAGES.HOME && showSettings && (
@@ -182,6 +186,7 @@ export default function App() {
             round={state.roundIndex + 1}
             motionOptIn={motionAllowed({ motionOptIn, noMotion })}
             motionCalibrated={motionNeutralZ != null}
+            reducedMotion={reducedMotion}
             onCalibrate={calibrateMotion}
             onAnswer={submitAnswer}
             onPause={() => dispatch({ type: "APP_BACKGROUND" })}
@@ -201,6 +206,7 @@ export default function App() {
             card={card}
             reportStatus={state.reportStatus}
             reportBusy={reportBusy}
+            reducedMotion={reducedMotion}
             onReport={report}
             onContinue={() => dispatch({ type: "NEXT_ROUND" })}
           />
