@@ -29,12 +29,14 @@ export function SettingsScreen({
       <Text style={s.sectionLabel}>ACCESS PREFERENCES</Text>
       <Choice
         active={reducedMotion}
+        role="switch"
         title="Reduced motion"
         body="Prefer minimal transition motion when the app animates."
         onPress={() => onReducedMotion(!reducedMotion)}
       />
       <Choice
         active={noMotion}
+        role="switch"
         title="No motion / tap-only"
         body="Disable optional tilt answers. Buttons remain the primary commit path."
         onPress={() => onNoMotion(!noMotion)}

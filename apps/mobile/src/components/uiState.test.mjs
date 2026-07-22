@@ -5,14 +5,22 @@ import {
   CONTENT_UNAVAILABLE_GUARD,
   FIXTURE_DISCLOSURE,
   PRIVATE_SHUTTER_RECOVERY,
+  accuracyPercent,
   contentUnavailableMessage,
   headerScoreLabel,
+  resultHeadline,
+  resultMark,
+  resultRewardLabel,
+  recapStatLines,
   reviewSourceStatus,
   reviewTruthLabel,
   roundInstruction,
   roundModeLabel,
+  runRankLabel,
+  runSummaryLabel,
   setupSectionLabel,
   setupShowsAccessRoles,
+  streakBadgeLabel,
 } from "./presentationLabels.js";
 import {
   MODES,
@@ -32,7 +40,9 @@ const fixture = {
 };
 
 function privateShutterState() {
-  let state = createSession({ cards: [fixture], allowLocalFixtures: true, deckVersion: "test" });
+  // Two cards so the first NEXT_ROUND is a non-final handoff (shutter), not the recap.
+  const cards = [fixture, { ...fixture, id: "fixture-2" }];
+  let state = createSession({ cards, allowLocalFixtures: true, deckVersion: "test" });
   state = gameReducer(state, { type: "SET_MODE", mode: MODES.PRIVATE_RELAY });
   state = gameReducer(state, { type: "START_ROUND" });
   state = gameReducer(state, { type: "ANSWER", guessAuthentic: false });
@@ -73,6 +83,53 @@ test("ui: review truth labels stay textual, not color-only", () => {
     reviewSourceStatus({ authentic: true, contentState: "fixture-authentic" }),
     /not a source-verified production card/i,
   );
+});
+
+test("reward: result copy celebrates skill with a non-color cue and never punishes a miss", () => {
+  assert.equal(resultHeadline(true), "NAILED IT");
+  assert.equal(resultHeadline(false), "NOT THIS TIME");
+  // Filled vs hollow mark carries meaning without relying on color.
+  assert.notEqual(resultMark(true), resultMark(false));
+  assert.equal(resultRewardLabel(true, 1), "+100 to the room");
+  assert.equal(resultRewardLabel(true, 3), "+100 · 3 IN A ROW");
+  // A miss reward line is forward-looking, not blaming.
+  assert.match(resultRewardLabel(false, 0), /next one/i);
+  assert.equal(streakBadgeLabel(1), null);
+  assert.match(streakBadgeLabel(4), /4 STREAK/);
+});
+
+test("reward: run summary reports play positively without truth verdicts", () => {
+  assert.equal(accuracyPercent(3, 4), 75);
+  assert.equal(accuracyPercent(0, 0), 0);
+  assert.equal(runSummaryLabel({ roundsPlayed: 0, correctCount: 0, bestStreak: 0 }), null);
+  assert.match(
+    runSummaryLabel({ roundsPlayed: 4, correctCount: 3, bestStreak: 3 }),
+    /THIS RUN · 4 reads · 75% called · best streak 3/,
+  );
+  // Does not append a streak brag when there was none.
+  assert.equal(
+    runSummaryLabel({ roundsPlayed: 2, correctCount: 1, bestStreak: 1 }),
+    "THIS RUN · 2 reads · 50% called",
+  );
+});
+
+test("reward: recap rank rates room skill without punishing a rough run", () => {
+  assert.equal(runRankLabel(100), "ROOM ORACLE");
+  assert.equal(runRankLabel(90), "ROOM ORACLE");
+  assert.equal(runRankLabel(75), "SHARP EYES");
+  assert.equal(runRankLabel(50), "SPLIT ROOM");
+  assert.equal(runRankLabel(0), "WARMING UP");
+
+  const lines = recapStatLines({ score: 200, correctCount: 5, roundsPlayed: 7, bestStreak: 3 });
+  assert.deepEqual(
+    lines.map((line) => line.label),
+    ["SCORE", "CALLED RIGHT", "ACCURACY", "BEST STREAK"],
+  );
+  const byLabel = Object.fromEntries(lines.map((line) => [line.label, line.value]));
+  assert.equal(byLabel.SCORE, "200");
+  assert.equal(byLabel["CALLED RIGHT"], "5 of 7");
+  assert.equal(byLabel.ACCURACY, "71%");
+  assert.equal(byLabel["BEST STREAK"], "3");
 });
 
 test("ui: private shutter conceals score through reducer and header copy", () => {

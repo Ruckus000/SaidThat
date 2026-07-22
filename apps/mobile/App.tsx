@@ -7,6 +7,7 @@ import { Header } from "./src/components/Header";
 import { HomeScreen } from "./src/components/HomeScreen";
 import { PausedScreen } from "./src/components/PausedScreen";
 import { PrivateShutterScreen } from "./src/components/PrivateShutterScreen";
+import { RecapScreen } from "./src/components/RecapScreen";
 import { ResultScreen } from "./src/components/ResultScreen";
 import { ReviewScreen } from "./src/components/ReviewScreen";
 import { RoundScreen } from "./src/components/RoundScreen";
@@ -122,6 +123,17 @@ export default function App() {
     dispatch({ type: "GO_HOME" });
   }
 
+  function playAgain() {
+    // Reshuffle in the UI layer so the reducer stays pure/deterministic.
+    const deck = playableFixtureDeck(catalog, { allowLocalFixtures });
+    for (let i = deck.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [deck[i], deck[j]] = [deck[j], deck[i]];
+    }
+    setMotionNeutralZ(null);
+    dispatch({ type: "PLAY_AGAIN", cards: deck, allowLocalFixtures });
+  }
+
   function setMode(mode: string) {
     if (mode !== MODES.ROOM_BEACON) {
       setMotionOptIn(false);
@@ -139,12 +151,22 @@ export default function App() {
     <SafeAreaView style={s.safe}>
       <StatusBar style="light" />
       <View style={s.app}>
-        <Header score={state.score} concealScore={shouldConcealScore(state)} onHome={goHome} />
+        <Header
+          score={state.score}
+          streak={state.streak}
+          concealScore={shouldConcealScore(state)}
+          reducedMotion={reducedMotion}
+          onHome={goHome}
+        />
         {state.stage === STAGES.HOME && !showSettings && (
           <HomeScreen
             onStart={() => dispatch({ type: "OPEN_SETUP" })}
             onOpenSettings={() => setShowSettings(true)}
             localFixtures={allowLocalFixtures}
+            reducedMotion={reducedMotion}
+            roundsPlayed={state.roundsPlayed}
+            correctCount={state.correctCount}
+            bestStreak={state.bestStreak}
           />
         )}
         {state.stage === STAGES.HOME && showSettings && (
@@ -176,6 +198,7 @@ export default function App() {
             round={state.roundIndex + 1}
             motionOptIn={motionAllowed({ motionOptIn, noMotion })}
             motionCalibrated={motionNeutralZ != null}
+            reducedMotion={reducedMotion}
             onCalibrate={calibrateMotion}
             onAnswer={submitAnswer}
             onPause={() => dispatch({ type: "APP_BACKGROUND" })}
@@ -184,6 +207,8 @@ export default function App() {
         {state.stage === STAGES.RESULT && (
           <ResultScreen
             correct={state.lastCorrect === true}
+            streak={state.streak}
+            reducedMotion={reducedMotion}
             onReview={() => dispatch({ type: "OPEN_REVIEW" })}
             onContinue={() => dispatch({ type: "NEXT_ROUND" })}
           />
@@ -193,8 +218,20 @@ export default function App() {
             card={card}
             reportStatus={state.reportStatus}
             reportBusy={reportBusy}
+            reducedMotion={reducedMotion}
             onReport={report}
             onContinue={() => dispatch({ type: "NEXT_ROUND" })}
+          />
+        )}
+        {state.stage === STAGES.RECAP && (
+          <RecapScreen
+            score={state.score}
+            correctCount={state.correctCount}
+            roundsPlayed={state.roundsPlayed}
+            bestStreak={state.bestStreak}
+            reducedMotion={reducedMotion}
+            onPlayAgain={playAgain}
+            onHome={goHome}
           />
         )}
         {state.stage === STAGES.PRIVATE_SHUTTER && (

@@ -28,7 +28,7 @@ export function SetupScreen({
   const roomBeacon = mode === MODES.ROOM_BEACON;
   return (
     <ScrollView contentContainerStyle={s.setup}>
-      <Text style={s.eyebrow}>CHOOSE THE RITUAL</Text>
+      <Text style={s.eyebrow}>SET UP THE ROOM</Text>
       <Text style={s.title}>How is the room playing?</Text>
       <Choice active={roomBeacon} title="Room Beacon" body="Group reads. Holder makes one tap-only group answer." onPress={() => onMode(MODES.ROOM_BEACON)} />
       <Choice active={!roomBeacon} title="Private Relay" body="One player reads and answers. A shutter protects every handoff." onPress={() => onMode(MODES.PRIVATE_RELAY)} />
@@ -46,6 +46,7 @@ export function SetupScreen({
           <Text style={s.sectionLabel}>OPTIONAL TILT</Text>
           <Choice
             active={motionOptIn}
+            role="switch"
             title="Enable tilt answer"
             body="Holder may tilt to answer after calibration. Tap buttons always work immediately."
             onPress={() => onMotionOptIn(!motionOptIn)}
@@ -53,7 +54,7 @@ export function SetupScreen({
         </>
       )}
       <Text style={s.note}>Untimed by design. Controls are at least 56 dp; tap paths remain complete with or without tilt.</Text>
-      <PrimaryButton label="Begin round" onPress={onStart} />
+      <PrimaryButton label="Start playing" onPress={onStart} />
     </ScrollView>
   );
 }

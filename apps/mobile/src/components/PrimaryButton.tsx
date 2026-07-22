@@ -16,7 +16,13 @@ export function PrimaryButton({ label, onPress, secondary = false, disabled = fa
       accessibilityLabel={label}
       accessibilityState={{ disabled }}
       disabled={disabled}
-      style={[s.button, secondary && s.secondary, disabled && s.disabled]}
+      android_ripple={{ color: "rgba(0,0,0,0.18)" }}
+      style={({ pressed }) => [
+        s.button,
+        secondary && s.secondary,
+        disabled && s.disabled,
+        pressed && !disabled && s.pressed,
+      ]}
       onPress={onPress}
     >
       <Text style={[s.buttonText, secondary && s.secondaryText]}>{label}</Text>

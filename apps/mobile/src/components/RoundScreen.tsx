@@ -2,6 +2,7 @@ import { Pressable, ScrollView, Text, View } from "react-native";
 
 import { MODES } from "../domain/game";
 import { roundInstruction, roundModeLabel } from "./presentationLabels";
+import { FadeIn } from "./FadeIn";
 import { PrimaryButton } from "./PrimaryButton";
 import { s } from "./styles";
 
@@ -17,10 +18,26 @@ export type RoundScreenProps = {
   hideCardFromAssistiveTech: boolean;
   motionOptIn: boolean;
   motionCalibrated: boolean;
+  reducedMotion: boolean;
   onCalibrate: () => void;
   onAnswer: (guessAuthentic: boolean) => void;
   onPause: () => void;
 };
+
+function AnswerButton({ label, hint, onPress }: { label: string; hint: string; onPress: () => void }) {
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`${label}. ${hint}`}
+      onPress={onPress}
+      android_ripple={{ color: "rgba(200,255,61,0.15)" }}
+      style={({ pressed }) => [s.answer, pressed && s.pressed]}
+    >
+      <Text style={s.answerText}>{label}</Text>
+      <Text style={s.answerHint}>{hint}</Text>
+    </Pressable>
+  );
+}
 
 export function RoundScreen({
   card,
@@ -29,6 +46,7 @@ export function RoundScreen({
   hideCardFromAssistiveTech,
   motionOptIn,
   motionCalibrated,
+  reducedMotion,
   onCalibrate,
   onAnswer,
   onPause,
@@ -37,14 +55,16 @@ export function RoundScreen({
     <View style={s.round}>
       <Text style={s.mode}>{roundModeLabel(mode, round)}</Text>
       <View style={s.beacon}><Text style={s.game}>THIS IS A GAME PROMPT · THE REVEAL DECIDES TRUTH</Text></View>
-      <ScrollView
-        contentContainerStyle={s.card}
-        accessibilityElementsHidden={hideCardFromAssistiveTech}
-        importantForAccessibility={hideCardFromAssistiveTech ? "no-hide-descendants" : "auto"}
-      >
-        <Text style={s.quote}>“{card.quote}”</Text>
-        <Text style={s.person}>— {card.person}</Text>
-      </ScrollView>
+      <FadeIn key={round} reducedMotion={reducedMotion} style={s.cardFill}>
+        <ScrollView
+          contentContainerStyle={s.card}
+          accessibilityElementsHidden={hideCardFromAssistiveTech}
+          importantForAccessibility={hideCardFromAssistiveTech ? "no-hide-descendants" : "auto"}
+        >
+          <Text style={s.quote}>“{card.quote}”</Text>
+          <Text style={s.person}>— {card.person}</Text>
+        </ScrollView>
+      </FadeIn>
       <Text style={s.instruction}>{roundInstruction(mode)}</Text>
       {motionOptIn && mode === MODES.ROOM_BEACON && (
         <>
@@ -58,11 +78,18 @@ export function RoundScreen({
           )}
         </>
       )}
-      <View style={s.actions}>
-        <PrimaryButton label="They did" onPress={() => onAnswer(true)} />
-        <PrimaryButton label="Made for game" secondary onPress={() => onAnswer(false)} />
+      <View style={s.answers}>
+        <AnswerButton label="They really said it" hint="Authentic" onPress={() => onAnswer(true)} />
+        <AnswerButton label="Faked for the game" hint="Fabricated" onPress={() => onAnswer(false)} />
       </View>
-      <Pressable accessibilityRole="button" accessibilityLabel="Pause session" onPress={onPause}><Text style={s.link}>Pause and leave safely</Text></Pressable>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Pause session"
+        onPress={onPause}
+        style={s.pauseTap}
+      >
+        <Text style={s.link}>Pause</Text>
+      </Pressable>
     </View>
   );
 }
