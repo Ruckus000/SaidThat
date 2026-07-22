@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { Animated, Text, View } from "react-native";
 
 import { revealFeedback } from "../feedback/haptics";
+import { hotmic } from "../theme/tokens";
 import { resultHeadline, resultMark, resultRewardLabel } from "./presentationLabels";
+import { Mark } from "./Mark";
 import { PrimaryButton } from "./PrimaryButton";
 import { s } from "./styles";
 
@@ -23,6 +25,7 @@ export function ResultScreen({ correct, streak, reducedMotion, haptics, onReview
   // skips straight to the verdict with the identical words and reward.
   const [revealed, setRevealed] = useState(reducedMotion);
   const reveal = useRef(new Animated.Value(reducedMotion ? 1 : 0)).current;
+  const seal = useRef(new Animated.Value(reducedMotion ? 1 : 0)).current;
   const pulse = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -38,12 +41,14 @@ export function ResultScreen({ correct, streak, reducedMotion, haptics, onReview
       loop.stop();
       setRevealed(true);
       Animated.spring(reveal, { toValue: 1, useNativeDriver: true, speed: 12, bounciness: 12 }).start();
+      // The closing MARK drops on a weightier spring — the round-closed "seal".
+      Animated.spring(seal, { toValue: 1, useNativeDriver: true, speed: 8, bounciness: 6 }).start();
     }, SUSPENSE_MS);
     return () => {
       clearTimeout(timer);
       loop.stop();
     };
-  }, [reducedMotion, reveal, pulse]);
+  }, [reducedMotion, reveal, seal, pulse]);
 
   // Fire the reveal haptic exactly when the verdict lands — on mount under reduced
   // motion (revealed starts true), or when the suspense beat flips it true.
@@ -64,6 +69,15 @@ export function ResultScreen({ correct, streak, reducedMotion, haptics, onReview
 
   return (
     <View style={s.center}>
+      <Animated.View
+        style={{
+          alignItems: "center",
+          opacity: seal,
+          transform: [{ translateY: seal.interpolate({ inputRange: [0, 1], outputRange: [-18, 0] }) }],
+        }}
+      >
+        <Mark name="close" size={44} color={hotmic.color.dark.textPrimary} />
+      </Animated.View>
       <Animated.View style={{ opacity: reveal, transform: [{ scale: reveal.interpolate({ inputRange: [0, 1], outputRange: [0.7, 1] }) }] }}>
         <Text style={s.resultMark} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
           {resultMark(correct)}
