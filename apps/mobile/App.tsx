@@ -24,6 +24,7 @@ import {
   currentCard,
   gameReducer,
   reportPayload,
+  runLength,
   shouldConcealScore,
 } from "./src/domain/game";
 import { calibrateNeutral, readMotionSample, useRoomBeaconMotion } from "./src/sensors/useRoomBeaconMotion";
@@ -167,6 +168,7 @@ export default function App() {
             roundsPlayed={state.roundsPlayed}
             correctCount={state.correctCount}
             bestStreak={state.bestStreak}
+            runComplete={state.roundsPlayed >= runLength(state)}
           />
         )}
         {state.stage === STAGES.HOME && showSettings && (

@@ -25,17 +25,22 @@ export function ResultScreen({ correct, streak, reducedMotion, onReview, onConti
 
   useEffect(() => {
     if (reducedMotion) return;
-    Animated.loop(
+    const loop = Animated.loop(
       Animated.sequence([
         Animated.timing(pulse, { toValue: 1, duration: 450, useNativeDriver: true }),
         Animated.timing(pulse, { toValue: 0, duration: 450, useNativeDriver: true }),
       ]),
-    ).start();
+    );
+    loop.start();
     const timer = setTimeout(() => {
+      loop.stop();
       setRevealed(true);
       Animated.spring(reveal, { toValue: 1, useNativeDriver: true, speed: 12, bounciness: 12 }).start();
     }, SUSPENSE_MS);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      loop.stop();
+    };
   }, [reducedMotion, reveal, pulse]);
 
   if (!revealed) {

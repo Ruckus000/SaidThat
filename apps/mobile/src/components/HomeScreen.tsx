@@ -13,6 +13,7 @@ export type HomeScreenProps = {
   roundsPlayed: number;
   correctCount: number;
   bestStreak: number;
+  runComplete: boolean;
 };
 
 export function HomeScreen({
@@ -23,8 +24,9 @@ export function HomeScreen({
   roundsPlayed,
   correctCount,
   bestStreak,
+  runComplete,
 }: HomeScreenProps) {
-  const summary = runSummaryLabel({ roundsPlayed, correctCount, bestStreak });
+  const summary = runSummaryLabel({ roundsPlayed, correctCount, bestStreak, complete: runComplete });
   return (
     <FadeIn reducedMotion={reducedMotion} style={s.center}>
       <Text style={s.eyebrow}>REAL OR FAKE · ONE PHONE</Text>
