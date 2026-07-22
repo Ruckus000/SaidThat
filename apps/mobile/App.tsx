@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
 import { Alert, AppState, SafeAreaView, View } from "react-native";
+import { useFonts } from "expo-font";
 import { StatusBar } from "expo-status-bar";
 
 import { ContentUnavailableScreen } from "./src/components/ContentUnavailableScreen";
@@ -35,6 +36,13 @@ import { clearReportQueue, queueReport } from "./src/storage/reportQueue";
 const allowLocalFixtures = typeof __DEV__ !== "undefined" && __DEV__;
 
 export default function App() {
+  // Load the HOT MIC faces (Bricolage Grotesque display + Inter body/counters). Render
+  // is gated on load so text never flashes in a fallback face; on a load error we fall
+  // through to the platform system face rather than showing nothing.
+  const [fontsLoaded, fontError] = useFonts({
+    Inter: require("./assets/fonts/InterVariable.ttf"),
+    BricolageGrotesque: require("./assets/fonts/BricolageGrotesque.ttf"),
+  });
   const [state, dispatch] = useReducer(
     gameReducer,
     undefined,
@@ -149,6 +157,15 @@ export default function App() {
   function setMotionOptInEnabled(enabled: boolean) {
     setMotionOptIn(enabled);
     if (!enabled) setMotionNeutralZ(null);
+  }
+
+  if (!fontsLoaded && !fontError) {
+    // Fonts still loading: hold on the calm canvas (no unstyled text flash).
+    return (
+      <SafeAreaView style={s.safe}>
+        <StatusBar style="light" />
+      </SafeAreaView>
+    );
   }
 
   return (
