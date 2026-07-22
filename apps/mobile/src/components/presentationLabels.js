@@ -68,6 +68,11 @@ export function setupSectionLabel(mode) {
   return mode === MODES.ROOM_BEACON ? "ACCESS ROLE" : "PRIVATE PLAY";
 }
 
+// Text state for a toggle, so on/off never relies on color alone.
+export function toggleStateLabel(on) {
+  return on ? "ON" : "OFF";
+}
+
 export function setupShowsAccessRoles(mode) {
   return mode === MODES.ROOM_BEACON;
 }
