@@ -61,16 +61,25 @@ export default function App() {
   const [hapticsEnabled, setHapticsEnabled] = useState(true);
   const card = currentCard(state);
 
-  const submitAnswer = useCallback((guessAuthentic: boolean) => {
-    commitFeedback(hapticsAllowed({ hapticsEnabled }));
+  // Tap commits fire the KICK haptic doublet inside the answer control (useFireEvent),
+  // so the shared dispatch is haptic-free to avoid a double tick. The tilt path has no
+  // press phase, so it fires its own single commit tick.
+  const commitAnswer = useCallback((guessAuthentic: boolean) => {
     dispatch({ type: "ANSWER", guessAuthentic });
-  }, [hapticsEnabled]);
+  }, []);
+  const commitAnswerFromTilt = useCallback(
+    (guessAuthentic: boolean) => {
+      commitFeedback(hapticsAllowed({ hapticsEnabled }));
+      commitAnswer(guessAuthentic);
+    },
+    [hapticsEnabled, commitAnswer],
+  );
 
   useRoomBeaconMotion({
     enabled: motionAllowed({ motionOptIn, noMotion }) && state.stage === STAGES.ROUND,
     mode: state.mode,
     neutralZ: motionNeutralZ,
-    onAnswer: submitAnswer,
+    onAnswer: commitAnswerFromTilt,
   });
 
   useEffect(() => {
@@ -223,8 +232,9 @@ export default function App() {
             motionOptIn={motionAllowed({ motionOptIn, noMotion })}
             motionCalibrated={motionNeutralZ != null}
             reducedMotion={reducedMotion}
+            haptics={hapticsAllowed({ hapticsEnabled })}
             onCalibrate={calibrateMotion}
-            onAnswer={submitAnswer}
+            onAnswer={commitAnswer}
             onPause={() => dispatch({ type: "APP_BACKGROUND" })}
           />
         )}

@@ -1,6 +1,7 @@
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Animated, Pressable, ScrollView, Text, View } from "react-native";
 
 import { MODES } from "../domain/game";
+import { useFireEvent } from "../feedback/useFireEvent";
 import { hotmic } from "../theme/tokens";
 import { roundInstruction, roundModeLabel } from "./presentationLabels";
 import { FadeIn } from "./FadeIn";
@@ -21,23 +22,41 @@ export type RoundScreenProps = {
   motionOptIn: boolean;
   motionCalibrated: boolean;
   reducedMotion: boolean;
+  haptics: boolean;
   onCalibrate: () => void;
   onAnswer: (guessAuthentic: boolean) => void;
   onPause: () => void;
 };
 
-function AnswerButton({ label, hint, onPress }: { label: string; hint: string; onPress: () => void }) {
+function AnswerButton({
+  label,
+  hint,
+  haptics,
+  reducedMotion,
+  onPress,
+}: {
+  label: string;
+  hint: string;
+  haptics: boolean;
+  reducedMotion: boolean;
+  onPress: () => void;
+}) {
+  // The KICK: identical for both answers (dip -> overshoot -> settle + haptic doublet),
+  // so the felt commit never differs between the two verdicts.
+  const { animatedStyle, pressableProps } = useFireEvent("answerCommit", { onPress, haptics, reducedMotion });
   return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={`${label}. ${hint}`}
-      onPress={onPress}
-      android_ripple={{ color: "rgba(200,255,61,0.15)" }}
-      style={({ pressed }) => [s.answer, pressed && s.pressed]}
-    >
-      <Text style={s.answerText}>{label}</Text>
-      <Text style={s.answerHint}>{hint}</Text>
-    </Pressable>
+    <Animated.View style={animatedStyle}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={`${label}. ${hint}`}
+        android_ripple={{ color: "rgba(255,176,32,0.12)" }}
+        style={({ pressed }) => [s.answer, pressed && s.pressed]}
+        {...pressableProps}
+      >
+        <Text style={s.answerText}>{label}</Text>
+        <Text style={s.answerHint}>{hint}</Text>
+      </Pressable>
+    </Animated.View>
   );
 }
 
@@ -49,6 +68,7 @@ export function RoundScreen({
   motionOptIn,
   motionCalibrated,
   reducedMotion,
+  haptics,
   onCalibrate,
   onAnswer,
   onPause,
@@ -84,8 +104,8 @@ export function RoundScreen({
         </>
       )}
       <View style={s.answers}>
-        <AnswerButton label="They really said it" hint="Authentic" onPress={() => onAnswer(true)} />
-        <AnswerButton label="Faked for the game" hint="Fabricated" onPress={() => onAnswer(false)} />
+        <AnswerButton label="They really said it" hint="Authentic" haptics={haptics} reducedMotion={reducedMotion} onPress={() => onAnswer(true)} />
+        <AnswerButton label="Faked for the game" hint="Fabricated" haptics={haptics} reducedMotion={reducedMotion} onPress={() => onAnswer(false)} />
       </View>
       <Pressable
         accessibilityRole="button"
