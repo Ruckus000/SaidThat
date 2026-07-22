@@ -1,8 +1,10 @@
 import { Pressable, ScrollView, Text, View } from "react-native";
 
 import { MODES } from "../domain/game";
+import { hotmic } from "../theme/tokens";
 import { roundInstruction, roundModeLabel } from "./presentationLabels";
 import { FadeIn } from "./FadeIn";
+import { Mark } from "./Mark";
 import { PrimaryButton } from "./PrimaryButton";
 import { s } from "./styles";
 
@@ -61,7 +63,10 @@ export function RoundScreen({
           accessibilityElementsHidden={hideCardFromAssistiveTech}
           importantForAccessibility={hideCardFromAssistiveTech ? "no-hide-descendants" : "auto"}
         >
-          <Text style={s.quote}>“{card.quote}”</Text>
+          <View style={s.markBeacon}>
+            <Mark name="open" size={56} color={hotmic.color.dark.marigold} />
+          </View>
+          <Text style={s.quote}>{card.quote}</Text>
           <Text style={s.person}>— {card.person}</Text>
         </ScrollView>
       </FadeIn>
