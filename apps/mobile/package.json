@@ -25,7 +25,7 @@
     "typecheck": "tsc --noEmit",
     "export:ios": "expo export --platform ios --output-dir /tmp/said-that-ios-export",
     "export:android": "expo export --platform android --output-dir /tmp/said-that-android-export",
-    "test": "node --experimental-default-type=module --test src/domain/game.test.mjs src/components/uiState.test.mjs src/sensors/roomBeaconMotion.test.mjs src/settings/settingsPolicy.test.mjs src/content/validateDeck.test.mjs src/release/releasePrep.test.mjs"
+    "test": "node --experimental-default-type=module --test src/domain/game.test.mjs src/components/uiState.test.mjs src/sensors/roomBeaconMotion.test.mjs src/settings/settingsPolicy.test.mjs src/content/validateDeck.test.mjs src/release/releasePrep.test.mjs src/theme/contrast.test.mjs"
   },
   "private": true
 }
