@@ -29,6 +29,25 @@ export function streakBadgeLabel(streak) {
   return streak >= 2 ? `🔥 ${streak} STREAK` : null;
 }
 
+// Playful recap rank for how well the room read the run. It rates game skill
+// (accuracy), never a person and never a truth verdict, and stays encouraging at
+// the low end so a rough run is never a punishment.
+export function runRankLabel(accuracy) {
+  if (accuracy >= 90) return "ROOM ORACLE";
+  if (accuracy >= 70) return "SHARP EYES";
+  if (accuracy >= 50) return "SPLIT ROOM";
+  return "WARMING UP";
+}
+
+export function recapStatLines({ score, correctCount, roundsPlayed, bestStreak }) {
+  return [
+    { label: "SCORE", value: `${score}` },
+    { label: "CALLED RIGHT", value: `${correctCount} of ${roundsPlayed}` },
+    { label: "ACCURACY", value: `${accuracyPercent(correctCount, roundsPlayed)}%` },
+    { label: "BEST STREAK", value: `${bestStreak}` },
+  ];
+}
+
 export function accuracyPercent(correctCount, roundsPlayed) {
   if (!roundsPlayed) return 0;
   return Math.round((correctCount / roundsPlayed) * 100);

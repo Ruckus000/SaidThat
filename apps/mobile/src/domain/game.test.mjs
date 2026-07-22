@@ -23,8 +23,12 @@ const fixture = {
   fixtureOnly: true,
 };
 
+// Two cards so a NEXT_ROUND from the first round is a non-final round (exercises
+// the Private Relay handoff shutter rather than ending the run).
+const secondFixture = { ...fixture, id: "fixture-2" };
+
 function started(mode = MODES.ROOM_BEACON) {
-  let state = createSession({ cards: [fixture], allowLocalFixtures: true, deckVersion: "test" });
+  let state = createSession({ cards: [fixture, secondFixture], allowLocalFixtures: true, deckVersion: "test" });
   state = gameReducer(state, { type: "SET_MODE", mode });
   return gameReducer(state, { type: "START_ROUND" });
 }
@@ -49,8 +53,9 @@ test("chaos: duplicate taps score only once", () => {
 });
 
 test("reward: streak counts consecutive correct reads and resets on a miss", () => {
-  const authentic = { ...fixture, id: "authentic", authentic: true };
-  let state = createSession({ cards: [authentic], allowLocalFixtures: true, deckVersion: "test" });
+  // Three distinct cards so the run spans three rounds before any recap.
+  const cards = [0, 1, 2].map((n) => ({ ...fixture, id: `authentic-${n}`, authentic: true }));
+  let state = createSession({ cards, allowLocalFixtures: true, deckVersion: "test" });
   state = gameReducer(state, { type: "START_ROUND" });
 
   // Correct guess raises the streak and best streak.
@@ -78,8 +83,8 @@ test("reward: streak counts consecutive correct reads and resets on a miss", () 
 });
 
 test("reward: run stats count plays and correct reads without double counting", () => {
-  const authentic = { ...fixture, id: "authentic", authentic: true };
-  let state = createSession({ cards: [authentic], allowLocalFixtures: true, deckVersion: "test" });
+  const cards = [0, 1].map((n) => ({ ...fixture, id: `authentic-${n}`, authentic: true }));
+  let state = createSession({ cards, allowLocalFixtures: true, deckVersion: "test" });
   state = gameReducer(state, { type: "START_ROUND" });
 
   state = gameReducer(state, { type: "ANSWER", guessAuthentic: true });
@@ -106,6 +111,73 @@ test("reward: reset clears the streak alongside the score", () => {
   });
   assert.equal(state.streak, 0);
   assert.equal(state.bestStreak, 0);
+});
+
+test("run: a full pass through the deck ends in recap, and play again resets the run", () => {
+  const a1 = { ...fixture, id: "a1", authentic: true };
+  const a2 = { ...fixture, id: "a2", authentic: true };
+  let state = createSession({ cards: [a1, a2], allowLocalFixtures: true, deckVersion: "test" });
+  state = gameReducer(state, { type: "START_ROUND" });
+
+  // Round 1 of 2 -> not the end, back to a round.
+  state = gameReducer(state, { type: "ANSWER", guessAuthentic: true });
+  state = gameReducer(state, { type: "NEXT_ROUND" });
+  assert.equal(state.stage, STAGES.ROUND);
+  assert.equal(state.roundIndex, 1);
+
+  // Round 2 of 2 -> end of run -> recap. No card is exposed on recap.
+  state = gameReducer(state, { type: "ANSWER", guessAuthentic: true });
+  state = gameReducer(state, { type: "NEXT_ROUND" });
+  assert.equal(state.stage, STAGES.RECAP);
+  assert.equal(state.roundsPlayed, 2);
+  assert.equal(state.correctCount, 2);
+  assert.equal(state.score, 200);
+  assert.equal(cardForPresentation(state), null);
+
+  // Play again starts a fresh run with the shuffled deck; score resets to 0.
+  state = gameReducer(state, { type: "PLAY_AGAIN", cards: [a2, a1], allowLocalFixtures: true });
+  assert.equal(state.stage, STAGES.ROUND);
+  assert.equal(state.roundIndex, 0);
+  assert.equal(state.score, 0);
+  assert.equal(state.roundsPlayed, 0);
+  assert.equal(state.streak, 0);
+});
+
+test("run: private relay ends the final round in recap, not a shutter", () => {
+  const a1 = { ...fixture, id: "a1", authentic: true };
+  const a2 = { ...fixture, id: "a2", authentic: true };
+  let state = createSession({ cards: [a1, a2], allowLocalFixtures: true, deckVersion: "test" });
+  state = gameReducer(state, { type: "SET_MODE", mode: MODES.PRIVATE_RELAY });
+  state = gameReducer(state, { type: "START_ROUND" });
+
+  // Non-final round still protects the handoff with a shutter.
+  state = gameReducer(state, { type: "ANSWER", guessAuthentic: true });
+  state = gameReducer(state, { type: "NEXT_ROUND" });
+  assert.equal(state.stage, STAGES.PRIVATE_SHUTTER);
+  state = gameReducer(state, { type: "REVEAL_PRIVATE_TURN" });
+  assert.equal(state.stage, STAGES.ROUND);
+
+  // Final round goes straight to recap (recap holds no private card).
+  state = gameReducer(state, { type: "ANSWER", guessAuthentic: true });
+  state = gameReducer(state, { type: "NEXT_ROUND" });
+  assert.equal(state.stage, STAGES.RECAP);
+  assert.equal(cardForPresentation(state), null);
+});
+
+test("run: starting again after a completed run resets instead of re-looping the last card", () => {
+  const a1 = { ...fixture, id: "a1", authentic: true };
+  let state = createSession({ cards: [a1], allowLocalFixtures: true, deckVersion: "test" });
+  state = gameReducer(state, { type: "START_ROUND" });
+  state = gameReducer(state, { type: "ANSWER", guessAuthentic: true });
+  state = gameReducer(state, { type: "NEXT_ROUND" });
+  assert.equal(state.stage, STAGES.RECAP);
+
+  // A single-card run is complete after one round; START_ROUND must reset it.
+  state = gameReducer(state, { type: "START_ROUND" });
+  assert.equal(state.stage, STAGES.ROUND);
+  assert.equal(state.roundIndex, 0);
+  assert.equal(state.score, 0);
+  assert.equal(state.roundsPlayed, 0);
 });
 
 test("chaos: private relay never shows prior card or result during handoff", () => {

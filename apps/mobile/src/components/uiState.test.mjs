@@ -11,10 +11,12 @@ import {
   resultHeadline,
   resultMark,
   resultRewardLabel,
+  recapStatLines,
   reviewSourceStatus,
   reviewTruthLabel,
   roundInstruction,
   roundModeLabel,
+  runRankLabel,
   runSummaryLabel,
   setupSectionLabel,
   setupShowsAccessRoles,
@@ -38,7 +40,9 @@ const fixture = {
 };
 
 function privateShutterState() {
-  let state = createSession({ cards: [fixture], allowLocalFixtures: true, deckVersion: "test" });
+  // Two cards so the first NEXT_ROUND is a non-final handoff (shutter), not the recap.
+  const cards = [fixture, { ...fixture, id: "fixture-2" }];
+  let state = createSession({ cards, allowLocalFixtures: true, deckVersion: "test" });
   state = gameReducer(state, { type: "SET_MODE", mode: MODES.PRIVATE_RELAY });
   state = gameReducer(state, { type: "START_ROUND" });
   state = gameReducer(state, { type: "ANSWER", guessAuthentic: false });
@@ -107,6 +111,25 @@ test("reward: run summary reports play positively without truth verdicts", () =>
     runSummaryLabel({ roundsPlayed: 2, correctCount: 1, bestStreak: 1 }),
     "THIS RUN · 2 reads · 50% called",
   );
+});
+
+test("reward: recap rank rates room skill without punishing a rough run", () => {
+  assert.equal(runRankLabel(100), "ROOM ORACLE");
+  assert.equal(runRankLabel(90), "ROOM ORACLE");
+  assert.equal(runRankLabel(75), "SHARP EYES");
+  assert.equal(runRankLabel(50), "SPLIT ROOM");
+  assert.equal(runRankLabel(0), "WARMING UP");
+
+  const lines = recapStatLines({ score: 200, correctCount: 5, roundsPlayed: 7, bestStreak: 3 });
+  assert.deepEqual(
+    lines.map((line) => line.label),
+    ["SCORE", "CALLED RIGHT", "ACCURACY", "BEST STREAK"],
+  );
+  const byLabel = Object.fromEntries(lines.map((line) => [line.label, line.value]));
+  assert.equal(byLabel.SCORE, "200");
+  assert.equal(byLabel["CALLED RIGHT"], "5 of 7");
+  assert.equal(byLabel.ACCURACY, "71%");
+  assert.equal(byLabel["BEST STREAK"], "3");
 });
 
 test("ui: private shutter conceals score through reducer and header copy", () => {

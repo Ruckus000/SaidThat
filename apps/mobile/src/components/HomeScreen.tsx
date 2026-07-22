@@ -31,7 +31,7 @@ export function HomeScreen({
       <Text style={s.title}>Did they really say that?</Text>
       <Text style={s.copy}>Pass the phone, read the room, and call it before the reveal.</Text>
       {summary && <Text style={s.runSummary}>{summary}</Text>}
-      <PrimaryButton label={summary ? "Keep the run going" : "Start a room"} onPress={onStart} />
+      <PrimaryButton label="Start a room" onPress={onStart} />
       <PrimaryButton label="Settings" secondary onPress={onOpenSettings} />
       <Text style={s.note}>No account, no live feed, no telemetry — it all stays on this phone.</Text>
       {localFixtures && <Text style={s.fixture}>{FIXTURE_DISCLOSURE}</Text>}

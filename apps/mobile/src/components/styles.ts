@@ -47,6 +47,13 @@ export const s = StyleSheet.create({
   success: { color: t.color.status.safe, fontSize: t.typography.size.beacon + 2, lineHeight: t.typography.size.beacon + 8 },
   error: { color: t.color.status.danger, fontSize: t.typography.size.beacon + 2, lineHeight: t.typography.size.beacon + 8 },
 
+  // Recap / rematch
+  recapRank: { color: t.color.text.primary, fontSize: t.typography.size.statement + 6, fontWeight: t.typography.weight.bold, letterSpacing: 1, lineHeight: t.typography.size.statement + 12 },
+  statBlock: { borderTopWidth: 1, borderColor: t.color.action.secondary, marginTop: t.spacing.xs },
+  statRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", borderBottomWidth: 1, borderColor: t.color.action.secondary, paddingVertical: t.spacing.sm - 4 },
+  statLabel: { color: t.color.text.muted, fontSize: t.typography.size.beacon + 1, fontWeight: t.typography.weight.bold, letterSpacing: 1 },
+  statValue: { color: t.color.signal, fontSize: t.typography.size.body + 4, fontWeight: t.typography.weight.bold },
+
   // Reveal / reward
   suspense: { color: t.color.signal, fontSize: t.typography.size.beacon + 2, fontWeight: t.typography.weight.bold, letterSpacing: 2, textAlign: "center" },
   resultMark: { color: t.color.text.primary, fontSize: t.typography.size.statement + 20, fontWeight: t.typography.weight.bold, textAlign: "center", lineHeight: t.typography.size.statement + 24 },

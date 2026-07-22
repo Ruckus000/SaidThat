@@ -14,10 +14,19 @@ export const STAGES = {
   ROUND: "round",
   RESULT: "result",
   REVIEW: "review",
+  RECAP: "recap",
   PRIVATE_SHUTTER: "private-shutter",
   PAUSED: "paused",
   CONTENT_UNAVAILABLE: "content-unavailable",
 };
+
+// A run is one pass through the deck, capped so large future decks still make a
+// party-sized run. Cards never repeat within a run because runLength <= deck size.
+export const MAX_RUN_ROUNDS = 10;
+
+export function runLength(state) {
+  return Math.min(state.cards.length, MAX_RUN_ROUNDS);
+}
 
 const NON_PLAYABLE_STATES = new Set(["disputed", "source-unavailable", "removed"]);
 const REPORT_REASONS = new Set(["wrong-attribution", "harmful-content", "other"]);
@@ -126,6 +135,21 @@ function protectPrivateState(state, resumeStage) {
   };
 }
 
+// Counters that define a single run. Reset whenever a fresh run begins (starting
+// from setup, or a rematch) so every run is its own scoreboard.
+const FRESH_RUN = {
+  roundIndex: 0,
+  score: 0,
+  streak: 0,
+  bestStreak: 0,
+  roundsPlayed: 0,
+  correctCount: 0,
+  committedRound: null,
+  reportStatus: null,
+  lastCorrect: null,
+  resumeStage: null,
+};
+
 export function gameReducer(state, action) {
   switch (action.type) {
     case "OPEN_SETUP":
@@ -135,8 +159,10 @@ export function gameReducer(state, action) {
     case "SET_ACCESS_ROLE":
       return { ...state, accessRole: action.accessRole };
     case "START_ROUND":
+      // Every start from setup is a fresh run: reset counters so a previously
+      // completed run cannot resume on its last card and re-trigger the recap.
       return state.cards.length
-        ? { ...state, stage: STAGES.ROUND, committedRound: null, reportStatus: null }
+        ? { ...state, ...FRESH_RUN, stage: STAGES.ROUND }
         : { ...state, stage: STAGES.CONTENT_UNAVAILABLE, fault: "no-safe-playable-content" };
     case "ANSWER": {
       if (state.stage !== STAGES.ROUND || state.committedRound === state.roundIndex) return state;
@@ -159,8 +185,13 @@ export function gameReducer(state, action) {
     }
     case "OPEN_REVIEW":
       return state.stage === STAGES.RESULT ? { ...state, stage: STAGES.REVIEW } : state;
-    case "NEXT_ROUND":
+    case "NEXT_ROUND": {
       if (state.stage !== STAGES.REVIEW && state.stage !== STAGES.RESULT) return state;
+      // End of the run -> recap (both modes; recap holds no card, so Private
+      // Relay needs no protective shutter here).
+      if (state.roundIndex + 1 >= runLength(state)) {
+        return { ...state, stage: STAGES.RECAP, committedRound: null, reportStatus: null, resumeStage: null };
+      }
       if (state.mode === MODES.PRIVATE_RELAY) {
         return {
           ...state,
@@ -178,6 +209,19 @@ export function gameReducer(state, action) {
         committedRound: null,
         reportStatus: null,
       };
+    }
+    case "PLAY_AGAIN": {
+      // Rematch: keep the room's mode/role, start a brand-new run. An optional
+      // freshly shuffled deck (built in the UI layer) gives variety; fall back to
+      // the current playable cards. Fail closed if nothing is playable.
+      const safeCards = action.cards
+        ? playableCards(action.cards, { allowLocalFixtures: action.allowLocalFixtures })
+        : state.cards;
+      if (!safeCards.length) {
+        return { ...state, stage: STAGES.CONTENT_UNAVAILABLE, fault: "no-safe-playable-content" };
+      }
+      return { ...state, ...FRESH_RUN, cards: safeCards, stage: STAGES.ROUND };
+    }
     case "REVEAL_PRIVATE_TURN":
       return state.stage === STAGES.PRIVATE_SHUTTER
         ? { ...state, stage: state.resumeStage ?? STAGES.ROUND, resumeStage: null, privateRecovery: null }
