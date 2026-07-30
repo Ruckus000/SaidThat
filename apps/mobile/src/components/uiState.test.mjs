@@ -111,6 +111,23 @@ test("ui: review truth labels stay textual, not color-only", () => {
   );
 });
 
+// The deck is fixture-only today, so this card cannot occur yet. The branch is
+// kept live anyway: a source-verified editorial card must never inherit the
+// simulation copy, and the failure would be silent if only fixtures were tested.
+test("ui: a source-verified authentic card is never labeled a simulation", () => {
+  const productionAuthentic = { authentic: true, contentState: "normal" };
+
+  const label = reviewTruthLabel(productionAuthentic);
+  assert.match(label, /AUTHENTIC/);
+  assert.doesNotMatch(label, /SIMULATED/);
+  assert.doesNotMatch(label, /FABRICATED/);
+
+  const status = reviewSourceStatus(productionAuthentic);
+  assert.doesNotMatch(status, /simulation/i);
+  assert.doesNotMatch(status, /game fixture/i);
+  assert.match(status, /source record/i);
+});
+
 test("reward: result copy celebrates skill with a non-color cue and never punishes a miss", () => {
   assert.equal(resultHeadline(true), "NAILED IT!");
   assert.equal(resultHeadline(false), "FOOLED YA.");
