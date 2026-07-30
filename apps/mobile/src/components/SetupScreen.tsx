@@ -89,7 +89,7 @@ export function SetupScreen({
         />
       )}
 
-      <PrimaryButton label="LET'S PLAY" onPress={onStart} />
+      <PrimaryButton label="LET'S PLAY" hero onPress={onStart} />
     </ScrollView>
   );
 }

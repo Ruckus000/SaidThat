@@ -1,6 +1,6 @@
 import { Pressable, ScrollView, Text, View } from "react-native";
 
-import { hotmic } from "../theme/tokens";
+import { volt } from "../theme/tokens";
 import { continueLabel, reviewSourceStatus, reviewTruthLabel } from "./presentationLabels";
 import { FadeIn } from "./FadeIn";
 import { Mark } from "./Mark";
@@ -37,7 +37,7 @@ export function ReviewScreen({
 }: ReviewScreenProps) {
   const truth = reviewTruthLabel(card);
   const authentic = Boolean(card.authentic || card.contentState === "fixture-authentic");
-  const c = hotmic.color.dark;
+  const c = volt.color.dark;
   const truthColor = authentic ? c.lime : c.pink;
   const next = continueLabel({ roundIndex, totalRounds });
 

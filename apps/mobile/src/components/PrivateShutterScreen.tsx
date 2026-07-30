@@ -1,6 +1,6 @@
 import { Text, View } from "react-native";
 
-import { hotmic } from "../theme/tokens";
+import { volt } from "../theme/tokens";
 import { PRIVATE_SHUTTER_RECOVERY } from "./presentationLabels";
 import { Mark } from "./Mark";
 import { PrimaryButton } from "./PrimaryButton";
@@ -17,7 +17,7 @@ export function PrivateShutterScreen({ onReady }: PrivateShutterScreenProps) {
         <Text style={s.shutterPillText}>PRIVATE HANDOFF</Text>
       </View>
       <View style={[s.center, { gap: 14 }]}>
-        <Mark name="close" size={88} color={hotmic.color.dark.lime} />
+        <Mark name="close" size={88} color={volt.color.dark.lime} />
         <Text style={s.eyebrowPink}>PRIVATE RELAY</Text>
         <Text style={s.displayL}>{"PASS THE\nPHONE."}</Text>
         <Text style={s.copy}>{PRIVATE_SHUTTER_RECOVERY}</Text>

@@ -1,6 +1,6 @@
 import type { TextStyle } from "react-native";
 
-import { hotmic } from "./tokens";
+import { volt } from "./tokens";
 
 /**
  * Typography resolvers for the VOLT system.
@@ -14,7 +14,7 @@ export const FONT_FAMILY: { display?: string; body?: string } = {
   body: "Inter",
 };
 
-export type TypeRole = keyof typeof hotmic.type;
+export type TypeRole = keyof typeof volt.type;
 
 const DISPLAY_ROLES: ReadonlySet<TypeRole> = new Set<TypeRole>([
   "displayXL",
@@ -25,7 +25,7 @@ const DISPLAY_ROLES: ReadonlySet<TypeRole> = new Set<TypeRole>([
 
 /** Resolve a type role to a React Native TextStyle (size, line-height, weight, tracking). */
 export function typeStyle(role: TypeRole): TextStyle {
-  const t = hotmic.type[role];
+  const t = volt.type[role];
   const family = DISPLAY_ROLES.has(role) ? FONT_FAMILY.display : FONT_FAMILY.body;
   return {
     fontSize: t.size,

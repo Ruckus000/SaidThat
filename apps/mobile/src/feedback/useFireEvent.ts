@@ -2,7 +2,7 @@ import { useCallback, useRef } from "react";
 import { Animated } from "react-native";
 
 import { springConfig } from "../theme/motion";
-import { hotmic } from "../theme/tokens";
+import { volt } from "../theme/tokens";
 import { commitFeedback, selectionFeedback } from "./haptics";
 import { interaction } from "./interactionPolicy.js";
 
@@ -29,7 +29,7 @@ export function useFireEvent(kind: InteractionKind, options: FireEventOptions = 
   const onPressIn = useCallback(() => {
     if (policy.pressInHaptic === "selection") selectionFeedback(haptics);
     if (reducedMotion) return;
-    const dip = kind === "answerCommit" ? hotmic.spring.kick.dip : 0.97;
+    const dip = kind === "answerCommit" ? volt.spring.kick.dip : 0.97;
     Animated.spring(scale, { toValue: dip, ...springConfig("snappy") }).start();
   }, [policy.pressInHaptic, haptics, reducedMotion, kind, scale]);
 
@@ -51,8 +51,8 @@ export function useFireEvent(kind: InteractionKind, options: FireEventOptions = 
       } else {
         // KICK: (already dipped) -> overshoot -> settle.
         Animated.sequence([
-          Animated.spring(scale, { toValue: hotmic.spring.kick.overshoot, ...springConfig("snappy") }),
-          Animated.spring(scale, { toValue: hotmic.spring.kick.settle, ...springConfig("standard") }),
+          Animated.spring(scale, { toValue: volt.spring.kick.overshoot, ...springConfig("snappy") }),
+          Animated.spring(scale, { toValue: volt.spring.kick.settle, ...springConfig("standard") }),
         ]).start();
       }
     }
@@ -65,7 +65,7 @@ export function useFireEvent(kind: InteractionKind, options: FireEventOptions = 
       onPressIn,
       onPressOut,
       onPress: onCommit,
-      hitSlop: hotmic.target.hitSlop,
+      hitSlop: volt.target.hitSlop,
     },
   };
 }

@@ -5,6 +5,8 @@ import { s } from "./styles";
 export type PrimaryButtonProps = {
   label: string;
   onPress: () => void;
+  /** The one action that opens a stage (START A ROOM / LET'S PLAY / RUN IT BACK). */
+  hero?: boolean;
   secondary?: boolean;
   destructive?: boolean;
   onFlash?: boolean;
@@ -16,6 +18,7 @@ export type PrimaryButtonProps = {
 export function PrimaryButton({
   label,
   onPress,
+  hero = false,
   secondary = false,
   destructive = false,
   onFlash = false,
@@ -44,6 +47,7 @@ export function PrimaryButton({
       <Text
         style={[
           s.buttonText,
+          hero && s.buttonTextHero,
           secondary && s.secondaryText,
           destructive && s.destructiveText,
           onFlash && s.onFlashText,

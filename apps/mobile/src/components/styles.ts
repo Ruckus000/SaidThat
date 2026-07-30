@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import { hotmic } from "../theme/tokens";
+import { volt } from "../theme/tokens";
 import { FONT_FAMILY } from "../theme/typography";
 
 /**
@@ -8,7 +8,7 @@ import { FONT_FAMILY } from "../theme/typography";
  * and CTA fill; pink is the secondary answer / miss / destructive accent. Every
  * colored state keeps a text label (and MARK glyph for truth).
  */
-const c = hotmic.color.dark;
+const c = volt.color.dark;
 const display = FONT_FAMILY.display;
 const body = FONT_FAMILY.body;
 
@@ -142,6 +142,8 @@ export const s = StyleSheet.create({
     shadowOffset: { width: 0, height: 0 },
     elevation: 6,
   },
+  // Three-step CTA scale: hero 22 (the one action that opens a stage), default 20,
+  // secondary 18. Deliberately coarser than the mockup's per-screen sizes.
   buttonText: {
     color: c.onHero,
     fontFamily: display,
@@ -150,14 +152,16 @@ export const s = StyleSheet.create({
     letterSpacing: 1,
     textAlign: "center",
   },
+  buttonTextHero: { fontSize: 22 },
   secondary: {
     backgroundColor: "transparent",
     borderWidth: 3,
     borderColor: c.outline,
     shadowOpacity: 0,
     elevation: 0,
+    minHeight: 60,
   },
-  secondaryText: { color: c.textPrimary },
+  secondaryText: { color: c.textPrimary, fontSize: 18 },
   destructive: {
     backgroundColor: "transparent",
     borderWidth: 2,
@@ -294,10 +298,19 @@ export const s = StyleSheet.create({
   // Home hero
   home: { flex: 1, justifyContent: "space-between", paddingBottom: 8 },
   homeHero: { flex: 1, justifyContent: "center", gap: 8, position: "relative", overflow: "hidden" },
-  homeMark: { position: "absolute", right: -70, top: -20, opacity: 0.09 },
+  homeMark: {
+    position: "absolute",
+    right: -70,
+    top: -20,
+    opacity: 0.09,
+    transform: [{ rotate: "12deg" }],
+  },
+  // Row flex + flexShrink:0 lets the doubled strip keep its intrinsic single-line
+  // width and overflow the clipped band, instead of wrapping to the stage gutter.
   tickerWrap: {
     backgroundColor: c.lime,
     transform: [{ rotate: "-2deg" }, { scale: 1.06 }],
+    flexDirection: "row",
     paddingVertical: 10,
     marginVertical: 8,
     marginHorizontal: -10,
@@ -309,6 +322,7 @@ export const s = StyleSheet.create({
     fontSize: 15,
     fontWeight: "800",
     letterSpacing: 2,
+    flexShrink: 0,
   },
   homeFooter: { gap: 10, paddingTop: 18 },
   homeFootnote: {
@@ -335,6 +349,24 @@ export const s = StyleSheet.create({
     fontWeight: "800",
     letterSpacing: 1,
   },
+  // Right-hand context pill: score by default, lit streak badge once one is running.
+  roundPillHot: {
+    borderColor: c.lime,
+    shadowColor: c.lime,
+    shadowOpacity: 0.3,
+    shadowRadius: 18,
+    shadowOffset: { width: 0, height: 0 },
+    elevation: 4,
+  },
+  roundPillTextMuted: {
+    color: c.textMuted,
+    fontFamily: display,
+    fontSize: 12,
+    fontWeight: "800",
+    letterSpacing: 1,
+    fontVariant: ["tabular-nums"],
+  },
+  roundPillTextHot: { color: c.lime },
   promptCard: {
     flex: 1,
     borderWidth: 3,

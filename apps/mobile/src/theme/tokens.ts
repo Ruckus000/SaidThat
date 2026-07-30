@@ -1,14 +1,13 @@
-import { dark as hotmicDark, light as hotmicLight } from "./palette.js";
+import { dark as voltDark, light as voltLight } from "./palette.js";
 
 /**
  * VOLT design system — the sole token layer. Color hexes come from `palette.js`,
- * the single source verified for WCAG 2.2 AA by `contrast.test.mjs`. The export
- * name `hotmic` is retained so existing imports stay stable during the skin swap.
+ * the single source verified for WCAG 2.2 AA by `contrast.test.mjs`.
  */
-export const hotmic = {
+export const volt = {
   color: {
-    dark: hotmicDark,
-    light: hotmicLight,
+    dark: voltDark,
+    light: voltLight,
   },
   // Modular type ramp: each role bakes size + lineHeight + weight + tracking, so no
   // component reconstructs a scale by arithmetic. Statement auto-shrinks size->minSize.

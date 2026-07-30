@@ -1,7 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Animated, Easing, Text, View } from "react-native";
 
-import { hotmic } from "../theme/tokens";
+import { volt } from "../theme/tokens";
 import { FIXTURE_DISCLOSURE, runSummaryLabel } from "./presentationLabels";
 import { FadeIn } from "./FadeIn";
 import { Mark } from "./Mark";
@@ -31,9 +31,13 @@ export function HomeScreen({
 }: HomeScreenProps) {
   const summary = runSummaryLabel({ roundsPlayed, correctCount, bestStreak, complete: runComplete });
   const tickerX = useRef(new Animated.Value(0)).current;
+  // The strip renders TICKER twice, so travelling exactly half its measured width
+  // lands the second copy where the first began — no visible seam on loop. Measured
+  // rather than hard-coded because the width depends on the loaded face.
+  const [tickerWidth, setTickerWidth] = useState(0);
 
   useEffect(() => {
-    if (reducedMotion) return;
+    if (reducedMotion || !tickerWidth) return;
     tickerX.setValue(0);
     const loop = Animated.loop(
       Animated.timing(tickerX, {
@@ -45,13 +49,13 @@ export function HomeScreen({
     );
     loop.start();
     return () => loop.stop();
-  }, [reducedMotion, tickerX]);
+  }, [reducedMotion, tickerX, tickerWidth]);
 
   return (
     <FadeIn reducedMotion={reducedMotion} style={s.home}>
       <View style={s.homeHero}>
         <View style={s.homeMark} pointerEvents="none">
-          <Mark name="open" size={300} color={hotmic.color.dark.lime} decorative />
+          <Mark name="open" size={300} color={volt.color.dark.lime} decorative />
         </View>
         <Text style={s.eyebrowPink}>REAL QUOTES.</Text>
         <Text style={s.eyebrowLime}>TOTAL LIES.</Text>
@@ -62,7 +66,9 @@ export function HomeScreen({
 
       <View style={s.tickerWrap}>
         <Animated.Text
-          numberOfLines={1}
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+          onLayout={(e) => setTickerWidth(e.nativeEvent.layout.width)}
           style={[
             s.tickerText,
             !reducedMotion && {
@@ -70,7 +76,7 @@ export function HomeScreen({
                 {
                   translateX: tickerX.interpolate({
                     inputRange: [-1, 0],
-                    outputRange: [-280, 0],
+                    outputRange: [-tickerWidth / 2, 0],
                   }),
                 },
               ],
@@ -83,7 +89,7 @@ export function HomeScreen({
       </View>
 
       <View style={s.homeFooter}>
-        <PrimaryButton label="START A ROOM" onPress={onStart} />
+        <PrimaryButton label="START A ROOM" hero onPress={onStart} />
         <Text style={s.homeFootnote}>No accounts · no feed · everything stays on this phone</Text>
         {localFixtures && <Text style={s.fixture}>{FIXTURE_DISCLOSURE}</Text>}
       </View>
