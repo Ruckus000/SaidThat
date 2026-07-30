@@ -68,7 +68,9 @@ export const s = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  gearText: { color: c.textMuted, fontSize: 16 },
+  // Pills and stat values that pair a drawn glyph with their label.
+  pillRow: { flexDirection: "row", alignItems: "center", gap: 6 },
+  sparkRow: { flexDirection: "row", alignItems: "center", gap: 2 },
 
   center: { flex: 1, justifyContent: "center", gap: 14 },
   setup: { flexGrow: 1, justifyContent: "center", gap: 12, paddingVertical: 24 },

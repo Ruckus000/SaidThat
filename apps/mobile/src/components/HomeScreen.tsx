@@ -18,7 +18,9 @@ export type HomeScreenProps = {
   runComplete: boolean;
 };
 
-const TICKER = "REAL OR FAKE ✦ REAL OR FAKE ✦ REAL OR FAKE ✦ REAL OR FAKE ✦ ";
+// Separator is the app's own middot idiom (ROOM · 0, THIS RUN · …) rather than a
+// dingbat character — the spark is drawn as SVG wherever it carries meaning.
+const TICKER = "REAL OR FAKE · REAL OR FAKE · REAL OR FAKE · REAL OR FAKE · ";
 
 export function HomeScreen({
   onStart,

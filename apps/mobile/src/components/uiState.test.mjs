@@ -9,8 +9,9 @@ import {
   contentUnavailableMessage,
   headerScoreLabel,
   resultHeadline,
-  resultMark,
+  resultMarkName,
   resultRewardLabel,
+  resultStreakLabel,
   recapStatLines,
   reviewSourceStatus,
   reviewTruthLabel,
@@ -21,8 +22,10 @@ import {
   setupSectionLabel,
   setupShowsAccessRoles,
   streakBadgeLabel,
+  streakSparkCount,
   toggleStateLabel,
 } from "./presentationLabels.js";
+import { markNames } from "./markPaths.js";
 import {
   MODES,
   STAGES,
@@ -87,7 +90,7 @@ test("ui: the round context pill picks streak over score, and concealment over b
 
   assert.equal(pill(300, 0, false), "ROOM · 300");
   assert.equal(pill(300, 1, false), "ROOM · 300", "a streak of 1 is not yet a streak");
-  assert.equal(pill(300, 3, false), "✦ STREAK ×3");
+  assert.equal(pill(300, 3, false), "STREAK ×3");
   // Private Relay must never leak the running score — or the streak that implies it.
   assert.equal(pill(300, 3, true), "PRIVATE HANDOFF");
   assert.equal(pill(300, 0, true), "PRIVATE HANDOFF");
@@ -111,14 +114,50 @@ test("ui: review truth labels stay textual, not color-only", () => {
 test("reward: result copy celebrates skill with a non-color cue and never punishes a miss", () => {
   assert.equal(resultHeadline(true), "NAILED IT!");
   assert.equal(resultHeadline(false), "FOOLED YA.");
-  // Filled vs hollow mark carries meaning without relying on color.
-  assert.notEqual(resultMark(true), resultMark(false));
+  // A distinct MARK glyph per outcome carries meaning without relying on color.
+  // These name drawn SVG shapes, not text characters, so the cue cannot silently
+  // degrade to a missing-glyph box on a device without the right font.
+  assert.notEqual(resultMarkName(true), resultMarkName(false));
+  assert.ok(markNames().includes(resultMarkName(true)));
+  assert.ok(markNames().includes(resultMarkName(false)));
   assert.equal(resultRewardLabel(true, 1), "+100");
   assert.equal(resultRewardLabel(true, 3), "+100");
   // A miss reward line is forward-looking, not blaming.
   assert.match(resultRewardLabel(false, 0), /truth is one tap away/i);
   assert.equal(streakBadgeLabel(1), null);
   assert.match(streakBadgeLabel(4), /STREAK ×4/);
+});
+
+// Icons are drawn, never typed. Emoji and dingbat characters render inconsistently
+// across devices and fonts, so no label may smuggle one in as a state cue.
+test("ui: no label carries an emoji or dingbat character", () => {
+  const labels = [
+    FIXTURE_DISCLOSURE,
+    CONTENT_UNAVAILABLE_GUARD,
+    PRIVATE_SHUTTER_RECOVERY,
+    streakBadgeLabel(4),
+    resultStreakLabel(4),
+    resultHeadline(true),
+    resultHeadline(false),
+    runSummaryLabel({ roundsPlayed: 4, correctCount: 3, bestStreak: 3 }),
+    ...recapStatLines({ score: 200, correctCount: 5, roundsPlayed: 7, bestStreak: 3 })
+      .flatMap((line) => [line.label, line.value]),
+  ];
+  // Emoji, dingbats, geometric shapes, and misc symbols — the ranges a "tacky"
+  // glyph would come from. Ordinary punctuation (· × — “ ”) stays allowed.
+  const pictographic = /[←-⇿⌀-➿⬀-⯿️]|[\u{1F000}-\u{1FAFF}]/u;
+  for (const label of labels) {
+    assert.ok(label != null, "label should exist");
+    assert.doesNotMatch(String(label), pictographic, `label smuggles a glyph: ${label}`);
+  }
+});
+
+test("reward: streak sparks are counted, capped, and silent below a real streak", () => {
+  assert.equal(streakSparkCount(0), 0);
+  assert.equal(streakSparkCount(1), 0, "one correct answer is not yet a streak");
+  assert.equal(streakSparkCount(2), 2);
+  assert.equal(streakSparkCount(6), 6);
+  assert.equal(streakSparkCount(99), 6, "the row is capped so the pill cannot overflow");
 });
 
 test("reward: run summary reports play positively without truth verdicts", () => {
@@ -161,7 +200,7 @@ test("reward: recap rank rates room skill without punishing a rough run", () => 
   assert.equal(byLabel.SCORE, "200");
   assert.equal(byLabel["CALLED RIGHT"], "5 of 7");
   assert.equal(byLabel.ACCURACY, "71%");
-  assert.equal(byLabel["BEST STREAK"], "✦ 3");
+  assert.equal(byLabel["BEST STREAK"], "3");
 });
 
 test("ui: private shutter conceals score through reducer and header copy", () => {

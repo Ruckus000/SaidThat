@@ -36,6 +36,12 @@ npm --prefix apps/mobile test
 - **`apps/mobile/src/components/markPaths.test.mjs`** — the MARK glyph family shares one
   viewBox and contains no check glyph; nothing in the mark language may read as "correct" or
   "verified."
+- **`apps/mobile/src/components/uiIconPaths.test.mjs`** — UI chrome icons (the settings gear)
+  are well-formed filled paths, and their namespace stays disjoint from THE MARK so a plain
+  affordance can never drift into the vocabulary that expresses game state.
+- **No typed glyphs.** Icons are drawn as SVG, never written as characters — emoji and dingbats
+  (`⚙ ✦ ◆ ○`) render inconsistently across devices and can degrade to a missing-glyph box, which
+  would silently break a non-color cue. `uiState.test.mjs` fails if one appears in a label.
 
 ## Not covered
 

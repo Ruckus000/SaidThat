@@ -7,10 +7,12 @@ import {
   continueLabel,
   resultHeadline,
   resultKicker,
+  resultMarkName,
   resultRewardLabel,
   resultStreakLabel,
 } from "./presentationLabels";
 import { Mark } from "./Mark";
+import { StreakSparks } from "./StreakSparks";
 import { PrimaryButton } from "./PrimaryButton";
 import { s } from "./styles";
 
@@ -102,11 +104,7 @@ export function ResultScreen({
             ],
           }}
         >
-          <Mark
-            name={correct ? "close" : "struck"}
-            size={72}
-            color={volt.color.dark.onHero}
-          />
+          <Mark name={resultMarkName(correct)} size={72} color={volt.color.dark.onHero} />
         </Animated.View>
         <Text style={s.resultKicker}>{resultKicker(correct)}</Text>
         <Animated.Text
@@ -135,7 +133,8 @@ export function ResultScreen({
           <Text style={s.rewardMiss}>{resultRewardLabel(correct, streak)}</Text>
         )}
         {correct && streakLine && (
-          <View style={s.streakPill}>
+          <View style={[s.streakPill, s.pillRow]}>
+            <StreakSparks streak={streak} size={14} color={volt.color.dark.onHero} />
             <Text style={s.streakPillText}>{streakLine}</Text>
           </View>
         )}
