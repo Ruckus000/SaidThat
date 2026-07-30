@@ -4,19 +4,29 @@ export const FIXTURE_DISCLOSURE =
   "LOCAL DEVELOPMENT FIXTURES · NOT EDITORIAL CONTENT";
 
 export function headerScoreLabel({ score, concealScore }) {
-  return concealScore ? "PRIVATE HANDOFF" : `ROOM SCORE · ${score}`;
+  return concealScore ? "PRIVATE HANDOFF" : `ROOM · ${score}`;
 }
 
-// Game-layer reward copy. This celebrates skill at the game (reading the room),
-// never a truth verdict, so it stays warm without color-coding authenticity.
+// Game-layer reward copy. Celebrates skill at the game (reading the room),
+// never a truth verdict — so it stays loud without color-coding authenticity.
 export function resultHeadline(correct) {
-  return correct ? "NAILED IT" : "NOT THIS TIME";
+  return correct ? "NAILED IT!" : "FOOLED YA.";
+}
+
+export function resultKicker(correct) {
+  return correct ? "THE ROOM CALLED IT" : "THE ROOM GOT PLAYED";
 }
 
 export function resultRewardLabel(correct, streak) {
-  if (!correct) return "The room reads the next one.";
-  if (streak >= 2) return `+100 · ${streak} IN A ROW`;
-  return "+100 to the room";
+  if (!correct) return "Streak reset. The truth is one tap away.";
+  if (streak >= 2) return `+100`;
+  return "+100";
+}
+
+export function resultStreakLabel(streak) {
+  if (streak < 2) return null;
+  const sparks = "✦".repeat(Math.min(streak, 6));
+  return `${sparks} ${streak} IN A ROW`;
 }
 
 // A non-color cue paired with the words, per the design DNA. Correct answers get
@@ -26,7 +36,7 @@ export function resultMark(correct) {
 }
 
 export function streakBadgeLabel(streak) {
-  return streak >= 2 ? `🔥 ${streak} STREAK` : null;
+  return streak >= 2 ? `✦ STREAK ×${streak}` : null;
 }
 
 // Playful recap rank for how well the room read the run. It rates game skill
@@ -44,7 +54,7 @@ export function recapStatLines({ score, correctCount, roundsPlayed, bestStreak }
     { label: "SCORE", value: `${score}` },
     { label: "CALLED RIGHT", value: `${correctCount} of ${roundsPlayed}` },
     { label: "ACCURACY", value: `${accuracyPercent(correctCount, roundsPlayed)}%` },
-    { label: "BEST STREAK", value: `${bestStreak}` },
+    { label: "BEST STREAK", value: `✦ ${bestStreak}` },
   ];
 }
 
@@ -57,11 +67,17 @@ export function accuracyPercent(correctCount, roundsPlayed) {
 // and is framed around the room's progress rather than individual blame.
 export function runSummaryLabel({ roundsPlayed, correctCount, bestStreak, complete = false }) {
   if (!roundsPlayed) return null;
-  const reads = roundsPlayed === 1 ? "1 read" : `${roundsPlayed} reads`;
-  const parts = [reads, `${accuracyPercent(correctCount, roundsPlayed)}% called`];
-  if (bestStreak >= 2) parts.push(`best streak ${bestStreak}`);
+  const parts = [
+    `${roundsPlayed} READS`,
+    `${accuracyPercent(correctCount, roundsPlayed)}% CALLED`,
+  ];
+  if (bestStreak >= 2) parts.push(`BEST STREAK ${bestStreak}`);
   const prefix = complete ? "LAST RUN" : "THIS RUN";
   return `${prefix} · ${parts.join(" · ")}`;
+}
+
+export function continueLabel({ roundIndex, totalRounds }) {
+  return roundIndex + 1 >= totalRounds ? "FINISH THE RUN" : "NEXT PROMPT";
 }
 
 export function setupSectionLabel(mode) {
@@ -90,26 +106,35 @@ export const PRIVATE_SHUTTER_RECOVERY =
   "The prior prompt and result are protected. If the app was interrupted, that private turn was discarded rather than shown to the next person.";
 
 export function reviewTruthLabel(card) {
-  if (card.contentState === "fixture-authentic") return "SIMULATED AUTHENTIC FIXTURE";
-  if (card.authentic) return "AUTHENTIC";
+  if (card.contentState === "fixture-authentic" || card.authentic) {
+    return 'SIMULATED AUTHENTIC · THEY “SAID” IT';
+  }
   return "FABRICATED FOR THIS GAME";
 }
 
 export function reviewSourceStatus(card) {
-  if (card.contentState === "fixture-authentic") {
+  if (card.contentState === "fixture-authentic" || card.authentic) {
     return "development simulation — not a source-verified production card";
   }
-  if (card.authentic) return "editorial source record required";
   return "game fixture";
 }
 
 export function roundInstruction(mode) {
   return mode === MODES.ROOM_BEACON
-    ? "The group decides. The holder taps exactly one answer."
-    : "Read privately, then make exactly one answer.";
+    ? "The room argues. The holder taps once."
+    : "Read privately. Answer once.";
 }
 
-export function roundModeLabel(mode, round) {
+export function roundModeLabel(mode, round, totalRounds) {
+  if (typeof totalRounds === "number") {
+    return `ROUND ${round} / ${totalRounds}`;
+  }
   const ritual = mode === MODES.ROOM_BEACON ? "ROOM BEACON" : "PRIVATE RELAY";
   return `${ritual} · ROUND ${round}`;
+}
+
+export function roleCaption(accessRole) {
+  return accessRole === "holder"
+    ? "The prompt stays hidden from VoiceOver and TalkBack."
+    : "You read the prompt aloud and argue with everyone else.";
 }

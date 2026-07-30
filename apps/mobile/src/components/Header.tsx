@@ -10,9 +10,17 @@ export type HeaderProps = {
   concealScore: boolean;
   reducedMotion: boolean;
   onHome: () => void;
+  onSettings?: () => void;
 };
 
-export function Header({ score, streak, concealScore, reducedMotion, onHome }: HeaderProps) {
+export function Header({
+  score,
+  streak,
+  concealScore,
+  reducedMotion,
+  onHome,
+  onSettings,
+}: HeaderProps) {
   const pop = useRef(new Animated.Value(1)).current;
   const prevScore = useRef(score);
 
@@ -22,12 +30,13 @@ export function Header({ score, streak, concealScore, reducedMotion, onHome }: H
     if (!increased || concealScore || reducedMotion) return;
     pop.setValue(1);
     Animated.sequence([
-      Animated.spring(pop, { toValue: 1.35, useNativeDriver: true, speed: 40, bounciness: 14 }),
+      Animated.spring(pop, { toValue: 1.12, useNativeDriver: true, speed: 40, bounciness: 14 }),
       Animated.spring(pop, { toValue: 1, useNativeDriver: true, speed: 20, bounciness: 8 }),
     ]).start();
   }, [score, concealScore, reducedMotion, pop]);
 
   const badge = concealScore ? null : streakBadgeLabel(streak);
+  const scoreLabel = headerScoreLabel({ score, concealScore });
 
   return (
     <View style={s.header}>
@@ -41,13 +50,30 @@ export function Header({ score, streak, concealScore, reducedMotion, onHome }: H
         <Text style={s.brand}>SAID THAT?</Text>
       </Pressable>
       <View style={s.scoreWrap}>
-        <Animated.Text
-          accessibilityLiveRegion="polite"
-          style={[s.score, { transform: [{ scale: pop }] }]}
-        >
-          {headerScoreLabel({ score, concealScore })}
-        </Animated.Text>
-        {badge && <Text style={s.streakBadge}>{badge}</Text>}
+        {badge ? (
+          <Animated.View style={[s.scorePill, s.scorePillHot, { transform: [{ scale: pop }] }]}>
+            <Text accessibilityLiveRegion="polite" style={[s.score, s.scoreHot]}>
+              {badge}
+            </Text>
+          </Animated.View>
+        ) : (
+          <Animated.View style={[s.scorePill, { transform: [{ scale: pop }] }]}>
+            <Text accessibilityLiveRegion="polite" style={s.score}>
+              {scoreLabel}
+            </Text>
+          </Animated.View>
+        )}
+        {onSettings && (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Open settings"
+            onPress={onSettings}
+            style={s.gear}
+            hitSlop={8}
+          >
+            <Text style={s.gearText}>⚙</Text>
+          </Pressable>
+        )}
       </View>
     </View>
   );

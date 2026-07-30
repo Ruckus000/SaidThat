@@ -18,6 +18,7 @@ export type RoundScreenProps = {
   card: RoundCard;
   mode: string;
   round: number;
+  totalRounds: number;
   hideCardFromAssistiveTech: boolean;
   motionOptIn: boolean;
   motionCalibrated: boolean;
@@ -31,26 +32,30 @@ export type RoundScreenProps = {
 function AnswerButton({
   label,
   hint,
+  variant,
   haptics,
   reducedMotion,
   onPress,
 }: {
   label: string;
   hint: string;
+  variant: "real" | "fake";
   haptics: boolean;
   reducedMotion: boolean;
   onPress: () => void;
 }) {
-  // The KICK: identical for both answers (dip -> overshoot -> settle + haptic doublet),
-  // so the felt commit never differs between the two verdicts.
   const { animatedStyle, pressableProps } = useFireEvent("answerCommit", { onPress, haptics, reducedMotion });
   return (
     <Animated.View style={animatedStyle}>
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={`${label}. ${hint}`}
-        android_ripple={{ color: "rgba(255,176,32,0.12)" }}
-        style={({ pressed }) => [s.answer, pressed && s.pressed]}
+        android_ripple={{ color: "rgba(11,14,19,0.18)" }}
+        style={({ pressed }) => [
+          s.answer,
+          variant === "real" ? s.answerReal : s.answerFake,
+          pressed && s.pressed,
+        ]}
         {...pressableProps}
       >
         <Text style={s.answerText}>{label}</Text>
@@ -64,6 +69,7 @@ export function RoundScreen({
   card,
   mode,
   round,
+  totalRounds,
   hideCardFromAssistiveTech,
   motionOptIn,
   motionCalibrated,
@@ -73,23 +79,28 @@ export function RoundScreen({
   onAnswer,
   onPause,
 }: RoundScreenProps) {
+  const compact = card.quote.length > 60;
   return (
     <View style={s.round}>
-      <Text style={s.mode}>{roundModeLabel(mode, round)}</Text>
-      <View style={s.beacon}><Text style={s.game}>THIS IS A GAME PROMPT · THE REVEAL DECIDES TRUTH</Text></View>
-      <FadeIn key={round} reducedMotion={reducedMotion} style={s.cardFill}>
+      <View style={s.roundTop}>
+        <View style={s.roundPill}>
+          <Text style={s.roundPillText}>{roundModeLabel(mode, round, totalRounds)}</Text>
+        </View>
+      </View>
+
+      <FadeIn key={round} reducedMotion={reducedMotion} style={s.promptCard}>
+        <Text style={s.promptBeacon}>GAME PROMPT · THE REVEAL DECIDES</Text>
         <ScrollView
           contentContainerStyle={s.card}
           accessibilityElementsHidden={hideCardFromAssistiveTech}
           importantForAccessibility={hideCardFromAssistiveTech ? "no-hide-descendants" : "auto"}
         >
-          <View style={s.markBeacon}>
-            <Mark name="open" size={56} color={hotmic.color.dark.marigold} />
-          </View>
-          <Text style={s.quote}>{card.quote}</Text>
+          <Mark name="open" size={56} color={hotmic.color.dark.lime} />
+          <Text style={[s.quote, compact && s.quoteCompact]}>{card.quote}</Text>
           <Text style={s.person}>— {card.person}</Text>
         </ScrollView>
       </FadeIn>
+
       <Text style={s.instruction}>{roundInstruction(mode)}</Text>
       {motionOptIn && mode === MODES.ROOM_BEACON && (
         <>
@@ -104,16 +115,30 @@ export function RoundScreen({
         </>
       )}
       <View style={s.answers}>
-        <AnswerButton label="They really said it" hint="Authentic" haptics={haptics} reducedMotion={reducedMotion} onPress={() => onAnswer(true)} />
-        <AnswerButton label="Faked for the game" hint="Fabricated" haptics={haptics} reducedMotion={reducedMotion} onPress={() => onAnswer(false)} />
+        <AnswerButton
+          label="SAID IT"
+          hint="it's real"
+          variant="real"
+          haptics={haptics}
+          reducedMotion={reducedMotion}
+          onPress={() => onAnswer(true)}
+        />
+        <AnswerButton
+          label="TOTAL LIE"
+          hint="made for the game"
+          variant="fake"
+          haptics={haptics}
+          reducedMotion={reducedMotion}
+          onPress={() => onAnswer(false)}
+        />
       </View>
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel="Pause session"
+        accessibilityLabel="Pause and leave safely"
         onPress={onPause}
         style={s.pauseTap}
       >
-        <Text style={s.link}>Pause</Text>
+        <Text style={s.link}>Pause and leave safely</Text>
       </Pressable>
     </View>
   );

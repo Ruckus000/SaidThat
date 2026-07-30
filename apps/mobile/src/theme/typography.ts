@@ -3,13 +3,11 @@ import type { TextStyle } from "react-native";
 import { hotmic } from "./tokens";
 
 /**
- * Typography resolvers for the HOT MIC system.
+ * Typography resolvers for the VOLT system.
  *
  * FONT SEAM: the faces are loaded in App via expo-font (assets/fonts) under these exact
  * family keys, with render gated on load and a system-face fallback on error, so text
- * never renders in a missing font. Display = Bricolage Grotesque (optical-size grotesque);
- * body/counters = Inter. Weight/opsz rendering of the variable faces is a native-
- * verification detail; the values below are what components consume in Phase 2.
+ * never renders in a missing font. Display = Bricolage Grotesque; body/counters = Inter.
  */
 export const FONT_FAMILY: { display?: string; body?: string } = {
   display: "BricolageGrotesque",

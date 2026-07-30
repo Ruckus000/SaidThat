@@ -1,7 +1,9 @@
 import { ScrollView, Text, View } from "react-native";
 
+import { hotmic } from "../theme/tokens";
 import { accuracyPercent, recapStatLines, runRankLabel } from "./presentationLabels";
 import { FadeIn } from "./FadeIn";
+import { Mark } from "./Mark";
 import { PrimaryButton } from "./PrimaryButton";
 import { s } from "./styles";
 
@@ -29,20 +31,24 @@ export function RecapScreen({
   return (
     <ScrollView contentContainerStyle={s.setup}>
       <FadeIn reducedMotion={reducedMotion} offset={14}>
-        <Text style={s.eyebrow}>RUN COMPLETE</Text>
+        <Mark name="spark" size={64} color={hotmic.color.dark.lime} />
+        <Text style={s.eyebrowPink}>RUN COMPLETE</Text>
         <Text style={s.recapRank}>{rank}</Text>
         <Text style={s.copy}>How the room read this run.</Text>
         <View style={s.statBlock}>
           {stats.map((stat) => (
             <View key={stat.label} style={s.statRow}>
               <Text style={s.statLabel}>{stat.label}</Text>
-              <Text style={s.statValue}>{stat.value}</Text>
+              <Text style={[s.statValue, stat.label === "BEST STREAK" && s.statValueHot]}>
+                {stat.value}
+              </Text>
             </View>
           ))}
         </View>
       </FadeIn>
-      <PrimaryButton label="Play again" onPress={onPlayAgain} />
-      <PrimaryButton label="Back home" secondary onPress={onHome} />
+      <View style={{ flex: 1, minHeight: 16 }} />
+      <PrimaryButton label="RUN IT BACK" onPress={onPlayAgain} />
+      <PrimaryButton label="BACK HOME" secondary onPress={onHome} />
     </ScrollView>
   );
 }

@@ -72,7 +72,8 @@ test("ui: toggle state reads as text, not color alone", () => {
 test("ui: round labels name the ritual and holder instruction", () => {
   assert.equal(roundModeLabel(MODES.ROOM_BEACON, 2), "ROOM BEACON · ROUND 2");
   assert.equal(roundModeLabel(MODES.PRIVATE_RELAY, 1), "PRIVATE RELAY · ROUND 1");
-  assert.match(roundInstruction(MODES.ROOM_BEACON), /holder taps exactly one answer/i);
+  assert.equal(roundModeLabel(MODES.ROOM_BEACON, 2, 7), "ROUND 2 / 7");
+  assert.match(roundInstruction(MODES.ROOM_BEACON), /holder taps once/i);
   assert.match(roundInstruction(MODES.PRIVATE_RELAY), /Read privately/i);
 });
 
@@ -81,9 +82,9 @@ test("ui: review truth labels stay textual, not color-only", () => {
     reviewTruthLabel({ authentic: false, contentState: "fabricated-for-game" }),
     "FABRICATED FOR THIS GAME",
   );
-  assert.equal(
+  assert.match(
     reviewTruthLabel({ authentic: true, contentState: "fixture-authentic" }),
-    "SIMULATED AUTHENTIC FIXTURE",
+    /SIMULATED AUTHENTIC/,
   );
   assert.match(
     reviewSourceStatus({ authentic: true, contentState: "fixture-authentic" }),
@@ -92,16 +93,16 @@ test("ui: review truth labels stay textual, not color-only", () => {
 });
 
 test("reward: result copy celebrates skill with a non-color cue and never punishes a miss", () => {
-  assert.equal(resultHeadline(true), "NAILED IT");
-  assert.equal(resultHeadline(false), "NOT THIS TIME");
+  assert.equal(resultHeadline(true), "NAILED IT!");
+  assert.equal(resultHeadline(false), "FOOLED YA.");
   // Filled vs hollow mark carries meaning without relying on color.
   assert.notEqual(resultMark(true), resultMark(false));
-  assert.equal(resultRewardLabel(true, 1), "+100 to the room");
-  assert.equal(resultRewardLabel(true, 3), "+100 · 3 IN A ROW");
+  assert.equal(resultRewardLabel(true, 1), "+100");
+  assert.equal(resultRewardLabel(true, 3), "+100");
   // A miss reward line is forward-looking, not blaming.
-  assert.match(resultRewardLabel(false, 0), /next one/i);
+  assert.match(resultRewardLabel(false, 0), /truth is one tap away/i);
   assert.equal(streakBadgeLabel(1), null);
-  assert.match(streakBadgeLabel(4), /4 STREAK/);
+  assert.match(streakBadgeLabel(4), /STREAK ×4/);
 });
 
 test("reward: run summary reports play positively without truth verdicts", () => {
@@ -110,12 +111,12 @@ test("reward: run summary reports play positively without truth verdicts", () =>
   assert.equal(runSummaryLabel({ roundsPlayed: 0, correctCount: 0, bestStreak: 0 }), null);
   assert.match(
     runSummaryLabel({ roundsPlayed: 4, correctCount: 3, bestStreak: 3 }),
-    /THIS RUN · 4 reads · 75% called · best streak 3/,
+    /THIS RUN · 4 READS · 75% CALLED · BEST STREAK 3/,
   );
   // Does not append a streak brag when there was none.
   assert.equal(
     runSummaryLabel({ roundsPlayed: 2, correctCount: 1, bestStreak: 1 }),
-    "THIS RUN · 2 reads · 50% called",
+    "THIS RUN · 2 READS · 50% CALLED",
   );
   // A finished run reads as "LAST RUN"; an in-progress/abandoned run as "THIS RUN".
   assert.match(
@@ -144,14 +145,14 @@ test("reward: recap rank rates room skill without punishing a rough run", () => 
   assert.equal(byLabel.SCORE, "200");
   assert.equal(byLabel["CALLED RIGHT"], "5 of 7");
   assert.equal(byLabel.ACCURACY, "71%");
-  assert.equal(byLabel["BEST STREAK"], "3");
+  assert.equal(byLabel["BEST STREAK"], "✦ 3");
 });
 
 test("ui: private shutter conceals score through reducer and header copy", () => {
   const state = privateShutterState();
   assert.equal(shouldConcealScore(state), true);
   assert.equal(headerScoreLabel({ score: state.score, concealScore: true }), "PRIVATE HANDOFF");
-  assert.equal(headerScoreLabel({ score: state.score, concealScore: false }), `ROOM SCORE · ${state.score}`);
+  assert.equal(headerScoreLabel({ score: state.score, concealScore: false }), `ROOM · ${state.score}`);
   assert.match(PRIVATE_SHUTTER_RECOVERY, /discarded rather than shown to the next person/i);
 });
 

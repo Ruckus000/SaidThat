@@ -1,7 +1,9 @@
-import { ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
 
-import { reviewSourceStatus, reviewTruthLabel } from "./presentationLabels";
+import { hotmic } from "../theme/tokens";
+import { continueLabel, reviewSourceStatus, reviewTruthLabel } from "./presentationLabels";
 import { FadeIn } from "./FadeIn";
+import { Mark } from "./Mark";
 import { PrimaryButton } from "./PrimaryButton";
 import { s } from "./styles";
 
@@ -16,34 +18,87 @@ export type ReviewScreenProps = {
   card: ReviewCard;
   reportStatus: string | null;
   reportBusy: boolean;
+  roundIndex: number;
+  totalRounds: number;
   reducedMotion: boolean;
   onReport: (reason: string) => void;
   onContinue: () => void;
 };
 
-export function ReviewScreen({ card, reportStatus, reportBusy, reducedMotion, onReport, onContinue }: ReviewScreenProps) {
+export function ReviewScreen({
+  card,
+  reportStatus,
+  reportBusy,
+  roundIndex,
+  totalRounds,
+  reducedMotion,
+  onReport,
+  onContinue,
+}: ReviewScreenProps) {
   const truth = reviewTruthLabel(card);
+  const authentic = Boolean(card.authentic || card.contentState === "fixture-authentic");
+  const c = hotmic.color.dark;
+  const truthColor = authentic ? c.lime : c.pink;
+  const next = continueLabel({ roundIndex, totalRounds });
+
   return (
     <ScrollView contentContainerStyle={s.setup}>
-      {/* The reveal lands first as the payoff. The label is the same weight and
-          color regardless of authenticity — meaning lives in the words. */}
       <FadeIn reducedMotion={reducedMotion} offset={14}>
-        <Text style={s.eyebrow}>THE REVEAL</Text>
-        <Text style={s.truthReveal}>{truth}</Text>
+        <View style={s.truthRow}>
+          <Mark name={authentic ? "spoken" : "struck"} size={30} color={truthColor} />
+          <Text style={[s.truthLabel, { color: truthColor }]}>{truth}</Text>
+        </View>
         <Text style={s.quoteSmall}>“{card.quote}”</Text>
         <Text style={s.copy}>{card.explanation}</Text>
       </FadeIn>
       <Text style={s.note}>Source status: {reviewSourceStatus(card)}.</Text>
       <View style={s.report}>
         <Text style={s.sectionLabel}>SEE A CONTENT ISSUE?</Text>
-        <Text style={s.note}>Reports save locally with only card ID, reason, deck version, and timestamp. No player identity or free text is collected.</Text>
-        <PrimaryButton label={reportBusy ? "Queuing report…" : "Report wrong attribution"} secondary onPress={() => onReport("wrong-attribution")} disabled={reportBusy} />
-        <PrimaryButton label="Report harmful content" secondary onPress={() => onReport("harmful-content")} disabled={reportBusy} />
-        <PrimaryButton label="Report another issue" secondary onPress={() => onReport("other")} disabled={reportBusy} />
-        {reportStatus === "queued" && <Text accessibilityLiveRegion="polite" style={s.success}>Saved locally. It will remain queued until a reviewed delivery path exists.</Text>}
-        {reportStatus === "failed" && <Text accessibilityLiveRegion="polite" style={s.error}>Could not save the report. Your game can continue safely.</Text>}
+        <Text style={s.note}>
+          Reports save locally with only card ID, reason, deck version, and timestamp. No player identity or free text.
+        </Text>
+        <View style={s.reportChips}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Report wrong attribution"
+            disabled={reportBusy}
+            onPress={() => onReport("wrong-attribution")}
+            style={s.reportChip}
+          >
+            <Text style={s.reportChipText}>WRONG ATTRIBUTION</Text>
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Report harmful content"
+            disabled={reportBusy}
+            onPress={() => onReport("harmful-content")}
+            style={s.reportChip}
+          >
+            <Text style={s.reportChipText}>HARMFUL CONTENT</Text>
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Report another issue"
+            disabled={reportBusy}
+            onPress={() => onReport("other")}
+            style={s.reportChip}
+          >
+            <Text style={s.reportChipText}>ANOTHER ISSUE</Text>
+          </Pressable>
+        </View>
+        {reportStatus === "queued" && (
+          <Text accessibilityLiveRegion="polite" style={s.success}>
+            Saved locally. It stays queued until a reviewed delivery path exists.
+          </Text>
+        )}
+        {reportStatus === "failed" && (
+          <Text accessibilityLiveRegion="polite" style={s.error}>
+            Could not save the report. Your game can continue safely.
+          </Text>
+        )}
       </View>
-      <PrimaryButton label="Next round" onPress={onContinue} />
+      <View style={{ flex: 1, minHeight: 16 }} />
+      <PrimaryButton label={next} onPress={onContinue} />
     </ScrollView>
   );
 }

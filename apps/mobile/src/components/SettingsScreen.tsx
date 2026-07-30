@@ -28,13 +28,12 @@ export function SettingsScreen({
   return (
     <ScrollView contentContainerStyle={s.setup}>
       <Text style={s.eyebrow}>LOCAL SESSION</Text>
-      <Text style={s.title}>Session settings</Text>
-      <Text style={s.copy}>These preferences stay on this device only. Tap-only play remains complete.</Text>
-      <Text style={s.sectionLabel}>ACCESS PREFERENCES</Text>
+      <Text style={s.title}>SETTINGS</Text>
+      <Text style={s.copy}>Stays on this device. Tap-only play is always complete.</Text>
       <View style={s.group}>
         <ToggleRow
           title="Reduced motion"
-          hint="Minimize transition motion when the app animates."
+          hint="Skip the suspense beat and flashes settle instantly."
           value={reducedMotion}
           onValueChange={onReducedMotion}
         />
@@ -46,15 +45,14 @@ export function SettingsScreen({
         />
         <ToggleRow
           title="Haptic feedback"
-          hint="A subtle tap when the room commits and when the reveal lands."
+          hint="A kick when the room commits and the reveal lands."
           value={hapticsEnabled}
           onValueChange={onHaptics}
         />
       </View>
-      <Text style={s.sectionLabel}>RESET</Text>
-      <Text style={s.note}>Clears the current room session and locally queued reports after confirmation.</Text>
-      <PrimaryButton label="Reset local session and reports" secondary onPress={onReset} />
-      <PrimaryButton label="Close settings" onPress={onClose} />
+      <View style={{ flex: 1, minHeight: 24 }} />
+      <PrimaryButton label="RESET LOCAL SESSION" destructive onPress={onReset} />
+      <PrimaryButton label="DONE" onPress={onClose} />
     </ScrollView>
   );
 }
