@@ -52,13 +52,6 @@ export const s = StyleSheet.create({
     fontVariant: ["tabular-nums"],
   },
   scoreHot: { color: c.lime },
-  streakBadge: {
-    color: c.lime,
-    fontFamily: display,
-    fontSize: 12,
-    fontWeight: "800",
-    letterSpacing: 1,
-  },
   gear: {
     borderWidth: 2,
     borderColor: c.outline,
@@ -307,24 +300,24 @@ export const s = StyleSheet.create({
     opacity: 0.09,
     transform: [{ rotate: "12deg" }],
   },
-  // Row flex + flexShrink:0 lets the doubled strip keep its intrinsic single-line
-  // width and overflow the clipped band, instead of wrapping to the stage gutter.
   tickerWrap: {
     backgroundColor: c.lime,
     transform: [{ rotate: "-2deg" }, { scale: 1.06 }],
-    flexDirection: "row",
     paddingVertical: 10,
     marginVertical: 8,
     marginHorizontal: -10,
     overflow: "hidden",
   },
+  // Over-wide and clipped by tickerWrap's overflow, so the strip can be measured
+  // at its true single-line width without ever being visible.
+  tickerMeasure: { position: "absolute", opacity: 0, top: 0, left: 0, width: 5000 },
+  tickerTrack: { flexDirection: "row" },
   tickerText: {
     color: c.onHero,
     fontFamily: display,
     fontSize: 15,
     fontWeight: "800",
     letterSpacing: 2,
-    flexShrink: 0,
   },
   homeFooter: { gap: 10, paddingTop: 18 },
   homeFootnote: {
@@ -536,7 +529,7 @@ export const s = StyleSheet.create({
     letterSpacing: 4,
     textAlign: "center",
   },
-  resultMark: {
+  verdict: {
     color: c.onHero,
     fontFamily: display,
     fontSize: 96,

@@ -41,7 +41,7 @@ export function RecapScreen({
             <View key={stat.label} style={s.statRow}>
               <Text style={s.statLabel}>{stat.label}</Text>
               <View style={s.pillRow}>
-                {stat.spark && <StreakSparks streak={bestStreak} size={16} single />}
+                {stat.spark && <StreakSparks count={1} size={16} />}
                 <Text style={[s.statValue, stat.spark && s.statValueHot]}>{stat.value}</Text>
               </View>
             </View>

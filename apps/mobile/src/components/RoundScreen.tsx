@@ -103,7 +103,7 @@ export function RoundScreen({
           <Text style={s.roundPillText}>{roundModeLabel(mode, round, totalRounds)}</Text>
         </View>
         <View style={[s.roundPill, s.pillRow, badge && s.roundPillHot]}>
-          {badge && <StreakSparks streak={streak} />}
+          {badge && <StreakSparks count={1} />}
           <Text
             accessibilityLiveRegion="polite"
             style={[s.roundPillTextMuted, badge && s.roundPillTextHot]}
