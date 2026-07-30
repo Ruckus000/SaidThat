@@ -2,7 +2,10 @@ import { useEffect, useRef } from "react";
 import { Animated, Pressable, Text, View } from "react-native";
 
 import { headerScoreLabel, streakBadgeLabel } from "./presentationLabels";
+import { Icon } from "./Icon";
+import { StreakSparks } from "./StreakSparks";
 import { s } from "./styles";
+import { volt } from "../theme/tokens";
 
 export type HeaderProps = {
   score: number;
@@ -51,7 +54,10 @@ export function Header({
       </Pressable>
       <View style={s.scoreWrap}>
         {badge ? (
-          <Animated.View style={[s.scorePill, s.scorePillHot, { transform: [{ scale: pop }] }]}>
+          <Animated.View
+            style={[s.scorePill, s.scorePillHot, s.pillRow, { transform: [{ scale: pop }] }]}
+          >
+            <StreakSparks streak={streak} />
             <Text accessibilityLiveRegion="polite" style={[s.score, s.scoreHot]}>
               {badge}
             </Text>
@@ -71,7 +77,7 @@ export function Header({
             style={s.gear}
             hitSlop={8}
           >
-            <Text style={s.gearText}>⚙</Text>
+            <Icon name="gear" size={17} color={volt.color.dark.textMuted} />
           </Pressable>
         )}
       </View>

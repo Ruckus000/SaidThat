@@ -5,6 +5,7 @@ import { accuracyPercent, recapStatLines, runRankLabel } from "./presentationLab
 import { FadeIn } from "./FadeIn";
 import { Mark } from "./Mark";
 import { PrimaryButton } from "./PrimaryButton";
+import { StreakSparks } from "./StreakSparks";
 import { s } from "./styles";
 
 export type RecapScreenProps = {
@@ -39,9 +40,10 @@ export function RecapScreen({
           {stats.map((stat) => (
             <View key={stat.label} style={s.statRow}>
               <Text style={s.statLabel}>{stat.label}</Text>
-              <Text style={[s.statValue, stat.label === "BEST STREAK" && s.statValueHot]}>
-                {stat.value}
-              </Text>
+              <View style={s.pillRow}>
+                {stat.spark && <StreakSparks streak={bestStreak} size={16} single />}
+                <Text style={[s.statValue, stat.spark && s.statValueHot]}>{stat.value}</Text>
+              </View>
             </View>
           ))}
         </View>

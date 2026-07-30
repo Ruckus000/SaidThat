@@ -11,6 +11,7 @@ import {
 } from "./presentationLabels";
 import { FadeIn } from "./FadeIn";
 import { Mark } from "./Mark";
+import { StreakSparks } from "./StreakSparks";
 import { PrimaryButton } from "./PrimaryButton";
 import { s } from "./styles";
 
@@ -101,7 +102,8 @@ export function RoundScreen({
         <View style={s.roundPill}>
           <Text style={s.roundPillText}>{roundModeLabel(mode, round, totalRounds)}</Text>
         </View>
-        <View style={[s.roundPill, badge && s.roundPillHot]}>
+        <View style={[s.roundPill, s.pillRow, badge && s.roundPillHot]}>
+          {badge && <StreakSparks streak={streak} />}
           <Text
             accessibilityLiveRegion="polite"
             style={[s.roundPillTextMuted, badge && s.roundPillTextHot]}

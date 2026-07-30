@@ -25,18 +25,24 @@ export function resultRewardLabel(correct, streak) {
 
 export function resultStreakLabel(streak) {
   if (streak < 2) return null;
-  const sparks = "✦".repeat(Math.min(streak, 6));
-  return `${sparks} ${streak} IN A ROW`;
+  return `${streak} IN A ROW`;
 }
 
-// A non-color cue paired with the words, per the design DNA. Correct answers get
-// a filled mark, misses a hollow one — meaning survives without color.
-export function resultMark(correct) {
-  return correct ? "◆" : "○";
+// How many spark glyphs accompany a streak. The glyphs are drawn as SVG (THE MARK
+// `spark`), never as text characters, so they render identically on every device.
+export function streakSparkCount(streak) {
+  return streak < 2 ? 0 : Math.min(streak, 6);
+}
+
+// The non-color cue paired with the reveal words, per the design DNA: a distinct
+// MARK glyph per outcome, so meaning survives without color. This names the glyph
+// rather than returning a character — the shape is drawn, not typed.
+export function resultMarkName(correct) {
+  return correct ? "close" : "struck";
 }
 
 export function streakBadgeLabel(streak) {
-  return streak >= 2 ? `✦ STREAK ×${streak}` : null;
+  return streak >= 2 ? `STREAK ×${streak}` : null;
 }
 
 // Playful recap rank for how well the room read the run. It rates game skill
@@ -54,7 +60,7 @@ export function recapStatLines({ score, correctCount, roundsPlayed, bestStreak }
     { label: "SCORE", value: `${score}` },
     { label: "CALLED RIGHT", value: `${correctCount} of ${roundsPlayed}` },
     { label: "ACCURACY", value: `${accuracyPercent(correctCount, roundsPlayed)}%` },
-    { label: "BEST STREAK", value: `✦ ${bestStreak}` },
+    { label: "BEST STREAK", value: `${bestStreak}`, spark: true },
   ];
 }
 

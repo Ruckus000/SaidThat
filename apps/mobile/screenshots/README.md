@@ -23,11 +23,19 @@ Two play modes:
 
 ## Capture notes
 
-- Device: Expo iOS Simulator, **iPhone 16e**
+- Device: Expo iOS Simulator, **iPhone 16e** (1170 × 2532)
 - Captured: ~2026-07-20
 - Status: **local fixture MVP UI** — not release-ready, not production content
 - Visual baseline in these PNGs: dark graphite canvas, lime accents, Inter-style UI type
-- **Important:** the repo later landed a **HOT MIC** direction (warm aubergine stage, marigold signal, custom quotation MARK). Treat these screenshots as the **interaction/route inventory** and the UI to improve—not as a hard freeze on graphite/lime if you align with HOT MIC. Preserve the behaviors and labels below either way.
+- **⚠️ These PNGs are stale.** They predate two reskins. The repo landed **HOT MIC** (warm
+  aubergine stage + marigold signal + the custom quotation MARK), and then **VOLT**, which is
+  what ships today: a cool near-black stage (`#0B0E13`), electric lime `#CDF244` as the signal
+  and CTA, hot pink `#FF4FA0` as the opposing answer and the miss, Bricolage Grotesque display
+  + Inter body. See [`docs/ux-design-direction.md`](../../../docs/ux-design-direction.md).
+- Copy in these shots is also stale: the hero now reads **SAID / THAT?** over "REAL QUOTES. /
+  TOTAL LIES.", and the answers are **SAID IT** / **TOTAL LIE**, not "They did" / "Made for game".
+- Treat these as the **interaction/route inventory** — the set of states that must exist — not as
+  a visual reference. Preserve the behaviors and labels in the Non-negotiables below either way.
 
 ## Non-negotiables (do not redesign away)
 
@@ -153,7 +161,18 @@ Non-playable fault when the deck fails validation / is corrupt.
 
 ## Suggested Claude Design brief (pasteable)
 
-> Redesign **Said That?**, a local-first one-phone party game about real-or-fake quotes. Use the attached 12 screenshots as the full route inventory (home, setup ×2, round, results ×2, reviews ×2, shutter, paused, content unavailable ×2). Keep every non-negotiable in the README: tap-only play, no color-only truth, fixture disclosure, privacy shutter, and no live social/account framing. Prefer a warm, stage-like night-out feel (HOT MIC: aubergine + single marigold signal + quotation-mark identity) over generic dark dashboards. One composition per screen; statement/quote is the hero on round; cards only where they hold a real control.
+> Redesign **Said That?**, a local-first one-phone party game about real-or-fake quotes. Use the attached 12 screenshots as the full route inventory (home, setup ×2, round, results ×2, reviews ×2, shutter, paused, content unavailable ×2). Keep every non-negotiable in the README: tap-only play, no color-only truth, fixture disclosure, privacy shutter, and no live social/account framing. The shipping direction is **VOLT** — cool near-black stage, one electric lime signal per screen, hot pink as the opposing answer and the miss, quotation-mark MARK identity. One composition per screen; statement/quote is the hero on round; cards only where they hold a real control.
+
+## Icons
+
+Every icon is **drawn as SVG**, never typed as a character. Emoji and dingbats (⚙ ✦ ◆ ○) render
+inconsistently across devices and fonts, so `uiState.test.mjs` fails the build if one appears in
+a label. Two separate families:
+
+- **THE MARK** (`src/components/markPaths.js`) — the identity glyphs that carry meaning
+  (open/close quote, selection dot, spoken, struck, spark). No check glyph, ever.
+- **UI icons** (`src/components/uiIconPaths.js`) — plain functional affordances like the settings
+  gear. Never used to express game state; the two namespaces are asserted disjoint.
 
 ## File checklist for export
 
