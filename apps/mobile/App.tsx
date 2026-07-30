@@ -177,11 +177,17 @@ export default function App() {
     );
   }
 
-  // Only the result flash goes full-bleed. Round and Recap drop the wordmark row
-  // but keep their gutters: Round carries score/streak in its own top row, and
-  // Recap opens on the spark MARK.
+  // Only the result flash goes full-bleed. Four stages drop the wordmark row but
+  // keep their gutters: Round carries score/streak in its own top row, Recap opens
+  // on the spark MARK, and the shutter carries its own PRIVATE HANDOFF pill — with
+  // the header the concealed score pill rendered that same label a second time.
   const bleed = state.stage === STAGES.RESULT;
-  const showHeader = ![STAGES.RESULT, STAGES.ROUND, STAGES.RECAP].includes(state.stage);
+  const showHeader = ![
+    STAGES.RESULT,
+    STAGES.ROUND,
+    STAGES.RECAP,
+    STAGES.PRIVATE_SHUTTER,
+  ].includes(state.stage);
   const totalRounds = runLength(state);
 
   return (

@@ -10,6 +10,7 @@ import {
   resultMarkName,
   resultRewardLabel,
   resultStreakLabel,
+  streakSparkCount,
 } from "./presentationLabels";
 import { Mark } from "./Mark";
 import { StreakSparks } from "./StreakSparks";
@@ -109,7 +110,7 @@ export function ResultScreen({
         <Text style={s.resultKicker}>{resultKicker(correct)}</Text>
         <Animated.Text
           style={[
-            s.resultMark,
+            s.verdict,
             {
               transform: [
                 {
@@ -134,7 +135,11 @@ export function ResultScreen({
         )}
         {correct && streakLine && (
           <View style={[s.streakPill, s.pillRow]}>
-            <StreakSparks streak={streak} size={14} color={volt.color.dark.onHero} />
+            <StreakSparks
+              count={streakSparkCount(streak)}
+              size={14}
+              color={volt.color.dark.onHero}
+            />
             <Text style={s.streakPillText}>{streakLine}</Text>
           </View>
         )}

@@ -1,6 +1,6 @@
 # Said That? — screenshot brief for Claude Design
 
-Export this whole folder (`README.md` + the 12 PNGs) into Claude Design. This document is the product brief; the images are the current visual baseline to redesign from.
+Export this whole folder (`README.md` + the 13 PNGs) into Claude Design. This document is the product brief; the images are the current visual baseline to redesign from.
 
 ## What this app is
 
@@ -24,18 +24,20 @@ Two play modes:
 ## Capture notes
 
 - Device: Expo iOS Simulator, **iPhone 16e** (1170 × 2532)
-- Captured: ~2026-07-20
+- Captured: 2026-07-30, on the **VOLT** direction
 - Status: **local fixture MVP UI** — not release-ready, not production content
-- Visual baseline in these PNGs: dark graphite canvas, lime accents, Inter-style UI type
-- **⚠️ These PNGs are stale.** They predate two reskins. The repo landed **HOT MIC** (warm
-  aubergine stage + marigold signal + the custom quotation MARK), and then **VOLT**, which is
-  what ships today: a cool near-black stage (`#0B0E13`), electric lime `#CDF244` as the signal
-  and CTA, hot pink `#FF4FA0` as the opposing answer and the miss, Bricolage Grotesque display
-  + Inter body. See [`docs/ux-design-direction.md`](../../../docs/ux-design-direction.md).
-- Copy in these shots is also stale: the hero now reads **SAID / THAT?** over "REAL QUOTES. /
-  TOTAL LIES.", and the answers are **SAID IT** / **TOTAL LIE**, not "They did" / "Made for game".
-- Treat these as the **interaction/route inventory** — the set of states that must exist — not as
-  a visual reference. Preserve the behaviors and labels in the Non-negotiables below either way.
+- Visual baseline: cool near-black stage (`#0B0E13`), electric lime `#CDF244` as the signal and
+  CTA, hot pink `#FF4FA0` as the opposing answer and the miss, Bricolage Grotesque display +
+  Inter body. See [`docs/ux-design-direction.md`](../../../docs/ux-design-direction.md).
+- **How these were produced:** rendered through a temporary harness that drives each screen
+  directly by deep link, rather than by playing through the game. Every pixel is the real
+  component with real styles and real fixture content, but the *state* is posed — the score,
+  streak, and round numbers are chosen to show each surface at its most informative (e.g. the
+  round shot carries a live streak so the lit context pill is visible). The harness is not
+  committed.
+- Chrome differs by stage: Round, Result, Recap and the Private Relay shutter deliberately have
+  no wordmark row — Round carries its own round/streak pills, Result goes full-bleed, Recap opens
+  on the spark MARK, and the shutter carries its own `PRIVATE HANDOFF` pill.
 
 ## Non-negotiables (do not redesign away)
 
@@ -65,7 +67,7 @@ Use filenames as stable IDs when referencing shots in the redesign.
 
 ### `01-home.png` — Home
 
-Entry surface. Brand **SAID THAT?**, room score, settings affordance, hero pitch (“Read the room. Trust the reveal.”), primary CTA **Start a room**, privacy strip (no account / no live feed / no telemetry), and amber **LOCAL DEVELOPMENT FIXTURES** banner.
+Entry surface. Lime **SAID THAT?** wordmark, `ROOM · 0` pill, SVG settings gear, pink/lime eyebrows **REAL QUOTES. / TOTAL LIES.**, the 92pt **SAID / THAT?** hero over a raked background MARK, a rotated lime **REAL OR FAKE** marquee, primary CTA **START A ROOM**, privacy strip, and the amber **LOCAL DEVELOPMENT FIXTURES** banner.
 
 **Redesign focus:** brand-first first viewport; keep fixture honesty and privacy claims legible; one clear CTA.
 
@@ -89,7 +91,7 @@ Same setup shell with **Private Relay** selected. Emphasizes private handoff and
 
 ### `04-round.png` — Round (active prompt)
 
-Core game screen. Mode + round label, banner that this is a **game prompt** (reveal decides truth), large attributed quote, instruction for group vs holder, two answer actions (**They did** / **Made for game**), and safe pause escape.
+Core game screen — no wordmark row. `ROUND 3 / 7` pill on the left and a lit `✦ STREAK ×2` pill on the right (the score when no streak is running; `PRIVATE HANDOFF` under Private Relay). Lime-bordered prompt card with the open-quote MARK, the attributed quote, instruction for group vs holder, two answer actions (**SAID IT** / **TOTAL LIE**), and a safe pause escape.
 
 **Redesign focus:** quotation is the hero; both answers equal affordance until commit; no truth leakage; large tap targets.
 
@@ -97,7 +99,7 @@ Core game screen. Mode + round label, banner that this is a **game prompt** (rev
 
 ### `05-result-correct.png` — Result · correct
 
-Post-commit payoff when the room called it right. Outcome label, score delta to the room, CTAs **See the truth** vs **Continue without review**.
+Post-commit payoff when the room called it right: a full-bleed lime flash with the closing MARK, kicker **THE ROOM CALLED IT**, the spring-stamped **NAILED IT!** verdict, **+100**, a streak pill carrying one drawn spark per streak step, and CTAs **SEE THE TRUTH** / **NEXT PROMPT**.
 
 **Redesign focus:** celebrate *game skill* (reading the room), not “verified reality.” Hit/miss must not rely on green/red alone.
 
@@ -105,9 +107,9 @@ Post-commit payoff when the room called it right. Outcome label, score delta to 
 
 ### `06-result-incorrect.png` — Result · incorrect
 
-Same result shell for a miss. Softer / corrective tone; still offers truth review or continue.
+The same shell for a miss, in pink, with the struck MARK, kicker **THE ROOM GOT PLAYED**, and **FOOLED YA.** The reward line points at the truth rather than the player. Hit and miss differ by word, kicker and MARK glyph as well as color, so the outcome never depends on hue.
 
-**Redesign focus:** color-symmetric with correct where possible; meaning via words + shape; never shame individuals.
+**Redesign focus:** meaning via words + MARK shape first, so the outcome survives without color; never shame individuals. (VOLT deliberately does *not* keep hit and miss color-symmetric — what the hue encodes is game outcome, never authenticity.)
 
 ---
 
@@ -159,9 +161,17 @@ Non-playable fault when the deck fails validation / is corrupt.
 
 ---
 
+### `13-recap.png` — Run recap
+
+End-of-run scoreboard — no wordmark row. Lime spark MARK, pink **RUN COMPLETE** eyebrow, the rank word in lime, then a stat table (score, called right, accuracy, best streak). Ranks rate game skill, never a person and never a truth verdict, and stay encouraging at the low end.
+
+**Redesign focus:** a scoreboard, not a settings list; a rough run must never read as punishment.
+
+---
+
 ## Suggested Claude Design brief (pasteable)
 
-> Redesign **Said That?**, a local-first one-phone party game about real-or-fake quotes. Use the attached 12 screenshots as the full route inventory (home, setup ×2, round, results ×2, reviews ×2, shutter, paused, content unavailable ×2). Keep every non-negotiable in the README: tap-only play, no color-only truth, fixture disclosure, privacy shutter, and no live social/account framing. The shipping direction is **VOLT** — cool near-black stage, one electric lime signal per screen, hot pink as the opposing answer and the miss, quotation-mark MARK identity. One composition per screen; statement/quote is the hero on round; cards only where they hold a real control.
+> Redesign **Said That?**, a local-first one-phone party game about real-or-fake quotes. Use the attached 13 screenshots as the full route inventory (home, setup ×2, round, results ×2, reviews ×2, shutter, paused, content unavailable ×2, recap). Keep every non-negotiable in the README: tap-only play, no color-only truth, fixture disclosure, privacy shutter, and no live social/account framing. The shipping direction is **VOLT** — cool near-black stage, one electric lime signal per screen, hot pink as the opposing answer and the miss, quotation-mark MARK identity. One composition per screen; statement/quote is the hero on round; cards only where they hold a real control.
 
 ## Icons
 
@@ -190,5 +200,6 @@ apps/mobile/screenshots/
 ├── 09-private-shutter.png
 ├── 10-paused.png
 ├── 11-content-unavailable-empty.png
-└── 12-content-unavailable-corrupt.png
+├── 12-content-unavailable-corrupt.png
+└── 13-recap.png
 ```

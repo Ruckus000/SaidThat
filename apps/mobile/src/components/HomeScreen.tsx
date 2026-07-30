@@ -67,27 +67,47 @@ export function HomeScreen({
       </View>
 
       <View style={s.tickerWrap}>
-        <Animated.Text
+        {/*
+          Measured off-screen inside a deliberately over-wide box: a Text always
+          lays out against the width available to it, so measuring it in place
+          would either wrap (no numberOfLines) or clip (numberOfLines={1}) and
+          report the gutter width instead of the string's true width.
+        */}
+        <View style={s.tickerMeasure} pointerEvents="none">
+          <Text
+            numberOfLines={1}
+            style={s.tickerText}
+            onLayout={(e) => setTickerWidth(e.nativeEvent.layout.width)}
+          >
+            {TICKER}
+          </Text>
+        </View>
+        <Animated.View
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
-          onLayout={(e) => setTickerWidth(e.nativeEvent.layout.width)}
           style={[
-            s.tickerText,
+            s.tickerTrack,
             !reducedMotion && {
               transform: [
                 {
                   translateX: tickerX.interpolate({
                     inputRange: [-1, 0],
-                    outputRange: [-tickerWidth / 2, 0],
+                    outputRange: [-tickerWidth, 0],
                   }),
                 },
               ],
             },
           ]}
         >
-          {TICKER}
-          {TICKER}
-        </Animated.Text>
+          {/* Two copies at exactly the measured width, so travelling one width
+              lands the second where the first began — no seam on loop. */}
+          <Text numberOfLines={1} style={[s.tickerText, { width: tickerWidth }]}>
+            {TICKER}
+          </Text>
+          <Text numberOfLines={1} style={[s.tickerText, { width: tickerWidth }]}>
+            {TICKER}
+          </Text>
+        </Animated.View>
       </View>
 
       <View style={s.homeFooter}>

@@ -5,7 +5,6 @@ import { headerScoreLabel, streakBadgeLabel } from "./presentationLabels";
 import { Icon } from "./Icon";
 import { StreakSparks } from "./StreakSparks";
 import { s } from "./styles";
-import { volt } from "../theme/tokens";
 
 export type HeaderProps = {
   score: number;
@@ -57,7 +56,7 @@ export function Header({
           <Animated.View
             style={[s.scorePill, s.scorePillHot, s.pillRow, { transform: [{ scale: pop }] }]}
           >
-            <StreakSparks streak={streak} />
+            <StreakSparks count={1} />
             <Text accessibilityLiveRegion="polite" style={[s.score, s.scoreHot]}>
               {badge}
             </Text>
@@ -77,7 +76,7 @@ export function Header({
             style={s.gear}
             hitSlop={8}
           >
-            <Icon name="gear" size={17} color={volt.color.dark.textMuted} />
+            <Icon name="gear" size={17} />
           </Pressable>
         )}
       </View>
