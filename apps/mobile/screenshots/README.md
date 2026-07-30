@@ -35,9 +35,13 @@ Two play modes:
   streak, and round numbers are chosen to show each surface at its most informative (e.g. the
   round shot carries a live streak so the lit context pill is visible). The harness is not
   committed.
-- Chrome differs by stage: Round, Result, Recap and the Private Relay shutter deliberately have
-  no wordmark row — Round carries its own round/streak pills, Result goes full-bleed, Recap opens
-  on the spark MARK, and the shutter carries its own `PRIVATE HANDOFF` pill.
+- Chrome differs by stage: Round, Result, Recap, the Private Relay shutter and Paused
+  deliberately have no wordmark row — Round carries its own round/streak pills, Result goes
+  full-bleed, Recap opens on the spark MARK, the shutter carries its own `PRIVATE HANDOFF` pill,
+  and Paused is a single-purpose off-ramp. **Consequence to be aware of:** with no wordmark on
+  Round or Paused, a run in progress has no route back to Home until it reaches the recap. That
+  matches the prototype; if mid-run exit is wanted, it needs a deliberate control, not the
+  wordmark.
 
 ## Non-negotiables (do not redesign away)
 
