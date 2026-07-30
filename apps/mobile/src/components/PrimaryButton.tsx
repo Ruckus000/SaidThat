@@ -6,10 +6,23 @@ export type PrimaryButtonProps = {
   label: string;
   onPress: () => void;
   secondary?: boolean;
+  destructive?: boolean;
+  onFlash?: boolean;
+  onFlashMiss?: boolean;
+  outlineOnFlash?: boolean;
   disabled?: boolean;
 };
 
-export function PrimaryButton({ label, onPress, secondary = false, disabled = false }: PrimaryButtonProps) {
+export function PrimaryButton({
+  label,
+  onPress,
+  secondary = false,
+  destructive = false,
+  onFlash = false,
+  onFlashMiss = false,
+  outlineOnFlash = false,
+  disabled = false,
+}: PrimaryButtonProps) {
   return (
     <Pressable
       accessibilityRole="button"
@@ -20,12 +33,26 @@ export function PrimaryButton({ label, onPress, secondary = false, disabled = fa
       style={({ pressed }) => [
         s.button,
         secondary && s.secondary,
+        destructive && s.destructive,
+        onFlash && s.onFlash,
+        outlineOnFlash && s.outlineOnFlash,
         disabled && s.disabled,
         pressed && !disabled && s.pressed,
       ]}
       onPress={onPress}
     >
-      <Text style={[s.buttonText, secondary && s.secondaryText]}>{label}</Text>
+      <Text
+        style={[
+          s.buttonText,
+          secondary && s.secondaryText,
+          destructive && s.destructiveText,
+          onFlash && s.onFlashText,
+          onFlashMiss && s.onFlashMissText,
+          outlineOnFlash && s.outlineOnFlashText,
+        ]}
+      >
+        {label}
+      </Text>
     </Pressable>
   );
 }

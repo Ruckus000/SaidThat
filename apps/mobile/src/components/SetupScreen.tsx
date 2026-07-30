@@ -1,7 +1,7 @@
-import { ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
 
 import { MODES } from "../domain/game";
-import { setupSectionLabel, setupShowsAccessRoles } from "./presentationLabels";
+import { roleCaption, setupShowsAccessRoles } from "./presentationLabels";
 import { Choice } from "./Choice";
 import { PrimaryButton } from "./PrimaryButton";
 import { ToggleRow } from "./ToggleRow";
@@ -29,25 +29,56 @@ export function SetupScreen({
   const roomBeacon = mode === MODES.ROOM_BEACON;
   return (
     <ScrollView contentContainerStyle={s.setup}>
-      <Text style={s.eyebrow}>SET UP THE ROOM</Text>
-      <Text style={s.title}>How is the room playing?</Text>
+      <Text style={s.title}>{"HOW'S THE ROOM\nPLAYING?"}</Text>
 
-      <View style={s.group} accessibilityRole="radiogroup">
-        <Choice active={roomBeacon} title="Room Beacon" body="The group reads together; the holder makes one tap answer." onPress={() => onMode(MODES.ROOM_BEACON)} />
-        <Choice active={!roomBeacon} title="Private Relay" body="One player reads and answers; a shutter guards each handoff." onPress={() => onMode(MODES.PRIVATE_RELAY)} />
+      <View style={[s.group, { flex: 1, justifyContent: "center" }]} accessibilityRole="radiogroup">
+        <Choice
+          active={roomBeacon}
+          title="ROOM BEACON"
+          body="Everyone reads. The holder taps once."
+          mark="open"
+          onPress={() => onMode(MODES.ROOM_BEACON)}
+        />
+        <Choice
+          active={!roomBeacon}
+          title="PRIVATE RELAY"
+          body="Pass the phone. A shutter guards each turn."
+          mark="close"
+          onPress={() => onMode(MODES.PRIVATE_RELAY)}
+        />
       </View>
 
-      <View style={s.group}>
-        <Text style={s.sectionLabel}>{setupSectionLabel(mode)}</Text>
-        {setupShowsAccessRoles(mode) ? (
-          <View style={s.group} accessibilityRole="radiogroup">
-            <Choice active={accessRole === "holder"} title="I'm holding the phone" body="The prompt stays hidden from VoiceOver and TalkBack." onPress={() => onRole("holder")} />
-            <Choice active={accessRole === "screen-facing"} title="I'm screen-facing" body="I can read the prompt aloud and help the group." onPress={() => onRole("screen-facing")} />
+      {setupShowsAccessRoles(mode) ? (
+        <View style={s.group}>
+          <View style={s.segment} accessibilityRole="radiogroup">
+            <Pressable
+              accessibilityRole="radio"
+              accessibilityState={{ selected: accessRole === "holder" }}
+              onPress={() => onRole("holder")}
+              style={[s.segmentItem, accessRole === "holder" && s.segmentItemOn]}
+            >
+              <Text style={[s.segmentText, accessRole === "holder" && s.segmentTextOn]}>
+                I'M HOLDING
+              </Text>
+            </Pressable>
+            <Pressable
+              accessibilityRole="radio"
+              accessibilityState={{ selected: accessRole === "screen-facing" }}
+              onPress={() => onRole("screen-facing")}
+              style={[s.segmentItem, accessRole === "screen-facing" && s.segmentItemOn]}
+            >
+              <Text style={[s.segmentText, accessRole === "screen-facing" && s.segmentTextOn]}>
+                SCREEN-FACING
+              </Text>
+            </Pressable>
           </View>
-        ) : (
-          <Text style={s.copy}>One player reads and answers privately. Nothing shows during the handoff.</Text>
-        )}
-      </View>
+          <Text style={[s.note, { textAlign: "center" }]}>{roleCaption(accessRole)}</Text>
+        </View>
+      ) : (
+        <Text style={[s.note, { textAlign: "center" }]}>
+          Untimed and tap-only. An interrupted turn is discarded, never revealed.
+        </Text>
+      )}
 
       {roomBeacon && (
         <ToggleRow
@@ -58,8 +89,7 @@ export function SetupScreen({
         />
       )}
 
-      <Text style={s.note}>Untimed · tap-only · large touch targets.</Text>
-      <PrimaryButton label="Start playing" onPress={onStart} />
+      <PrimaryButton label="LET'S PLAY" onPress={onStart} />
     </ScrollView>
   );
 }

@@ -8,8 +8,8 @@ test("theme: the contrast math matches known WCAG reference values", () => {
   assert.equal(contrastRatio("#123456", "#123456").toFixed(2), "1.00", "identical colors are 1:1");
   // order-independent
   assert.equal(
-    contrastRatio("#FFB020", "#170F14").toFixed(2),
-    contrastRatio("#170F14", "#FFB020").toFixed(2),
+    contrastRatio("#CDF244", "#0B0E13").toFixed(2),
+    contrastRatio("#0B0E13", "#CDF244").toFixed(2),
   );
 });
 

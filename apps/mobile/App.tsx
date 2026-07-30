@@ -36,7 +36,7 @@ import { clearReportQueue, queueReport } from "./src/storage/reportQueue";
 const allowLocalFixtures = typeof __DEV__ !== "undefined" && __DEV__;
 
 export default function App() {
-  // Load the HOT MIC faces (Bricolage Grotesque display + Inter body/counters). Render
+  // Load VOLT faces (Bricolage Grotesque display + Inter body/counters). Render
   // is gated on load so text never flashes in a fallback face; on a load error we fall
   // through to the platform system face rather than showing nothing.
   const [fontsLoaded, fontError] = useFonts({
@@ -177,27 +177,32 @@ export default function App() {
     );
   }
 
+  const hideChrome = state.stage === STAGES.RESULT;
+  const totalRounds = runLength(state);
+
   return (
     <SafeAreaView style={s.safe}>
       <StatusBar style="light" />
-      <View style={s.app}>
-        <Header
-          score={state.score}
-          streak={state.streak}
-          concealScore={shouldConcealScore(state)}
-          reducedMotion={reducedMotion}
-          onHome={goHome}
-        />
+      <View style={[s.app, hideChrome && s.appBleed]}>
+        {!hideChrome && (
+          <Header
+            score={state.score}
+            streak={state.streak}
+            concealScore={shouldConcealScore(state)}
+            reducedMotion={reducedMotion}
+            onHome={goHome}
+            onSettings={state.stage === STAGES.HOME && !showSettings ? () => setShowSettings(true) : undefined}
+          />
+        )}
         {state.stage === STAGES.HOME && !showSettings && (
           <HomeScreen
             onStart={() => dispatch({ type: "OPEN_SETUP" })}
-            onOpenSettings={() => setShowSettings(true)}
             localFixtures={allowLocalFixtures}
             reducedMotion={reducedMotion}
             roundsPlayed={state.roundsPlayed}
             correctCount={state.correctCount}
             bestStreak={state.bestStreak}
-            runComplete={state.roundsPlayed >= runLength(state)}
+            runComplete={state.roundsPlayed >= totalRounds}
           />
         )}
         {state.stage === STAGES.HOME && showSettings && (
@@ -229,6 +234,7 @@ export default function App() {
             mode={state.mode}
             hideCardFromAssistiveTech={!canExposeCardToAssistiveTech(state)}
             round={state.roundIndex + 1}
+            totalRounds={totalRounds}
             motionOptIn={motionAllowed({ motionOptIn, noMotion })}
             motionCalibrated={motionNeutralZ != null}
             reducedMotion={reducedMotion}
@@ -242,6 +248,8 @@ export default function App() {
           <ResultScreen
             correct={state.lastCorrect === true}
             streak={state.streak}
+            roundIndex={state.roundIndex}
+            totalRounds={totalRounds}
             reducedMotion={reducedMotion}
             haptics={hapticsAllowed({ hapticsEnabled })}
             onReview={() => dispatch({ type: "OPEN_REVIEW" })}
@@ -253,6 +261,8 @@ export default function App() {
             card={card}
             reportStatus={state.reportStatus}
             reportBusy={reportBusy}
+            roundIndex={state.roundIndex}
+            totalRounds={totalRounds}
             reducedMotion={reducedMotion}
             onReport={report}
             onContinue={() => dispatch({ type: "NEXT_ROUND" })}

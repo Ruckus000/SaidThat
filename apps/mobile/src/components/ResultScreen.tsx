@@ -3,7 +3,13 @@ import { Animated, Text, View } from "react-native";
 
 import { revealFeedback } from "../feedback/haptics";
 import { hotmic } from "../theme/tokens";
-import { resultHeadline, resultMark, resultRewardLabel } from "./presentationLabels";
+import {
+  continueLabel,
+  resultHeadline,
+  resultKicker,
+  resultRewardLabel,
+  resultStreakLabel,
+} from "./presentationLabels";
 import { Mark } from "./Mark";
 import { PrimaryButton } from "./PrimaryButton";
 import { s } from "./styles";
@@ -11,22 +17,34 @@ import { s } from "./styles";
 export type ResultScreenProps = {
   correct: boolean;
   streak: number;
+  roundIndex: number;
+  totalRounds: number;
   reducedMotion: boolean;
   haptics: boolean;
   onReview: () => void;
   onContinue: () => void;
 };
 
-const SUSPENSE_MS = 850;
+const SUSPENSE_MS = hotmic.motion.durations.locking;
 
-export function ResultScreen({ correct, streak, reducedMotion, haptics, onReview, onContinue }: ResultScreenProps) {
+export function ResultScreen({
+  correct,
+  streak,
+  roundIndex,
+  totalRounds,
+  reducedMotion,
+  haptics,
+  onReview,
+  onContinue,
+}: ResultScreenProps) {
   // Post-commit anticipation beat: the tap is already registered, so this never
   // makes tap-play second-class and adds no answer countdown. Reduced motion
   // skips straight to the verdict with the identical words and reward.
   const [revealed, setRevealed] = useState(reducedMotion);
-  const reveal = useRef(new Animated.Value(reducedMotion ? 1 : 0)).current;
-  const seal = useRef(new Animated.Value(reducedMotion ? 1 : 0)).current;
+  const stamp = useRef(new Animated.Value(reducedMotion ? 1 : 0)).current;
   const pulse = useRef(new Animated.Value(0)).current;
+  const next = continueLabel({ roundIndex, totalRounds });
+  const streakLine = resultStreakLabel(streak);
 
   useEffect(() => {
     if (reducedMotion) return;
@@ -40,26 +58,30 @@ export function ResultScreen({ correct, streak, reducedMotion, haptics, onReview
     const timer = setTimeout(() => {
       loop.stop();
       setRevealed(true);
-      Animated.spring(reveal, { toValue: 1, useNativeDriver: true, speed: 12, bounciness: 12 }).start();
-      // The closing MARK drops on a weightier spring — the round-closed "seal".
-      Animated.spring(seal, { toValue: 1, useNativeDriver: true, speed: 8, bounciness: 6 }).start();
+      Animated.spring(stamp, { toValue: 1, useNativeDriver: true, speed: 14, bounciness: 10 }).start();
     }, SUSPENSE_MS);
     return () => {
       clearTimeout(timer);
       loop.stop();
     };
-  }, [reducedMotion, reveal, seal, pulse]);
+  }, [reducedMotion, stamp, pulse]);
 
-  // Fire the reveal haptic exactly when the verdict lands — on mount under reduced
-  // motion (revealed starts true), or when the suspense beat flips it true.
   useEffect(() => {
     if (revealed) revealFeedback(haptics);
   }, [revealed, haptics]);
 
   if (!revealed) {
     return (
-      <View style={s.center}>
-        <Animated.Text style={[s.suspense, { opacity: pulse.interpolate({ inputRange: [0, 1], outputRange: [0.45, 1] }) }]}>
+      <View style={s.lockingWrap}>
+        <Animated.View style={{ opacity: pulse.interpolate({ inputRange: [0, 1], outputRange: [0.35, 1] }) }}>
+          <Mark name="selectionDot" size={44} color={hotmic.color.dark.lime} />
+        </Animated.View>
+        <Animated.Text
+          style={[
+            s.suspense,
+            { opacity: pulse.interpolate({ inputRange: [0, 1], outputRange: [0.35, 1] }) },
+          ]}
+        >
           LOCKING IT IN…
         </Animated.Text>
         <Text style={s.copy}>The room leans in.</Text>
@@ -67,26 +89,66 @@ export function ResultScreen({ correct, streak, reducedMotion, haptics, onReview
     );
   }
 
+  const flashStyle = correct ? s.resultFlashHit : s.resultFlashMiss;
+
   return (
-    <View style={s.center}>
-      <Animated.View
-        style={{
-          alignItems: "center",
-          opacity: seal,
-          transform: [{ translateY: seal.interpolate({ inputRange: [0, 1], outputRange: [-18, 0] }) }],
-        }}
-      >
-        <Mark name="close" size={44} color={hotmic.color.dark.textPrimary} />
-      </Animated.View>
-      <Animated.View style={{ opacity: reveal, transform: [{ scale: reveal.interpolate({ inputRange: [0, 1], outputRange: [0.7, 1] }) }] }}>
-        <Text style={s.resultMark} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
-          {resultMark(correct)}
-        </Text>
-        <Text style={s.eyebrow}>{resultHeadline(correct)}</Text>
-        <Text style={correct ? s.reward : s.copy}>{resultRewardLabel(correct, streak)}</Text>
-      </Animated.View>
-      <PrimaryButton label="See the truth" onPress={onReview} />
-      <PrimaryButton label="Keep playing" secondary onPress={onContinue} />
+    <View style={[s.resultFlash, flashStyle]}>
+      <View style={s.resultBody}>
+        <Animated.View
+          style={{
+            opacity: stamp,
+            transform: [
+              { translateY: stamp.interpolate({ inputRange: [0, 1], outputRange: [26, 0] }) },
+            ],
+          }}
+        >
+          <Mark
+            name={correct ? "close" : "struck"}
+            size={72}
+            color={hotmic.color.dark.onHero}
+          />
+        </Animated.View>
+        <Text style={s.resultKicker}>{resultKicker(correct)}</Text>
+        <Animated.Text
+          style={[
+            s.resultMark,
+            {
+              transform: [
+                {
+                  scale: stamp.interpolate({ inputRange: [0, 1], outputRange: [2.2, 1] }),
+                },
+                {
+                  rotate: stamp.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: correct ? ["-10deg", "-3deg"] : ["8deg", "2deg"],
+                  }),
+                },
+              ],
+            },
+          ]}
+        >
+          {resultHeadline(correct).replace(" ", "\n")}
+        </Animated.Text>
+        {correct ? (
+          <Text style={s.reward}>{resultRewardLabel(correct, streak)}</Text>
+        ) : (
+          <Text style={s.rewardMiss}>{resultRewardLabel(correct, streak)}</Text>
+        )}
+        {correct && streakLine && (
+          <View style={s.streakPill}>
+            <Text style={s.streakPillText}>{streakLine}</Text>
+          </View>
+        )}
+      </View>
+      <View style={s.resultActions}>
+        <PrimaryButton
+          label="SEE THE TRUTH"
+          onFlash
+          onFlashMiss={!correct}
+          onPress={onReview}
+        />
+        <PrimaryButton label={next} outlineOnFlash onPress={onContinue} />
+      </View>
     </View>
   );
 }

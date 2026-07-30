@@ -12,9 +12,7 @@ export type ToggleRowProps = {
 
 /**
  * The single on/off control in the app: every boolean preference uses this.
- * A slim row that reads as a toggle (not a one-of-many choice card), announces
- * as a switch, and shows a text ON/OFF pill so the state survives without color.
- * Tap target stays at least 56dp. For a one-of-many selection use Choice instead.
+ * Shows a text ON/OFF pill so the state survives without color.
  */
 export function ToggleRow({ title, hint, value, onValueChange }: ToggleRowProps) {
   return (
@@ -23,7 +21,7 @@ export function ToggleRow({ title, hint, value, onValueChange }: ToggleRowProps)
       accessibilityState={{ checked: value }}
       accessibilityLabel={`${title}. ${hint}`}
       onPress={() => onValueChange(!value)}
-      android_ripple={{ color: "rgba(200,255,61,0.12)" }}
+      android_ripple={{ color: "rgba(205,242,68,0.12)" }}
       style={({ pressed }) => [s.toggleRow, pressed && s.pressed]}
     >
       <View style={s.toggleText}>
