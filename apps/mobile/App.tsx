@@ -298,7 +298,7 @@ export default function App() {
           <PrivateShutterScreen onReady={() => dispatch({ type: "REVEAL_PRIVATE_TURN" })} />
         )}
         {state.stage === STAGES.PAUSED && (
-          <PausedScreen onResume={() => dispatch({ type: "RESUME_ROOM" })} />
+          <PausedScreen onResume={() => dispatch({ type: "RESUME_ROOM" })} onLeave={goHome} />
         )}
         {state.stage === STAGES.CONTENT_UNAVAILABLE && <ContentUnavailableScreen fault={state.fault} />}
       </View>
