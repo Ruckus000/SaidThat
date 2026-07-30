@@ -111,17 +111,25 @@ export const CONTENT_UNAVAILABLE_GUARD =
 export const PRIVATE_SHUTTER_RECOVERY =
   "The prior prompt and result are protected. If the app was interrupted, that private turn was discarded rather than shown to the next person.";
 
+// Truth labels are load-bearing: the words, not the color, carry the verdict.
+// A simulated-authentic fixture and a source-verified editorial card are NOT the
+// same claim, so they never share a label. The scare quotes on the fixture line
+// are the tell — nobody actually said it. Keep the two branches distinct even
+// while the deck is fixture-only; collapsing them would let a real editorial
+// card ship under simulation copy the moment the pipeline lands.
 export function reviewTruthLabel(card) {
-  if (card.contentState === "fixture-authentic" || card.authentic) {
+  if (card.contentState === "fixture-authentic") {
     return 'SIMULATED AUTHENTIC · THEY “SAID” IT';
   }
+  if (card.authentic) return "AUTHENTIC · THEY SAID IT";
   return "FABRICATED FOR THIS GAME";
 }
 
 export function reviewSourceStatus(card) {
-  if (card.contentState === "fixture-authentic" || card.authentic) {
+  if (card.contentState === "fixture-authentic") {
     return "development simulation — not a source-verified production card";
   }
+  if (card.authentic) return "editorial source record required";
   return "game fixture";
 }
 
