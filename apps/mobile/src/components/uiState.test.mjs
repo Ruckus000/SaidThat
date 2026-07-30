@@ -220,6 +220,34 @@ test("reward: recap rank rates room skill without punishing a rough run", () => 
   assert.equal(byLabel["BEST STREAK"], "3");
 });
 
+// Paused owns leaving: neither Round nor Paused carries the wordmark, so this is
+// the only route Home mid-run. It must not behave like a reset — the run counters
+// survive so Home still reports the abandoned run.
+test("ui: leaving from paused keeps the run reportable as THIS RUN", () => {
+  const cards = [fixture, { ...fixture, id: "fixture-2" }];
+  let state = createSession({ cards, allowLocalFixtures: true, deckVersion: "test" });
+  state = gameReducer(state, { type: "START_ROUND" });
+  state = gameReducer(state, { type: "ANSWER", guessAuthentic: false });
+  state = gameReducer(state, { type: "APP_BACKGROUND" });
+  assert.equal(state.stage, STAGES.PAUSED);
+
+  const left = gameReducer(state, { type: "GO_HOME" });
+  assert.equal(left.stage, STAGES.HOME);
+  assert.equal(left.roundsPlayed, state.roundsPlayed, "leaving is not a reset");
+  assert.equal(left.correctCount, state.correctCount);
+  assert.equal(left.score, state.score);
+  // An abandoned run reads as in-progress, never as a finished one.
+  assert.match(
+    runSummaryLabel({
+      roundsPlayed: left.roundsPlayed,
+      correctCount: left.correctCount,
+      bestStreak: left.bestStreak,
+      complete: false,
+    }),
+    /^THIS RUN · /,
+  );
+});
+
 test("ui: private shutter conceals score through reducer and header copy", () => {
   const state = privateShutterState();
   assert.equal(shouldConcealScore(state), true);

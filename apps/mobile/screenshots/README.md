@@ -38,10 +38,10 @@ Two play modes:
 - Chrome differs by stage: Round, Result, Recap, the Private Relay shutter and Paused
   deliberately have no wordmark row — Round carries its own round/streak pills, Result goes
   full-bleed, Recap opens on the spark MARK, the shutter carries its own `PRIVATE HANDOFF` pill,
-  and Paused is a single-purpose off-ramp. **Consequence to be aware of:** with no wordmark on
-  Round or Paused, a run in progress has no route back to Home until it reaches the recap. That
-  matches the prototype; if mid-run exit is wanted, it needs a deliberate control, not the
-  wordmark.
+  and Paused is the off-ramp. Because no wordmark means no tappable logo to escape by, **Paused
+  owns leaving**: it carries an explicit `LEAVE THE ROOM` under `RESUME SAFELY`, and that is the
+  only route Home mid-run. Leaving is non-destructive — the run counters survive, so Home still
+  reports the abandoned run as `THIS RUN`.
 
 ## Non-negotiables (do not redesign away)
 
@@ -143,9 +143,9 @@ Privacy interruption surface after backgrounding / unsafe handoff. Blocks prior 
 
 ### `10-paused.png` — Room Beacon paused
 
-Safe leave / pause from Room Beacon. Room can resume without corrupting scoring.
+Safe leave / pause from Room Beacon — no wordmark row. Centered selection-dot MARK, lime **SESSION PAUSED**, the reassurance **NOTHING WAS SUBMITTED.**, then **RESUME SAFELY** with **LEAVE THE ROOM** beneath it. The room can resume without corrupting scoring, and leaving keeps the run reportable on Home.
 
-**Redesign focus:** pause ≠ failure; resume and leave home are both obvious.
+**Redesign focus:** pause ≠ failure; resume and leave are both obvious, and resuming is clearly the primary of the two.
 
 ---
 
