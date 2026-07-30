@@ -177,14 +177,18 @@ export default function App() {
     );
   }
 
-  const hideChrome = state.stage === STAGES.RESULT;
+  // Only the result flash goes full-bleed. Round and Recap drop the wordmark row
+  // but keep their gutters: Round carries score/streak in its own top row, and
+  // Recap opens on the spark MARK.
+  const bleed = state.stage === STAGES.RESULT;
+  const showHeader = ![STAGES.RESULT, STAGES.ROUND, STAGES.RECAP].includes(state.stage);
   const totalRounds = runLength(state);
 
   return (
     <SafeAreaView style={s.safe}>
       <StatusBar style="light" />
-      <View style={[s.app, hideChrome && s.appBleed]}>
-        {!hideChrome && (
+      <View style={[s.app, bleed && s.appBleed]}>
+        {showHeader && (
           <Header
             score={state.score}
             streak={state.streak}
@@ -235,6 +239,9 @@ export default function App() {
             hideCardFromAssistiveTech={!canExposeCardToAssistiveTech(state)}
             round={state.roundIndex + 1}
             totalRounds={totalRounds}
+            score={state.score}
+            streak={state.streak}
+            concealScore={shouldConcealScore(state)}
             motionOptIn={motionAllowed({ motionOptIn, noMotion })}
             motionCalibrated={motionNeutralZ != null}
             reducedMotion={reducedMotion}

@@ -1,6 +1,6 @@
 import { Text, View } from "react-native";
 
-import { hotmic } from "../theme/tokens";
+import { volt } from "../theme/tokens";
 import { Mark } from "./Mark";
 import { PrimaryButton } from "./PrimaryButton";
 import { s } from "./styles";
@@ -13,7 +13,7 @@ export function PausedScreen({ onResume }: PausedScreenProps) {
   return (
     <View style={{ flex: 1 }}>
       <View style={[s.center, { gap: 14 }]}>
-        <Mark name="selectionDot" size={64} color={hotmic.color.dark.textDim} />
+        <Mark name="selectionDot" size={64} color={volt.color.dark.textDim} />
         <Text style={s.eyebrow}>SESSION PAUSED</Text>
         <Text style={s.displayPaused}>{"NOTHING WAS\nSUBMITTED."}</Text>
         <Text style={s.copy}>

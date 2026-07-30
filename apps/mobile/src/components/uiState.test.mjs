@@ -77,6 +77,22 @@ test("ui: round labels name the ritual and holder instruction", () => {
   assert.match(roundInstruction(MODES.PRIVATE_RELAY), /Read privately/i);
 });
 
+// The round stage carries its own context pill instead of the shared header. Which
+// label it shows is a pure function of state, so it is asserted here rather than in
+// the (renderer-less) component: a running streak lights up, otherwise the score
+// shows, and a concealed handoff wins over both.
+test("ui: the round context pill picks streak over score, and concealment over both", () => {
+  const pill = (score, streak, concealScore) =>
+    (concealScore ? null : streakBadgeLabel(streak)) ?? headerScoreLabel({ score, concealScore });
+
+  assert.equal(pill(300, 0, false), "ROOM · 300");
+  assert.equal(pill(300, 1, false), "ROOM · 300", "a streak of 1 is not yet a streak");
+  assert.equal(pill(300, 3, false), "✦ STREAK ×3");
+  // Private Relay must never leak the running score — or the streak that implies it.
+  assert.equal(pill(300, 3, true), "PRIVATE HANDOFF");
+  assert.equal(pill(300, 0, true), "PRIVATE HANDOFF");
+});
+
 test("ui: review truth labels stay textual, not color-only", () => {
   assert.equal(
     reviewTruthLabel({ authentic: false, contentState: "fabricated-for-game" }),

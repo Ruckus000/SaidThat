@@ -2,8 +2,13 @@ import { Animated, Pressable, ScrollView, Text, View } from "react-native";
 
 import { MODES } from "../domain/game";
 import { useFireEvent } from "../feedback/useFireEvent";
-import { hotmic } from "../theme/tokens";
-import { roundInstruction, roundModeLabel } from "./presentationLabels";
+import { volt } from "../theme/tokens";
+import {
+  headerScoreLabel,
+  roundInstruction,
+  roundModeLabel,
+  streakBadgeLabel,
+} from "./presentationLabels";
 import { FadeIn } from "./FadeIn";
 import { Mark } from "./Mark";
 import { PrimaryButton } from "./PrimaryButton";
@@ -19,6 +24,9 @@ export type RoundScreenProps = {
   mode: string;
   round: number;
   totalRounds: number;
+  score: number;
+  streak: number;
+  concealScore: boolean;
   hideCardFromAssistiveTech: boolean;
   motionOptIn: boolean;
   motionCalibrated: boolean;
@@ -70,6 +78,9 @@ export function RoundScreen({
   mode,
   round,
   totalRounds,
+  score,
+  streak,
+  concealScore,
   hideCardFromAssistiveTech,
   motionOptIn,
   motionCalibrated,
@@ -80,11 +91,23 @@ export function RoundScreen({
   onPause,
 }: RoundScreenProps) {
   const compact = card.quote.length > 60;
+  // The round stage owns its own context row instead of the shared wordmark header:
+  // the round count on the left, and on the right a lit streak badge once a streak is
+  // running, otherwise the plain score. Both are words first — the lime is additive.
+  const badge = concealScore ? null : streakBadgeLabel(streak);
   return (
     <View style={s.round}>
       <View style={s.roundTop}>
         <View style={s.roundPill}>
           <Text style={s.roundPillText}>{roundModeLabel(mode, round, totalRounds)}</Text>
+        </View>
+        <View style={[s.roundPill, badge && s.roundPillHot]}>
+          <Text
+            accessibilityLiveRegion="polite"
+            style={[s.roundPillTextMuted, badge && s.roundPillTextHot]}
+          >
+            {badge ?? headerScoreLabel({ score, concealScore })}
+          </Text>
         </View>
       </View>
 
@@ -95,7 +118,7 @@ export function RoundScreen({
           accessibilityElementsHidden={hideCardFromAssistiveTech}
           importantForAccessibility={hideCardFromAssistiveTech ? "no-hide-descendants" : "auto"}
         >
-          <Mark name="open" size={56} color={hotmic.color.dark.lime} />
+          <Mark name="open" size={56} color={volt.color.dark.lime} />
           <Text style={[s.quote, compact && s.quoteCompact]}>{card.quote}</Text>
           <Text style={s.person}>— {card.person}</Text>
         </ScrollView>

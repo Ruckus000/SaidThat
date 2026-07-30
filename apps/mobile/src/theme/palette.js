@@ -96,6 +96,9 @@ export const CONTRAST_PAIRS = [
   { theme: "dark", label: "onHero/limeFill", fg: dark.onHero, bg: dark.limeFill, min: 4.5 },
   { theme: "dark", label: "onHero/pinkFill", fg: dark.onHero, bg: dark.pinkFill, min: 4.5 },
   { theme: "dark", label: "lime/canvas (large)", fg: dark.lime, bg: dark.canvas, min: 3.0 },
+  // The round streak badge is a 12pt label — bold, but below the WCAG large-text
+  // threshold, so it is held to the normal-text bar rather than the UI bar.
+  { theme: "dark", label: "lime(pill text)/canvas", fg: dark.lime, bg: dark.canvas, min: 4.5 },
   { theme: "dark", label: "pink/canvas (large)", fg: dark.pink, bg: dark.canvas, min: 3.0 },
   { theme: "dark", label: "statusTeal/surfaceRaised", fg: dark.statusTeal, bg: dark.surfaceRaised, min: 4.5 },
   { theme: "dark", label: "statusOchre/surfaceRaised", fg: dark.statusOchre, bg: dark.surfaceRaised, min: 4.5 },

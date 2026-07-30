@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Animated, Text, View } from "react-native";
 
 import { revealFeedback } from "../feedback/haptics";
-import { hotmic } from "../theme/tokens";
+import { volt } from "../theme/tokens";
 import {
   continueLabel,
   resultHeadline,
@@ -25,7 +25,7 @@ export type ResultScreenProps = {
   onContinue: () => void;
 };
 
-const SUSPENSE_MS = hotmic.motion.durations.locking;
+const SUSPENSE_MS = volt.motion.durations.locking;
 
 export function ResultScreen({
   correct,
@@ -74,7 +74,7 @@ export function ResultScreen({
     return (
       <View style={s.lockingWrap}>
         <Animated.View style={{ opacity: pulse.interpolate({ inputRange: [0, 1], outputRange: [0.35, 1] }) }}>
-          <Mark name="selectionDot" size={44} color={hotmic.color.dark.lime} />
+          <Mark name="selectionDot" size={44} color={volt.color.dark.lime} />
         </Animated.View>
         <Animated.Text
           style={[
@@ -105,7 +105,7 @@ export function ResultScreen({
           <Mark
             name={correct ? "close" : "struck"}
             size={72}
-            color={hotmic.color.dark.onHero}
+            color={volt.color.dark.onHero}
           />
         </Animated.View>
         <Text style={s.resultKicker}>{resultKicker(correct)}</Text>

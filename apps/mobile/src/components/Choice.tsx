@@ -1,7 +1,7 @@
 import { Pressable, Text, View } from "react-native";
 
 import { Mark } from "./Mark";
-import { hotmic } from "../theme/tokens";
+import { volt } from "../theme/tokens";
 import { s } from "./styles";
 
 /**
@@ -17,7 +17,7 @@ export type ChoiceProps = {
 };
 
 export function Choice({ active, title, body, mark, onPress }: ChoiceProps) {
-  const c = hotmic.color.dark;
+  const c = volt.color.dark;
   return (
     <Pressable
       accessibilityRole="radio"
