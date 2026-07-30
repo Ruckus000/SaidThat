@@ -177,16 +177,18 @@ export default function App() {
     );
   }
 
-  // Only the result flash goes full-bleed. Four stages drop the wordmark row but
+  // Only the result flash goes full-bleed. Five stages drop the wordmark row but
   // keep their gutters: Round carries score/streak in its own top row, Recap opens
-  // on the spark MARK, and the shutter carries its own PRIVATE HANDOFF pill — with
-  // the header the concealed score pill rendered that same label a second time.
+  // on the spark MARK, the shutter carries its own PRIVATE HANDOFF pill (with the
+  // header, the concealed score pill rendered that same label a second time), and
+  // Paused is a single-purpose off-ramp whose only action is resuming the room.
   const bleed = state.stage === STAGES.RESULT;
   const showHeader = ![
     STAGES.RESULT,
     STAGES.ROUND,
     STAGES.RECAP,
     STAGES.PRIVATE_SHUTTER,
+    STAGES.PAUSED,
   ].includes(state.stage);
   const totalRounds = runLength(state);
 
