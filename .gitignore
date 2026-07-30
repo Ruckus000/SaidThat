@@ -1,3 +1,9 @@
 node_modules/
 .DS_Store
 
+# Serena rewrites this on almost every run (reordering its own comment blocks),
+# so it shows up as a diff in every unrelated commit. It is regenerated locally
+# on demand — nothing depends on the committed copy. Kept here rather than in
+# .serena/.gitignore because that file is tool-managed too.
+.serena/project.yml
+
