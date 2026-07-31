@@ -3,8 +3,8 @@ import { MODES } from "../domain/game.js";
 export const FIXTURE_DISCLOSURE =
   "LOCAL DEVELOPMENT FIXTURES · NOT EDITORIAL CONTENT";
 
-export function headerScoreLabel({ score, concealScore }) {
-  return concealScore ? "PRIVATE HANDOFF" : `ROOM · ${score}`;
+export function headerScoreLabel(score) {
+  return `ROOM · ${score}`;
 }
 
 // Game-layer reward copy. Celebrates skill at the game (reading the room),

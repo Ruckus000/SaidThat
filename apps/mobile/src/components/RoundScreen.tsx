@@ -27,7 +27,6 @@ export type RoundScreenProps = {
   totalRounds: number;
   score: number;
   streak: number;
-  concealScore: boolean;
   hideCardFromAssistiveTech: boolean;
   motionOptIn: boolean;
   motionCalibrated: boolean;
@@ -81,7 +80,6 @@ export function RoundScreen({
   totalRounds,
   score,
   streak,
-  concealScore,
   hideCardFromAssistiveTech,
   motionOptIn,
   motionCalibrated,
@@ -95,7 +93,7 @@ export function RoundScreen({
   // The round stage owns its own context row instead of the shared wordmark header:
   // the round count on the left, and on the right a lit streak badge once a streak is
   // running, otherwise the plain score. Both are words first — the lime is additive.
-  const badge = concealScore ? null : streakBadgeLabel(streak);
+  const badge = streakBadgeLabel(streak);
   return (
     <View style={s.round}>
       <View style={s.roundTop}>
@@ -108,7 +106,7 @@ export function RoundScreen({
             accessibilityLiveRegion="polite"
             style={[s.roundPillTextMuted, badge && s.roundPillTextHot]}
           >
-            {badge ?? headerScoreLabel({ score, concealScore })}
+            {badge ?? headerScoreLabel(score)}
           </Text>
         </View>
       </View>

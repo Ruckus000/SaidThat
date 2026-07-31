@@ -30,9 +30,9 @@ import { markNames } from "./markPaths.js";
 import {
   MODES,
   STAGES,
+  cardForPresentation,
   createSession,
   gameReducer,
-  shouldConcealScore,
 } from "../domain/game.js";
 
 const fixture = {
@@ -84,17 +84,13 @@ test("ui: round labels name the ritual and holder instruction", () => {
 // The round stage carries its own context pill instead of the shared header. Which
 // label it shows is a pure function of state, so it is asserted here rather than in
 // the (renderer-less) component: a running streak lights up, otherwise the score
-// shows, and a concealed handoff wins over both.
-test("ui: the round context pill picks streak over score, and concealment over both", () => {
-  const pill = (score, streak, concealScore) =>
-    (concealScore ? null : streakBadgeLabel(streak)) ?? headerScoreLabel({ score, concealScore });
+// shows.
+test("ui: the round context pill picks streak over score", () => {
+  const pill = (score, streak) => streakBadgeLabel(streak) ?? headerScoreLabel(score);
 
-  assert.equal(pill(300, 0, false), "ROOM · 300");
-  assert.equal(pill(300, 1, false), "ROOM · 300", "a streak of 1 is not yet a streak");
-  assert.equal(pill(300, 3, false), "STREAK ×3");
-  // Private Relay must never leak the running score — or the streak that implies it.
-  assert.equal(pill(300, 3, true), "PRIVATE HANDOFF");
-  assert.equal(pill(300, 0, true), "PRIVATE HANDOFF");
+  assert.equal(pill(300, 0), "ROOM · 300");
+  assert.equal(pill(300, 1), "ROOM · 300", "a streak of 1 is not yet a streak");
+  assert.equal(pill(300, 3), "STREAK ×3");
 });
 
 test("ui: review truth labels stay textual, not color-only", () => {
@@ -267,11 +263,12 @@ test("ui: leaving from paused keeps the run reportable as THIS RUN", () => {
   );
 });
 
-test("ui: private shutter conceals score through reducer and header copy", () => {
+// What actually protects the handoff is that the shutter shows no card and no
+// score row at all — not a conceal flag on a header that never renders there.
+// This asserts the protection that exists rather than the one that read well.
+test("ui: the private shutter hands off without the card or the running score", () => {
   const state = privateShutterState();
-  assert.equal(shouldConcealScore(state), true);
-  assert.equal(headerScoreLabel({ score: state.score, concealScore: true }), "PRIVATE HANDOFF");
-  assert.equal(headerScoreLabel({ score: state.score, concealScore: false }), `ROOM · ${state.score}`);
+  assert.equal(cardForPresentation(state), null, "no card survives into the handoff");
   assert.match(PRIVATE_SHUTTER_RECOVERY, /discarded rather than shown to the next person/i);
 });
 
