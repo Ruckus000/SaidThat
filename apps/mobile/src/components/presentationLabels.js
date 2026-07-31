@@ -104,6 +104,20 @@ export function reducedMotionHint(lockedByDevice) {
     : "Skip the suspense beat and flashes settle instantly.";
 }
 
+// Tilt calibration reads the accelerometer, which can be absent, denied, or
+// wedged. The read is bounded, so "we asked and nothing came back" is a real
+// outcome the player has to be told about — otherwise the button just stops
+// working. Tap is always the complete route, so the unavailable copy says the
+// game is unaffected rather than treating this as a failure.
+export function calibrationHint({ calibrated, reading, unavailable }) {
+  if (calibrated) return "Tilt is active for the holder. Tap answers still commit exactly once.";
+  if (reading) return "Hold the phone level…";
+  if (unavailable) {
+    return "This device did not report motion, so tilt stays off. Tapping plays the full game.";
+  }
+  return "Hold the phone level, then calibrate before using tilt.";
+}
+
 export function setupShowsAccessRoles(mode) {
   return mode === MODES.ROOM_BEACON;
 }
