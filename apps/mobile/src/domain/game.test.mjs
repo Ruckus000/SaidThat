@@ -46,6 +46,37 @@ test("chaos: unapproved, disputed, removed, and malformed authentic records fail
   assert.equal(isPlayableCard({ ...fixture, authentic: true, contentState: "fixture-authentic" }, { allowLocalFixtures: true }), true);
 });
 
+// `new Set` takes any iterable, so a single approver written as a string counts
+// its characters: new Set("alice").size is 5, which cleared the two-approval bar
+// and shipped a one-approver card as if two people had signed it. Non-iterables
+// threw out of createSession instead of reaching the content-unavailable screen.
+// The deck is fixture-only today and fixtures never reach this check, so this
+// guards the editorial pipeline that has not landed yet.
+test("chaos: an approvals field that is not a list of approvals fails closed", () => {
+  const productionAuthentic = (editorialApprovals) => ({
+    contentState: "authentic",
+    sourceRecord: { retained: true, url: "https://example.com" },
+    editorialApprovals,
+  });
+
+  // A single approver as a bare string must never read as several approvals.
+  assert.equal(isPlayableCard(productionAuthentic("alice")), false, "a string is not two approvals");
+  assert.equal(isPlayableCard(productionAuthentic("ab")), false);
+  // Non-iterables must fail closed rather than throwing out of the deck filter.
+  for (const malformed of [5, {}, true, { 0: "a", 1: "b", length: 2 }]) {
+    assert.doesNotThrow(() => isPlayableCard(productionAuthentic(malformed)));
+    assert.equal(isPlayableCard(productionAuthentic(malformed)), false, `${JSON.stringify(malformed)} is not two approvals`);
+  }
+  // Absent and empty stay closed; a genuine pair still opens.
+  assert.equal(isPlayableCard(productionAuthentic(undefined)), false);
+  assert.equal(isPlayableCard(productionAuthentic([])), false);
+  assert.equal(isPlayableCard(productionAuthentic(["alice", "bo"])), true, "two real approvers still pass");
+
+  // A malformed card must not take the whole deck down with it.
+  const session = createSession({ cards: [productionAuthentic(5)], deckVersion: "test" });
+  assert.equal(session.stage, STAGES.CONTENT_UNAVAILABLE);
+});
+
 test("chaos: duplicate taps score only once", () => {
   const state = started();
   const first = gameReducer(state, { type: "ANSWER", guessAuthentic: false });
