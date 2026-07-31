@@ -13,7 +13,7 @@
     { "path": ".designops/05-direction-validation/ai-tabletop-simulation/implementation-chaos-appendix.md", "sha256": "32eeeac66a1830b14ead96fa0fd479993ef4c3528d9ba4fcb126c4e1a809bdad" },
     { "path": ".designops/06-content-state-map.json", "sha256": "97397a037beb9710c57a2ee51762a3546cead418fb3e741122ab89c1f75d23f8" },
     { "path": ".designops/07-design-dna.json", "sha256": "cf0e3fc875238e48bd2a020738db25b6c05aa60ecf3629bec08eec68912b8d70" },
-    { "path": ".designops/08-design-system/tokens.json", "sha256": "ad14fa453d9149b6127846abb44655ac44fda8b2df666ddd4a389af1802189e7" }
+    { "path": ".designops/08-design-system/tokens.json", "sha256": "2ef3c0a5dae5d0e33405b4092d52250476a6ddb73cde48357d1103fbd7fa42ef" }
   ],
   "nonClaims": [
     "This decision is not participant research, a usability result, or a claim about real group behavior.",

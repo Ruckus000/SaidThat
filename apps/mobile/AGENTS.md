@@ -22,4 +22,14 @@ npm --prefix apps/mobile run typecheck
 npm --prefix apps/mobile test
 (cd apps/mobile && npx expo export --platform ios --output-dir /private/tmp/said-that-ios-export)
 node tools/designops/enforce.mjs --intent implementation --working-tree
+node --test tools/designops/enforce.test.mjs
 ```
+
+That last one is what CI runs, and it is not implied by the others: `enforce.mjs`
+checks whether *this change* is permitted, while `enforce.test.mjs` checks the
+DesignOps records themselves — including the SHA-256 pins in
+`.designops/11-simulation-owner-handoff-decision.json` that fix which version of
+each evidence file the owner decision rests on. Editing a pinned file (notably
+`.designops/08-design-system/tokens.json`) turns CI red without any of the other
+four commands noticing. If you changed one deliberately, re-pin its hash in the
+same commit.
