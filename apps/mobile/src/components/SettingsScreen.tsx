@@ -1,11 +1,14 @@
 import { ScrollView, Text, View } from "react-native";
 
+import { reducedMotionHint } from "./presentationLabels";
 import { PrimaryButton } from "./PrimaryButton";
 import { ToggleRow } from "./ToggleRow";
 import { s } from "./styles";
 
 export type SettingsScreenProps = {
   reducedMotion: boolean;
+  /** The device's Reduce Motion setting is holding it on; the toggle cannot lower it. */
+  motionLockedByDevice?: boolean;
   noMotion: boolean;
   hapticsEnabled: boolean;
   onReducedMotion: (enabled: boolean) => void;
@@ -17,6 +20,7 @@ export type SettingsScreenProps = {
 
 export function SettingsScreen({
   reducedMotion,
+  motionLockedByDevice = false,
   noMotion,
   hapticsEnabled,
   onReducedMotion,
@@ -33,7 +37,7 @@ export function SettingsScreen({
       <View style={s.group}>
         <ToggleRow
           title="Reduced motion"
-          hint="Skip the suspense beat and flashes settle instantly."
+          hint={reducedMotionHint(motionLockedByDevice)}
           value={reducedMotion}
           onValueChange={onReducedMotion}
         />

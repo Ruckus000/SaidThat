@@ -95,6 +95,15 @@ export function toggleStateLabel(on) {
   return on ? "ON" : "OFF";
 }
 
+// When the device setting is what is holding reduced motion on, say so plainly
+// rather than showing a toggle that appears stuck. The player is not being
+// ignored — they are being obeyed, from a setting they made elsewhere.
+export function reducedMotionHint(lockedByDevice) {
+  return lockedByDevice
+    ? "On because Reduce Motion is enabled in your device settings."
+    : "Skip the suspense beat and flashes settle instantly.";
+}
+
 export function setupShowsAccessRoles(mode) {
   return mode === MODES.ROOM_BEACON;
 }

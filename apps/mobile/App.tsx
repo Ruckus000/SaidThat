@@ -30,7 +30,13 @@ import {
 } from "./src/domain/game";
 import { commitFeedback } from "./src/feedback/haptics";
 import { calibrateNeutral, readMotionSample, useRoomBeaconMotion } from "./src/sensors/useRoomBeaconMotion";
-import { hapticsAllowed, motionAllowed } from "./src/settings/settingsPolicy";
+import {
+  hapticsAllowed,
+  motionAllowed,
+  reducedMotionActive,
+  reducedMotionForcedByDevice,
+} from "./src/settings/settingsPolicy";
+import { useReducedMotion } from "./src/theme/motion";
 import { clearReportQueue, queueReport } from "./src/storage/reportQueue";
 
 const allowLocalFixtures = typeof __DEV__ !== "undefined" && __DEV__;
@@ -56,9 +62,15 @@ export default function App() {
   const [motionOptIn, setMotionOptIn] = useState(false);
   const [motionNeutralZ, setMotionNeutralZ] = useState<number | null>(null);
   const [showSettings, setShowSettings] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
+  const [reducedMotionPreference, setReducedMotionPreference] = useState(false);
   const [noMotion, setNoMotion] = useState(false);
   const [hapticsEnabled, setHapticsEnabled] = useState(true);
+  // The device's Reduce Motion setting is honoured directly, not just mirrored
+  // into a default: someone who set it has already told us once, and the in-app
+  // toggle can only add to it.
+  const deviceReducedMotion = useReducedMotion();
+  const reducedMotion = reducedMotionActive({ reducedMotionPreference, deviceReducedMotion });
+  const motionLockedByDevice = reducedMotionForcedByDevice({ reducedMotionPreference, deviceReducedMotion });
   const card = currentCard(state);
 
   // Tap commits fire the KICK haptic doublet inside the answer control (useFireEvent),
@@ -222,7 +234,8 @@ export default function App() {
             reducedMotion={reducedMotion}
             noMotion={noMotion}
             hapticsEnabled={hapticsEnabled}
-            onReducedMotion={setReducedMotion}
+            motionLockedByDevice={motionLockedByDevice}
+            onReducedMotion={setReducedMotionPreference}
             onNoMotion={setNoMotionEnabled}
             onHaptics={setHapticsEnabled}
             onReset={confirmResetLocalSession}
