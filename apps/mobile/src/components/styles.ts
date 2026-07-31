@@ -115,6 +115,14 @@ export const s = StyleSheet.create({
     letterSpacing: 1,
     textAlign: "center",
   },
+  resetNotice: {
+    color: c.warning,
+    fontFamily: body,
+    fontSize: 13,
+    lineHeight: 18,
+    textAlign: "center",
+    marginBottom: 12,
+  },
   runSummary: {
     color: c.textDim,
     fontFamily: display,

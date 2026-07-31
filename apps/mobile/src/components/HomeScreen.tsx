@@ -10,6 +10,8 @@ import { s } from "./styles";
 
 export type HomeScreenProps = {
   onStart: () => void;
+  /** Outcome of a local reset that could not fully deliver, shown until acknowledged. */
+  notice?: string | null;
   localFixtures: boolean;
   reducedMotion: boolean;
   roundsPlayed: number;
@@ -24,6 +26,7 @@ const TICKER = "REAL OR FAKE · REAL OR FAKE · REAL OR FAKE · REAL OR FAKE · 
 
 export function HomeScreen({
   onStart,
+  notice = null,
   localFixtures,
   reducedMotion,
   roundsPlayed,
@@ -111,6 +114,12 @@ export function HomeScreen({
       </View>
 
       <View style={s.homeFooter}>
+        {/* The words carry the meaning, not the colour — per the design DNA. */}
+        {notice && (
+          <Text style={s.resetNotice} accessibilityRole="alert">
+            {notice}
+          </Text>
+        )}
         <PrimaryButton label="START A ROOM" hero onPress={onStart} />
         <Text style={s.homeFootnote}>No accounts · no feed · everything stays on this phone</Text>
         {localFixtures && <Text style={s.fixture}>{FIXTURE_DISCLOSURE}</Text>}
