@@ -50,7 +50,22 @@ export function ResultScreen({
   const streakLine = resultStreakLabel(streak);
 
   useEffect(() => {
-    if (reducedMotion) return;
+    if (reducedMotion) {
+      // Not just an early return. Both of these are seeded at MOUNT from
+      // reducedMotion, so a player who turns it on DURING the beat had them
+      // seeded false: the cleanup below clears the reveal timer, this effect
+      // returns, and nothing else ever sets `revealed` — leaving them stuck on
+      // "LOCKING IT IN…" one round into a run they cannot continue. Someone
+      // reaching for Reduce Motion mid-beat is doing it because the motion
+      // bothers them, which is the worst possible moment to strand them.
+      //
+      // `stamp` is as load-bearing as `revealed`: it drives the mark's opacity
+      // and the verdict's scale, so setting `revealed` alone swaps the beat for a
+      // screen that is technically the verdict and visually blank.
+      stamp.setValue(1);
+      setRevealed(true);
+      return;
+    }
     const loop = Animated.loop(
       Animated.sequence([
         Animated.timing(pulse, { toValue: 1, duration: 450, useNativeDriver: true }),
