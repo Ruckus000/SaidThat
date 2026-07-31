@@ -31,8 +31,20 @@ export function runLength(state) {
 const NON_PLAYABLE_STATES = new Set(["disputed", "source-unavailable", "removed"]);
 const REPORT_REASONS = new Set(["wrong-attribution", "harmful-content", "other"]);
 
+/**
+ * Two distinct human approvals, counted from a list and nothing else.
+ *
+ * `new Set` takes any iterable, so the array check is load-bearing rather than
+ * defensive typing. A single approver recorded as a string — "alice" instead of
+ * ["alice"] — counts as five distinct approvals and clears the bar, which is the
+ * likeliest way an editorial pipeline gets this wrong. Non-iterables (a number,
+ * an object) throw instead, taking the app down at createSession rather than
+ * routing to the content-unavailable screen. Anything that is not a list of
+ * approvals fails closed here.
+ */
 function hasTwoDistinctApprovals(card) {
-  return new Set(card.editorialApprovals ?? []).size >= 2;
+  if (!Array.isArray(card.editorialApprovals)) return false;
+  return new Set(card.editorialApprovals).size >= 2;
 }
 
 /**
