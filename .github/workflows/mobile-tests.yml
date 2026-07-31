@@ -1,0 +1,43 @@
+name: Mobile tests
+
+# The mobile suite previously ran only from the local AGENTS.md checklist, so a
+# red test could reach main whenever someone skipped a step. It gates PRs now.
+on:
+  pull_request:
+    paths:
+      - "apps/mobile/**"
+      - ".github/workflows/mobile-tests.yml"
+  push:
+    branches: [main]
+    paths:
+      - "apps/mobile/**"
+      - ".github/workflows/mobile-tests.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/mobile/package-lock.json
+
+      - name: Install
+        run: npm ci --prefix apps/mobile
+
+      - name: Typecheck
+        run: npm --prefix apps/mobile run typecheck
+
+      # Split so a failure names which layer broke: the extracted policy modules
+      # under node --test, or the App.tsx render tests under jest.
+      - name: Unit tests
+        run: npm --prefix apps/mobile run test:unit
+
+      - name: App render tests
+        run: npm --prefix apps/mobile run test:app

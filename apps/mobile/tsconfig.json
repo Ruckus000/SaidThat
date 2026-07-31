@@ -2,6 +2,10 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
-    "allowJs": true
+    "allowJs": true,
+    // Expo's base leaves `types` unset, which did not pick up the jest globals
+    // for App.test.tsx. Naming them explicitly also keeps the ambient surface
+    // deliberate rather than "whatever is installed under @types".
+    "types": ["jest", "node", "react"]
   }
 }

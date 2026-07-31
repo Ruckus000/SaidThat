@@ -14,7 +14,12 @@
     "react-native-svg": "^15.15.4"
   },
   "devDependencies": {
+    "@testing-library/react-native": "^13.3.3",
+    "@types/jest": "^29.5.14",
     "@types/react": "~19.2.2",
+    "jest": "^29.7.0",
+    "jest-expo": "57.0.2",
+    "react-test-renderer": "19.2.3",
     "typescript": "~6.0.3"
   },
   "scripts": {
@@ -25,7 +30,15 @@
     "typecheck": "tsc --noEmit",
     "export:ios": "expo export --platform ios --output-dir /tmp/said-that-ios-export",
     "export:android": "expo export --platform android --output-dir /tmp/said-that-android-export",
-    "test": "node --experimental-default-type=module --test src/domain/game.test.mjs src/components/uiState.test.mjs src/components/markPaths.test.mjs src/components/uiIconPaths.test.mjs src/sensors/roomBeaconMotion.test.mjs src/settings/settingsPolicy.test.mjs src/storage/reportQueue.test.mjs src/feedback/interactionPolicy.test.mjs src/content/validateDeck.test.mjs src/release/releasePrep.test.mjs src/theme/contrast.test.mjs"
+    "test": "npm run test:unit && npm run test:app",
+    "test:unit": "node --experimental-default-type=module --test src/domain/game.test.mjs src/components/uiState.test.mjs src/components/markPaths.test.mjs src/components/uiIconPaths.test.mjs src/sensors/roomBeaconMotion.test.mjs src/settings/settingsPolicy.test.mjs src/storage/reportQueue.test.mjs src/feedback/interactionPolicy.test.mjs src/content/validateDeck.test.mjs src/release/releasePrep.test.mjs src/theme/contrast.test.mjs",
+    "test:app": "jest"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "testMatch": [
+      "**/*.test.tsx"
+    ]
   },
   "private": true
 }
