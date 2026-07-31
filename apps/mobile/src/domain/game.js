@@ -93,6 +93,7 @@ export function createSession({ cards, allowLocalFixtures = false, deckVersion }
     committedRound: null,
     resumeStage: null,
     reportStatus: null,
+    privateRecovery: null,
     fault: safeCards.length ? null : "no-safe-playable-content",
   };
 }
@@ -180,6 +181,9 @@ const FRESH_RUN = {
   reportStatus: null,
   lastCorrect: null,
   resumeStage: null,
+  // A discard belongs to the run it happened in. Carrying the flag into a new
+  // run would tell the next shutter that a turn it never had was thrown away.
+  privateRecovery: null,
 };
 
 export function gameReducer(state, action) {
@@ -292,7 +296,7 @@ export function gameReducer(state, action) {
     case "SIMULATE_CORRUPT_DECK":
       return { ...state, stage: STAGES.CONTENT_UNAVAILABLE, cards: [], fault: "corrupt-deck" };
     case "GO_HOME":
-      return { ...state, stage: STAGES.HOME, reportStatus: null, resumeStage: null };
+      return { ...state, stage: STAGES.HOME, reportStatus: null, resumeStage: null, privateRecovery: null };
     case "RESET_LOCAL_SESSION":
       return createSession({
         cards: action.cards,

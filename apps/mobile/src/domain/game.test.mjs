@@ -260,6 +260,42 @@ test("chaos: backgrounding private content enters a shutter, not a spoiler state
   assert.equal(shouldConcealScore(state), true);
 });
 
+// PrivateShutterScreen tells the player their turn was thrown away based on this
+// flag alone. It is set on an involuntary discard and cleared on reveal — but not
+// on leaving or on starting a new run, so a flag that survived either would make
+// the next handoff claim a loss that never happened. The words on that screen are
+// only true if the flag belongs to the run in front of the player.
+test("chaos: a discard notice belongs to its own run and never follows the player", () => {
+  const interrupted = gameReducer(started(MODES.PRIVATE_RELAY), { type: "APP_BACKGROUND" });
+  assert.equal(interrupted.privateRecovery, "discarded-prior-turn", "the discard is recorded");
+
+  // Leaving mid-shutter drops it.
+  const home = gameReducer(interrupted, { type: "GO_HOME" });
+  assert.equal(home.privateRecovery, null, "leaving clears the discard");
+
+  // And a fresh run cannot inherit one, whichever way the run begins.
+  assert.equal(gameReducer(interrupted, { type: "START_ROUND" }).privateRecovery, null);
+  assert.equal(
+    gameReducer(interrupted, { type: "PLAY_AGAIN", cards: [fixture, secondFixture], allowLocalFixtures: true })
+      .privateRecovery,
+    null,
+  );
+
+  // The whole point: the next handoff in a new run must not claim a discard.
+  const replayed = gameReducer(home, { type: "START_ROUND" });
+  const handoff = gameReducer(gameReducer(replayed, { type: "ANSWER", guessAuthentic: false }), {
+    type: "NEXT_ROUND",
+  });
+  assert.equal(handoff.stage, STAGES.PRIVATE_SHUTTER, "a normal handoff, not an interruption");
+  assert.notEqual(handoff.privateRecovery, "discarded-prior-turn");
+
+  // A real interruption still reports one, so this is not blanket suppression.
+  assert.equal(
+    gameReducer(replayed, { type: "APP_BACKGROUND" }).privateRecovery,
+    "discarded-prior-turn",
+  );
+});
+
 test("chaos: a screen-reader forehead holder cannot receive the prompt", () => {
   const holder = started();
   assert.equal(canExposeCardToAssistiveTech(holder), false);
