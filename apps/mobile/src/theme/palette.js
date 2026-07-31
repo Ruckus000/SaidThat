@@ -104,6 +104,8 @@ export const CONTRAST_PAIRS = [
   { theme: "dark", label: "statusOchre/surfaceRaised", fg: dark.statusOchre, bg: dark.surfaceRaised, min: 4.5 },
   { theme: "dark", label: "safe/surface", fg: dark.safe, bg: dark.surface, min: 4.5 },
   { theme: "dark", label: "warning/surface", fg: dark.warning, bg: dark.surface, min: 4.5 },
+  // The reset notice on Home sits on canvas, not on a surface panel.
+  { theme: "dark", label: "warning/canvas", fg: dark.warning, bg: dark.canvas, min: 4.5 },
   { theme: "dark", label: "danger/surface", fg: dark.danger, bg: dark.surface, min: 4.5 },
   { theme: "dark", label: "focusHalo/canvas (UI)", fg: dark.focusHalo, bg: dark.canvas, min: 3.0 },
   { theme: "dark", label: "focusCore/limeFill (UI)", fg: dark.focusCore, bg: dark.limeFill, min: 3.0 },
@@ -119,4 +121,5 @@ export const CONTRAST_PAIRS = [
   { theme: "light", label: "statusTeal/surfaceRaised", fg: light.statusTeal, bg: light.surfaceRaised, min: 4.5 },
   { theme: "light", label: "statusOchre/surfaceRaised", fg: light.statusOchre, bg: light.surfaceRaised, min: 4.5 },
   { theme: "light", label: "focusHalo/canvas (UI)", fg: light.focusHalo, bg: light.canvas, min: 3.0 },
+  { theme: "light", label: "warning/canvas", fg: light.warning, bg: light.canvas, min: 4.5 },
 ];

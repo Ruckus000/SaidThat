@@ -63,6 +63,7 @@ export default function App() {
   const [motionOptIn, setMotionOptIn] = useState(false);
   const [motionNeutralZ, setMotionNeutralZ] = useState<number | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [resetNotice, setResetNotice] = useState<string | null>(null);
   const [reducedMotionPreference, setReducedMotionPreference] = useState(false);
   const [noMotion, setNoMotion] = useState(false);
   const [hapticsEnabled, setHapticsEnabled] = useState(true);
@@ -159,8 +160,11 @@ export default function App() {
       allowLocalFixtures,
       deckVersion: DECK_VERSION,
     });
-    const notice = resetReportsNotice(reportsCleared);
-    if (notice) Alert.alert("Reset local session", notice);
+    // Surfaced on Home rather than as a second Alert. The confirm alert is still
+    // dismissing when this runs, and iOS drops a modal presented mid-dismissal —
+    // which would have silently restored the very bug this notice exists to fix.
+    // On Home it cannot be dropped, and it survives long enough to be read.
+    setResetNotice(resetReportsNotice(reportsCleared));
   }
 
   function goHome() {
@@ -232,7 +236,12 @@ export default function App() {
         )}
         {state.stage === STAGES.HOME && !showSettings && (
           <HomeScreen
-            onStart={() => dispatch({ type: "OPEN_SETUP" })}
+            onStart={() => {
+              // Read once. Starting a room is the acknowledgement.
+              setResetNotice(null);
+              dispatch({ type: "OPEN_SETUP" });
+            }}
+            notice={resetNotice}
             localFixtures={allowLocalFixtures}
             reducedMotion={reducedMotion}
             roundsPlayed={state.roundsPlayed}
