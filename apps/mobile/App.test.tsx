@@ -1,5 +1,5 @@
 import { Alert } from "react-native";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react-native";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react-native";
 
 import App from "./App";
 
@@ -45,6 +45,12 @@ const mockClearReportQueue = clearReportQueue as jest.MockedFunction<typeof clea
  * Alert is a native module: RNTL cannot press its buttons, so the destructive
  * confirm has to be driven by hand. This finds the named button in the most
  * recent Alert.alert call and invokes its onPress, which is what UIKit does.
+ *
+ * The act() wrap is the exception to the harness rule "never wrap presses in
+ * act" — that rule is about RNTL's own helpers, which already wrap. This is a raw
+ * callback invoked outside React's event system, and the handler now updates
+ * state synchronously, so without it React warns and the assertions race the
+ * commit.
  */
 function pressAlertButton(spy: jest.SpyInstance, text: string) {
   const calls = spy.mock.calls;
@@ -54,7 +60,9 @@ function pressAlertButton(spy: jest.SpyInstance, text: string) {
     | undefined;
   const button = buttons?.find((b) => b.text === text);
   if (!button) throw new Error(`no "${text}" button in the alert`);
-  button.onPress?.();
+  act(() => {
+    button.onPress?.();
+  });
 }
 
 async function openSettings() {
@@ -105,6 +113,26 @@ test("app: a refusing device still completes the reset and reports the queue sur
   expect(notice.props.children).toMatch(/stay on this device/i);
   expect(notice.props.children).toMatch(/not sent anywhere/i);
 });
+
+// A refusing device was already covered. A device that never ANSWERS was not, and
+// a catch is no protection against it: the await simply never returned, so every
+// state reset below it was skipped and the confirmed destructive action did
+// nothing at all — the same bug this function was written to fix, one layer down.
+test("app: a storage backend that never answers cannot cancel the reset", async () => {
+  mockClearReportQueue.mockImplementation(() => new Promise(() => {}));
+  const alert = jest.spyOn(Alert, "alert").mockImplementation(() => {});
+
+  fireEvent.press(await openSettings());
+  pressAlertButton(alert, "Reset");
+
+  // The reset lands immediately — it never waited on storage in the first place.
+  await waitFor(() => expect(screen.getByText("START A ROOM")).toBeOnTheScreen());
+
+  // And once the bound expires, the half that did not happen is still reported
+  // rather than silently passed off as a clean reset.
+  const notice = await screen.findByText(/could not be cleared/i, {}, { timeout: 5000 });
+  expect(notice).toHaveTextContent(/stay on this device/i);
+}, 10000);
 
 test("app: the reset notice is cleared by starting the next room, not left to linger", async () => {
   mockClearReportQueue.mockRejectedValue(new Error("storage unavailable"));
