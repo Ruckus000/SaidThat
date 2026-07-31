@@ -432,6 +432,10 @@ export const s = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 10,
   },
+  // The chips already carry `disabled`, which Pressable turns into
+  // accessibilityState — correct for assistive tech and invisible to everyone
+  // else. This is the seeing half of the same fact.
+  reportChipBusy: { opacity: 0.55 },
   reportChipText: {
     color: c.textMuted,
     fontFamily: display,

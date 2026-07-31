@@ -117,8 +117,16 @@ export default function App() {
     // one; the report itself is already written either way.
     const roundIndex = state.roundIndex;
     try {
-      await queueReport(reportPayload(state, reason, new Date().toISOString()));
-      dispatch({ type: "REPORT_QUEUED", roundIndex });
+      // Bounded for the same reason the reset is. `finally` looks like it
+      // guarantees the busy flag is released, and it does — for a promise that
+      // SETTLES. A wedged native bridge neither resolves nor rejects, so the
+      // await never returned, `finally` never ran, and all three report chips
+      // stayed disabled for the rest of the session with no way to retry.
+      const queued = await withTimeout(
+        queueReport(reportPayload(state, reason, new Date().toISOString())).then(() => true),
+        { fallback: false },
+      );
+      dispatch({ type: queued ? "REPORT_QUEUED" : "REPORT_FAILED", roundIndex });
     } catch {
       dispatch({ type: "REPORT_FAILED", roundIndex });
     } finally {

@@ -145,3 +145,35 @@ test("app: the reset notice is cleared by starting the next room, not left to li
   fireEvent.press(screen.getByText("START A ROOM"));
   await waitFor(() => expect(screen.queryByText(/could not be cleared/i)).toBeNull());
 });
+
+// The report chips disable themselves while a write is in flight, and `finally`
+// releases that flag — for a promise that SETTLES. A wedged native bridge neither
+// resolves nor rejects, so the await never returned, `finally` never ran, and all
+// three chips stayed disabled for the rest of the session with no way to retry.
+test("app: a storage backend that never answers still releases the report chips", async () => {
+  const { queueReport } = require("./src/storage/reportQueue");
+  (queueReport as jest.Mock).mockImplementation(() => new Promise(() => {}));
+
+  render(<App />);
+  // Reach a review screen: start a run, answer, open the review.
+  fireEvent.press(await screen.findByText("START A ROOM"));
+  fireEvent.press(await screen.findByText("LET'S PLAY"));
+  fireEvent.press(await screen.findByText("SAID IT"));
+  // The reveal is behind an 850ms suspense beat.
+  fireEvent.press(await screen.findByText("SEE THE TRUTH", {}, { timeout: 3000 }));
+
+  const chip = await screen.findByLabelText("Report wrong attribution");
+  fireEvent.press(chip);
+
+  // Busy immediately...
+  await waitFor(() =>
+    expect(screen.getByLabelText("Report wrong attribution")).toBeDisabled(),
+  );
+
+  // ...and released once the bound expires, rather than latched forever.
+  await waitFor(
+    () => expect(screen.getByLabelText("Report wrong attribution")).toBeEnabled(),
+    { timeout: 6000 },
+  );
+  expect(await screen.findByText(/Could not save the report/i)).toBeOnTheScreen();
+}, 15000);
