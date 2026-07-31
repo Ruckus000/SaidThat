@@ -29,6 +29,14 @@ jest.mock("expo-font", () => ({
   isLoaded: () => true,
 }));
 
+// Safe-area insets come from a native module. The package ships its own mock,
+// which supplies fixed frame/insets so SafeAreaProvider resolves synchronously —
+// without it the provider renders nothing until it measures, and every query
+// below finds an empty tree.
+jest.mock("react-native-safe-area-context", () =>
+  require("react-native-safe-area-context/jest/mock").default,
+);
+
 import { clearReportQueue } from "./src/storage/reportQueue";
 
 const mockClearReportQueue = clearReportQueue as jest.MockedFunction<typeof clearReportQueue>;
@@ -64,6 +72,7 @@ test("app: the settings sheet reaches the destructive reset", async () => {
   const reset = await openSettings();
   expect(reset).toBeTruthy();
 });
+
 
 test("app: a clean reset closes settings and says nothing about the queue", async () => {
   const alert = jest.spyOn(Alert, "alert").mockImplementation(() => {});
