@@ -14,6 +14,7 @@ import { ReviewScreen } from "./src/components/ReviewScreen";
 import { RoundScreen } from "./src/components/RoundScreen";
 import { SetupScreen } from "./src/components/SetupScreen";
 import { SettingsScreen } from "./src/components/SettingsScreen";
+import { resetReportsNotice } from "./src/components/presentationLabels";
 import { s } from "./src/components/styles";
 import { catalog, DECK_VERSION } from "./src/content/catalog";
 import { playableFixtureDeck } from "./src/content/validateDeck";
@@ -139,7 +140,16 @@ export default function App() {
   }
 
   async function resetLocalSession() {
-    await clearReportQueue();
+    // The in-memory reset does not depend on the storage write succeeding, so a
+    // refusing device must not strand the player in a session they asked to end.
+    // It does change what the reset delivered, though, and the confirm promised
+    // both halves — so say which half did not happen instead of reporting clean.
+    let reportsCleared = true;
+    try {
+      await clearReportQueue();
+    } catch {
+      reportsCleared = false;
+    }
     setMotionOptIn(false);
     setMotionNeutralZ(null);
     setShowSettings(false);
@@ -149,6 +159,8 @@ export default function App() {
       allowLocalFixtures,
       deckVersion: DECK_VERSION,
     });
+    const notice = resetReportsNotice(reportsCleared);
+    if (notice) Alert.alert("Reset local session", notice);
   }
 
   function goHome() {

@@ -128,6 +128,17 @@ export function privateDiscardNotice(discardedPriorTurn) {
 export const PRIVATE_SHUTTER_RECOVERY =
   "The prior prompt and result are protected. If the app was interrupted, that private turn was discarded rather than shown to the next person.";
 
+// The reset promises two things — clearing room progress and clearing queued
+// reports. Progress lives in memory and always clears; the queue lives in device
+// storage and can refuse. Stated only when the queue actually survived, so a
+// clean reset stays silent rather than volunteering a failure that did not
+// happen. Names where the reports are, since the player just asked to be rid of
+// them and is owed the truth about which half of the promise was kept.
+export function resetReportsNotice(reportsCleared) {
+  if (reportsCleared) return null;
+  return "Room progress was reset, but the reports queued on this device could not be cleared. They stay on this device and were not sent anywhere.";
+}
+
 // Truth labels are load-bearing: the words, not the color, carry the verdict.
 // A simulated-authentic fixture and a source-verified editorial card are NOT the
 // same claim, so they never share a label. The scare quotes on the fixture line
