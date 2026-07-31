@@ -15,9 +15,14 @@ import { PrivateShutterScreen } from "./PrivateShutterScreen";
  *  1. Query by what a user or assistive technology perceives, in this priority:
  *     getByRole -> getByLabelText -> getByText. queryBy* for absence, findBy* for
  *     async. testID is a last resort — it asserts implementation, not experience.
- *  2. Use the matchers RNTL 13.3.3 registers itself (toBeOnTheScreen, toBeVisible,
- *     toHaveAccessibleName, toHaveAccessibilityState). Do NOT add
- *     @testing-library/jest-native; it is deprecated and its matchers are built in.
+ *  2. Use the matchers RNTL 13.3.3 registers itself. The state matchers are
+ *     toBeChecked / toBeSelected / toBeDisabled / toBeEnabled / toBeBusy /
+ *     toBeExpanded / toBePartiallyChecked — NOT toHaveAccessibilityState, which
+ *     this comment previously named and which does not exist in this version.
+ *     Also available: toBeOnTheScreen, toBeVisible, toHaveAccessibleName,
+ *     toHaveAccessibilityValue, toHaveTextContent, toHaveStyle, toHaveProp.
+ *     Do NOT add @testing-library/jest-native; it is deprecated and its matchers
+ *     are built in.
  *  3. await userEvent.press(...) even where fireEvent would work synchronously —
  *     free forward-compatibility with RNTL 14's async-by-default render.
  *  4. Never jest.mock("react-native") wholesale. Mock at the module path
