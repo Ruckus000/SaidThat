@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Animated, Text, View } from "react-native";
 
+import { announce } from "../feedback/announce";
 import { revealFeedback } from "../feedback/haptics";
 import { volt } from "../theme/tokens";
 import {
@@ -85,8 +86,13 @@ export function ResultScreen({
   }, [reducedMotion, stamp, pulse]);
 
   useEffect(() => {
-    if (revealed) revealFeedback(haptics);
-  }, [revealed, haptics]);
+    if (!revealed) return;
+    revealFeedback(haptics);
+    // The verdict arrives on a timer, not on a touch, so nothing moves screen
+    // reader focus to it. Both halves are strings already on screen — the
+    // headline and its kicker — joined, never a separately-worded line.
+    announce(`${resultHeadline(correct)} ${resultKicker(correct)}`);
+  }, [revealed, haptics, correct]);
 
   if (!revealed) {
     return (

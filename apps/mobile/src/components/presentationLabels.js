@@ -118,6 +118,19 @@ export function calibrationHint({ calibrated, reading, unavailable }) {
   return "Hold the phone level, then calibrate before using tilt.";
 }
 
+// Extracted so the rendered text and the spoken announcement are literally the
+// same value. Left inline in the JSX, the two copies drift the moment either is
+// edited, and the app then tells sighted and non-sighted players different things.
+export function reportStatusMessage(reportStatus) {
+  if (reportStatus === "queued") {
+    return "Saved locally. It stays queued until a reviewed delivery path exists.";
+  }
+  if (reportStatus === "failed") {
+    return "Could not save the report. Your game can continue safely.";
+  }
+  return null;
+}
+
 export function setupShowsAccessRoles(mode) {
   return mode === MODES.ROOM_BEACON;
 }
