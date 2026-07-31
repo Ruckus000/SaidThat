@@ -7,9 +7,11 @@ import {
   cardForPresentation,
   canExposeCardToAssistiveTech,
   createSession,
+  currentCard,
   gameReducer,
   isPlayableCard,
   reportPayload,
+  runLength,
   shouldConcealScore,
 } from "./game.js";
 import { MAX_QUEUED_REPORTS, appendQueuedReport } from "./reportPolicy.js";
@@ -289,8 +291,75 @@ test("chaos: arbitrary event storms do not create invalid stages or duplicate co
   let seed = 73;
   for (let step = 0; step < 500; step += 1) {
     seed = (seed * 1103515245 + 12345) >>> 0;
-    state = gameReducer(state, events[seed % events.length]);
+    const event = events[seed % events.length];
+    state = gameReducer(state, event);
     assert.ok(Object.values(STAGES).includes(state.stage));
     if (state.stage === STAGES.PRIVATE_SHUTTER) assert.equal(cardForPresentation(state), null);
+    // The storm used to pass while roundIndex ran past the end of the run: the
+    // shutter's discard advanced it with no boundary, so currentCard wrapped
+    // modulo the deck and re-served a card the room had already played. Stage
+    // membership alone cannot see that — these bind the run arithmetic itself.
+    assert.ok(
+      state.roundIndex < runLength(state),
+      `roundIndex ${state.roundIndex} ran past runLength ${runLength(state)} after ${event.type}`,
+    );
+    assert.ok(
+      state.roundsPlayed <= runLength(state),
+      `roundsPlayed ${state.roundsPlayed} exceeded runLength ${runLength(state)} after ${event.type}`,
+    );
   }
+});
+
+test("private relay: an interruption on the final round ends the run instead of overflowing it", () => {
+  // A notification or Control Center pull on the last card used to advance
+  // roundIndex past the deck, producing "ROUND 8 / 7" and re-serving card 1.
+  let state = started(MODES.PRIVATE_RELAY);
+  const total = runLength(state);
+  while (state.roundIndex < total - 1) {
+    state = gameReducer(state, { type: "ANSWER", guessAuthentic: false });
+    state = gameReducer(state, { type: "NEXT_ROUND" });
+    if (state.stage === STAGES.PRIVATE_SHUTTER) {
+      state = gameReducer(state, { type: "REVEAL_PRIVATE_TURN" });
+    }
+  }
+  assert.equal(state.roundIndex, total - 1, "sanity: parked on the final round");
+
+  const firstCard = currentCard(started(MODES.PRIVATE_RELAY));
+  state = gameReducer(state, { type: "APP_BACKGROUND" });
+  assert.equal(state.stage, STAGES.RECAP, "the run ends rather than handing off a turn that does not exist");
+  assert.ok(state.roundIndex < total);
+  assert.notEqual(currentCard(state)?.id, firstCard?.id ?? null, "no already-played card is re-served");
+});
+
+test("pause: the deliberate pause keeps the turn in both modes, unlike an interruption", () => {
+  for (const mode of [MODES.ROOM_BEACON, MODES.PRIVATE_RELAY]) {
+    const before = started(mode);
+    const paused = gameReducer(before, { type: "REQUEST_PAUSE" });
+    assert.equal(paused.stage, STAGES.PAUSED, `${mode} must reach PAUSED, where leaving is offered`);
+    assert.equal(paused.roundIndex, before.roundIndex, `${mode} pause must not burn a card`);
+
+    const resumed = gameReducer(paused, { type: "RESUME_ROOM" });
+    assert.equal(resumed.roundIndex, before.roundIndex, `${mode} resume must not burn a card`);
+    if (mode === MODES.PRIVATE_RELAY) {
+      // The phone may have changed hands while paused, so the handoff ritual is
+      // re-established before the protected turn is shown again.
+      assert.equal(resumed.stage, STAGES.PRIVATE_SHUTTER);
+      assert.equal(cardForPresentation(resumed), null);
+      assert.equal(
+        gameReducer(resumed, { type: "REVEAL_PRIVATE_TURN" }).stage,
+        STAGES.ROUND,
+        "and the same turn is still there behind it",
+      );
+    } else {
+      assert.equal(resumed.stage, STAGES.ROUND);
+    }
+  }
+});
+
+test("pause: an interruption still fails closed, discarding the private turn", () => {
+  const before = started(MODES.PRIVATE_RELAY);
+  const interrupted = gameReducer(before, { type: "APP_BACKGROUND" });
+  assert.equal(interrupted.stage, STAGES.PRIVATE_SHUTTER);
+  assert.equal(interrupted.privateRecovery, "discarded-prior-turn");
+  assert.notEqual(interrupted.roundIndex, before.roundIndex, "the interrupted turn is discarded, not resumed");
 });

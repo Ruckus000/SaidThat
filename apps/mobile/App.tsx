@@ -256,7 +256,7 @@ export default function App() {
             haptics={hapticsAllowed({ hapticsEnabled })}
             onCalibrate={calibrateMotion}
             onAnswer={commitAnswer}
-            onPause={() => dispatch({ type: "APP_BACKGROUND" })}
+            onPause={() => dispatch({ type: "REQUEST_PAUSE" })}
           />
         )}
         {state.stage === STAGES.RESULT && (
@@ -295,7 +295,10 @@ export default function App() {
           />
         )}
         {state.stage === STAGES.PRIVATE_SHUTTER && (
-          <PrivateShutterScreen onReady={() => dispatch({ type: "REVEAL_PRIVATE_TURN" })} />
+          <PrivateShutterScreen
+            discardedPriorTurn={state.privateRecovery === "discarded-prior-turn"}
+            onReady={() => dispatch({ type: "REVEAL_PRIVATE_TURN" })}
+          />
         )}
         {state.stage === STAGES.PAUSED && (
           <PausedScreen onResume={() => dispatch({ type: "RESUME_ROOM" })} onLeave={goHome} />

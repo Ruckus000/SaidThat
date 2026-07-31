@@ -123,11 +123,31 @@ function protectPrivateState(state, resumeStage) {
   // There is no identity proof on a shared phone. On interruption, retaining
   // a private card/result would let the next person reveal it. Fail closed by
   // discarding that private turn and presenting a fresh protected turn.
+  //
+  // The discard costs a card, so it must respect the run boundary exactly as
+  // NEXT_ROUND does. Without this, an interruption on the last round advanced
+  // roundIndex past the end: currentCard wraps modulo the deck and re-serves a
+  // card the room already played (and already saw the truth for), the pill reads
+  // "ROUND 8 / 7", and answering it inflates the recap past the run length.
+  const nextIndex = state.roundIndex + 1;
+  if (nextIndex >= runLength(state)) {
+    // Nothing protected is left to hand off. Recap holds no card, so it needs
+    // no shutter — the same reasoning NEXT_ROUND uses at the run boundary.
+    return {
+      ...state,
+      stage: STAGES.RECAP,
+      committedRound: null,
+      lastCorrect: null,
+      reportStatus: null,
+      resumeStage: null,
+      privateRecovery: null,
+    };
+  }
   return {
     ...state,
     stage: STAGES.PRIVATE_SHUTTER,
     resumeStage: STAGES.ROUND,
-    roundIndex: state.roundIndex + 1,
+    roundIndex: nextIndex,
     committedRound: null,
     lastCorrect: null,
     reportStatus: null,
@@ -226,12 +246,33 @@ export function gameReducer(state, action) {
       return state.stage === STAGES.PRIVATE_SHUTTER
         ? { ...state, stage: state.resumeStage ?? STAGES.ROUND, resumeStage: null, privateRecovery: null }
         : state;
+    // An involuntary interruption. There is no identity proof on a shared phone,
+    // so this stays fail-closed: Private Relay discards the protected turn.
     case "APP_BACKGROUND":
       return [STAGES.ROUND, STAGES.RESULT, STAGES.REVIEW].includes(state.stage)
         ? protectPrivateState(state, state.stage)
         : state;
-    case "RESUME_ROOM":
-      return state.stage === STAGES.PAUSED ? { ...state, stage: state.resumeStage ?? STAGES.ROUND, resumeStage: null } : state;
+    // A deliberate pause, and deliberately NOT the same action. Routing the
+    // "Pause and leave safely" control through APP_BACKGROUND meant that in
+    // Private Relay it reached the shutter instead of PAUSED — so it neither
+    // paused nor offered the exit its label promises, and it silently burned the
+    // card. Nothing is discarded here: PausedScreen shows no card, quote, or
+    // score, so the turn survives in both modes.
+    case "REQUEST_PAUSE":
+      return [STAGES.ROUND, STAGES.RESULT, STAGES.REVIEW].includes(state.stage)
+        ? { ...state, stage: STAGES.PAUSED, resumeStage: state.stage }
+        : state;
+    case "RESUME_ROOM": {
+      if (state.stage !== STAGES.PAUSED) return state;
+      const resume = state.resumeStage ?? STAGES.ROUND;
+      // The phone may have changed hands while paused, and the app cannot tell.
+      // Re-establish the handoff ritual before the protected turn is shown again.
+      // The turn itself is kept — a deliberate pause is not an interruption.
+      if (state.mode === MODES.PRIVATE_RELAY) {
+        return { ...state, stage: STAGES.PRIVATE_SHUTTER, resumeStage: resume };
+      }
+      return { ...state, stage: resume, resumeStage: null };
+    }
     case "REPORT_QUEUED":
       return { ...state, reportStatus: "queued" };
     case "REPORT_FAILED":
