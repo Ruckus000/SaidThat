@@ -66,6 +66,11 @@ export const s = StyleSheet.create({
   sparkRow: { flexDirection: "row", alignItems: "center", gap: 2 },
 
   center: { flex: 1, justifyContent: "center", gap: 14 },
+  // The scrolling twin of `center`, for a ScrollView's contentContainerStyle.
+  // `flexGrow` rather than `flex` so short content still centres in the viewport
+  // while long content — a large accessibility text size — grows past it and
+  // scrolls instead of being clipped at the bottom edge.
+  centerScroll: { flexGrow: 1, justifyContent: "center", gap: 14 },
   setup: { flexGrow: 1, justifyContent: "center", gap: 12, paddingVertical: 24 },
 
   eyebrow: {

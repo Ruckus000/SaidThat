@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 
 import { volt } from "../theme/tokens";
 import { PRIVATE_SHUTTER_RECOVERY, privateDiscardNotice } from "./presentationLabels";
@@ -22,7 +22,17 @@ export function PrivateShutterScreen({ onReady, discardedPriorTurn = false }: Pr
       <View style={s.shutterPill}>
         <Text style={s.shutterPillText}>PRIVATE HANDOFF</Text>
       </View>
-      <View style={[s.center, { gap: 14 }]}>
+      {/*
+        The body scrolls, the action does not. At a large accessibility text size
+        this block outgrows the viewport, and as a fixed View the button below it
+        was pushed off-screen — leaving the protected handoff with no way forward
+        and the run stuck behind a shutter that cannot be dismissed.
+
+        The PrimaryButton stays OUTSIDE the ScrollView deliberately: the one
+        control that advances the handoff must never be something the player has
+        to discover by scrolling.
+      */}
+      <ScrollView contentContainerStyle={s.centerScroll}>
         <Mark name="close" size={88} color={volt.color.dark.lime} />
         <Text style={s.eyebrowPink}>PRIVATE RELAY</Text>
         <Text style={s.displayL}>{"PASS THE\nPHONE."}</Text>
@@ -32,7 +42,7 @@ export function PrivateShutterScreen({ onReady, discardedPriorTurn = false }: Pr
           </Text>
         )}
         <Text style={s.copy}>{PRIVATE_SHUTTER_RECOVERY}</Text>
-      </View>
+      </ScrollView>
       <PrimaryButton label="I HAVE THE PHONE — REVEAL MY TURN" onPress={onReady} />
     </View>
   );

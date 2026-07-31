@@ -1,3 +1,4 @@
+import { ScrollView, Text } from "react-native";
 import { render, screen } from "@testing-library/react-native";
 
 import { ContentUnavailableScreen } from "./ContentUnavailableScreen";
@@ -38,4 +39,21 @@ test("content-unavailable: the withheld-record guard is stated whatever the faul
     ).toBeOnTheScreen();
     view.unmount();
   }
+});
+
+// This is the screen a player reads when nothing else works, and the guard line
+// at the bottom is the part that explains WHY play stopped. At a large text size
+// a fixed View clipped exactly that: a dead end with its reason cut off.
+test("unavailable: the explanation scrolls rather than being clipped", () => {
+  render(<ContentUnavailableScreen fault="corrupt-deck" />);
+
+  const scroller = screen.UNSAFE_getByType(ScrollView);
+  const scrolledText = scroller
+    .findAllByType(Text)
+    .map((node: { props: { children: unknown } }) => node.props.children)
+    .join(" ");
+
+  expect(scrolledText).toMatch(/not safe to play/i);
+  // The guard line is the reason, and it is last — so it is what a clip removes.
+  expect(scrolledText).toMatch(/never used as binary game prompts/i);
 });

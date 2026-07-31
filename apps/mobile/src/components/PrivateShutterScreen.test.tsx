@@ -1,3 +1,4 @@
+import { ScrollView, Text } from "react-native";
 import { userEvent, render, screen } from "@testing-library/react-native";
 
 import { PrivateShutterScreen } from "./PrivateShutterScreen";
@@ -78,4 +79,31 @@ test("private shutter: the discard notice appears only when a turn was really di
   const notice = screen.getByText(/last turn was interrupted/i);
   expect(notice).toBeOnTheScreen();
   expect(notice).toHaveTextContent(/Nothing was scored for it/i);
+});
+
+// At a large accessibility text size this block outgrows the viewport. As a fixed
+// View the button below it was pushed off-screen, leaving the protected handoff
+// with no way forward — a run stuck behind a shutter that cannot be dismissed.
+test("shutter: the body scrolls, and the one action that advances it does not", () => {
+  render(<PrivateShutterScreen onReady={() => {}} discardedPriorTurn />);
+
+  const scroller = screen.UNSAFE_getByType(ScrollView);
+  const scrolledText = scroller
+    .findAllByType(Text)
+    .map((node: { props: { children: unknown } }) => node.props.children)
+    .join(" ");
+
+  // The reading matter is inside the scroller...
+  expect(scrolledText).toMatch(/PASS THE/);
+  expect(scrolledText).toMatch(/interrupted/i);
+
+  // ...and the control is NOT. A player must never have to scroll to find the
+  // only thing that advances a protected handoff.
+  const buttonsInsideScroller = scroller.findAllByProps({
+    accessibilityRole: "button",
+  });
+  expect(buttonsInsideScroller).toHaveLength(0);
+  expect(
+    screen.getByRole("button", { name: "I HAVE THE PHONE — REVEAL MY TURN" }),
+  ).toBeOnTheScreen();
 });
