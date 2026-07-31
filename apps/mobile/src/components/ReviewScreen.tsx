@@ -79,7 +79,7 @@ export function ReviewScreen({
             accessibilityLabel="Report wrong attribution"
             disabled={reportBusy}
             onPress={() => onReport("wrong-attribution")}
-            style={s.reportChip}
+            style={[s.reportChip, reportBusy && s.reportChipBusy]}
           >
             <Text style={s.reportChipText}>WRONG ATTRIBUTION</Text>
           </Pressable>
@@ -88,7 +88,7 @@ export function ReviewScreen({
             accessibilityLabel="Report harmful content"
             disabled={reportBusy}
             onPress={() => onReport("harmful-content")}
-            style={s.reportChip}
+            style={[s.reportChip, reportBusy && s.reportChipBusy]}
           >
             <Text style={s.reportChipText}>HARMFUL CONTENT</Text>
           </Pressable>
@@ -97,7 +97,7 @@ export function ReviewScreen({
             accessibilityLabel="Report another issue"
             disabled={reportBusy}
             onPress={() => onReport("other")}
-            style={s.reportChip}
+            style={[s.reportChip, reportBusy && s.reportChipBusy]}
           >
             <Text style={s.reportChipText}>ANOTHER ISSUE</Text>
           </Pressable>
