@@ -1,7 +1,14 @@
+import { useEffect } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 
 import { volt } from "../theme/tokens";
-import { continueLabel, reviewSourceStatus, reviewTruthLabel } from "./presentationLabels";
+import { announce } from "../feedback/announce";
+import {
+  continueLabel,
+  reportStatusMessage,
+  reviewSourceStatus,
+  reviewTruthLabel,
+} from "./presentationLabels";
 import { FadeIn } from "./FadeIn";
 import { Mark } from "./Mark";
 import { PrimaryButton } from "./PrimaryButton";
@@ -40,6 +47,15 @@ export function ReviewScreen({
   const c = volt.color.dark;
   const truthColor = authentic ? c.lime : c.pink;
   const next = continueLabel({ roundIndex, totalRounds });
+  const statusMessage = reportStatusMessage(reportStatus);
+
+  // The live region below is Android-only. Without this, a VoiceOver user tapped
+  // a report chip and heard nothing at all — the confirmation appeared on screen
+  // while focus stayed on a chip that had just been disabled. Announces the same
+  // value it renders, so the two can never disagree.
+  useEffect(() => {
+    announce(statusMessage);
+  }, [statusMessage]);
 
   return (
     <ScrollView contentContainerStyle={s.setup}>
@@ -86,14 +102,12 @@ export function ReviewScreen({
             <Text style={s.reportChipText}>ANOTHER ISSUE</Text>
           </Pressable>
         </View>
-        {reportStatus === "queued" && (
-          <Text accessibilityLiveRegion="polite" style={s.success}>
-            Saved locally. It stays queued until a reviewed delivery path exists.
-          </Text>
-        )}
-        {reportStatus === "failed" && (
-          <Text accessibilityLiveRegion="polite" style={s.error}>
-            Could not save the report. Your game can continue safely.
+        {statusMessage && (
+          <Text
+            accessibilityLiveRegion="polite"
+            style={reportStatus === "queued" ? s.success : s.error}
+          >
+            {statusMessage}
           </Text>
         )}
       </View>
