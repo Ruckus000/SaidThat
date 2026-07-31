@@ -34,6 +34,22 @@ npm --prefix apps/mobile run export:android
 - [ ] Screen-facing / Private Relay: full round completable with tap-only controls
 - [ ] Truth review labels are readable as text, not color-only
 
+### Large text sizes
+
+The two recovery screens scroll their bodies so a long block cannot clip, but a
+render test cannot simulate font scaling — jest-expo has no way to set a text
+size, so the scroll containers are asserted structurally and the actual overflow
+behaviour is only observable on a device. These rows are the real check.
+
+At the largest system text size (iOS: Settings → Accessibility → Display & Text
+Size → Larger Text, slider at maximum; Android: Settings → Display → Font size,
+maximum):
+
+- [ ] Private Relay shutter: the reveal control stays reachable without scrolling
+- [ ] Private Relay shutter: the body text scrolls rather than clipping
+- [ ] Content-unavailable: the guard line explaining *why* play stopped is reachable
+- [ ] Round: prompt text wraps rather than truncating, and both answer controls stay on screen
+
 ## Sensors (optional tilt)
 
 - [ ] Tilt remains opt-in with calibration and immediate tap fallback
