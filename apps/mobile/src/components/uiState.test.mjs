@@ -13,6 +13,7 @@ import {
   resultRewardLabel,
   resultStreakLabel,
   recapStatLines,
+  resetReportsNotice,
   reviewSourceStatus,
   reviewTruthLabel,
   roundInstruction,
@@ -126,6 +127,24 @@ test("ui: a source-verified authentic card is never labeled a simulation", () =>
   assert.doesNotMatch(status, /simulation/i);
   assert.doesNotMatch(status, /game fixture/i);
   assert.match(status, /source record/i);
+});
+
+// RESET LOCAL SESSION promises to clear room progress AND the queued reports.
+// Progress is in memory and always clears; the queue is device storage and can
+// refuse. A reset that silently left reports behind would be the same shape of
+// bug as the reveal claiming a fixture was source-verified: a guarantee the
+// words made and the code did not.
+test("reset: a queue that could not be cleared is reported, and a clean reset stays silent", () => {
+  assert.equal(resetReportsNotice(true), null, "a clean reset volunteers nothing");
+
+  const notice = resetReportsNotice(false);
+  assert.match(notice, /could not be cleared/i, "the failure is named, not implied");
+  // The player asked to be rid of these. Say where they actually are.
+  assert.match(notice, /stay on this device/i);
+  assert.match(notice, /not sent anywhere/i, "never imply a local failure leaked off-device");
+  // The half that did succeed is still reported, so the reset does not read as a
+  // total no-op when the session really was reset.
+  assert.match(notice, /progress was reset/i);
 });
 
 test("reward: result copy celebrates skill with a non-color cue and never punishes a miss", () => {
