@@ -12,7 +12,6 @@ import {
   isPlayableCard,
   reportPayload,
   runLength,
-  shouldConcealScore,
 } from "./game.js";
 import { MAX_QUEUED_REPORTS, appendQueuedReport } from "./reportPolicy.js";
 
@@ -244,7 +243,6 @@ test("chaos: private relay never shows prior card or result during handoff", () 
   assert.equal(state.stage, STAGES.PRIVATE_SHUTTER);
   assert.equal(state.roundIndex, 1);
   assert.equal(cardForPresentation(state), null);
-  assert.equal(shouldConcealScore(state), true);
   assert.equal(canExposeCardToAssistiveTech(state), true);
   state = gameReducer(state, { type: "REVEAL_PRIVATE_TURN" });
   assert.equal(state.stage, STAGES.ROUND);
@@ -257,7 +255,6 @@ test("chaos: backgrounding private content enters a shutter, not a spoiler state
   assert.equal(state.roundIndex, 1);
   assert.equal(state.privateRecovery, "discarded-prior-turn");
   assert.equal(cardForPresentation(state), null);
-  assert.equal(shouldConcealScore(state), true);
 });
 
 // PrivateShutterScreen tells the player their turn was thrown away based on this

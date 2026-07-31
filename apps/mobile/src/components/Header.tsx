@@ -9,7 +9,6 @@ import { s } from "./styles";
 export type HeaderProps = {
   score: number;
   streak: number;
-  concealScore: boolean;
   reducedMotion: boolean;
   onHome: () => void;
   onSettings?: () => void;
@@ -18,7 +17,6 @@ export type HeaderProps = {
 export function Header({
   score,
   streak,
-  concealScore,
   reducedMotion,
   onHome,
   onSettings,
@@ -29,16 +27,16 @@ export function Header({
   useEffect(() => {
     const increased = score > prevScore.current;
     prevScore.current = score;
-    if (!increased || concealScore || reducedMotion) return;
+    if (!increased || reducedMotion) return;
     pop.setValue(1);
     Animated.sequence([
       Animated.spring(pop, { toValue: 1.12, useNativeDriver: true, speed: 40, bounciness: 14 }),
       Animated.spring(pop, { toValue: 1, useNativeDriver: true, speed: 20, bounciness: 8 }),
     ]).start();
-  }, [score, concealScore, reducedMotion, pop]);
+  }, [score, reducedMotion, pop]);
 
-  const badge = concealScore ? null : streakBadgeLabel(streak);
-  const scoreLabel = headerScoreLabel({ score, concealScore });
+  const badge = streakBadgeLabel(streak);
+  const scoreLabel = headerScoreLabel(score);
 
   return (
     <View style={s.header}>

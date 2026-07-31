@@ -117,9 +117,14 @@ export function cardForPresentation(state, { forAssistiveTech = false } = {}) {
   return currentCard(state);
 }
 
-export function shouldConcealScore(state) {
-  return state.mode === MODES.PRIVATE_RELAY && state.stage === STAGES.PRIVATE_SHUTTER;
-}
+// shouldConcealScore lived here and returned true only at PRIVATE_SHUTTER. Both
+// consumers — the Header and the Round screen's own score row — render only at
+// stages where it was false, so the concealed branch could never be reached.
+// PrivateShutterScreen shows its own PRIVATE HANDOFF pill and no card, which is
+// what actually protects the handoff; the score path was left behind when the
+// header stopped rendering on that screen. Removed rather than kept as a second,
+// dead copy of a privacy rule — a control that cannot engage is not protection,
+// and reading like one invites trusting it.
 
 export function reportPayload(state, reason, now) {
   const card = currentCard(state);

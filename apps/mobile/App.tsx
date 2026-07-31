@@ -28,7 +28,6 @@ import {
   gameReducer,
   reportPayload,
   runLength,
-  shouldConcealScore,
 } from "./src/domain/game";
 import { commitFeedback } from "./src/feedback/haptics";
 import { calibrateNeutral, readMotionSample, useRoomBeaconMotion } from "./src/sensors/useRoomBeaconMotion";
@@ -210,9 +209,9 @@ export default function App() {
 
   // Only the result flash goes full-bleed. Five stages drop the wordmark row but
   // keep their gutters: Round carries score/streak in its own top row, Recap opens
-  // on the spark MARK, the shutter carries its own PRIVATE HANDOFF pill (with the
-  // header, the concealed score pill rendered that same label a second time), and
-  // Paused is a single-purpose off-ramp whose only action is resuming the room.
+  // on the spark MARK, the shutter carries its own PRIVATE HANDOFF pill (the
+  // header used to render that same label a second time), and Paused is a
+  // single-purpose off-ramp whose only action is resuming the room.
   const bleed = state.stage === STAGES.RESULT;
   const showHeader = ![
     STAGES.RESULT,
@@ -232,7 +231,6 @@ export default function App() {
             <Header
               score={state.score}
               streak={state.streak}
-              concealScore={shouldConcealScore(state)}
               reducedMotion={reducedMotion}
               onHome={goHome}
               onSettings={state.stage === STAGES.HOME && !showSettings ? () => setShowSettings(true) : undefined}
@@ -287,7 +285,6 @@ export default function App() {
               totalRounds={totalRounds}
               score={state.score}
               streak={state.streak}
-              concealScore={shouldConcealScore(state)}
               motionOptIn={motionAllowed({ motionOptIn, noMotion })}
               motionCalibrated={motionNeutralZ != null}
               reducedMotion={reducedMotion}
