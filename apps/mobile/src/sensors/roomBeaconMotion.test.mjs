@@ -14,6 +14,44 @@ test("motion: calibration stores a neutral axis sample", () => {
   assert.equal(calibrateNeutral(null), null);
 });
 
+// A saturated or wedged driver reports ±Infinity, and the guards used to spell
+// their check out as `typeof z !== "number" || Number.isNaN(z)` — which lets it
+// straight through, because Number.isNaN(Infinity) is false. The consequence was
+// not a cosmetic one: delta becomes ±Infinity, clears the threshold, and commits
+// an answer nobody gave, final under the one-commit-per-round rule. The gate is
+// then stuck disarmed forever, since an infinite distance never re-enters the
+// re-arm band, so every later round of the run silently loses tilt too.
+test("motion: a non-finite sample is not a reading, in every gate", () => {
+  for (const saturated of [{ z: Infinity }, { z: -Infinity }]) {
+    const label = `${saturated.z}`;
+
+    // It must never become the stored baseline...
+    assert.equal(calibrateNeutral(saturated), null, `${label} is not a calibration`);
+
+    // ...must never read as a tilt against a good baseline...
+    assert.equal(interpretTilt(saturated, { neutralZ: 0 }), null, `${label} is not a tilt`);
+
+    // ...and must never commit an answer.
+    assert.equal(
+      motionAnswerFromSample(saturated, createMotionGate(), { neutralZ: 0, now: 1000 }).answer,
+      null,
+      `${label} must not answer for the player`,
+    );
+  }
+
+  // A poisoned baseline is refused too, so one bad calibration cannot make every
+  // subsequent good sample read as a full-magnitude tilt.
+  assert.equal(interpretTilt({ z: 0.5 }, { neutralZ: Infinity }), null);
+  assert.equal(
+    motionAnswerFromSample({ z: 0.5 }, createMotionGate(), { neutralZ: Infinity, now: 1000 }).answer,
+    null,
+  );
+
+  // The good path is unchanged — this is a guard, not a mute.
+  assert.equal(calibrateNeutral({ z: 0.12 }), 0.12);
+  assert.equal(interpretTilt({ z: 0.55 }, { neutralZ: 0.1 }), true);
+});
+
 test("motion: neutral band ignores small movement", () => {
   const neutralZ = 0.1;
   assert.equal(interpretTilt({ z: 0.2 }, { neutralZ }), null);
@@ -82,7 +120,7 @@ test("motion: re-arming needs a real return to level, not a drift inside the thr
 test("motion: an uncalibrated or invalid sample can never re-arm the gate", () => {
   const options = { neutralZ: 0 };
   const committed = motionAnswerFromSample({ z: 0.8 }, createMotionGate(), { ...options, now: 1000 });
-  for (const bad of [null, { z: Number.NaN }, {}]) {
+  for (const bad of [null, { z: Number.NaN }, {}, { z: Infinity }, { z: -Infinity }]) {
     const next = motionAnswerFromSample(bad, committed.gate, { ...options, now: 2000 });
     assert.equal(next.gate.armed, false, `${JSON.stringify(bad)} must not re-arm`);
     assert.equal(next.answer, null);
