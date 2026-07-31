@@ -25,10 +25,14 @@ const BANNED = [
   },
 ];
 
+// Directories with no source to check. Everything else under the app root is
+// walked, so a new top-level file or folder is covered without editing this test.
+const SKIP_DIRS = new Set(["node_modules", "assets", "screenshots"]);
+
 async function sourceFiles(dir) {
   const found = [];
   for (const entry of await readdir(dir, { withFileTypes: true })) {
-    if (entry.name === "node_modules" || entry.name.startsWith(".")) continue;
+    if (SKIP_DIRS.has(entry.name) || entry.name.startsWith(".")) continue;
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       found.push(...(await sourceFiles(full)));
@@ -40,8 +44,13 @@ async function sourceFiles(dir) {
 }
 
 test("source: no file imports a deprecated react-native export", async () => {
-  const files = [path.join(MOBILE_ROOT, "App.tsx"), ...(await sourceFiles(path.join(MOBILE_ROOT, "src")))];
+  // The whole app root, not App.tsx plus src/ — the earlier version missed
+  // index.ts and would have missed any future top-level component.
+  const files = await sourceFiles(MOBILE_ROOT);
   assert.ok(files.length > 10, "the scan found the source tree");
+  const scanned = files.map((f) => path.relative(MOBILE_ROOT, f));
+  assert.ok(scanned.includes("App.tsx"), "the entry component is scanned");
+  assert.ok(scanned.includes("index.ts"), "the root registration file is scanned");
 
   const offences = [];
   for (const file of files) {
