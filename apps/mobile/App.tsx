@@ -39,6 +39,7 @@ import {
 } from "./src/settings/settingsPolicy";
 import { useReducedMotion } from "./src/theme/motion";
 import { clearReportQueue, queueReport } from "./src/storage/reportQueue";
+import { withTimeout } from "./src/storage/withTimeout";
 
 const allowLocalFixtures = typeof __DEV__ !== "undefined" && __DEV__;
 
@@ -154,16 +155,15 @@ export default function App() {
   }
 
   async function resetLocalSession() {
-    // The in-memory reset does not depend on the storage write succeeding, so a
-    // refusing device must not strand the player in a session they asked to end.
-    // It does change what the reset delivered, though, and the confirm promised
-    // both halves — so say which half did not happen instead of reporting clean.
-    let reportsCleared = true;
-    try {
-      await clearReportQueue();
-    } catch {
-      reportsCleared = false;
-    }
+    // The in-memory reset happens FIRST, and synchronously. It does not depend on
+    // storage at all, so nothing storage does — refusing, or never answering —
+    // should be able to delay or cancel the session the player asked to end.
+    //
+    // The previous ordering awaited the queue first. A `catch` covered a refusing
+    // device, but a wedged native bridge neither resolves nor rejects: the await
+    // simply never returned, every line below it was skipped, and the confirmed
+    // destructive action did nothing at all. That is the same bug this function
+    // was written to fix, one layer down.
     setMotionOptIn(false);
     setMotionNeutralZ(null);
     setShowSettings(false);
@@ -173,6 +173,17 @@ export default function App() {
       allowLocalFixtures,
       deckVersion: DECK_VERSION,
     });
+
+    // Now the durable half, bounded. The confirm promised to clear queued reports
+    // too, so a failure — refusal or silence — still has to be reported honestly.
+    let reportsCleared = true;
+    try {
+      reportsCleared = await withTimeout(clearReportQueue().then(() => true), {
+        fallback: false,
+      });
+    } catch {
+      reportsCleared = false;
+    }
     // Surfaced on Home rather than as a second Alert. The confirm alert is still
     // dismissing when this runs, and iOS drops a modal presented mid-dismissal —
     // which would have silently restored the very bug this notice exists to fix.
