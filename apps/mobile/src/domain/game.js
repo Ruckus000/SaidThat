@@ -294,9 +294,20 @@ export function gameReducer(state, action) {
       }
       return { ...state, stage: resume, resumeStage: null };
     }
+    // Report status belongs to the round it was raised from. queueReport is
+    // async, so the player can reach the next card — or the recap — while it is
+    // still in flight; without this scope the confirmation lands against whatever
+    // is on screen when it returns, telling the room a card was reported when
+    // nothing about that card was. The write itself is unaffected: only the
+    // misattributed display is dropped.
+    //
+    // A missing roundIndex is treated as current, so a caller that does not
+    // supply one keeps the old behaviour rather than silently losing its status.
     case "REPORT_QUEUED":
+      if (action.roundIndex != null && action.roundIndex !== state.roundIndex) return state;
       return { ...state, reportStatus: "queued" };
     case "REPORT_FAILED":
+      if (action.roundIndex != null && action.roundIndex !== state.roundIndex) return state;
       return { ...state, reportStatus: "failed" };
     case "SIMULATE_CORRUPT_DECK":
       return { ...state, stage: STAGES.CONTENT_UNAVAILABLE, cards: [], fault: "corrupt-deck" };

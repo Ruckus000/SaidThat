@@ -301,6 +301,40 @@ test("chaos: a screen-reader forehead holder cannot receive the prompt", () => {
   assert.equal(canExposeCardToAssistiveTech(contributor), true);
 });
 
+// queueReport is async and the player can keep moving while it is in flight.
+// Without a round scope the confirmation lands against whatever card is on screen
+// when the write returns — telling the room a card was reported when nothing about
+// that card was. The write is never suppressed, only the misattributed display.
+test("chaos: a report confirmation cannot land against a later card", () => {
+  let state = started();
+  const reportedRound = state.roundIndex;
+
+  // The player answers and moves on before the write settles.
+  state = gameReducer(state, { type: "ANSWER", guessAuthentic: false });
+  state = gameReducer(state, { type: "NEXT_ROUND" });
+  assert.notEqual(state.roundIndex, reportedRound, "the run really did advance");
+
+  const late = gameReducer(state, { type: "REPORT_QUEUED", roundIndex: reportedRound });
+  assert.equal(late.reportStatus, null, "a stale confirmation is dropped");
+  assert.equal(late, state, "and the state is returned untouched, not rebuilt");
+
+  const lateFailure = gameReducer(state, { type: "REPORT_FAILED", roundIndex: reportedRound });
+  assert.equal(lateFailure.reportStatus, null);
+
+  // The current round still reports normally — this is a scope, not a mute.
+  assert.equal(
+    gameReducer(state, { type: "REPORT_QUEUED", roundIndex: state.roundIndex }).reportStatus,
+    "queued",
+  );
+  assert.equal(
+    gameReducer(state, { type: "REPORT_FAILED", roundIndex: state.roundIndex }).reportStatus,
+    "failed",
+  );
+
+  // An action with no roundIndex keeps the old behaviour rather than vanishing.
+  assert.equal(gameReducer(state, { type: "REPORT_QUEUED" }).reportStatus, "queued");
+});
+
 test("chaos: report records minimize data and corrupted decks halt play", () => {
   let state = started();
   assert.deepEqual(reportPayload(state, "wrong-attribution", "2026-07-20T00:00:00.000Z"), {

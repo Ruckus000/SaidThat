@@ -111,11 +111,16 @@ export default function App() {
   async function report(reason: string) {
     if (reportBusy) return;
     setReportBusy(true);
+    // Captured before the await, and carried on the action. The player can reach
+    // the next card while the write is in flight, and a confirmation that lands
+    // then would be attached to a card nobody reported. The reducer drops a stale
+    // one; the report itself is already written either way.
+    const roundIndex = state.roundIndex;
     try {
       await queueReport(reportPayload(state, reason, new Date().toISOString()));
-      dispatch({ type: "REPORT_QUEUED" });
+      dispatch({ type: "REPORT_QUEUED", roundIndex });
     } catch {
-      dispatch({ type: "REPORT_FAILED" });
+      dispatch({ type: "REPORT_FAILED", roundIndex });
     } finally {
       setReportBusy(false);
     }
