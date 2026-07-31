@@ -4,6 +4,7 @@ import { MODES } from "../domain/game";
 import { useFireEvent } from "../feedback/useFireEvent";
 import { volt } from "../theme/tokens";
 import {
+  calibrationHint,
   headerScoreLabel,
   roundInstruction,
   roundModeLabel,
@@ -30,6 +31,10 @@ export type RoundScreenProps = {
   hideCardFromAssistiveTech: boolean;
   motionOptIn: boolean;
   motionCalibrated: boolean;
+  /** A calibration read is in flight; the control is inert until it settles. */
+  calibrationReading?: boolean;
+  /** The bounded read came back with nothing — no sensor, denied, or wedged. */
+  calibrationUnavailable?: boolean;
   reducedMotion: boolean;
   haptics: boolean;
   onCalibrate: () => void;
@@ -83,6 +88,8 @@ export function RoundScreen({
   hideCardFromAssistiveTech,
   motionOptIn,
   motionCalibrated,
+  calibrationReading = false,
+  calibrationUnavailable = false,
   reducedMotion,
   haptics,
   onCalibrate,
@@ -127,13 +134,20 @@ export function RoundScreen({
       <Text style={s.instruction}>{roundInstruction(mode)}</Text>
       {motionOptIn && mode === MODES.ROOM_BEACON && (
         <>
-          <Text style={s.note}>
-            {motionCalibrated
-              ? "Tilt is active for the holder. Tap answers still commit exactly once."
-              : "Hold the phone level, then calibrate before using tilt."}
+          <Text accessibilityLiveRegion="polite" style={s.note}>
+            {calibrationHint({
+              calibrated: motionCalibrated,
+              reading: calibrationReading,
+              unavailable: calibrationUnavailable,
+            })}
           </Text>
           {!motionCalibrated && (
-            <PrimaryButton label="Calibrate neutral tilt" secondary onPress={onCalibrate} />
+            <PrimaryButton
+              label={calibrationUnavailable ? "Try calibrating again" : "Calibrate neutral tilt"}
+              secondary
+              disabled={calibrationReading}
+              onPress={onCalibrate}
+            />
           )}
         </>
       )}

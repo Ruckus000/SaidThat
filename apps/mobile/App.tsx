@@ -62,6 +62,8 @@ export default function App() {
   const [reportBusy, setReportBusy] = useState(false);
   const [motionOptIn, setMotionOptIn] = useState(false);
   const [motionNeutralZ, setMotionNeutralZ] = useState<number | null>(null);
+  const [calibrationReading, setCalibrationReading] = useState(false);
+  const [calibrationUnavailable, setCalibrationUnavailable] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [resetNotice, setResetNotice] = useState<string | null>(null);
   const [reducedMotionPreference, setReducedMotionPreference] = useState(false);
@@ -119,9 +121,20 @@ export default function App() {
   }
 
   async function calibrateMotion() {
-    const sample = await readMotionSample();
-    const neutral = calibrateNeutral(sample);
-    if (neutral != null) setMotionNeutralZ(neutral);
+    // The read is bounded and never rejects, so this cannot hang and cannot throw
+    // — but it CAN legitimately come back empty on a device with no accelerometer
+    // or a denied permission. Say so, rather than leaving a button that silently
+    // does nothing. Tap is unaffected either way.
+    if (calibrationReading) return;
+    setCalibrationReading(true);
+    setCalibrationUnavailable(false);
+    const neutral = calibrateNeutral(await readMotionSample());
+    setCalibrationReading(false);
+    if (neutral == null) {
+      setCalibrationUnavailable(true);
+      return;
+    }
+    setMotionNeutralZ(neutral);
   }
 
   function setNoMotionEnabled(enabled: boolean) {
@@ -287,6 +300,8 @@ export default function App() {
               streak={state.streak}
               motionOptIn={motionAllowed({ motionOptIn, noMotion })}
               motionCalibrated={motionNeutralZ != null}
+            calibrationReading={calibrationReading}
+            calibrationUnavailable={calibrationUnavailable}
               reducedMotion={reducedMotion}
               haptics={hapticsAllowed({ hapticsEnabled })}
               onCalibrate={calibrateMotion}
