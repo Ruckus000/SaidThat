@@ -1,4 +1,4 @@
-import { act, render, screen } from "@testing-library/react-native";
+import { act, userEvent, render, screen } from "@testing-library/react-native";
 
 import { ResultScreen } from "./ResultScreen";
 
@@ -95,4 +95,48 @@ test("result: the verdict revealed this way is actually visible, not opacity zer
   for (const opacity of opacities) {
     expect(opacity).toBe(1);
   }
+});
+
+// RC-2 sweep additions. P1 covered the reveal timing; these cover what the
+// revealed screen actually says and offers.
+
+test("result: the verdict celebrates the read, never the truth of the card", () => {
+  render(<ResultScreen {...base} correct reducedMotion />);
+
+  expect(screen.getByText("NAILED IT!")).toBeOnTheScreen();
+  expect(screen.getByText("THE ROOM CALLED IT")).toBeOnTheScreen();
+  // The result screen rates play. It must not label the card's truth state —
+  // that belongs to the review, behind a deliberate press.
+  expect(screen.queryByText(/AUTHENTIC|FABRICATED|SIMULATED/)).not.toBeOnTheScreen();
+});
+
+test("result: a miss is stated without punishing the player", () => {
+  render(<ResultScreen {...base} correct={false} reducedMotion />);
+
+  expect(screen.getByText("FOOLED YA.")).toBeOnTheScreen();
+  expect(screen.getByText("THE ROOM GOT PLAYED")).toBeOnTheScreen();
+  // Both routes stay open on a miss — a wrong read never costs access.
+  expect(screen.getByRole("button", { name: "SEE THE TRUTH" })).toBeOnTheScreen();
+});
+
+test("result: both routes onward are reachable and distinct", async () => {
+  const onReview = jest.fn();
+  const onContinue = jest.fn();
+  render(
+    <ResultScreen {...base} correct reducedMotion onReview={onReview} onContinue={onContinue} />,
+  );
+
+  await userEvent.press(screen.getByRole("button", { name: "SEE THE TRUTH" }));
+  expect(onReview).toHaveBeenCalledTimes(1);
+  expect(onContinue).not.toHaveBeenCalled();
+
+  await userEvent.press(screen.getByRole("button", { name: "NEXT PROMPT" }));
+  expect(onContinue).toHaveBeenCalledTimes(1);
+});
+
+test("result: the last round offers finishing the run, not another prompt", () => {
+  render(<ResultScreen {...base} correct reducedMotion roundIndex={4} totalRounds={5} />);
+
+  expect(screen.getByRole("button", { name: "FINISH THE RUN" })).toBeOnTheScreen();
+  expect(screen.queryByRole("button", { name: "NEXT PROMPT" })).not.toBeOnTheScreen();
 });
