@@ -21,8 +21,24 @@ export function createMotionGate({ debounceMs = DEFAULT_DEBOUNCE_MS } = {}) {
   return { debounceMs, lastCommitAt: null, armed: true };
 }
 
+/**
+ * A usable reading, and the only door every gate below goes through.
+ *
+ * These three guards used to spell the check out individually as
+ * `typeof z !== "number" || Number.isNaN(z)`, which lets ±Infinity through:
+ * `Number.isNaN(Infinity)` is false and `typeof Infinity` is "number". One
+ * saturated sample was therefore enough to produce `delta = ±Infinity`, clear the
+ * threshold, and commit an answer nobody gave — final, under the one-commit rule —
+ * while leaving the gate permanently unable to re-arm, since an infinite distance
+ * is never within the re-arm band. `Number.isFinite` is the whole check: it
+ * rejects non-numbers, NaN, and both infinities without coercing.
+ */
+function isValidZ(sample) {
+  return Boolean(sample) && Number.isFinite(sample.z);
+}
+
 export function calibrateNeutral(sample) {
-  if (!sample || typeof sample.z !== "number" || Number.isNaN(sample.z)) return null;
+  if (!isValidZ(sample)) return null;
   return sample.z;
 }
 
@@ -30,7 +46,10 @@ export function interpretTilt(
   sample,
   { neutralZ, threshold = DEFAULT_TILT_THRESHOLD } = {},
 ) {
-  if (neutralZ == null || !sample || typeof sample.z !== "number" || Number.isNaN(sample.z)) {
+  // The neutral goes through the same door: it is only ever produced by
+  // calibrateNeutral, but an infinite baseline would poison every delta, so the
+  // check is stated here rather than assumed from the producer.
+  if (!Number.isFinite(neutralZ) || !isValidZ(sample)) {
     return null;
   }
   const delta = sample.z - neutralZ;
@@ -51,7 +70,7 @@ export function recordMotionCommit(gate, now) {
 
 /** True when the phone has returned close enough to neutral to arm the next tilt. */
 export function isRearmed(sample, { neutralZ, threshold = DEFAULT_TILT_THRESHOLD, rearmRatio = DEFAULT_REARM_RATIO } = {}) {
-  if (neutralZ == null || !sample || typeof sample.z !== "number" || Number.isNaN(sample.z)) {
+  if (!Number.isFinite(neutralZ) || !isValidZ(sample)) {
     return false;
   }
   return Math.abs(sample.z - neutralZ) < threshold * rearmRatio;
