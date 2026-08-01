@@ -177,3 +177,4 @@ test("app: a storage backend that never answers still releases the report chips"
   );
   expect(await screen.findByText(/Could not save the report/i)).toBeOnTheScreen();
 }, 15000);
+

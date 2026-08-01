@@ -8,6 +8,7 @@ import {
   canExposeCardToAssistiveTech,
   createSession,
   currentCard,
+  canCommitAnswer,
   gameReducer,
   isPlayableCard,
   reportPayload,
@@ -74,6 +75,74 @@ test("chaos: an approvals field that is not a list of approvals fails closed", (
   // A malformed card must not take the whole deck down with it.
   const session = createSession({ cards: [productionAuthentic(5)], deckVersion: "test" });
   assert.equal(session.stage, STAGES.CONTENT_UNAVAILABLE);
+});
+
+// SE4. The tilt path fires the commit haptic, and on the round screen that buzz
+// IS the confirmation an answer landed — so it must fire only when the reducer
+// will actually take the answer. Both the reducer and the tilt path ask this
+// predicate, which is the point: one rule, not the same rule written twice.
+//
+// The first version of this test compared the predicate against the reducer and
+// was worthless BECAUSE of that sharing — weakening the predicate weakened the
+// reducer identically, so they agreed no matter what it said. These assertions
+// are absolute: each state names the answer it must give.
+test("chaos: the commit predicate names exactly when an answer can land", () => {
+  const round = started();
+  const answered = gameReducer(round, { type: "ANSWER", guessAuthentic: false });
+
+  // The only state that may commit: a round whose answer is not yet in.
+  assert.equal(canCommitAnswer(round), true, "a fresh round accepts an answer");
+
+  // Everything else must refuse, and each for its own reason.
+  assert.equal(canCommitAnswer(answered), false, "the round is already committed");
+  assert.equal(
+    canCommitAnswer(gameReducer(answered, { type: "OPEN_REVIEW" })),
+    false,
+    "the review is not a round",
+  );
+  assert.equal(
+    canCommitAnswer(gameReducer(round, { type: "REQUEST_PAUSE" })),
+    false,
+    "a paused room cannot answer",
+  );
+  assert.equal(
+    canCommitAnswer(gameReducer(round, { type: "GO_HOME" })),
+    false,
+    "home is not a round",
+  );
+  assert.equal(
+    canCommitAnswer(gameReducer(round, { type: "APP_BACKGROUND" })),
+    false,
+    "an interrupted room cannot answer — the race the haptic used to lose",
+  );
+
+  // And the next round opens again, so this is a gate, not a one-shot.
+  assert.equal(canCommitAnswer(gameReducer(answered, { type: "NEXT_ROUND" })), true);
+
+  // Both halves of the predicate, asserted directly on constructed states.
+  //
+  // Reached this way on purpose: no action sequence produces stage=ROUND with the
+  // round already committed — ANSWER moves to RESULT, and every route back to
+  // ROUND clears committedRound — so a test driven only by actions cannot tell
+  // the committedRound half from the stage half, and passes with either deleted.
+  // Verified by mutation, not assumed. The guard stays because the predicate is
+  // exported and its contract is "this round, not yet answered", independent of
+  // which paths happen to reach it today.
+  assert.equal(
+    canCommitAnswer({ stage: STAGES.ROUND, roundIndex: 2, committedRound: 2 }),
+    false,
+    "a round already committed refuses, even sitting on ROUND",
+  );
+  assert.equal(
+    canCommitAnswer({ stage: STAGES.ROUND, roundIndex: 2, committedRound: 1 }),
+    true,
+    "a commit from an earlier round does not block this one",
+  );
+  assert.equal(
+    canCommitAnswer({ stage: STAGES.RESULT, roundIndex: 2, committedRound: null }),
+    false,
+    "an uncommitted round off the ROUND stage still refuses",
+  );
 });
 
 test("chaos: duplicate taps score only once", () => {

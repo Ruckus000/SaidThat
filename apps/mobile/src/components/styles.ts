@@ -431,6 +431,12 @@ export const s = StyleSheet.create({
     borderRadius: 999,
     paddingHorizontal: 16,
     paddingVertical: 10,
+    // Padding alone left these near 40pt — under the app's own token and under
+    // both platforms' guidance. These are the controls a player reaches for when
+    // something is wrong with the content, so they are the worst ones to make
+    // fiddly. justifyContent keeps the label centred now the box is taller.
+    minHeight: volt.target.minimum,
+    justifyContent: "center",
   },
   // The chips already carry `disabled`, which Pressable turns into
   // accessibilityState — correct for assistive tech and invisible to everyone

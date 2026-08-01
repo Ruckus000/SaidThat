@@ -126,6 +126,21 @@ export function cardForPresentation(state, { forAssistiveTech = false } = {}) {
 // dead copy of a privacy rule — a control that cannot engage is not protection,
 // and reading like one invites trusting it.
 
+/**
+ * Whether the reducer will accept an answer for the round on screen.
+ *
+ * Exported because the tilt path needs to know BEFORE it fires the commit
+ * haptic: on the round screen that buzz is the confirmation an answer landed, so
+ * firing it for an answer the reducer then drops tells the room something that
+ * did not happen. The alternative was duplicating this condition at the call
+ * site, which is the same rule written twice and free to drift.
+ *
+ * The reducer uses this too, so the two can never disagree.
+ */
+export function canCommitAnswer(state) {
+  return state.stage === STAGES.ROUND && state.committedRound !== state.roundIndex;
+}
+
 export function reportPayload(state, reason, now) {
   const card = currentCard(state);
   return {
@@ -206,7 +221,7 @@ export function gameReducer(state, action) {
         ? { ...state, ...FRESH_RUN, stage: STAGES.ROUND }
         : { ...state, stage: STAGES.CONTENT_UNAVAILABLE, fault: "no-safe-playable-content" };
     case "ANSWER": {
-      if (state.stage !== STAGES.ROUND || state.committedRound === state.roundIndex) return state;
+      if (!canCommitAnswer(state)) return state;
       const card = currentCard(state);
       const correct = Boolean(card?.authentic) === action.guessAuthentic;
       // Streak is a pure game-skill reward (how many the room read correctly in
