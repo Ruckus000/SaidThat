@@ -22,6 +22,7 @@ import { playableFixtureDeck } from "./src/content/validateDeck";
 import {
   MODES,
   STAGES,
+  canCommitAnswer,
   canExposeCardToAssistiveTech,
   createSession,
   currentCard,
@@ -86,10 +87,19 @@ export default function App() {
   }, []);
   const commitAnswerFromTilt = useCallback(
     (guessAuthentic: boolean) => {
+      // The haptic fires only if the reducer actually takes the answer. It used
+      // to fire first, unconditionally, so a tilt the reducer rejected — the
+      // round already committed, or the stage left ROUND in a race with
+      // APP_BACKGROUND — still buzzed. On this screen the buzz IS the
+      // confirmation, so that told the room an answer had landed when none had.
+      //
+      // Asked of the reducer's own predicate rather than re-stated here, so the
+      // two cannot drift into disagreeing about what counts as a commit.
+      if (!canCommitAnswer(state)) return;
       commitFeedback(hapticsAllowed({ hapticsEnabled }));
       commitAnswer(guessAuthentic);
     },
-    [hapticsEnabled, commitAnswer],
+    [hapticsEnabled, commitAnswer, state],
   );
 
   useRoomBeaconMotion({

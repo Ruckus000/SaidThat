@@ -39,6 +39,9 @@ export function SettingsScreen({
           title="Reduced motion"
           hint={reducedMotionHint(motionLockedByDevice)}
           value={reducedMotion}
+          // Held on from the device: the in-app toggle can only ever ADD to it,
+          // so while the device holds it there is nothing this control can do.
+          disabled={motionLockedByDevice}
           onValueChange={onReducedMotion}
         />
         <ToggleRow

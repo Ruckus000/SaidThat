@@ -1,5 +1,6 @@
 import { userEvent, render, screen } from "@testing-library/react-native";
 
+import { volt } from "../theme/tokens";
 import { ReviewScreen } from "./ReviewScreen";
 
 /**
@@ -91,6 +92,22 @@ test("review: every report control is disabled while a report is in flight", () 
     "Report another issue",
   ]) {
     expect(screen.getByLabelText(label)).toBeDisabled();
+  }
+});
+
+// A5. These are the controls a player reaches for when something is wrong with
+// the content, so they are the worst ones in the app to make fiddly. Padding
+// alone left them near 40pt — under the app's own token and under both
+// platforms' guidance.
+test("review: every report control meets the app's own touch-target token", () => {
+  render(<ReviewScreen {...base} card={fabricated} />);
+
+  for (const label of [
+    "Report wrong attribution",
+    "Report harmful content",
+    "Report another issue",
+  ]) {
+    expect(screen.getByLabelText(label)).toHaveStyle({ minHeight: volt.target.minimum });
   }
 });
 

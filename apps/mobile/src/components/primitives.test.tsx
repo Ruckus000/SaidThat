@@ -51,6 +51,37 @@ test("toggle: it announces itself as a switch carrying its own state", async () 
   expect(onValueChange).toHaveBeenCalledWith(false);
 });
 
+// A3. The reduced-motion row can be held ON by the device, and the app's toggle
+// can only ever ADD to it. The explanatory hint came first, and on its own it
+// left a control that read "you may change this", accepted a press, and did
+// nothing — worse than one that plainly cannot be changed.
+test("toggle: a value held from outside says so and refuses the press", async () => {
+  const onValueChange = jest.fn();
+  render(
+    <ToggleRow
+      title="Reduced motion"
+      hint="On because Reduce Motion is enabled in your device settings."
+      value
+      disabled
+      onValueChange={onValueChange}
+    />,
+  );
+
+  const control = screen.getByRole("switch");
+  expect(control).toBeDisabled();
+  // Both facts, not one: it is on AND it cannot be changed here.
+  expect(control).toBeChecked();
+
+  await userEvent.press(control);
+  expect(onValueChange).not.toHaveBeenCalled();
+});
+
+test("toggle: an ordinary row is not disabled by default", () => {
+  render(<ToggleRow title="Haptics" hint="A kick on commit." value onValueChange={() => {}} />);
+
+  expect(screen.getByRole("switch")).toBeEnabled();
+});
+
 // ---------------------------------------------------------------- Choice
 
 test("choice: selection is a radio state, not a colour", async () => {
