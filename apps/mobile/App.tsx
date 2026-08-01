@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
 import { Alert, AppState, View } from "react-native";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useFonts } from "expo-font";
 import { StatusBar } from "expo-status-bar";
 
@@ -251,11 +251,9 @@ export default function App() {
   if (!fontsLoaded && !fontError) {
     // Fonts still loading: hold on the calm canvas (no unstyled text flash).
     return (
-      <SafeAreaProvider>
-        <SafeAreaView style={s.safe}>
-          <StatusBar style="light" />
-        </SafeAreaView>
-      </SafeAreaProvider>
+      <SafeAreaView style={s.safe}>
+        <StatusBar style="light" />
+      </SafeAreaView>
     );
   }
 
@@ -275,128 +273,126 @@ export default function App() {
   const totalRounds = runLength(state);
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={s.safe}>
-        <StatusBar style="light" />
-        <View style={[s.app, bleed && s.appBleed]}>
-          {showHeader && (
-            <Header
-              score={state.score}
-              streak={state.streak}
-              reducedMotion={reducedMotion}
-              onHome={goHome}
-              onSettings={state.stage === STAGES.HOME && !showSettings ? () => setShowSettings(true) : undefined}
-            />
-          )}
-          {state.stage === STAGES.HOME && !showSettings && (
-            <HomeScreen
-              onStart={() => {
-                // Read once. Starting a room is the acknowledgement.
-                setResetNotice(null);
-                dispatch({ type: "OPEN_SETUP" });
-              }}
-              notice={resetNotice}
-              localFixtures={allowLocalFixtures}
-              reducedMotion={reducedMotion}
-              roundsPlayed={state.roundsPlayed}
-              correctCount={state.correctCount}
-              bestStreak={state.bestStreak}
-              runComplete={state.roundsPlayed >= totalRounds}
-            />
-          )}
-          {state.stage === STAGES.HOME && showSettings && (
-            <SettingsScreen
-              reducedMotion={reducedMotion}
-              noMotion={noMotion}
-              hapticsEnabled={hapticsEnabled}
-              motionLockedByDevice={motionLockedByDevice}
-              onReducedMotion={setReducedMotionPreference}
-              onNoMotion={setNoMotionEnabled}
-              onHaptics={setHapticsEnabled}
-              onReset={confirmResetLocalSession}
-              onClose={() => setShowSettings(false)}
-            />
-          )}
-          {state.stage === STAGES.SETUP && (
-            <SetupScreen
-              mode={state.mode}
-              accessRole={state.accessRole}
-              motionOptIn={motionOptIn}
-              onMode={setMode}
-              onRole={(accessRole) => dispatch({ type: "SET_ACCESS_ROLE", accessRole })}
-              onMotionOptIn={setMotionOptInEnabled}
-              onStart={() => dispatch({ type: "START_ROUND" })}
-            />
-          )}
-          {state.stage === STAGES.ROUND && card && (
-            <RoundScreen
-              card={card}
-              mode={state.mode}
-              hideCardFromAssistiveTech={!canExposeCardToAssistiveTech(state)}
-              round={state.roundIndex + 1}
-              totalRounds={totalRounds}
-              score={state.score}
-              streak={state.streak}
-              motionOptIn={motionAllowed({ motionOptIn, noMotion })}
-              motionCalibrated={motionNeutralZ != null}
-            calibrationReading={calibrationReading}
-            calibrationUnavailable={calibrationUnavailable}
-              reducedMotion={reducedMotion}
-              haptics={hapticsAllowed({ hapticsEnabled })}
-              onCalibrate={calibrateMotion}
-              onAnswer={commitAnswer}
-              onPause={() => dispatch({ type: "REQUEST_PAUSE" })}
-            />
-          )}
-          {state.stage === STAGES.RESULT && (
-            <ResultScreen
-              correct={state.lastCorrect === true}
-              streak={state.streak}
-              roundIndex={state.roundIndex}
-              totalRounds={totalRounds}
-              reducedMotion={reducedMotion}
-              haptics={hapticsAllowed({ hapticsEnabled })}
-              initiallyRevealed={revealedRound === state.roundIndex}
-              onRevealed={() => setRevealedRound(state.roundIndex)}
-              onReview={() => dispatch({ type: "OPEN_REVIEW" })}
-              onContinue={() => dispatch({ type: "NEXT_ROUND" })}
-            />
-          )}
-          {state.stage === STAGES.REVIEW && card && (
-            <ReviewScreen
-              card={card}
-              reportStatus={state.reportStatus}
-              reportBusy={reportBusy}
-              roundIndex={state.roundIndex}
-              totalRounds={totalRounds}
-              reducedMotion={reducedMotion}
-              onReport={report}
-              onContinue={() => dispatch({ type: "NEXT_ROUND" })}
-            />
-          )}
-          {state.stage === STAGES.RECAP && (
-            <RecapScreen
-              score={state.score}
-              correctCount={state.correctCount}
-              roundsPlayed={state.roundsPlayed}
-              bestStreak={state.bestStreak}
-              reducedMotion={reducedMotion}
-              onPlayAgain={playAgain}
-              onHome={goHome}
-            />
-          )}
-          {state.stage === STAGES.PRIVATE_SHUTTER && (
-            <PrivateShutterScreen
-              discardedPriorTurn={state.privateRecovery === "discarded-prior-turn"}
-              onReady={() => dispatch({ type: "REVEAL_PRIVATE_TURN" })}
-            />
-          )}
-          {state.stage === STAGES.PAUSED && (
-            <PausedScreen onResume={() => dispatch({ type: "RESUME_ROOM" })} onLeave={goHome} />
-          )}
-          {state.stage === STAGES.CONTENT_UNAVAILABLE && <ContentUnavailableScreen fault={state.fault} />}
-        </View>
-      </SafeAreaView>
-    </SafeAreaProvider>
+    <SafeAreaView style={s.safe}>
+      <StatusBar style="light" />
+      <View style={[s.app, bleed && s.appBleed]}>
+        {showHeader && (
+          <Header
+            score={state.score}
+            streak={state.streak}
+            reducedMotion={reducedMotion}
+            onHome={goHome}
+            onSettings={state.stage === STAGES.HOME && !showSettings ? () => setShowSettings(true) : undefined}
+          />
+        )}
+        {state.stage === STAGES.HOME && !showSettings && (
+          <HomeScreen
+            onStart={() => {
+              // Read once. Starting a room is the acknowledgement.
+              setResetNotice(null);
+              dispatch({ type: "OPEN_SETUP" });
+            }}
+            notice={resetNotice}
+            localFixtures={allowLocalFixtures}
+            reducedMotion={reducedMotion}
+            roundsPlayed={state.roundsPlayed}
+            correctCount={state.correctCount}
+            bestStreak={state.bestStreak}
+            runComplete={state.roundsPlayed >= totalRounds}
+          />
+        )}
+        {state.stage === STAGES.HOME && showSettings && (
+          <SettingsScreen
+            reducedMotion={reducedMotion}
+            noMotion={noMotion}
+            hapticsEnabled={hapticsEnabled}
+            motionLockedByDevice={motionLockedByDevice}
+            onReducedMotion={setReducedMotionPreference}
+            onNoMotion={setNoMotionEnabled}
+            onHaptics={setHapticsEnabled}
+            onReset={confirmResetLocalSession}
+            onClose={() => setShowSettings(false)}
+          />
+        )}
+        {state.stage === STAGES.SETUP && (
+          <SetupScreen
+            mode={state.mode}
+            accessRole={state.accessRole}
+            motionOptIn={motionOptIn}
+            onMode={setMode}
+            onRole={(accessRole) => dispatch({ type: "SET_ACCESS_ROLE", accessRole })}
+            onMotionOptIn={setMotionOptInEnabled}
+            onStart={() => dispatch({ type: "START_ROUND" })}
+          />
+        )}
+        {state.stage === STAGES.ROUND && card && (
+          <RoundScreen
+            card={card}
+            mode={state.mode}
+            hideCardFromAssistiveTech={!canExposeCardToAssistiveTech(state)}
+            round={state.roundIndex + 1}
+            totalRounds={totalRounds}
+            score={state.score}
+            streak={state.streak}
+            motionOptIn={motionAllowed({ motionOptIn, noMotion })}
+            motionCalibrated={motionNeutralZ != null}
+          calibrationReading={calibrationReading}
+          calibrationUnavailable={calibrationUnavailable}
+            reducedMotion={reducedMotion}
+            haptics={hapticsAllowed({ hapticsEnabled })}
+            onCalibrate={calibrateMotion}
+            onAnswer={commitAnswer}
+            onPause={() => dispatch({ type: "REQUEST_PAUSE" })}
+          />
+        )}
+        {state.stage === STAGES.RESULT && (
+          <ResultScreen
+            correct={state.lastCorrect === true}
+            streak={state.streak}
+            roundIndex={state.roundIndex}
+            totalRounds={totalRounds}
+            reducedMotion={reducedMotion}
+            haptics={hapticsAllowed({ hapticsEnabled })}
+            initiallyRevealed={revealedRound === state.roundIndex}
+            onRevealed={() => setRevealedRound(state.roundIndex)}
+            onReview={() => dispatch({ type: "OPEN_REVIEW" })}
+            onContinue={() => dispatch({ type: "NEXT_ROUND" })}
+          />
+        )}
+        {state.stage === STAGES.REVIEW && card && (
+          <ReviewScreen
+            card={card}
+            reportStatus={state.reportStatus}
+            reportBusy={reportBusy}
+            roundIndex={state.roundIndex}
+            totalRounds={totalRounds}
+            reducedMotion={reducedMotion}
+            onReport={report}
+            onContinue={() => dispatch({ type: "NEXT_ROUND" })}
+          />
+        )}
+        {state.stage === STAGES.RECAP && (
+          <RecapScreen
+            score={state.score}
+            correctCount={state.correctCount}
+            roundsPlayed={state.roundsPlayed}
+            bestStreak={state.bestStreak}
+            reducedMotion={reducedMotion}
+            onPlayAgain={playAgain}
+            onHome={goHome}
+          />
+        )}
+        {state.stage === STAGES.PRIVATE_SHUTTER && (
+          <PrivateShutterScreen
+            discardedPriorTurn={state.privateRecovery === "discarded-prior-turn"}
+            onReady={() => dispatch({ type: "REVEAL_PRIVATE_TURN" })}
+          />
+        )}
+        {state.stage === STAGES.PAUSED && (
+          <PausedScreen onResume={() => dispatch({ type: "RESUME_ROOM" })} onLeave={goHome} />
+        )}
+        {state.stage === STAGES.CONTENT_UNAVAILABLE && <ContentUnavailableScreen fault={state.fault} />}
+      </View>
+    </SafeAreaView>
   );
 }
