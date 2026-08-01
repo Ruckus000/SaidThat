@@ -1,5 +1,4 @@
-import { useEffect, useRef } from "react";
-import { Animated, Pressable, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 import { headerScoreLabel, streakBadgeLabel } from "./presentationLabels";
 import { Icon } from "./Icon";
@@ -14,27 +13,22 @@ export type HeaderProps = {
   onSettings?: () => void;
 };
 
-export function Header({
-  score,
-  streak,
-  reducedMotion,
-  onHome,
-  onSettings,
-}: HeaderProps) {
-  const pop = useRef(new Animated.Value(1)).current;
-  const prevScore = useRef(score);
-
-  useEffect(() => {
-    const increased = score > prevScore.current;
-    prevScore.current = score;
-    if (!increased || reducedMotion) return;
-    pop.setValue(1);
-    Animated.sequence([
-      Animated.spring(pop, { toValue: 1.12, useNativeDriver: true, speed: 40, bounciness: 14 }),
-      Animated.spring(pop, { toValue: 1, useNativeDriver: true, speed: 20, bounciness: 8 }),
-    ]).start();
-  }, [score, reducedMotion, pop]);
-
+/**
+ * The wordmark row: home, the score or streak pill, and settings.
+ *
+ * There was a spring "pop" on the score pill here, driven by an effect comparing
+ * the score against a ref. It could never run. The score changes in exactly one
+ * place — the ANSWER case, which requires stage ROUND — and this header renders
+ * at neither ROUND nor RESULT; App excludes both, along with RECAP,
+ * PRIVATE_SHUTTER and PAUSED. So the component is unmounted across the only
+ * transition that raises the score, and on remount `prevScore` re-seeds to the
+ * current value, leaving `increased` false forever.
+ *
+ * `reducedMotion` stays in the props even though nothing here animates now. Every
+ * screen takes it, App passes it uniformly, and removing it would make this one
+ * component's signature the odd one out for no gain.
+ */
+export function Header({ score, streak, onHome, onSettings }: HeaderProps) {
   const badge = streakBadgeLabel(streak);
   const scoreLabel = headerScoreLabel(score);
 
@@ -51,20 +45,18 @@ export function Header({
       </Pressable>
       <View style={s.scoreWrap}>
         {badge ? (
-          <Animated.View
-            style={[s.scorePill, s.scorePillHot, s.pillRow, { transform: [{ scale: pop }] }]}
-          >
+          <View style={[s.scorePill, s.scorePillHot, s.pillRow]}>
             <StreakSparks count={1} />
             <Text accessibilityLiveRegion="polite" style={[s.score, s.scoreHot]}>
               {badge}
             </Text>
-          </Animated.View>
+          </View>
         ) : (
-          <Animated.View style={[s.scorePill, { transform: [{ scale: pop }] }]}>
+          <View style={s.scorePill}>
             <Text accessibilityLiveRegion="polite" style={s.score}>
               {scoreLabel}
             </Text>
-          </Animated.View>
+          </View>
         )}
         {onSettings && (
           <Pressable
