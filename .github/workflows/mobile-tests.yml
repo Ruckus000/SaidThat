@@ -25,6 +25,11 @@ on:
 
 permissions:
   contents: read
+  # dorny/paths-filter asks the PR files API on a pull_request event, so it needs
+  # this in addition to contents. Without it the filter job fails with "Resource
+  # not accessible by integration" and takes the whole check down with it —
+  # observed, not anticipated.
+  pull-requests: read
 
 jobs:
   changes:
