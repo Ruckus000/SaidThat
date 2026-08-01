@@ -25,6 +25,16 @@ export type ResultScreenProps = {
   totalRounds: number;
   reducedMotion: boolean;
   haptics: boolean;
+  /**
+   * This round's verdict has already been shown once. Skips straight to it.
+   *
+   * Held by App rather than here because this screen UNMOUNTS on interruption —
+   * a backgrounded app (an incoming call, Control Center) routes through PAUSED,
+   * and `key` cannot preserve state across an unmount, only across a re-render.
+   */
+  initiallyRevealed?: boolean;
+  /** Fired the first time the verdict is on screen, so App can remember it. */
+  onRevealed?: () => void;
   onReview: () => void;
   onContinue: () => void;
 };
@@ -38,20 +48,37 @@ export function ResultScreen({
   totalRounds,
   reducedMotion,
   haptics,
+  initiallyRevealed = false,
+  onRevealed,
   onReview,
   onContinue,
 }: ResultScreenProps) {
   // Post-commit anticipation beat: the tap is already registered, so this never
   // makes tap-play second-class and adds no answer countdown. Reduced motion
   // skips straight to the verdict with the identical words and reward.
-  const [revealed, setRevealed] = useState(reducedMotion);
-  const stamp = useRef(new Animated.Value(reducedMotion ? 1 : 0)).current;
+  //
+  // `initiallyRevealed` skips it for a second reason: the verdict was already
+  // shown and the player was interrupted. Making them sit through the beat again
+  // for a result they have seen — with both actions gone for 850ms — is the
+  // anticipation working against them.
+  //
+  // `stamp` takes the same seed so the verdict is not blank on the frame before
+  // effects flush — it drives the mark's opacity and the verdict's scale. The
+  // effect below sets it too, which makes the seed unobservable from a test:
+  // mutation-checked, and removing it changes nothing jest can see. It stays for
+  // the pre-effect frame on a real device, and this comment says so rather than
+  // letting a passing suite imply the seed is what protects that.
+  const alreadySeen = reducedMotion || initiallyRevealed;
+  const [revealed, setRevealed] = useState(alreadySeen);
+  const stamp = useRef(new Animated.Value(alreadySeen ? 1 : 0)).current;
   const pulse = useRef(new Animated.Value(0)).current;
   const next = continueLabel({ roundIndex, totalRounds });
   const streakLine = resultStreakLabel(streak);
 
   useEffect(() => {
-    if (reducedMotion) {
+    // Already on screen — either reduced motion, or this round's verdict was
+    // shown before an interruption. Nothing to animate towards.
+    if (alreadySeen) {
       // Not just an early return. Both of these are seeded at MOUNT from
       // reducedMotion, so a player who turns it on DURING the beat had them
       // seeded false: the cleanup below clears the reveal timer, this effect
@@ -83,16 +110,24 @@ export function ResultScreen({
       clearTimeout(timer);
       loop.stop();
     };
-  }, [reducedMotion, stamp, pulse]);
+  }, [alreadySeen, stamp, pulse]);
+
+  // Captured at mount: was this screen restored, or is the verdict arriving?
+  const restored = useRef(initiallyRevealed).current;
 
   useEffect(() => {
     if (!revealed) return;
+    onRevealed?.();
+    // Feedback and the announcement belong to a verdict ARRIVING. Firing them on
+    // a restored screen buzzed a second time for one answer and told VoiceOver a
+    // new verdict had landed — half the reason the replay was worth fixing.
+    if (restored) return;
     revealFeedback(haptics);
     // The verdict arrives on a timer, not on a touch, so nothing moves screen
     // reader focus to it. Both halves are strings already on screen — the
     // headline and its kicker — joined, never a separately-worded line.
     announce(`${resultHeadline(correct)} ${resultKicker(correct)}`);
-  }, [revealed, haptics, correct]);
+  }, [revealed, haptics, correct, restored, onRevealed]);
 
   if (!revealed) {
     return (

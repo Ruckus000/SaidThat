@@ -1,4 +1,4 @@
-import { Alert } from "react-native";
+import { Alert, AppState } from "react-native";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react-native";
 
 import App from "./App";
@@ -178,3 +178,31 @@ test("app: a storage backend that never answers still releases the report chips"
   expect(await screen.findByText(/Could not save the report/i)).toBeOnTheScreen();
 }, 15000);
 
+
+// L3 end-to-end. The unit tests drive `initiallyRevealed` as a prop; this drives
+// the real path — answer, get interrupted (AppState "inactive" fires on a call
+// banner or a Control Center pull), resume — and asserts the player is not made
+// to sit through the 850ms beat again for a verdict already decided.
+test("app: an interruption after the verdict does not replay the suspense beat", async () => {
+  render(<App />);
+  fireEvent.press(await screen.findByText("START A ROOM"));
+  fireEvent.press(await screen.findByText("LET'S PLAY"));
+  fireEvent.press(await screen.findByText("SAID IT"));
+
+  // The verdict lands after the beat.
+  await screen.findByText("SEE THE TRUTH", {}, { timeout: 3000 });
+
+  // Interrupted: the app is backgrounded, which routes through PAUSED.
+  const handler = (AppState.addEventListener as jest.Mock).mock.calls.at(-1)?.[1];
+  await act(async () => {
+    handler?.("inactive");
+  });
+  expect(await screen.findByText(/RESUME SAFELY/)).toBeOnTheScreen();
+
+  // Back again. Asserted SYNCHRONOUSLY on purpose: findByText waits up to 1000ms
+  // by default, which outlasts the 850ms beat, so an awaited assertion passes
+  // whether the beat was skipped or merely finished while the test waited.
+  fireEvent.press(screen.getByText("RESUME SAFELY"));
+  expect(screen.queryByText("LOCKING IT IN…")).not.toBeOnTheScreen();
+  expect(screen.getByText("SEE THE TRUTH")).toBeOnTheScreen();
+}, 15000);

@@ -1,3 +1,4 @@
+import { AccessibilityInfo } from "react-native";
 import { act, userEvent, render, screen } from "@testing-library/react-native";
 
 import { ResultScreen } from "./ResultScreen";
@@ -139,4 +140,73 @@ test("result: the last round offers finishing the run, not another prompt", () =
 
   expect(screen.getByRole("button", { name: "FINISH THE RUN" })).toBeOnTheScreen();
   expect(screen.queryByRole("button", { name: "NEXT PROMPT" })).not.toBeOnTheScreen();
+});
+
+// L3. This screen unmounts on an interruption — backgrounding routes through
+// PAUSED — so on return it re-seeded `revealed` false and made the player sit
+// through the whole 850ms beat again, for a verdict already decided, with both
+// actions gone for that window.
+test("result: a verdict already seen is restored immediately, not replayed", () => {
+  render(<ResultScreen {...base} correct reducedMotion={false} initiallyRevealed />);
+
+  expect(screen.queryByText("LOCKING IT IN…")).not.toBeOnTheScreen();
+  expect(screen.getByText("NAILED IT!")).toBeOnTheScreen();
+  expect(screen.getByRole("button", { name: "SEE THE TRUTH" })).toBeOnTheScreen();
+});
+
+// Restoring must not resurrect a blank verdict: `stamp` drives the mark's
+// opacity and the verdict's scale, so it takes the same seed as `revealed`.
+test("result: a restored verdict is visible, not opacity zero", () => {
+  const { UNSAFE_root } = render(
+    <ResultScreen {...base} correct reducedMotion={false} initiallyRevealed />,
+  );
+
+  const opacities = UNSAFE_root
+    .findAll((node: { props?: Record<string, any> }) => {
+      const style = node.props?.style;
+      return Boolean(style && !Array.isArray(style) && style.opacity !== undefined);
+    })
+    .map((node: { props: Record<string, any> }) => {
+      const raw = node.props.style.opacity;
+      return typeof raw === "object" && raw !== null && "_value" in raw ? raw._value : raw;
+    });
+
+  expect(opacities.length).toBeGreaterThan(0);
+  for (const opacity of opacities) expect(opacity).toBe(1);
+});
+
+// The buzz and the announcement are for a verdict ARRIVING. On a restored screen
+// they fired again — a second buzz for one answer, and VoiceOver told a new
+// verdict had landed. That was half the reason the replay mattered.
+test("result: a restored verdict does not buzz or announce a second time", () => {
+  // jest-expo already mocks this native, so the spy wraps a mock that has been
+  // accumulating calls across the whole file. Clear it, or the assertion reads
+  // every earlier test's announcements as this one's.
+  const spoken = jest
+    .spyOn(AccessibilityInfo, "announceForAccessibility")
+    .mockImplementation(() => {});
+  spoken.mockClear();
+
+  render(<ResultScreen {...base} correct reducedMotion={false} initiallyRevealed haptics />);
+  expect(spoken).not.toHaveBeenCalled();
+
+  spoken.mockRestore();
+});
+
+test("result: a first reveal still announces, so this is a restore guard not a mute", () => {
+  const spoken = jest
+    .spyOn(AccessibilityInfo, "announceForAccessibility")
+    .mockImplementation(() => {});
+  spoken.mockClear();
+
+  render(<ResultScreen {...base} correct reducedMotion initiallyRevealed={false} />);
+  expect(spoken).toHaveBeenCalled();
+
+  spoken.mockRestore();
+});
+
+test("result: the beat still runs for a round whose verdict has not been seen", () => {
+  render(<ResultScreen {...base} correct reducedMotion={false} initiallyRevealed={false} />);
+
+  expect(screen.getByText("LOCKING IT IN…")).toBeOnTheScreen();
 });
