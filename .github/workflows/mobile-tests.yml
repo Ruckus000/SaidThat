@@ -18,6 +18,20 @@ name: Mobile tests
 #
 # NOTE: if `merge_group` is ever added to `on:`, revisit this. Path filtering does
 # not apply to that trigger at all, so `changes` would need a different source.
+#
+# UNVERIFIED, and worth knowing before trusting the paragraph above: the skip path
+# has never actually run. Every PR since this workflow was rewritten has touched
+# apps/mobile, so `changes` has only ever reported true and `test` has only ever
+# executed. The first PR that touches neither apps/mobile/** nor this file is the
+# one that proves it — check that PR's checks page and confirm `test` appears and
+# is not left pending. If it IS left pending, the filter is in the wrong place
+# again and this comment is the lie.
+#
+# The distinction is narrow enough to get wrong twice: GitHub reports a job
+# skipped by `if:` with conclusion "skipped", not literally "success". Its docs
+# say a skipped required check is treated as passing — that is the behaviour being
+# relied on here, and it cannot be tested on this repo's plan, which has no
+# required checks to configure.
 on:
   pull_request:
   push:
