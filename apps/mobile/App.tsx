@@ -68,6 +68,11 @@ export default function App() {
   const [calibrationUnavailable, setCalibrationUnavailable] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [resetNotice, setResetNotice] = useState<string | null>(null);
+  // Which round's verdict the player has already seen. Held here rather than in
+  // ResultScreen because that screen UNMOUNTS on an interruption — backgrounding
+  // routes through PAUSED — and a component key cannot preserve state across an
+  // unmount. Keyed by round so the next one still gets its suspense beat.
+  const [revealedRound, setRevealedRound] = useState<number | null>(null);
   const [reducedMotionPreference, setReducedMotionPreference] = useState(false);
   const [noMotion, setNoMotion] = useState(false);
   const [hapticsEnabled, setHapticsEnabled] = useState(true);
@@ -351,6 +356,8 @@ export default function App() {
               totalRounds={totalRounds}
               reducedMotion={reducedMotion}
               haptics={hapticsAllowed({ hapticsEnabled })}
+              initiallyRevealed={revealedRound === state.roundIndex}
+              onRevealed={() => setRevealedRound(state.roundIndex)}
               onReview={() => dispatch({ type: "OPEN_REVIEW" })}
               onContinue={() => dispatch({ type: "NEXT_ROUND" })}
             />
