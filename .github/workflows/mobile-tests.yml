@@ -2,22 +2,50 @@ name: Mobile tests
 
 # The mobile suite previously ran only from the local AGENTS.md checklist, so a
 # red test could reach main whenever someone skipped a step. It gates PRs now.
+#
+# The path filter lives in the JOB, not in `on:`, and that placement is the whole
+# point. GitHub treats the two skips differently: a workflow skipped by a path
+# filter leaves its check PENDING FOREVER, which blocks a PR if the check is ever
+# required; a job skipped by an `if:` conditional reports SUCCESS and satisfies
+# it. This repo cannot enforce required checks on its current plan (see the root
+# AGENTS.md), so nothing is blocked today — but AGENTS.md anticipates a plan
+# upgrade, and a filter written the other way would wedge the first docs-only PR
+# after that switch.
+#
+# It also makes the check honest right now: a reviewer sees "Success — nothing
+# mobile changed" rather than a check that never appears, which is exactly the
+# ambiguity AGENTS.md warns against reading as proof.
+#
+# NOTE: if `merge_group` is ever added to `on:`, revisit this. Path filtering does
+# not apply to that trigger at all, so `changes` would need a different source.
 on:
   pull_request:
-    paths:
-      - "apps/mobile/**"
-      - ".github/workflows/mobile-tests.yml"
   push:
     branches: [main]
-    paths:
-      - "apps/mobile/**"
-      - ".github/workflows/mobile-tests.yml"
 
 permissions:
   contents: read
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      mobile: ${{ steps.filter.outputs.mobile }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            mobile:
+              - 'apps/mobile/**'
+              - '.github/workflows/mobile-tests.yml'
+
   test:
+    needs: changes
+    # Job-level, deliberately. A step-level `if:` also reports Success, but spins
+    # up a runner for every PR to do nothing.
+    if: needs.changes.outputs.mobile == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -41,3 +69,14 @@ jobs:
 
       - name: App render tests
         run: npm --prefix apps/mobile run test:app
+
+      # Metro resolves differently from both tsc and jest, so an unresolvable
+      # asset require, a dependency present only transitively, or an import cycle
+      # passes all three checks above and fails at release instead. This is the
+      # only step that proves the app still bundles.
+      #
+      # $RUNNER_TEMP rather than the package script's /tmp default, matching how
+      # designops-policy.yml handles temp material.
+      - name: Bundle (iOS export)
+        working-directory: apps/mobile
+        run: npx expo export --platform ios --output-dir "$RUNNER_TEMP/said-that-ios-export"

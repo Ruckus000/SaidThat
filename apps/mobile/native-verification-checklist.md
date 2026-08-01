@@ -36,10 +36,26 @@ npm --prefix apps/mobile run export:android
 
 ### Large text sizes
 
-The two recovery screens scroll their bodies so a long block cannot clip, but a
-render test cannot simulate font scaling — jest-expo has no way to set a text
-size, so the scroll containers are asserted structurally and the actual overflow
-behaviour is only observable on a device. These rows are the real check.
+The two recovery screens scroll their bodies so a long block cannot clip, and the
+scroll containers are asserted structurally in the render tests. The overflow
+behaviour itself is only observable on a device, and these rows are the real
+check.
+
+The reason is worth stating correctly, because an earlier version of this note
+got it wrong and the wrong reason discourages a test that would be worth writing.
+It is **not** that the font scale cannot be set in a test: `Dimensions.set` and
+`PixelRatio.getFontScale` are both mockable, so a test can absolutely tell the app
+the system text is at maximum. The reason is that **jest has no text measurement**
+— `onLayout` never fires with real dimensions and the test renderer produces no
+geometry — so whether a block overflows, clips, or pushes a control off-screen is
+unobservable at any scale. A future scale-aware layout (one that switched to a
+stacked arrangement above a threshold, say) *would* be testable; today nothing in
+the app reads the scale, so there is nothing to assert.
+
+What IS enforced automatically: `src/components/fontScaling.test.mjs` fails the
+build if any source file sets `allowFontScaling` or `maxFontSizeMultiplier`. That
+guards the property these rows depend on — text that actually grows — against the
+one-line fix that would otherwise be tempting when a row below fails.
 
 At the largest system text size (iOS: Settings → Accessibility → Display & Text
 Size → Larger Text, slider at maximum; Android: Settings → Display → Font size,
@@ -49,6 +65,14 @@ maximum):
 - [ ] Private Relay shutter: the body text scrolls rather than clipping
 - [ ] Content-unavailable: the guard line explaining *why* play stopped is reachable
 - [ ] Round: prompt text wraps rather than truncating, and both answer controls stay on screen
+- [ ] Home: the scrolling ticker loops without a visible seam
+
+  The ticker measures its own width off-screen against a fixed 5000px box and
+  renders two copies at that measured width, so travelling one width is seamless.
+  At maximum text size the string could approach 5000px, at which point
+  `numberOfLines={1}` clips the measurement and the loop gains a visible gap.
+  Cosmetic only — the ticker is hidden from assistive tech, so this is a seam, not
+  lost information.
 
 ## Sensors (optional tilt)
 
