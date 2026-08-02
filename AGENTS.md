@@ -46,6 +46,14 @@ node tools/designops/enforce.mjs --working-tree
 
 Exit `0` permits the requested work. Exits `1`, `2`, or `3` require stopping. Do not work around a nonzero result. The current exception grants `0` for the in-scope `apps/mobile/` MVP; do not invent a research or signature prerequisite for that work. All other implementation paths remain fail-closed until explicitly scoped.
 
+In a fresh clone or a new worktree, install the gate's own dependencies first:
+
+```bash
+npm ci --prefix tools/launchpad-designops --omit=dev --ignore-scripts
+```
+
+Without it, `node --test tools/designops/enforce.test.mjs` fails two tests that name neither the cause nor the remedy — "review-required planning reports the active MVP exception" and "pre-push hook classifies a new feature branch". Both are `ERR_MODULE_NOT_FOUND` for `ajv`, buried in a details string, and both pass once the install runs. Read as written they look like a real policy regression on a clean checkout. The commands above are unaffected and still exit `0`, which is what makes the failure confusing rather than obvious. The DesignOps workflow does this install as its own step, so CI never sees it.
+
 ## Non-negotiable rules
 
 - Do not implement fonts, colors, layouts, components, or visual styling from `docs/ux-spec.md` as approved direction. Those values remain hypotheses until direction and handoff approval.
