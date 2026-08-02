@@ -160,10 +160,18 @@ stay on screen". Fine at AX3 and below.
 From roughly AX3 upward the `ROOM · N` pill is cut off by the screen edge, so the
 score is unreadable. Present on every screen that shows the header.
 
-### D5 — The setup screen breaks at AX5 (not fixed, not in scope of the D1-D3 fix)
+### D5 — The setup screen breaks at AX5
+
+> **Fixed**, same pattern as D1-D3: wrap before shrink. Verified on clean launches
+> at AX5 and at `medium`, where the layout is unchanged. `SetupScreenScaling.test.tsx`
+> holds the contract; each assertion was mutation-checked.
+>
+> One residual, recorded rather than over-tuned: at AX5 `SCREEN-FACING` wraps to two
+> lines and the `F` grazes the capsule's corner curve. Legible, and a long way from
+> the two labels drawn on top of each other.
 
 Seen while navigating to the round at `accessibility-extra-extra-extra-large`, on
-`SetupScreen`, which the D1-D3 fix does not touch:
+`SetupScreen`:
 
 - The `PRIVATE RELAY` choice title is clipped at the right edge rather than wrapping.
 - The `I'M HOLDING` / `SCREEN-FACING` segmented control overlaps itself, both labels

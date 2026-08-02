@@ -236,12 +236,17 @@ export const s = StyleSheet.create({
     elevation: 4,
   },
   choiceInactive: { opacity: 0.55 },
-  choiceRow: { flexDirection: "row", alignItems: "center", gap: 12 },
+  // Glyph beside title. Wraps so the title drops under the mark rather than being
+  // cut off by the card edge at accessibility text sizes.
+  choiceRow: { flexDirection: "row", alignItems: "center", gap: 12, flexWrap: "wrap" },
   choiceTitle: {
     color: c.textPrimary,
     fontFamily: display,
     fontSize: t.headline.size,
     fontWeight: "800",
+    // Without this the title keeps its intrinsic width in the row and runs past
+    // the card instead of wrapping inside it. PRIVATE RELAY clipped mid-word.
+    flexShrink: 1,
   },
   choiceTitleActive: { color: c.lime },
   choiceBody: { color: c.textMuted, fontFamily: body, fontSize: t.bodyCompact.size, lineHeight: t.bodyCompact.lineHeight },
@@ -252,10 +257,23 @@ export const s = StyleSheet.create({
     borderColor: c.outline,
     borderRadius: 999,
     overflow: "hidden",
+    // Stacks instead of overlapping. At AX5 the two labels drew on top of each
+    // other, both unreadable; wrapping gives each its own full-width row.
+    flexWrap: "wrap",
   },
   segmentItem: {
-    flex: 1,
+    // Was `flex: 1` — a zero basis, so each half was exactly 50% no matter how
+    // wide the label got, and the text spilled over its neighbour. `auto` makes
+    // the label's own width the basis that wrapping is decided on, while the
+    // 48% floor keeps the two halves even at every size that still fits one row.
+    flexGrow: 1,
+    flexBasis: "auto",
+    minWidth: "48%",
     minHeight: 52,
+    // Clears the capsule's corner radius. Once the control stacks, each row is
+    // tall enough that a 999 radius curves right through where the label sits,
+    // and `overflow: hidden` on the container was cutting the ends off it.
+    paddingHorizontal: 20,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "transparent",
