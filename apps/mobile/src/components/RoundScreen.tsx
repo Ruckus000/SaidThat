@@ -118,65 +118,80 @@ export function RoundScreen({
         </View>
       </View>
 
-      <FadeIn key={round} reducedMotion={reducedMotion} style={s.promptCard}>
-        <Text style={s.promptBeacon}>GAME PROMPT · THE REVEAL DECIDES</Text>
-        <ScrollView
-          contentContainerStyle={s.card}
-          accessibilityElementsHidden={hideCardFromAssistiveTech}
-          importantForAccessibility={hideCardFromAssistiveTech ? "no-hide-descendants" : "auto"}
-        >
-          <Mark name="open" size={56} color={volt.color.dark.lime} />
-          <Text style={[s.quote, compact && s.quoteCompact]}>{card.quote}</Text>
-          <Text style={s.person}>— {card.person}</Text>
-        </ScrollView>
-      </FadeIn>
+      {/*
+        One scroller, and everything is inside it — prompt, instruction, answers,
+        pause. Two earlier shapes were wrong. The card owning its own ScrollView
+        nested two vertical scrollers, so a collapsed card read as a missing quote
+        with nothing to drag. Pinning the answers outside the scroller then moved
+        the same squeeze one level up: at the largest accessibility size the two
+        controls took the whole screen and left the prompt a 40pt sliver.
 
-      <Text style={s.instruction}>{roundInstruction(mode)}</Text>
-      {motionOptIn && mode === MODES.ROOM_BEACON && (
-        <>
-          <Text accessibilityLiveRegion="polite" style={s.note}>
-            {calibrationHint({
-              calibrated: motionCalibrated,
-              reading: calibrationReading,
-              unavailable: calibrationUnavailable,
-            })}
-          </Text>
-          {!motionCalibrated && (
-            <PrimaryButton
-              label={calibrationUnavailable ? "Try calibrating again" : "Calibrate neutral tilt"}
-              secondary
-              disabled={calibrationReading}
-              onPress={onCalibrate}
-            />
-          )}
-        </>
-      )}
-      <View style={s.answers}>
-        <AnswerButton
-          label="SAID IT"
-          hint="it's real"
-          variant="real"
-          haptics={haptics}
-          reducedMotion={reducedMotion}
-          onPress={() => onAnswer(true)}
-        />
-        <AnswerButton
-          label="TOTAL LIE"
-          hint="made for the game"
-          variant="fake"
-          haptics={haptics}
-          reducedMotion={reducedMotion}
-          onPress={() => onAnswer(false)}
-        />
-      </View>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel="Pause and leave safely"
-        onPress={onPause}
-        style={s.pauseTap}
-      >
-        <Text style={s.link}>Pause and leave safely</Text>
-      </Pressable>
+        At AX5 a readable prompt and two full-size controls cannot both fit. The
+        answers scroll rather than the statement being unreadable — a player who
+        cannot read what they are voting on has nothing to vote about. At every
+        size that does fit, flexGrow keeps the layout exactly as it was.
+      */}
+      <ScrollView contentContainerStyle={s.roundScroll}>
+        <FadeIn key={round} reducedMotion={reducedMotion} style={s.promptCard}>
+          <Text style={s.promptBeacon}>GAME PROMPT · THE REVEAL DECIDES</Text>
+          <View
+            style={s.card}
+            accessibilityElementsHidden={hideCardFromAssistiveTech}
+            importantForAccessibility={hideCardFromAssistiveTech ? "no-hide-descendants" : "auto"}
+          >
+            <Mark name="open" size={56} color={volt.color.dark.lime} />
+            <Text style={[s.quote, compact && s.quoteCompact]}>{card.quote}</Text>
+            <Text style={s.person}>— {card.person}</Text>
+          </View>
+        </FadeIn>
+
+        <Text style={s.instruction}>{roundInstruction(mode)}</Text>
+        {motionOptIn && mode === MODES.ROOM_BEACON && (
+          <>
+            <Text accessibilityLiveRegion="polite" style={s.note}>
+              {calibrationHint({
+                calibrated: motionCalibrated,
+                reading: calibrationReading,
+                unavailable: calibrationUnavailable,
+              })}
+            </Text>
+            {!motionCalibrated && (
+              <PrimaryButton
+                label={calibrationUnavailable ? "Try calibrating again" : "Calibrate neutral tilt"}
+                secondary
+                disabled={calibrationReading}
+                onPress={onCalibrate}
+              />
+            )}
+          </>
+        )}
+        <View style={s.answers}>
+          <AnswerButton
+            label="SAID IT"
+            hint="it's real"
+            variant="real"
+            haptics={haptics}
+            reducedMotion={reducedMotion}
+            onPress={() => onAnswer(true)}
+          />
+          <AnswerButton
+            label="TOTAL LIE"
+            hint="made for the game"
+            variant="fake"
+            haptics={haptics}
+            reducedMotion={reducedMotion}
+            onPress={() => onAnswer(false)}
+          />
+        </View>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Pause and leave safely"
+          onPress={onPause}
+          style={s.pauseTap}
+        >
+          <Text style={s.link}>Pause and leave safely</Text>
+        </Pressable>
+      </ScrollView>
     </View>
   );
 }

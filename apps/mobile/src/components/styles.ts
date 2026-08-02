@@ -25,21 +25,31 @@ export const s = StyleSheet.create({
     paddingTop: 8,
     minHeight: 56,
     paddingHorizontal: 0,
+    gap: 8,
+    // Wrap before shrink. Shrinking alone got the score pill down to one character
+    // per line at the largest text size — no longer clipped, but a tall alphabet
+    // soup. Wrapping drops it onto its own row intact instead.
+    flexWrap: "wrap",
   },
   brand: {
+    // The wordmark scales with the text size and pushed the score pill off the
+    // right edge. Shrink lets it give ground first; the row's flexWrap above is
+    // what keeps the pill whole once there is no ground left to give.
+    flexShrink: 1,
     color: c.lime,
     fontFamily: display,
     fontSize: t.label.size,
     fontWeight: "800",
     letterSpacing: 2,
   },
-  scoreWrap: { flexDirection: "row", alignItems: "center", gap: 8 },
+  scoreWrap: { flexDirection: "row", alignItems: "center", gap: 8, flexShrink: 1 },
   scorePill: {
     borderWidth: 2,
     borderColor: c.outline,
     borderRadius: 999,
     paddingHorizontal: 14,
     paddingVertical: 6,
+    flexShrink: 1,
   },
   scorePillHot: {
     borderColor: c.lime,
@@ -343,13 +353,30 @@ export const s = StyleSheet.create({
 
   // Round
   round: { flex: 1, paddingTop: 8, gap: 12 },
-  roundTop: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+  // Content container for the round's single scroller, which holds the whole
+  // round — prompt, instruction, answers, pause. flexGrow so that at any size
+  // which fits, the children lay out exactly as they did in the old flex column;
+  // past that, the content grows and scrolls instead of being squeezed. See
+  // RoundScreen for why nothing is pinned outside it.
+  roundScroll: { flexGrow: 1, gap: 12 },
+  roundTop: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 8,
+    // Same rule as the shared header: two pills that both scale, so let the row
+    // wrap rather than squeezing either one into a column of letters.
+    flexWrap: "wrap",
+  },
   roundPill: {
     borderWidth: 2,
     borderColor: c.outline,
     borderRadius: 999,
     paddingHorizontal: 14,
     paddingVertical: 6,
+    // Both pills grow with the text scale and together overran the row, clipping
+    // the score off the right edge. Shrinking lets the labels wrap instead.
+    flexShrink: 1,
   },
   roundPillText: {
     color: c.textPrimary,
@@ -377,7 +404,14 @@ export const s = StyleSheet.create({
   },
   roundPillTextHot: { color: c.lime },
   promptCard: {
-    flex: 1,
+    // flexGrow + NO shrink, deliberately. This was `flex: 1`, which is
+    // flexShrink: 1 with a zero basis: as the instruction, answers and pause grew
+    // with the text scale, they took the card's height away until its viewport was
+    // near zero and the quote — the thing being voted on — scrolled out of sight
+    // entirely. Growing to fill spare space is wanted; shrinking below the content
+    // is what broke it.
+    flexGrow: 1,
+    flexShrink: 0,
     borderWidth: 3,
     borderColor: c.lime,
     borderRadius: 28,
