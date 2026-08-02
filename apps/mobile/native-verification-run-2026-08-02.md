@@ -114,11 +114,18 @@ Management → Trust.
 
 > **Resolution (same day):** D1, D2 and D3 are fixed in `RoundScreen.tsx` and
 > `styles.ts`, with regression cover in `RoundScreenScaling.test.tsx`. Re-verified on
-> a clean launch at AX3: the quote wraps and scrolls, both answer controls stay
-> pinned on screen, and both context pills wrap intact. The device rows below remain
-> **NOT OBSERVED** regardless — a simulator cannot close them.
+> clean launches at AX3 and AX5: the quote wraps and scrolls, the answers and pause
+> are reachable, and both context pills wrap intact.
 >
-> D4 is **not** fixed and was not caused by the fix; see its note.
+> The first attempt pinned the answers outside the scroller so they could never
+> scroll away. Checking it at AX5 showed that just moved the squeeze up a level —
+> the two controls took the whole screen and left the prompt a 40pt sliver. At that
+> size a readable prompt and two full-size controls cannot both fit, so everything
+> scrolls instead: being unable to read the statement is worse than having to scroll
+> to the buttons.
+>
+> The device rows below remain **NOT OBSERVED** regardless — a simulator cannot
+> close them. D4 is **not** fixed and was not caused by the fix; see its note.
 
 Simulator observations, so **no row above is ticked**. But these are layout
 behaviours, not simulator artifacts, and the device rows they correspond to should
@@ -152,6 +159,18 @@ stay on screen". Fine at AX3 and below.
 
 From roughly AX3 upward the `ROOM · N` pill is cut off by the screen edge, so the
 score is unreadable. Present on every screen that shows the header.
+
+### D5 — The setup screen breaks at AX5 (not fixed, not in scope of the D1-D3 fix)
+
+Seen while navigating to the round at `accessibility-extra-extra-extra-large`, on
+`SetupScreen`, which the D1-D3 fix does not touch:
+
+- The `PRIVATE RELAY` choice title is clipped at the right edge rather than wrapping.
+- The `I'M HOLDING` / `SCREEN-FACING` segmented control overlaps itself, both labels
+  drawn on top of one another.
+
+Same class as D1-D3 — fixed-shape rows meeting a text scale that outgrows them — but
+a different screen, so it is recorded rather than folded into that change.
 
 ### What behaved correctly
 

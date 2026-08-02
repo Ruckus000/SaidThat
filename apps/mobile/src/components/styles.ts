@@ -26,6 +26,10 @@ export const s = StyleSheet.create({
     minHeight: 56,
     paddingHorizontal: 0,
     gap: 8,
+    // Wrap before shrink. Shrinking alone got the score pill down to one character
+    // per line at the largest text size — no longer clipped, but a tall alphabet
+    // soup. Wrapping drops it onto its own row intact instead.
+    flexWrap: "wrap",
   },
   brand: {
     // Same story as roundPill: the wordmark scales with the text size and pushed
@@ -358,6 +362,9 @@ export const s = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     gap: 8,
+    // Same rule as the shared header: two pills that both scale, so let the row
+    // wrap rather than squeezing either one into a column of letters.
+    flexWrap: "wrap",
   },
   roundPill: {
     borderWidth: 2,

@@ -62,21 +62,20 @@ test("header: the wordmark and score pill compress rather than clipping the scor
   expect(s.scorePill.flexShrink).toBe(1);
 });
 
-test("round: the prompt scrolls, and the answer controls stay outside that scroll", () => {
+test("round: the prompt and both commits are all inside the one scroller", () => {
   render(<RoundScreen {...base} />);
 
   const scroll = screen.UNSAFE_getByType(ScrollView);
 
-  // The quote is inside — it is the part allowed to run long.
+  // Everything the round needs is reachable by scrolling. An earlier shape pinned
+  // the answers outside the scroller so they could never scroll away; at the
+  // largest accessibility size those two controls then took the whole screen and
+  // squeezed the prompt to a sliver — the same collapse one level up. A player who
+  // cannot read the statement has nothing to vote about, so the controls scroll.
   expect(within(scroll).getByText(/A fabricated line/)).toBeOnTheScreen();
-
-  // The two commits are not. Same rule PrivateShutterScreen follows for its reveal
-  // control: the thing a player must be able to press is never the thing that
-  // scrolls away.
-  expect(within(scroll).queryByRole("button", { name: /SAID IT/ })).toBeNull();
-  expect(within(scroll).queryByRole("button", { name: /TOTAL LIE/ })).toBeNull();
-  expect(screen.getByRole("button", { name: /SAID IT/ })).toBeOnTheScreen();
-  expect(screen.getByRole("button", { name: /TOTAL LIE/ })).toBeOnTheScreen();
+  expect(within(scroll).getByRole("button", { name: /SAID IT/ })).toBeOnTheScreen();
+  expect(within(scroll).getByRole("button", { name: /TOTAL LIE/ })).toBeOnTheScreen();
+  expect(within(scroll).getByText(/[Pp]ause/)).toBeOnTheScreen();
 });
 
 test("round: exactly one vertical scroller, so a collapsed viewport cannot hide the quote", () => {
