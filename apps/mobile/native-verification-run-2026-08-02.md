@@ -207,18 +207,37 @@ it was checked — but **not** of Home, which clips its hero wordmark and render
 empty ticker at AX3 even on a fresh launch. Those are layout bugs of the D1/D5
 class, not stale state, and they are still open. See D6.
 
-### D6 — Home clips its hero and loses its ticker at accessibility sizes (open)
+### D6 — Home clipped its hero and lost its ticker at accessibility sizes
 
-On a **fresh** launch at AX3 and above:
+> **Fixed.** Verified on clean launches at AX3 and at `medium`, where the screen is
+> unchanged. Three separate causes, only one of which was visible from the code.
 
-- The hero wordmark renders as "SAI" — 92pt scaled past the screen width, clipped by
-  `homeHero`'s `overflow: hidden` rather than wrapping or shrinking.
-- The ticker strip renders as a blank lime bar. It measures its own width off-screen
-  against a fixed 5000px box; at these scales the measurement no longer yields a
-  usable width, so nothing is drawn.
+On a **fresh** launch at AX3 and above, Home rendered its wordmark as "SAI" and its
+ticker as a blank lime bar.
 
-Not fixed. Same class as D1 and D5, and the same remedy should apply, but it is a
-third screen and was found while verifying D4 rather than as part of it.
+**Hero.** 92pt scaled past the screen width, and `homeHero` clips rather than wraps.
+It now drops to the title role above a text scale of 1.6, and Home scrolls, so a hero
+that outgrows the screen can no longer take the rest of the page with it — the CTA
+included.
+
+**Ticker.** The interesting one. The strip was measured inside a fixed 5000pt box so
+it could be measured "at its true single-line width". But a `Text` stretches to the
+width it is given, so `onLayout` reported **5000 at every text size** — the box, never
+the string. Both copies were then laid out 5000 wide. At normal sizes that still drew
+(the visible window shows the start of a very wide run); at accessibility sizes the
+layer became too large to rasterise and the strip vanished.
+
+The measurer now shrink-wraps, so it reports the string. The copies are not pinned to
+that width — pinning truncated them the moment the two disagreed by a fraction — and
+they clip rather than ellipsize, because a `…` mid-strip is worse than a seam.
+
+A first attempt scaled the 5000 box by `fontScale`. That made it worse, pushing the
+layer further past the rasteriser's limit, and is why the box is gone rather than
+enlarged.
+
+**Residual:** the copy boundary is visible as a slight seam in the scrolling strip at
+all sizes. Cosmetic, on an element already hidden from assistive tech, and the
+checklist anticipated exactly this trade.
 
 ### D7 — The statement's last line clipped instead of wrapping (fixed)
 
