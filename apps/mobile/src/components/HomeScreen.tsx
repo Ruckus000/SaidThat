@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Animated, Easing, Text, View } from "react-native";
+import { Animated, Easing, ScrollView, Text, View, useWindowDimensions } from "react-native";
 
 import { volt } from "../theme/tokens";
 import { FIXTURE_DISCLOSURE, runSummaryLabel } from "./presentationLabels";
@@ -24,6 +24,7 @@ export type HomeScreenProps = {
 // dingbat character — the spark is drawn as SVG wherever it carries meaning.
 const TICKER = "REAL OR FAKE · REAL OR FAKE · REAL OR FAKE · REAL OR FAKE · ";
 
+
 export function HomeScreen({
   onStart,
   notice = null,
@@ -35,6 +36,17 @@ export function HomeScreen({
   runComplete,
 }: HomeScreenProps) {
   const summary = runSummaryLabel({ roundsPlayed, correctCount, bestStreak, complete: runComplete });
+  const { fontScale } = useWindowDimensions();
+  // A 92pt wordmark is wider than the phone once the text scale passes roughly this
+  // much, and homeHero clips rather than wraps, so it rendered as "SAI". Dropping to
+  // the title role keeps it whole.
+  //
+  // This is a scale-aware layout rule, not an opt-out from text scaling: the two
+  // props that would do that are banned by fontScaling.test.mjs, and they would
+  // shrink every other label on the screen along with the wordmark. Naming them
+  // here is enough to trip that scan — it reads source as text — which is why this
+  // comment talks around them.
+  const hugeText = fontScale >= 1.6;
   const tickerX = useRef(new Animated.Value(0)).current;
   // The strip renders TICKER twice, so travelling exactly half its measured width
   // lands the second copy where the first began — no visible seam on loop. Measured
@@ -57,14 +69,19 @@ export function HomeScreen({
   }, [reducedMotion, tickerX, tickerWidth]);
 
   return (
-    <FadeIn reducedMotion={reducedMotion} style={s.home}>
+    <FadeIn reducedMotion={reducedMotion} style={s.homeFill}>
+      {/*
+        Home scrolls. At accessibility text sizes the hero alone can fill the
+        screen, and this was a fixed column: whatever did not fit was simply gone.
+      */}
+      <ScrollView contentContainerStyle={s.home}>
       <View style={s.homeHero}>
         <View style={s.homeMark} pointerEvents="none">
           <Mark name="open" size={300} color={volt.color.dark.lime} decorative />
         </View>
         <Text style={s.eyebrowPink}>REAL QUOTES.</Text>
         <Text style={s.eyebrowLime}>TOTAL LIES.</Text>
-        <Text style={s.heroTitle}>{"SAID\nTHAT?"}</Text>
+        <Text style={[s.heroTitle, hugeText && s.heroTitleCompact]}>{"SAID\nTHAT?"}</Text>
         <Text style={s.copy}>One phone. One room. Call the bluff before the reveal burns you.</Text>
         {summary && <Text style={s.runSummary}>{summary}</Text>}
       </View>
@@ -80,7 +97,11 @@ export function HomeScreen({
           <Text
             numberOfLines={1}
             style={s.tickerText}
-            onLayout={(e) => setTickerWidth(e.nativeEvent.layout.width)}
+            // Ceil, because the copies below are laid out AT this width: a
+            // fractional measurement rounds down against the text that produced
+            // it, and numberOfLines={1} then truncates each copy with an ellipsis
+            // — visible mid-strip as "…" rather than a clean loop.
+            onLayout={(e) => setTickerWidth(Math.ceil(e.nativeEvent.layout.width))}
           >
             {TICKER}
           </Text>
@@ -102,12 +123,24 @@ export function HomeScreen({
             },
           ]}
         >
-          {/* Two copies at exactly the measured width, so travelling one width
-              lands the second where the first began — no seam on loop. */}
-          <Text numberOfLines={1} style={[s.tickerText, { width: tickerWidth }]}>
+          {/*
+            Two copies, so the second covers the gap as the first scrolls out, and
+            the track travels one measured width per loop.
+
+            `ellipsizeMode="clip"` because a copy still gets constrained to the
+            row's available width and numberOfLines={1} would otherwise draw a "…"
+            in the middle of a scrolling strip. Clipping is what a ticker wants
+            anyway — the wrap is hidden by tickerWrap's overflow.
+
+            Not given `width: tickerWidth` either: pinning a Text to a measured
+            width truncates it the moment the two disagree by a fraction, and at
+            accessibility sizes that width became a layer too large to rasterise,
+            which is what blanked the strip entirely.
+          */}
+          <Text numberOfLines={1} ellipsizeMode="clip" style={s.tickerText}>
             {TICKER}
           </Text>
-          <Text numberOfLines={1} style={[s.tickerText, { width: tickerWidth }]}>
+          <Text numberOfLines={1} ellipsizeMode="clip" style={s.tickerText}>
             {TICKER}
           </Text>
         </Animated.View>
@@ -124,6 +157,7 @@ export function HomeScreen({
         <Text style={s.homeFootnote}>No accounts · no feed · everything stays on this phone</Text>
         {localFixtures && <Text style={s.fixture}>{FIXTURE_DISCLOSURE}</Text>}
       </View>
+      </ScrollView>
     </FadeIn>
   );
 }

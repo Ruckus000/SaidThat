@@ -113,6 +113,9 @@ export const s = StyleSheet.create({
     lineHeight: t.title.lineHeight,
     letterSpacing: -1,
   },
+  // The wordmark at a size that still fits the screen once the text scale is large.
+  // Same role as `title`, applied only above the threshold in HomeScreen.
+  heroTitleCompact: { fontSize: t.title.size, lineHeight: t.title.lineHeight },
   heroTitle: {
     color: c.textPrimary,
     fontFamily: display,
@@ -333,7 +336,12 @@ export const s = StyleSheet.create({
   },
 
   // Home hero
-  home: { flex: 1, justifyContent: "space-between", paddingBottom: 8 },
+  // Fills the stage; the scroller inside it owns the layout.
+  homeFill: { flex: 1 },
+  // Content container for that scroller. flexGrow keeps space-between doing what it
+  // always did at sizes that fit, and lets the content run past the screen — and
+  // scroll — at sizes that do not.
+  home: { flexGrow: 1, justifyContent: "space-between", paddingBottom: 8 },
   homeHero: { flex: 1, justifyContent: "center", gap: 8, position: "relative", overflow: "hidden" },
   homeMark: {
     position: "absolute",
@@ -350,9 +358,13 @@ export const s = StyleSheet.create({
     marginHorizontal: -10,
     overflow: "hidden",
   },
-  // Over-wide and clipped by tickerWrap's overflow, so the strip can be measured
-  // at its true single-line width without ever being visible.
-  tickerMeasure: { position: "absolute", opacity: 0, top: 0, left: 0, width: 5000 },
+  // Measured off-screen at the string's TRUE width. Absolutely positioned with no
+  // width so it shrink-wraps its child: a Text stretches to whatever width it is
+  // given, so the old fixed 5000 box meant onLayout reported 5000 every time, at
+  // every text size — the measurement was the box, never the string. Both copies
+  // were then laid out 5000 wide, and at accessibility sizes that became a layer
+  // too large for the GPU to rasterise, so the strip rendered blank.
+  tickerMeasure: { position: "absolute", opacity: 0, top: 0, left: 0, alignSelf: "flex-start" },
   tickerTrack: { flexDirection: "row" },
   tickerText: {
     color: c.onHero,
@@ -360,6 +372,10 @@ export const s = StyleSheet.create({
     fontSize: t.labelL.size,
     fontWeight: "800",
     letterSpacing: 2,
+    // Each copy keeps its natural width. In a row a Text is otherwise compressed
+    // to the space available and numberOfLines={1} ellipsizes it, which drew a
+    // "…" in the middle of the strip instead of a continuous loop.
+    flexShrink: 0,
   },
   homeFooter: { gap: 10, paddingTop: 18 },
   homeFootnote: {
