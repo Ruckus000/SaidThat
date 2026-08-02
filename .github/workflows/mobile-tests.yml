@@ -91,11 +91,21 @@ jobs:
 
       # Metro resolves differently from both tsc and jest, so an unresolvable
       # asset require, a dependency present only transitively, or an import cycle
-      # passes all three checks above and fails at release instead. This is the
-      # only step that proves the app still bundles.
+      # passes all three checks above and fails at release instead. These two
+      # steps are the only ones that prove the app still bundles.
       #
-      # $RUNNER_TEMP rather than the package script's /tmp default, matching how
+      # Both platforms, because Metro picks platform-specific files (foo.android.ts
+      # over foo.ts) and platform-specific assets. An Android-only resolution
+      # failure survives typecheck, both test suites, AND the iOS export — verified
+      # by deliberately breaking one, not assumed. Separate steps rather than
+      # --platform all so a failure names the platform.
+      #
+      # $RUNNER_TEMP rather than the package scripts' /tmp default, matching how
       # designops-policy.yml handles temp material.
       - name: Bundle (iOS export)
         working-directory: apps/mobile
         run: npx expo export --platform ios --output-dir "$RUNNER_TEMP/said-that-ios-export"
+
+      - name: Bundle (Android export)
+        working-directory: apps/mobile
+        run: npx expo export --platform android --output-dir "$RUNNER_TEMP/said-that-android-export"

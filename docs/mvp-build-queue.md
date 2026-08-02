@@ -15,7 +15,7 @@
 1. Read `apps/mobile/AGENTS.md` and pass implementation enforcement before editing.
 2. Make one focused change with no unrelated refactor.
 3. Add or update deterministic tests for changed policy, reducer, storage, or UI-state behavior.
-4. Pass typecheck, unit tests, and `(cd apps/mobile && npx expo export --platform ios --output-dir /private/tmp/said-that-ios-export)`.
+4. Pass typecheck, unit tests, and both platform exports — `(cd apps/mobile && npx expo export --platform ios --output-dir /private/tmp/said-that-ios-export)` and `(cd apps/mobile && npx expo export --platform android --output-dir /private/tmp/said-that-android-export)`.
 5. Pass `node tools/designops/enforce.mjs --intent implementation --working-tree`.
 6. Open a PR, complete code review and security review, and merge only when the policy workflow passes and review findings are resolved.
 
