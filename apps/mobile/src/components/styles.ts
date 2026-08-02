@@ -32,8 +32,9 @@ export const s = StyleSheet.create({
     flexWrap: "wrap",
   },
   brand: {
-    // Same story as roundPill: the wordmark scales with the text size and pushed
-    // the score pill off the right edge. Shrinking lets both wrap and stay whole.
+    // The wordmark scales with the text size and pushed the score pill off the
+    // right edge. Shrink lets it give ground first; the row's flexWrap above is
+    // what keeps the pill whole once there is no ground left to give.
     flexShrink: 1,
     color: c.lime,
     fontFamily: display,
@@ -352,10 +353,11 @@ export const s = StyleSheet.create({
 
   // Round
   round: { flex: 1, paddingTop: 8, gap: 12 },
-  // The scrolling middle of the round. The answers and pause sit OUTSIDE it, the
-  // same way PrivateShutterScreen pins its reveal control: at accessibility text
-  // sizes the prompt grows past the screen, and the two controls that commit an
-  // answer are the last things that may scroll out of reach.
+  // Content container for the round's single scroller, which holds the whole
+  // round — prompt, instruction, answers, pause. flexGrow so that at any size
+  // which fits, the children lay out exactly as they did in the old flex column;
+  // past that, the content grows and scrolls instead of being squeezed. See
+  // RoundScreen for why nothing is pinned outside it.
   roundScroll: { flexGrow: 1, gap: 12 },
   roundTop: {
     flexDirection: "row",
