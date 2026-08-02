@@ -9,6 +9,7 @@ import { FONT_FAMILY } from "../theme/typography";
  * colored state keeps a text label (and MARK glyph for truth).
  */
 const c = volt.color.dark;
+const t = volt.type;
 const display = FONT_FAMILY.display;
 const body = FONT_FAMILY.body;
 
@@ -28,7 +29,7 @@ export const s = StyleSheet.create({
   brand: {
     color: c.lime,
     fontFamily: display,
-    fontSize: 14,
+    fontSize: t.label.size,
     fontWeight: "800",
     letterSpacing: 2,
   },
@@ -46,7 +47,7 @@ export const s = StyleSheet.create({
   score: {
     color: c.textMuted,
     fontFamily: display,
-    fontSize: 12,
+    fontSize: t.beacon.size,
     fontWeight: "800",
     letterSpacing: 1,
     fontVariant: ["tabular-nums"],
@@ -76,46 +77,46 @@ export const s = StyleSheet.create({
   eyebrow: {
     color: c.lime,
     fontFamily: display,
-    fontSize: 13,
+    fontSize: t.caption.size,
     fontWeight: "800",
     letterSpacing: 3,
   },
   eyebrowPink: {
     color: c.pink,
     fontFamily: display,
-    fontSize: 15,
+    fontSize: t.labelL.size,
     fontWeight: "800",
     letterSpacing: 3,
   },
   eyebrowLime: {
     color: c.lime,
     fontFamily: display,
-    fontSize: 15,
+    fontSize: t.labelL.size,
     fontWeight: "800",
     letterSpacing: 3,
   },
   title: {
     color: c.textPrimary,
     fontFamily: display,
-    fontSize: 44,
+    fontSize: t.title.size,
     fontWeight: "800",
-    lineHeight: 42,
+    lineHeight: t.title.lineHeight,
     letterSpacing: -1,
   },
   heroTitle: {
     color: c.textPrimary,
     fontFamily: display,
-    fontSize: 92,
+    fontSize: t.displayXL.size,
     fontWeight: "800",
-    lineHeight: 84,
+    lineHeight: t.displayXL.lineHeight,
     letterSpacing: -2,
   },
-  copy: { color: c.textMuted, fontFamily: body, fontSize: 17, lineHeight: 24 },
-  note: { color: c.textDim, fontFamily: body, fontSize: 13, lineHeight: 18 },
+  copy: { color: c.textMuted, fontFamily: body, fontSize: t.body.size, lineHeight: t.body.lineHeight },
+  note: { color: c.textDim, fontFamily: body, fontSize: t.caption.size, lineHeight: t.caption.lineHeight },
   fixture: {
     color: c.warning,
     fontFamily: body,
-    fontSize: 11,
+    fontSize: t.micro.size,
     fontWeight: "700",
     letterSpacing: 1,
     textAlign: "center",
@@ -123,15 +124,15 @@ export const s = StyleSheet.create({
   resetNotice: {
     color: c.warning,
     fontFamily: body,
-    fontSize: 13,
-    lineHeight: 18,
+    fontSize: t.caption.size,
+    lineHeight: t.caption.lineHeight,
     textAlign: "center",
     marginBottom: 12,
   },
   runSummary: {
     color: c.textDim,
     fontFamily: display,
-    fontSize: 13,
+    fontSize: t.caption.size,
     fontWeight: "800",
     letterSpacing: 1,
     marginTop: 6,
@@ -155,12 +156,12 @@ export const s = StyleSheet.create({
   buttonText: {
     color: c.onHero,
     fontFamily: display,
-    fontSize: 20,
+    fontSize: t.action.size,
     fontWeight: "800",
     letterSpacing: 1,
     textAlign: "center",
   },
-  buttonTextHero: { fontSize: 22 },
+  buttonTextHero: { fontSize: t.actionL.size },
   secondary: {
     backgroundColor: "transparent",
     borderWidth: 3,
@@ -169,7 +170,7 @@ export const s = StyleSheet.create({
     elevation: 0,
     minHeight: 60,
   },
-  secondaryText: { color: c.textPrimary, fontSize: 18 },
+  secondaryText: { color: c.textPrimary, fontSize: t.bodyM.size },
   destructive: {
     backgroundColor: "transparent",
     borderWidth: 2,
@@ -178,7 +179,7 @@ export const s = StyleSheet.create({
     elevation: 0,
     minHeight: 60,
   },
-  destructiveText: { color: c.pink, fontSize: 17 },
+  destructiveText: { color: c.pink, fontSize: t.body.size },
   onFlash: {
     backgroundColor: c.onHero,
     shadowOpacity: 0,
@@ -201,7 +202,7 @@ export const s = StyleSheet.create({
     fontFamily: body,
     textAlign: "center",
     fontWeight: "600",
-    fontSize: 14,
+    fontSize: t.label.size,
     padding: 4,
   },
   pauseTap: { minHeight: 44, justifyContent: "center", alignItems: "center" },
@@ -229,11 +230,11 @@ export const s = StyleSheet.create({
   choiceTitle: {
     color: c.textPrimary,
     fontFamily: display,
-    fontSize: 26,
+    fontSize: t.headline.size,
     fontWeight: "800",
   },
   choiceTitleActive: { color: c.lime },
-  choiceBody: { color: c.textMuted, fontFamily: body, fontSize: 15, lineHeight: 21 },
+  choiceBody: { color: c.textMuted, fontFamily: body, fontSize: t.bodyCompact.size, lineHeight: t.bodyCompact.lineHeight },
 
   segment: {
     flexDirection: "row",
@@ -252,7 +253,7 @@ export const s = StyleSheet.create({
   segmentItemOn: { backgroundColor: c.lime },
   segmentText: {
     fontFamily: display,
-    fontSize: 14,
+    fontSize: t.label.size,
     fontWeight: "800",
     letterSpacing: 1,
     color: c.textMuted,
@@ -272,8 +273,8 @@ export const s = StyleSheet.create({
     backgroundColor: c.surface,
   },
   toggleText: { flex: 1, gap: 2 },
-  toggleTitle: { color: c.textPrimary, fontFamily: body, fontSize: 17, fontWeight: "600" },
-  toggleHint: { color: c.textDim, fontFamily: body, fontSize: 13, lineHeight: 18 },
+  toggleTitle: { color: c.textPrimary, fontFamily: body, fontSize: t.body.size, fontWeight: "600" },
+  toggleHint: { color: c.textDim, fontFamily: body, fontSize: t.caption.size, lineHeight: t.caption.lineHeight },
   togglePill: {
     minWidth: 52,
     minHeight: 28,
@@ -289,7 +290,7 @@ export const s = StyleSheet.create({
   togglePillText: {
     color: c.textMuted,
     fontFamily: display,
-    fontSize: 12,
+    fontSize: t.beacon.size,
     fontWeight: "800",
     letterSpacing: 1,
   },
@@ -298,7 +299,7 @@ export const s = StyleSheet.create({
   sectionLabel: {
     color: c.lime,
     fontFamily: display,
-    fontSize: 12,
+    fontSize: t.beacon.size,
     fontWeight: "800",
     letterSpacing: 2,
   },
@@ -328,14 +329,14 @@ export const s = StyleSheet.create({
   tickerText: {
     color: c.onHero,
     fontFamily: display,
-    fontSize: 15,
+    fontSize: t.labelL.size,
     fontWeight: "800",
     letterSpacing: 2,
   },
   homeFooter: { gap: 10, paddingTop: 18 },
   homeFootnote: {
     color: c.textDim,
-    fontSize: 13,
+    fontSize: t.caption.size,
     textAlign: "center",
     fontFamily: body,
   },
@@ -353,7 +354,7 @@ export const s = StyleSheet.create({
   roundPillText: {
     color: c.textPrimary,
     fontFamily: display,
-    fontSize: 12,
+    fontSize: t.beacon.size,
     fontWeight: "800",
     letterSpacing: 1,
   },
@@ -369,7 +370,7 @@ export const s = StyleSheet.create({
   roundPillTextMuted: {
     color: c.textMuted,
     fontFamily: display,
-    fontSize: 12,
+    fontSize: t.beacon.size,
     fontWeight: "800",
     letterSpacing: 1,
     fontVariant: ["tabular-nums"],
@@ -393,7 +394,7 @@ export const s = StyleSheet.create({
   promptBeacon: {
     color: c.lime,
     fontFamily: display,
-    fontSize: 12,
+    fontSize: t.beacon.size,
     fontWeight: "800",
     letterSpacing: 2,
   },
@@ -402,24 +403,24 @@ export const s = StyleSheet.create({
   quote: {
     color: c.textPrimary,
     fontFamily: display,
-    fontSize: 34,
+    fontSize: t.statement.size,
     fontWeight: "700",
-    lineHeight: 40,
+    lineHeight: t.statement.lineHeight,
   },
-  quoteCompact: { fontSize: 28, lineHeight: 34 },
+  quoteCompact: { fontSize: t.statementCompact.size, lineHeight: t.statementCompact.lineHeight },
   quoteSmall: {
     color: c.textPrimary,
     fontFamily: display,
-    fontSize: 34,
+    fontSize: t.statementTight.size,
     fontWeight: "800",
-    lineHeight: 38,
+    lineHeight: t.statementTight.lineHeight,
   },
-  person: { color: c.textMuted, fontFamily: body, fontSize: 19, fontWeight: "600" },
+  person: { color: c.textMuted, fontFamily: body, fontSize: t.bodyL.size, fontWeight: "600" },
   instruction: {
     color: c.textMuted,
     fontFamily: body,
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: t.bodyS.size,
+    lineHeight: t.bodyS.lineHeight,
     textAlign: "center",
   },
   actions: { gap: 10 },
@@ -445,12 +446,12 @@ export const s = StyleSheet.create({
   reportChipText: {
     color: c.textMuted,
     fontFamily: display,
-    fontSize: 12,
+    fontSize: t.beacon.size,
     fontWeight: "800",
     letterSpacing: 1,
   },
-  success: { color: c.lime, fontFamily: body, fontSize: 13, lineHeight: 18 },
-  error: { color: c.danger, fontFamily: body, fontSize: 14, lineHeight: 20 },
+  success: { color: c.lime, fontFamily: body, fontSize: t.caption.size, lineHeight: t.caption.lineHeight },
+  error: { color: c.danger, fontFamily: body, fontSize: t.bodyS.size, lineHeight: t.bodyS.lineHeight },
 
   // Answers — labeled choice fills (text always present)
   answers: { gap: 10 },
@@ -466,7 +467,7 @@ export const s = StyleSheet.create({
   answerText: {
     color: c.onHero,
     fontFamily: display,
-    fontSize: 22,
+    fontSize: t.actionL.size,
     fontWeight: "800",
     letterSpacing: 1,
     textAlign: "center",
@@ -474,7 +475,7 @@ export const s = StyleSheet.create({
   answerHint: {
     color: "rgba(11,14,19,0.6)",
     fontFamily: body,
-    fontSize: 12,
+    fontSize: t.beacon.size,
     fontWeight: "700",
     textAlign: "center",
     marginTop: 2,
@@ -484,10 +485,10 @@ export const s = StyleSheet.create({
   recapRank: {
     color: c.lime,
     fontFamily: display,
-    fontSize: 72,
+    fontSize: t.rank.size,
     fontWeight: "800",
     letterSpacing: -2,
-    lineHeight: 68,
+    lineHeight: t.rank.lineHeight,
   },
   statBlock: { borderTopWidth: 2, borderColor: c.outline, marginTop: 4 },
   statRow: {
@@ -501,14 +502,14 @@ export const s = StyleSheet.create({
   statLabel: {
     color: c.textMuted,
     fontFamily: display,
-    fontSize: 13,
+    fontSize: t.caption.size,
     fontWeight: "800",
     letterSpacing: 1.5,
   },
   statValue: {
     color: c.textPrimary,
     fontFamily: display,
-    fontSize: 26,
+    fontSize: t.headline.size,
     fontWeight: "800",
     fontVariant: ["tabular-nums"],
   },
@@ -518,7 +519,7 @@ export const s = StyleSheet.create({
   suspense: {
     color: c.lime,
     fontFamily: display,
-    fontSize: 24,
+    fontSize: t.suspense.size,
     fontWeight: "800",
     letterSpacing: 6,
     textAlign: "center",
@@ -547,7 +548,7 @@ export const s = StyleSheet.create({
   resultKicker: {
     color: c.onHero,
     fontFamily: display,
-    fontSize: 15,
+    fontSize: t.labelL.size,
     fontWeight: "800",
     letterSpacing: 4,
     textAlign: "center",
@@ -555,16 +556,16 @@ export const s = StyleSheet.create({
   verdict: {
     color: c.onHero,
     fontFamily: display,
-    fontSize: 96,
+    fontSize: t.verdict.size,
     fontWeight: "800",
     letterSpacing: -3,
     textAlign: "center",
-    lineHeight: 88,
+    lineHeight: t.verdict.lineHeight,
   },
   reward: {
     color: c.onHero,
     fontFamily: display,
-    fontSize: 34,
+    fontSize: t.statement.size,
     fontWeight: "800",
     textAlign: "center",
     marginTop: 14,
@@ -572,7 +573,7 @@ export const s = StyleSheet.create({
   rewardMiss: {
     color: c.onHero,
     fontFamily: body,
-    fontSize: 18,
+    fontSize: t.bodyM.size,
     fontWeight: "600",
     textAlign: "center",
     marginTop: 14,
@@ -588,7 +589,7 @@ export const s = StyleSheet.create({
   streakPillText: {
     color: c.onHero,
     fontFamily: display,
-    fontSize: 15,
+    fontSize: t.labelL.size,
     fontWeight: "800",
     letterSpacing: 2,
   },
@@ -598,16 +599,16 @@ export const s = StyleSheet.create({
   truthRow: { flexDirection: "row", alignItems: "center", gap: 10 },
   truthLabel: {
     fontFamily: display,
-    fontSize: 14,
+    fontSize: t.label.size,
     fontWeight: "800",
     letterSpacing: 3,
   },
   truthReveal: {
     color: c.textPrimary,
     fontFamily: display,
-    fontSize: 34,
+    fontSize: t.statementTight.size,
     fontWeight: "800",
-    lineHeight: 38,
+    lineHeight: t.statementTight.lineHeight,
   },
 
   // Shutter / paused
@@ -622,24 +623,24 @@ export const s = StyleSheet.create({
   shutterPillText: {
     color: c.textMuted,
     fontFamily: display,
-    fontSize: 12,
+    fontSize: t.beacon.size,
     fontWeight: "800",
     letterSpacing: 1,
   },
   displayL: {
     color: c.textPrimary,
     fontFamily: display,
-    fontSize: 64,
+    fontSize: t.displayM.size,
     fontWeight: "800",
-    lineHeight: 60,
+    lineHeight: t.displayM.lineHeight,
     letterSpacing: -2,
   },
   displayPaused: {
     color: c.textPrimary,
     fontFamily: display,
-    fontSize: 58,
+    fontSize: t.displayL.size,
     fontWeight: "800",
-    lineHeight: 56,
+    lineHeight: t.displayL.lineHeight,
     letterSpacing: -2,
   },
 });

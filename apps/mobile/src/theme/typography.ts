@@ -1,6 +1,6 @@
 import type { TextStyle } from "react-native";
 
-import { volt } from "./tokens";
+import { volt, type TypeRoleSpec } from "./tokens";
 
 /**
  * Typography resolvers for the VOLT system.
@@ -38,15 +38,26 @@ const DISPLAY_ROLES: ReadonlySet<TypeRole> = new Set<TypeRole>([
   "label",
 ]);
 
-/** Resolve a type role to a React Native TextStyle (size, line-height, weight, tracking). */
+/**
+ * Resolve a type role to a React Native TextStyle (size, line-height, weight, tracking).
+ *
+ * Only what the role defines is emitted. The step roles added for `styles.ts` fix a
+ * size and sometimes a line height and nothing else, so this must not write
+ * `fontWeight: undefined` over a style it is spread into.
+ *
+ * DISPLAY_ROLES covers the semantic ramp only. The step roles are used at both
+ * families — `bodyM` is the display-face secondary button and the body-face miss
+ * line — so family is not a property of those roles, and they resolve to body here.
+ * Nothing calls this function today (see the FONT SEAM note above).
+ */
 export function typeStyle(role: TypeRole): TextStyle {
-  const t = volt.type[role];
+  const t: TypeRoleSpec = volt.type[role];
   const family = DISPLAY_ROLES.has(role) ? FONT_FAMILY.display : FONT_FAMILY.body;
   return {
     fontSize: t.size,
-    lineHeight: t.lineHeight,
-    fontWeight: t.weight,
-    letterSpacing: t.tracking,
+    ...(t.lineHeight != null ? { lineHeight: t.lineHeight } : null),
+    ...(t.weight != null ? { fontWeight: t.weight } : null),
+    ...(t.tracking != null ? { letterSpacing: t.tracking } : null),
     ...(family ? { fontFamily: family } : null),
   };
 }
