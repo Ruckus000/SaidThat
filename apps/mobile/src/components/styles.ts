@@ -458,6 +458,10 @@ export const s = StyleSheet.create({
     fontSize: t.statement.size,
     fontWeight: "700",
     lineHeight: t.statement.lineHeight,
+    // Same reason as choiceTitle. Without it the statement keeps its intrinsic
+    // width and the last line runs past the card: "snacks arrive." rendered as
+    // "snacks arri". The whole point of the round is reading this text.
+    flexShrink: 1,
   },
   quoteCompact: { fontSize: t.statementCompact.size, lineHeight: t.statementCompact.lineHeight },
   quoteSmall: {
@@ -467,7 +471,7 @@ export const s = StyleSheet.create({
     fontWeight: "800",
     lineHeight: t.statementTight.lineHeight,
   },
-  person: { color: c.textMuted, fontFamily: body, fontSize: t.bodyL.size, fontWeight: "600" },
+  person: { color: c.textMuted, fontFamily: body, fontSize: t.bodyL.size, fontWeight: "600", flexShrink: 1 },
   instruction: {
     color: c.textMuted,
     fontFamily: body,

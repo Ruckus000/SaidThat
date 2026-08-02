@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
-import { Alert, AppState, View } from "react-native";
+import { Alert, AppState, View, useWindowDimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFonts } from "expo-font";
 import { StatusBar } from "expo-status-bar";
@@ -52,6 +52,8 @@ export default function App() {
     Inter: require("./assets/fonts/InterVariable.ttf"),
     BricolageGrotesque: require("./assets/fonts/BricolageGrotesque.ttf"),
   });
+  // Re-renders when the system text size changes; see the key below.
+  const { fontScale } = useWindowDimensions();
   const [state, dispatch] = useReducer(
     gameReducer,
     undefined,
@@ -275,7 +277,20 @@ export default function App() {
   return (
     <SafeAreaView style={s.safe}>
       <StatusBar style="light" />
-      <View style={[s.app, bleed && s.appBleed]}>
+      {/*
+        Keyed on the text scale so the screens remount when the player changes it
+        in Settings and comes back. Changing it while the app runs left text drawn
+        at the new size inside frames measured at the old one: the wordmark showed
+        "SAI" and the ticker a clipped fragment, because both size themselves from
+        a measurement taken once on mount. A fresh launch was always correct, which
+        is what made it look like a rendering bug rather than a stale one.
+
+        The key is HERE and not on the SafeAreaView on purpose: the reducer, the
+        settings flags and the reset notice all live above this node, so the room's
+        score and stage survive the remount. What is thrown away is exactly what
+        needs re-measuring — and a scroll offset, which is worth the trade.
+      */}
+      <View key={`text-scale-${fontScale}`} style={[s.app, bleed && s.appBleed]}>
         {showHeader && (
           <Header
             score={state.score}
