@@ -25,21 +25,26 @@ export const s = StyleSheet.create({
     paddingTop: 8,
     minHeight: 56,
     paddingHorizontal: 0,
+    gap: 8,
   },
   brand: {
+    // Same story as roundPill: the wordmark scales with the text size and pushed
+    // the score pill off the right edge. Shrinking lets both wrap and stay whole.
+    flexShrink: 1,
     color: c.lime,
     fontFamily: display,
     fontSize: t.label.size,
     fontWeight: "800",
     letterSpacing: 2,
   },
-  scoreWrap: { flexDirection: "row", alignItems: "center", gap: 8 },
+  scoreWrap: { flexDirection: "row", alignItems: "center", gap: 8, flexShrink: 1 },
   scorePill: {
     borderWidth: 2,
     borderColor: c.outline,
     borderRadius: 999,
     paddingHorizontal: 14,
     paddingVertical: 6,
+    flexShrink: 1,
   },
   scorePillHot: {
     borderColor: c.lime,
@@ -343,13 +348,26 @@ export const s = StyleSheet.create({
 
   // Round
   round: { flex: 1, paddingTop: 8, gap: 12 },
-  roundTop: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+  // The scrolling middle of the round. The answers and pause sit OUTSIDE it, the
+  // same way PrivateShutterScreen pins its reveal control: at accessibility text
+  // sizes the prompt grows past the screen, and the two controls that commit an
+  // answer are the last things that may scroll out of reach.
+  roundScroll: { flexGrow: 1, gap: 12 },
+  roundTop: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 8,
+  },
   roundPill: {
     borderWidth: 2,
     borderColor: c.outline,
     borderRadius: 999,
     paddingHorizontal: 14,
     paddingVertical: 6,
+    // Both pills grow with the text scale and together overran the row, clipping
+    // the score off the right edge. Shrinking lets the labels wrap instead.
+    flexShrink: 1,
   },
   roundPillText: {
     color: c.textPrimary,
@@ -377,7 +395,14 @@ export const s = StyleSheet.create({
   },
   roundPillTextHot: { color: c.lime },
   promptCard: {
-    flex: 1,
+    // flexGrow + NO shrink, deliberately. This was `flex: 1`, which is
+    // flexShrink: 1 with a zero basis: as the instruction, answers and pause grew
+    // with the text scale, they took the card's height away until its viewport was
+    // near zero and the quote — the thing being voted on — scrolled out of sight
+    // entirely. Growing to fill spare space is wanted; shrinking below the content
+    // is what broke it.
+    flexGrow: 1,
+    flexShrink: 0,
     borderWidth: 3,
     borderColor: c.lime,
     borderRadius: 28,

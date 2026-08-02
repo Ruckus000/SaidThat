@@ -118,39 +118,48 @@ export function RoundScreen({
         </View>
       </View>
 
-      <FadeIn key={round} reducedMotion={reducedMotion} style={s.promptCard}>
-        <Text style={s.promptBeacon}>GAME PROMPT · THE REVEAL DECIDES</Text>
-        <ScrollView
-          contentContainerStyle={s.card}
-          accessibilityElementsHidden={hideCardFromAssistiveTech}
-          importantForAccessibility={hideCardFromAssistiveTech ? "no-hide-descendants" : "auto"}
-        >
-          <Mark name="open" size={56} color={volt.color.dark.lime} />
-          <Text style={[s.quote, compact && s.quoteCompact]}>{card.quote}</Text>
-          <Text style={s.person}>— {card.person}</Text>
-        </ScrollView>
-      </FadeIn>
+      {/*
+        The prompt scrolls; the answers below do not. One ScrollView, not two —
+        the card used to hold its own, which nested two vertical scrollers and hid
+        the failure: when the card's height collapsed, the inner scroller simply
+        had a near-zero viewport and the quote was gone with nothing to drag.
+      */}
+      <ScrollView contentContainerStyle={s.roundScroll}>
+        <FadeIn key={round} reducedMotion={reducedMotion} style={s.promptCard}>
+          <Text style={s.promptBeacon}>GAME PROMPT · THE REVEAL DECIDES</Text>
+          <View
+            style={s.card}
+            accessibilityElementsHidden={hideCardFromAssistiveTech}
+            importantForAccessibility={hideCardFromAssistiveTech ? "no-hide-descendants" : "auto"}
+          >
+            <Mark name="open" size={56} color={volt.color.dark.lime} />
+            <Text style={[s.quote, compact && s.quoteCompact]}>{card.quote}</Text>
+            <Text style={s.person}>— {card.person}</Text>
+          </View>
+        </FadeIn>
 
-      <Text style={s.instruction}>{roundInstruction(mode)}</Text>
-      {motionOptIn && mode === MODES.ROOM_BEACON && (
-        <>
-          <Text accessibilityLiveRegion="polite" style={s.note}>
-            {calibrationHint({
-              calibrated: motionCalibrated,
-              reading: calibrationReading,
-              unavailable: calibrationUnavailable,
-            })}
-          </Text>
-          {!motionCalibrated && (
-            <PrimaryButton
-              label={calibrationUnavailable ? "Try calibrating again" : "Calibrate neutral tilt"}
-              secondary
-              disabled={calibrationReading}
-              onPress={onCalibrate}
-            />
-          )}
-        </>
-      )}
+        <Text style={s.instruction}>{roundInstruction(mode)}</Text>
+        {motionOptIn && mode === MODES.ROOM_BEACON && (
+          <>
+            <Text accessibilityLiveRegion="polite" style={s.note}>
+              {calibrationHint({
+                calibrated: motionCalibrated,
+                reading: calibrationReading,
+                unavailable: calibrationUnavailable,
+              })}
+            </Text>
+            {!motionCalibrated && (
+              <PrimaryButton
+                label={calibrationUnavailable ? "Try calibrating again" : "Calibrate neutral tilt"}
+                secondary
+                disabled={calibrationReading}
+                onPress={onCalibrate}
+              />
+            )}
+          </>
+        )}
+      </ScrollView>
+
       <View style={s.answers}>
         <AnswerButton
           label="SAID IT"
