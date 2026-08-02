@@ -188,20 +188,44 @@ a different screen, so it is recorded rather than folded into that change.
 - Tilt defaults to **OFF** with "Tapping always works" — opt-in, as required.
 - One tap scored exactly once (`ROOM · 0` → `ROOM · 100`).
 
-### D4 — Text renders half-drawn after the system text size changes at runtime
+### D4 — Stale layout after the system text size changes at runtime
 
-Every text row clips mid-glyph and stops wrapping. It persisted across a minute and
-two independent capture paths, so it is not a screenshot artifact, and a tap still
-advanced the round normally — the app is misrendered, not frozen.
+> **Fixed.** App now keys its screens on `fontScale`, so they remount and re-measure
+> when the size changes. Verified by the comparison that defines the bug: the render
+> after a runtime change is now identical to a fresh launch at that size. Game state
+> survives — a mid-round change keeps the round, the card and the score, because the
+> reducer sits above the keyed node.
 
-Isolated on the second pass: **a fresh launch at any content size renders perfectly,
-including AX5.** The corruption only appears once the content size is changed while
-the app is running. That points at stale text layers not being re-laid-out on a
-Dynamic Type change, not at the layout itself.
+Changing the size while the app ran left text drawn at the new size inside frames
+measured at the old one. The wordmark rendered as "SAI"; the ticker showed a
+fragment measured at the previous scale. Both size themselves from a measurement
+taken once on mount.
 
-Present both before and after the D1–D3 fix, so it is neither caused nor cured by it.
-Left open deliberately. It matters on device: iOS users change text size in Settings
-and return to a running app, which is exactly this path.
+**A correction to how this was first recorded.** The original note said a fresh
+launch was clean at every size. That was true of the round and setup screens, where
+it was checked — but **not** of Home, which clips its hero wordmark and renders an
+empty ticker at AX3 even on a fresh launch. Those are layout bugs of the D1/D5
+class, not stale state, and they are still open. See D6.
+
+### D6 — Home clips its hero and loses its ticker at accessibility sizes (open)
+
+On a **fresh** launch at AX3 and above:
+
+- The hero wordmark renders as "SAI" — 92pt scaled past the screen width, clipped by
+  `homeHero`'s `overflow: hidden` rather than wrapping or shrinking.
+- The ticker strip renders as a blank lime bar. It measures its own width off-screen
+  against a fixed 5000px box; at these scales the measurement no longer yields a
+  usable width, so nothing is drawn.
+
+Not fixed. Same class as D1 and D5, and the same remedy should apply, but it is a
+third screen and was found while verifying D4 rather than as part of it.
+
+### D7 — The statement's last line clipped instead of wrapping (fixed)
+
+Found while confirming D4: at AX1 the quote laid its final line out at intrinsic
+width and ran past the card — "snacks arrive." rendered as "snacks arri". Present on
+a fresh launch, so not stale state. Fixed with `flexShrink` on the quote and the
+attribution, the same remedy as the choice title in D5.
 
 ## Host environment issues found during this run
 
