@@ -98,6 +98,44 @@ restricts its rows to physical-device observation. None of this ticks anything.
 | Result | Built, installed, launched |
 | Observed | Home screen renders; fixture disclosure "LOCAL DEVELOPMENT FIXTURES · NOT EDITORIAL CONTENT" and "No accounts · no feed · everything stays on this phone" both visible — demo-spec route step 1 |
 
+## Android emulator dry run — context only, not checklist evidence
+
+Same standing as the iOS simulator section: an emulator is not a device, so **no row
+above is ticked**. Its value is that every accessibility fix so far was verified on
+iOS only, and Android scales text by a different mechanism.
+
+| Item | Detail |
+| --- | --- |
+| Device | Pixel 9 Pro emulator, Android 16 (API 36), `sdk_gphone64_arm64` |
+| Package | `com.anonymous.saidthat` — placeholder from `expo prebuild`; `app.json` sets none |
+| Result | Built with Gradle, installed, launched |
+
+**Android has two independent scaling axes** where iOS has one: Font size
+(`font_scale`) and Display size (density). They compound — the second shrinks the
+available width while the first grows the text — so both were exercised.
+
+| Condition | Round | Setup | Home |
+| --- | --- | --- | --- |
+| `font_scale 1.0` | correct | correct | correct |
+| `font_scale 2.0` (Android max) | statement complete and wrapped, both answers and pause on screen without scrolling | both titles whole, role segment stacked and readable | wordmark whole, ticker rendering, CTA present |
+| `font_scale 2.0` + density 546 (largest Display size) | pills wrap to separate rows, statement complete, both answers reachable by scrolling | correct | correct |
+
+All four fixes hold. Nothing found on Android that was not already fixed for iOS.
+
+**D4 has no Android equivalent.** Changing `font_scale` on a running app makes Android
+recreate the Activity — a brief white flash — and the app then re-renders identically
+to a fresh launch at that size. The OS does the remount the iOS fix has to perform
+itself, so the `fontScale` key is iOS-motivated but harmless here.
+
+**The ticker seam is more visible on Android.** At `font_scale 1.0` there is a clear
+gap between the two copies rather than the subtle discontinuity seen on iOS. Same
+recorded residual, worse on this platform. Still cosmetic, still hidden from
+assistive tech.
+
+**Not covered by this run:** TalkBack, Android lifecycle and offline behaviour, and
+performance. Those are the Android rows above, and they remain **NOT OBSERVED** —
+an emulator cannot close them any more than a simulator can.
+
 ## Physical device — installed, not yet exercised
 
 | Item | Detail |
