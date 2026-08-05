@@ -1,0 +1,39 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000011",
+  "figureId": "c3000000-0000-4000-8000-000000000011",
+  "displayName": "Jaden Smith",
+  "statementText": "Clouds Are Just The Sky Getting Tired I Think Sometimes",
+  "authenticity": "fabricated",
+  "category": "internet-culture",
+  "difficultyPrior": 4,
+  "sensitivity": "everyone",
+  "explanation": "Written for this game. The Title Case aphorism is his format; we deliberately made it a worse aphorism, because a fake that out-writes the real ones is its own tell.",
+  "formatFingerprint": "aphorism",
+  "eraVocabTag": "pre-2015",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Drafted with AI assistance, rewritten and owned by the repository owner under ADR-012.",
+  "decoyMethod": "ai_assisted",
+  "source": null
+}

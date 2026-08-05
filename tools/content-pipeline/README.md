@@ -104,13 +104,19 @@ import the other. `test/calibration.test.mjs` asserts the two copies agree.
 
 ## Current corpus state
 
-The 40 cards ported from `docs/content/phase0-deck.candidates.json` **do not
-pass**, deliberately. They were ported without inventing provenance, so 20
-authentic cards sit at Tier C on a single listicle citation, and the deck leaks
-two exclusive style markers (`exclCount`, `curlyTypographyCount` — both three
-authentic, zero fabricated).
+`pop-voices` ships: 14 cards, 7 authentic / 7 fabricated, every gate green, and
+leave-one-out leakage at 28.6% — below chance, meaning surface style carries no
+authenticity signal.
 
-`test/corpus.test.mjs` pins that failure exactly. It exists so the failures
-cannot be "fixed" by weakening a threshold: any such change breaks the golden
-loudly. When the editorial pass cleans the corpus, the golden inverts and CI
-gains a live `validate.mjs` step.
+Six of the seven authentic cards carry a Wayback capture confirmed through the
+availability API plus an independent contemporaneous article (Tier A). The
+seventh ships Tier B on two independent outlets and explicitly claims no
+archive rather than inventing one.
+
+The ported candidate corpus that used to live here was replaced rather than
+repaired — 16 of its 20 authentic cards cited a single listicle, one could not
+be verified to exist at all, two failed safety, and all 20 fabricated cards
+shared one explanation. See `docs/content/EDITOR-WORKLIST.md`.
+
+The one real gap is size: 14 cards against a pool floor of ~60, which
+`composition.pool-size` warns about. Runs will repeat sooner than they should.

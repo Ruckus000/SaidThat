@@ -1,156 +1,169 @@
 [
   {
-    "figureId": "c2000000-0000-4000-8000-000000000001",
-    "displayName": "Ellen DeGeneres",
-    "likenessAllowed": true,
-    "voiceBank": [],
-    "notes": ""
-  },
-  {
-    "figureId": "c2000000-0000-4000-8000-000000000002",
-    "displayName": "Jack Dorsey",
-    "likenessAllowed": true,
-    "voiceBank": [],
-    "notes": ""
-  },
-  {
-    "figureId": "c2000000-0000-4000-8000-000000000003",
-    "displayName": "Ryan Reynolds",
-    "likenessAllowed": true,
-    "voiceBank": [],
-    "notes": ""
-  },
-  {
-    "figureId": "c2000000-0000-4000-8000-000000000004",
-    "displayName": "Britney Spears",
-    "likenessAllowed": true,
-    "voiceBank": [],
-    "notes": ""
-  },
-  {
-    "figureId": "c2000000-0000-4000-8000-000000000005",
+    "figureId": "c3000000-0000-4000-8000-000000000001",
     "displayName": "Post Malone",
     "likenessAllowed": true,
-    "voiceBank": [],
+    "voiceBank": [
+      "all lowercase",
+      "no terminal punctuation",
+      "very short",
+      "sincere food questions"
+    ],
     "notes": ""
   },
   {
-    "figureId": "c2000000-0000-4000-8000-000000000006",
-    "displayName": "Kim Kardashian",
-    "likenessAllowed": true,
-    "voiceBank": [],
-    "notes": ""
-  },
-  {
-    "figureId": "c2000000-0000-4000-8000-000000000007",
-    "displayName": "Lady Gaga",
-    "likenessAllowed": true,
-    "voiceBank": [],
-    "notes": ""
-  },
-  {
-    "figureId": "c2000000-0000-4000-8000-000000000008",
-    "displayName": "Kylie Jenner",
-    "likenessAllowed": true,
-    "voiceBank": [],
-    "notes": ""
-  },
-  {
-    "figureId": "c2000000-0000-4000-8000-000000000009",
-    "displayName": "Tony Hawk",
-    "likenessAllowed": true,
-    "voiceBank": [],
-    "notes": ""
-  },
-  {
-    "figureId": "c2000000-0000-4000-8000-000000000010",
-    "displayName": "Dionne Warwick",
-    "likenessAllowed": true,
-    "voiceBank": [],
-    "notes": ""
-  },
-  {
-    "figureId": "c2000000-0000-4000-8000-000000000011",
-    "displayName": "Jaden Smith",
-    "likenessAllowed": true,
-    "voiceBank": [],
-    "notes": ""
-  },
-  {
-    "figureId": "c2000000-0000-4000-8000-000000000012",
+    "figureId": "c3000000-0000-4000-8000-000000000002",
     "displayName": "Justin Bieber",
     "likenessAllowed": true,
-    "voiceBank": [],
+    "voiceBank": [
+      "early-2010s teen register",
+      "typos left in",
+      "no terminal punctuation",
+      "geography confusion"
+    ],
     "notes": ""
   },
   {
-    "figureId": "c2000000-0000-4000-8000-000000000013",
-    "displayName": "Olivia Wilde",
+    "figureId": "c3000000-0000-4000-8000-000000000003",
+    "displayName": "Kim Kardashian",
     "likenessAllowed": true,
-    "voiceBank": [],
+    "voiceBank": [
+      "lowercase",
+      "run-on enthusiasm",
+      "2010-era slang",
+      "exclamation marks"
+    ],
     "notes": ""
   },
   {
-    "figureId": "c2000000-0000-4000-8000-000000000014",
-    "displayName": "Chris Evans",
+    "figureId": "c3000000-0000-4000-8000-000000000004",
+    "displayName": "Lady Gaga",
     "likenessAllowed": true,
-    "voiceBank": [],
+    "voiceBank": [
+      "lowercase opening",
+      "ALL-CAPS burst for emphasis",
+      "long single sentence",
+      "no terminal punctuation"
+    ],
     "notes": ""
   },
   {
-    "figureId": "c2000000-0000-4000-8000-000000000015",
+    "figureId": "c3000000-0000-4000-8000-000000000005",
+    "displayName": "Kylie Jenner",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "all lowercase",
+      "short declarative",
+      "terminal period",
+      "mundane firsts"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000006",
+    "displayName": "Ryan Reynolds",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "sentence case",
+      "ellipsis openings",
+      "short",
+      "franchise self-reference"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000007",
     "displayName": "Macaulay Culkin",
     "likenessAllowed": true,
-    "voiceBank": [],
+    "voiceBank": [
+      "sentence case",
+      "direct address",
+      "short sentences",
+      "self-aware age jokes"
+    ],
     "notes": ""
   },
   {
-    "figureId": "c2000000-0000-4000-8000-000000000016",
-    "displayName": "James Blunt",
-    "likenessAllowed": true,
-    "voiceBank": [],
-    "notes": ""
-  },
-  {
-    "figureId": "c2000000-0000-4000-8000-000000000017",
-    "displayName": "Cher",
-    "likenessAllowed": true,
-    "voiceBank": [],
-    "notes": ""
-  },
-  {
-    "figureId": "c2000000-0000-4000-8000-000000000018",
-    "displayName": "Gordon Ramsay",
-    "likenessAllowed": true,
-    "voiceBank": [],
-    "notes": ""
-  },
-  {
-    "figureId": "c2000000-0000-4000-8000-000000000019",
+    "figureId": "c3000000-0000-4000-8000-000000000008",
     "displayName": "Dwayne Johnson",
     "likenessAllowed": true,
-    "voiceBank": [],
+    "voiceBank": [
+      "sentence case",
+      "training detail",
+      "earnest",
+      "terminal punctuation"
+    ],
     "notes": ""
   },
   {
-    "figureId": "c2000000-0000-4000-8000-000000000020",
-    "displayName": "Taylor Swift",
-    "likenessAllowed": true,
-    "voiceBank": [],
-    "notes": ""
-  },
-  {
-    "figureId": "c2000000-0000-4000-8000-000000000021",
+    "figureId": "c3000000-0000-4000-8000-000000000009",
     "displayName": "Keanu Reeves",
     "likenessAllowed": true,
-    "voiceBank": [],
+    "voiceBank": [
+      "lowercase",
+      "no terminal punctuation",
+      "understated",
+      "small kindnesses"
+    ],
     "notes": ""
   },
   {
-    "figureId": "c2000000-0000-4000-8000-000000000022",
-    "displayName": "Rihanna",
+    "figureId": "c3000000-0000-4000-8000-000000000010",
+    "displayName": "James Blunt",
     "likenessAllowed": true,
-    "voiceBank": [],
+    "voiceBank": [
+      "sentence case",
+      "self-deprecating",
+      "replies to strangers",
+      "dry"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000011",
+    "displayName": "Jaden Smith",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "Title Case Aphorisms",
+      "no terminal punctuation",
+      "hedged abstractions"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000012",
+    "displayName": "Chrissy Teigen",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "all lowercase",
+      "food questions",
+      "short",
+      "question marks"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000013",
+    "displayName": "Mark Hamill",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "sentence case",
+      "ellipsis",
+      "wry",
+      "terminal punctuation"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000014",
+    "displayName": "Snoop Dogg",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "lowercase",
+      "ALL-CAPS emphasis",
+      "exclamation marks",
+      "long run-ons"
+    ],
     "notes": ""
   }
 ]

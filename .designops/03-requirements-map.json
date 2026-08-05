@@ -88,7 +88,7 @@
       "status": "stakeholder-provided",
       "confidence": "high",
       "criticality": "critical",
-      "sha256": "3fd5cafbb30a03673a2a3bd28913fa3c02c248975d392b577cbd4973810bc66a"
+      "sha256": "eae4db52a9762bd9fceebb52fd6b67d899c8480de4cffca5ecd01937b20d06e9"
     },
     {
       "id": "architecture",
@@ -188,7 +188,7 @@
       "status": "stakeholder-provided",
       "confidence": "high",
       "criticality": "high",
-      "sha256": "cde27d83ef4c67e5e2bd21a446305684347410b879265d6ff7869320a2ee24f5"
+      "sha256": "1d149f2e55ceaf32f1c3cbcefb5613ebb3027da7af8469d181522f3e15b70fba"
     },
     {
       "id": "simulation-evidence-ledger",

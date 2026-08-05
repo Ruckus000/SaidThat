@@ -17,11 +17,34 @@ test("deck: bundled catalog passes structural validation", () => {
   assert.equal(result.errors.length, 0);
 });
 
-test("deck: playable fixture deck excludes withheld editorial states", () => {
+test("deck: playable deck excludes withheld editorial states", () => {
   const playable = playableFixtureDeck(catalog, { allowLocalFixtures: true });
   assert.ok(playable.length >= 4);
-  assert.ok(playable.every((record) => record.fixtureOnly === true));
   assert.ok(playable.every((record) => !["disputed", "removed", "source-unavailable"].includes(record.contentState)));
+});
+
+// The catalog now merges curated cards with the dev fixtures, so the two
+// configurations must differ: fixtures are development-only, and the curated
+// deck is what a release actually plays. Asserted together because the failure
+// mode runs both ways — fixtures leaking into release, or curated cards being
+// filtered out of it (which is what the missing "authentic" content state used
+// to do, silently).
+test("deck: fixtures are development-only and curated cards ship in release", () => {
+  const dev = playableFixtureDeck(catalog, { allowLocalFixtures: true });
+  const release = playableFixtureDeck(catalog, { allowLocalFixtures: false });
+
+  assert.ok(release.length > 0, "a release build must have playable content");
+  assert.ok(release.every((record) => record.fixtureOnly !== true), "no fixture may ship in release");
+  assert.ok(dev.some((record) => record.fixtureOnly === true), "fixtures must remain available in development");
+  assert.ok(dev.length > release.length, "the dev deck is the release deck plus fixtures");
+
+  // Every card a release plays is either source-verified or labelled fabricated.
+  for (const record of release) {
+    assert.ok(["authentic", "fabricated-for-game"].includes(record.contentState), record.id);
+    if (record.contentState === "authentic") {
+      assert.equal(record.sourceRecord?.retained, true, record.id);
+    }
+  }
 });
 
 test("deck: rotation is deterministic across rematches", () => {

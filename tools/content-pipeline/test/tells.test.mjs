@@ -125,49 +125,28 @@ test("tells: the report is deterministic across runs", () => {
 });
 
 // ---------------------------------------------------------------------------
-// Regression pin on the real ported corpus.
+// The shipped corpus must NOT leak authenticity through surface style.
 //
-// The 40 candidates in docs/content/phase0-deck.candidates.json are partly
-// self-solving. Measured, the leak is narrower than a casual read suggests but
-// real where it counts:
+// This assertion is inverted from what it used to be. The ported candidate
+// corpus leaked two exclusive class markers ("!" and curly typography, each in
+// three authentic cards and zero fabricated ones) and sat at 0.60 leave-one-out
+// accuracy. It was replaced by a deck whose two halves are deliberately matched
+// on length buckets, era, terminal punctuation, lowercase openings, and the
+// presence of exclamation marks, ALL-CAPS bursts and ellipses.
 //
-//   exclCount            3 authentic / 0 fabricated  — exclusive class marker
-//   curlyTypographyCount 3 authentic / 0 fabricated  — exclusive class marker
-//   leave-one-out accuracy 0.60 (warn band; p=0.13, not significant on n=40)
-//
-// The two markers are what matter. A feature present in several cards of one
-// class and *none* of the other is a rule that never misfires for the player
-// who spots it, regardless of how modest its effect size looks — which is why
-// the marker check exists separately from the effect-size test. Curly quotes in
-// particular are not a voice trait at all: they are a copy-paste signature from
-// the source article, i.e. the deck leaking its own production process.
-//
-// This test asserts the detector still sees the leak, so a future "cleanup"
-// that silently normalises the corpus cannot make it invisible instead of
-// fixing it. CP-04 fixes the corpus; when it does, this test flips to asserting
-// the leak is GONE — it is not deleted.
+// Kept rather than deleted: this is the check that stops a future editorial
+// pass from quietly reintroducing a rule the room can learn by round four.
 // ---------------------------------------------------------------------------
-test("tells: the ported candidate corpus leaks authenticity through surface style", async () => {
+test("tells: the shipped corpus does not leak authenticity through surface style", async () => {
   const { cards } = await loadDeck("pop-voices");
   const report = deckTellReport(cards);
-  const blocking = blockingIssues(report);
 
-  const markers = blocking
-    .filter((entry) => entry.code === "tells.class-marker")
-    .map((entry) => entry.path.replace("deck.features.", ""));
+  const markers = report.features.filter((f) => f.classMarker).map((f) => f.name);
+  assert.deepEqual(markers, [], `exclusive class markers found: ${markers.join(", ")}`);
 
-  for (const feature of ["exclCount", "curlyTypographyCount"]) {
-    assert.ok(markers.includes(feature), `expected '${feature}' to be a one-sided class marker, got ${markers}`);
-  }
-
-  // The corpus must not pass the tell gate as it stands.
-  assert.equal(report.ok, false);
-
-  // Whole-vector leakage sits in the warn band rather than the block band.
-  // Pinned as a range so CP-04 must move it down, not merely jiggle it.
+  assert.deepEqual(blockingIssues(report), []);
   assert.ok(
-    report.looAccuracy > 0.55 && report.looAccuracy <= LOO_BLOCK_LIMIT,
-    `expected leave-one-out accuracy in (0.55, ${LOO_BLOCK_LIMIT}], got ${report.looAccuracy}`,
+    report.looAccuracy <= LOO_BLOCK_LIMIT,
+    `leave-one-out accuracy ${report.looAccuracy} exceeds ${LOO_BLOCK_LIMIT}`,
   );
-  assert.ok(report.worstOffenders.length > 0);
 });

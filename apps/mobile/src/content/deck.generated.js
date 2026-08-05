@@ -8,18 +8,249 @@
  * A/B provenance, two distinct approvals, and the safety, read-aloud,
  * composition and tell-leakage checks. Editing this file by hand bypasses all
  * of them.
- *
- * CURRENTLY EMPTY, and that is the correct state rather than a stub. The
- * candidate corpus is still at `draft` and fails the gates — 20 authentic
- * cards carry Tier C provenance on a single listicle citation, and the deck
- * leaks two exclusive style markers. `build.mjs` refuses to emit a deck that
- * fails validation, so this file stays empty until the editorial pass fixes the
- * corpus. The app falls back to its dev fixtures behind the existing __DEV__
- * gate, exactly as it did before the pipeline existed.
  */
-export const GENERATED_DECK_VERSION = "0.0.0-no-curated-cards";
-export const GENERATED_SOURCE_SHA256 = "";
+export const GENERATED_DECK_VERSION = "0.3.0";
+export const GENERATED_SOURCE_SHA256 = "24fc13d8017d60502a90e558695e23a424c85b5c24a02e567d915099c9a4b2b4";
 
-export const generatedCards = [];
+export const generatedCards = [
+  {
+    "id": "b2000000-0000-4000-8000-000000000001",
+    "quote": "is meatball an fruit",
+    "person": "Post Malone",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "Posted in July 2018 and immediately answered by half the internet, Bon Appetit included. The missing article is his, not a typo we added.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "music",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://web.archive.org/web/20221225204504/https://twitter.com/PostMalone/status/1018731670474670080"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000002",
+    "quote": "Why is rhode island nor a road or an island",
+    "person": "Justin Bieber",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "December 2009, when he was fifteen. The \"nor\" is his and is the whole card — we transcribe typos rather than tidy them.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "music",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://web.archive.org/web/20230626050301/https://twitter.com/justinbieber/status/6350337695"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000003",
+    "quote": "kowabunga dudettes. i'm so pumped to be on this surfing kick. who else surfs out there? gnarly day in the h2o. ridin waves!",
+    "person": "Kim Kardashian",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "August 2010, and unexplained for seven years — in 2017 she said Kourtney had taken her phone. The surfing was never real; the post is.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "reality-tv",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://web.archive.org/web/20260721221915/https://twitter.com/KimKardashian/status/22396212024"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000004",
+    "quote": "why do people look at me like I'm crazy when i use coupons at grocery or try bargaining at retail, IM FROM NEW YORK WHERE IS THE SALE RACK",
+    "person": "Lady Gaga",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "December 2012. She has talked about coupon-clipping in interviews since, which is why the caps-lock ending reads as genuine exasperation.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "music",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://web.archive.org/web/20240705023447/https://twitter.com/ladygaga/status/282126105073299457"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000005",
+    "quote": "last night i had cereal with milk for the first time. life changing.",
+    "person": "Kylie Jenner",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "September 2018. She followed up to specify Cinnamon Toast Crunch and regular milk, having previously eaten cereal dry.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "reality-tv",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://web.archive.org/web/20231121010147/https://twitter.com/KylieJenner/status/1042219771930927104"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000006",
+    "quote": "Uh… It's Chimichanga Time.",
+    "person": "Ryan Reynolds",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "December 2014, the week Deadpool was confirmed. Chimichangas are the character's running gag, which is exactly why it reads invented.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "movies",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://web.archive.org/web/20150321100604/https://twitter.com/VancityReynolds/status/540594148097916928"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000007",
+    "quote": "Hey guys, wanna feel old? I'm 40. You're welcome.",
+    "person": "Macaulay Culkin",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "His 40th birthday, August 2020. He was ten when Home Alone came out, and followed up that making people feel old is his gift to the world.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "movies",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://x.com/CNN/status/1298784267036745728"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000008",
+    "quote": "Woke up at 3:40 to train and somebody had already unlocked the gym. I need to know who that was.",
+    "person": "Dwayne Johnson",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Invented. Real: he posts pre-dawn training times constantly. Invented: the unlocked gym and the mild paranoia about who beat him there.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "sports",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000009",
+    "quote": "someone held the elevator at the hotel today and i said thank you twice",
+    "person": "Keanu Reeves",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Made up for the game. The small-kindness register is real to his public image; the elevator, the hotel and the second thank-you are ours.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "film-tv",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000010",
+    "quote": "Someone tagged me in a photo of a sad looking dog and captioned it with my name. It's fair.",
+    "person": "James Blunt",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Not a real post. He genuinely replies to his own detractors this way, which is what makes the shape believable — the dog is invented.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "internet-culture",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000011",
+    "quote": "Clouds Are Just The Sky Getting Tired I Think Sometimes",
+    "person": "Jaden Smith",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Written for this game. The Title Case aphorism is his format; we deliberately made it a worse aphorism, because a fake that out-writes the real ones is its own tell.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "internet-culture",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000012",
+    "quote": "is a hot dog a taco or am i just tired?",
+    "person": "Chrissy Teigen",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Invented for the game. She really does post food taxonomy questions at odd hours; this particular one is ours.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "food",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000013",
+    "quote": "Well… that's the wrong screwdriver.",
+    "person": "Mark Hamill",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Made up for the game. The dry ellipsis opening matches how he actually posts, so the only invented part is the screwdriver.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "film-tv",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000014",
+    "quote": "i been at this game 20 years and they still spell my name wrong on the badge. TWO Gs. TWO! anyway good day",
+    "person": "Snoop Dogg",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Not a real post. The caps-lock emphasis and the shrug ending are true to his voice; the badge and the misspelling are invented.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "sports",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  }
+];
 
 export const generatedTombstones = [];

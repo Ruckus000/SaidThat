@@ -1,0 +1,67 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000007",
+  "figureId": "c3000000-0000-4000-8000-000000000007",
+  "displayName": "Macaulay Culkin",
+  "statementText": "Hey guys, wanna feel old? I'm 40. You're welcome.",
+  "authenticity": "authentic",
+  "category": "movies",
+  "difficultyPrior": 1,
+  "sensitivity": "everyone",
+  "explanation": "His 40th birthday, August 2020. He was ten when Home Alone came out, and followed up that making people feel old is his gift to the world.",
+  "formatFingerprint": "wanna-feel-old",
+  "eraVocabTag": "2020+",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": true,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": true,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Status URL resolved and no capture found — ships Tier B on two independent contemporaneous outlets.",
+  "decoyMethod": "none",
+  "transcriptionExact": true,
+  "normalizations": [],
+  "sourceTier": "B",
+  "citations": [
+    {
+      "url": "https://x.com/CNN/status/1298784267036745728",
+      "outlet": "x.com",
+      "publishedAt": "2020-08-26",
+      "isPrimary": false,
+      "independent": true,
+      "independentOf": []
+    },
+    {
+      "url": "https://www.foxnews.com/entertainment/home-alone-star-macaulay-culkin-trolls-fans-on-40th-birthday",
+      "outlet": "foxnews.com",
+      "publishedAt": "2020-08-26",
+      "isPrimary": false,
+      "independent": true,
+      "independentOf": []
+    }
+  ],
+  "source": {
+    "url": "https://x.com/CNN/status/1298784267036745728",
+    "archiveUrl": null,
+    "publishedAt": "2020-08-26",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "contemporaneous-article",
+    "retained": true
+  }
+}

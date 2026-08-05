@@ -81,16 +81,19 @@ jobs:
         with:
           node-version: 22
 
-      # Includes corpus.test.mjs, which asserts the CURRENT corpus state against
-      # the gates. The ported candidates do not pass yet — 20 authentic cards
-      # carry Tier C provenance and the deck leaks two exclusive style markers —
-      # so the golden pins the failure rather than pretending it is clean.
-      #
-      # Once the editorial pass (CP-04) lands, replace that golden with a live
-      # `node tools/content-pipeline/bin/validate.mjs --deck pop-voices` step
-      # here, so CI enforces the gate directly instead of a recorded snapshot.
       - name: Pipeline unit tests
         run: node --test tools/content-pipeline/test/
+
+      # The gates themselves, against the real corpus. This is what stops a deck
+      # that leaks authenticity through surface style, or an authentic card with
+      # laundered provenance, from reaching the bundle.
+      - name: Deck gates
+        run: node tools/content-pipeline/bin/validate.mjs --deck pop-voices
+
+      # A card edited without rebuilding would ship stale content, so the
+      # committed bundle must match what the editorial records emit.
+      - name: Deck bundle is current
+        run: node tools/content-pipeline/bin/build.mjs --deck pop-voices --check
 
   test:
     needs: changes

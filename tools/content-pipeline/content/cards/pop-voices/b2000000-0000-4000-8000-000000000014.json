@@ -1,0 +1,39 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000014",
+  "figureId": "c3000000-0000-4000-8000-000000000014",
+  "displayName": "Snoop Dogg",
+  "statementText": "i been at this game 20 years and they still spell my name wrong on the badge. TWO Gs. TWO! anyway good day",
+  "authenticity": "fabricated",
+  "category": "sports",
+  "difficultyPrior": 1,
+  "sensitivity": "everyone",
+  "explanation": "Not a real post. The caps-lock emphasis and the shrug ending are true to his voice; the badge and the misspelling are invented.",
+  "formatFingerprint": "name-misspelled",
+  "eraVocabTag": "pre-2015",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": true,
+    "hasConcreteMundaneDetail": true,
+    "readsFabricated": false,
+    "readsAuthentic": true
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Drafted with AI assistance, rewritten and owned by the repository owner under ADR-012.",
+  "decoyMethod": "ai_assisted",
+  "source": null
+}

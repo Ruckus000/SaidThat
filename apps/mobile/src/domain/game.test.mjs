@@ -10,6 +10,7 @@ import {
   currentCard,
   canCommitAnswer,
   gameReducer,
+  OWNER_APPROVAL,
   isPlayableCard,
   reportPayload,
   runLength,
@@ -44,6 +45,35 @@ test("chaos: unapproved, disputed, removed, and malformed authentic records fail
   assert.equal(isPlayableCard({ contentState: "fabricated-for-game", editorialApprovals: ["same", "same"] }), false);
   assert.equal(isPlayableCard({ ...fixture, authentic: true, contentState: "fixture-authentic" }), false);
   assert.equal(isPlayableCard({ ...fixture, authentic: true, contentState: "fixture-authentic" }, { allowLocalFixtures: true }), true);
+});
+
+// Pre-release owner approval, amended 2026-08-05. The two-person rule is still
+// the release bar; before release there is one editor, and inventing a second
+// name would make the rule look satisfied while providing none of the review it
+// exists for. So a lone approval passes only when explicitly marked as the
+// owner's — a distinct sentinel, not a name that could be matched by accident.
+test("chaos: a lone approval passes only when it is the explicit owner marker", () => {
+  const authentic = (editorialApprovals) => ({
+    contentState: "authentic",
+    sourceRecord: { retained: true, url: "https://example.com" },
+    editorialApprovals,
+  });
+
+  assert.equal(isPlayableCard(authentic([OWNER_APPROVAL])), true);
+  assert.equal(isPlayableCard({ contentState: "fabricated-for-game", editorialApprovals: [OWNER_APPROVAL] }), true);
+
+  // Names that merely look owner-ish must not clear the bar.
+  for (const impostor of ["owner", "Ruckus", "owner:", "OWNER:PRE-RELEASE"]) {
+    assert.equal(isPlayableCard(authentic([impostor])), false, `${impostor} must not pass as the owner marker`);
+  }
+  // The string-iterable trap still closes: the marker must be an ARRAY entry.
+  assert.equal(isPlayableCard(authentic(OWNER_APPROVAL)), false, "a bare string is not an approvals list");
+  // Everything else about the card is still required.
+  assert.equal(
+    isPlayableCard({ contentState: "authentic", sourceRecord: { retained: false }, editorialApprovals: [OWNER_APPROVAL] }),
+    false,
+    "owner approval does not substitute for a retained source",
+  );
 });
 
 // `new Set` takes any iterable, so a single approver written as a string counts

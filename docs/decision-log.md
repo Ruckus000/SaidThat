@@ -153,3 +153,17 @@
 - **Why:** Preserve repository privacy and accurately distinguish local controls from remote visibility without incurring a plan or ownership change.
 - **Consequences:** A writer with repository access can directly update `main`; contributors must use feature branches, pull requests, local gates/hooks, and inspect the Actions result as operating discipline. CODEOWNERS routes review requests but is not mandatory.
 - **Change if:** The repository gains an eligible GitHub plan and branch protection is actually activated for `main`.
+
+---
+
+## ADR-016 — Owner approval is a named pre-release state, not a relaxed rule
+
+**Added 2026-08-05 (owner decision).**
+
+- **Decision:** A card may leave `draft` on a single approval when that approval is the explicit `owner:pre-release` marker. Two distinct approvers remain the release bar.
+- **Context:** The two-person rule (content-operations §2 step 10, and `isPlayableCard`) predates the content pipeline. Pre-release there is exactly one editor, so the rule allowed only two outcomes: ship nothing, or record a second approver who did not review the card.
+- **Why:** A fabricated second name is strictly worse than an honest single one — it makes the rule look satisfied while providing none of the review it exists to provide, and it is undetectable afterwards. A distinct sentinel is auditable: every card approved this way is greppable, and the validator warns on each one.
+- **Alternatives:** Drop the rule entirely (loses the release bar); block until a second editor exists (ships nothing).
+- **Change if:** a second editor joins — at which point the marker should be replaced card-by-card rather than left in place.
+
+---

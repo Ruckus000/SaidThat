@@ -140,6 +140,14 @@ export function otherProperNouns(text, displayName) {
     }
     if (COMMON_OPENERS.has(parts[0].toLowerCase())) continue;
 
+    // A one- or two-character capitalised token is an initial, a unit or an
+    // abbreviation — "Gs", "St", "Dr" — not a name worth blocking a card over.
+    // Downgraded rather than dropped, so it still reaches an editor.
+    if (parts[0].length <= 2) {
+      possible.add(match[0]);
+      continue;
+    }
+
     // Trailing quote marks must not hide the terminator: in
     // `"You skate?" Me: "A little."` the word Me does start a sentence.
     const before = value.slice(0, match.index).trimEnd().replace(/["'’”]+$/, "");

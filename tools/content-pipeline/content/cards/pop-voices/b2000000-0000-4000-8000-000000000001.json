@@ -1,0 +1,67 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000001",
+  "figureId": "c3000000-0000-4000-8000-000000000001",
+  "displayName": "Post Malone",
+  "statementText": "is meatball an fruit",
+  "authenticity": "authentic",
+  "category": "music",
+  "difficultyPrior": 2,
+  "sensitivity": "everyone",
+  "explanation": "Posted in July 2018 and immediately answered by half the internet, Bon Appetit included. The missing article is his, not a typo we added.",
+  "formatFingerprint": "food-taxonomy-question",
+  "eraVocabTag": "2015-2019",
+  "styleFlags": {
+    "hasNonstandardGrammar": true,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": true,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API.",
+  "decoyMethod": "none",
+  "transcriptionExact": true,
+  "normalizations": [],
+  "sourceTier": "A",
+  "citations": [
+    {
+      "url": "https://www.today.com/food/rapper-post-malone-asked-twitter-meatball-fruit-t133711",
+      "outlet": "today.com",
+      "publishedAt": "2018-07-16",
+      "isPrimary": false,
+      "independent": true,
+      "independentOf": []
+    },
+    {
+      "url": "https://www.foxnews.com/food-drink/rapper-post-malone-asks-twitter-if-meatballs-are-an-fruit-bon-appetit-responds",
+      "outlet": "foxnews.com",
+      "publishedAt": "2018-07-16",
+      "isPrimary": false,
+      "independent": true,
+      "independentOf": []
+    }
+  ],
+  "source": {
+    "url": "https://web.archive.org/web/20221225204504/https://twitter.com/PostMalone/status/1018731670474670080",
+    "archiveUrl": "https://web.archive.org/web/20221225204504/https://twitter.com/PostMalone/status/1018731670474670080",
+    "publishedAt": "2018-07-16",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "web-archive",
+    "retained": true
+  }
+}

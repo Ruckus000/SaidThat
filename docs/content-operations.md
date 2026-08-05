@@ -55,6 +55,7 @@ flowchart LR
 8. Preview typography at forehead sizes  
 9. Submit for review  
 10. Second editor approves (two-person rule for public figures)  
+    **Amended 2026-08-05 (owner decision):** before release there is one editor, so a card may instead carry an explicit `owner:pre-release` approval. That marker is a distinct sentinel rather than a person's name, it is reported as a warning on every validation run, and it does not lower the release bar — two distinct approvers are still required to ship. Recording a second name that did not review the card is never an acceptable substitute.  
 11. Add to deck; bump semver; promote staging → prod  
 
 ### Removal

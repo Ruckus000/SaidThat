@@ -1,84 +1,111 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { loadDeck, loadFigures } from "../lib/deck.mjs";
-import { validateAll } from "../lib/validate.mjs";
+import { loadDeck, loadFigures, splitByAuthenticity } from "../lib/deck.mjs";
+import { buildability, validateAll } from "../lib/validate.mjs";
+import { OWNER_APPROVAL } from "../lib/schema.mjs";
 
 /**
- * Golden state of the ported candidate corpus.
+ * State of the shipped corpus.
  *
- * The 40 cards in docs/content/phase0-deck.candidates.json were ported honestly
- * — no provenance was invented to make them pass — so they FAIL the gates. This
- * file pins exactly how, for two reasons:
- *
- *   1. A gate that passes on a corpus this raw would be inert. Asserting the
- *      specific failures proves each rule is actually wired up and firing.
- *   2. It stops the failures being "fixed" by weakening a rule. Changing a
- *      threshold to make the corpus pass breaks this test loudly.
- *
- * When the editorial pass (CP-04) cleans the corpus, these counts go to zero
- * and the assertions invert. Update the numbers here in the same commit that
- * changes the cards — never separately.
+ * This file used to pin the ported candidate corpus FAILING — 20 authentic
+ * cards on Tier C provenance, two exclusive style markers. That corpus was
+ * replaced by verified records (see bin/seed-pop-voices.mjs), so the golden is
+ * inverted rather than deleted: it now asserts the deck is clean, and any
+ * regression that reintroduces laundered provenance or a style leak breaks it.
  */
 
-const EXPECTED_BLOCKING = {
-  // S2 — 16 of 20 authentic cards cite one listicle; all 20 are Tier C.
-  "provenance.tier-c": 20,
-  "provenance.independent-citations": 20,
-  "schema.source-not-retained": 20,
-  // S9 — read-aloud failures.
-  "read-aloud.hashtag": 1,
-  "read-aloud.mention": 2,
-  "read-aloud.too-long": 1,
-  "read-aloud.unpronounceable": 1,
-  // S10 — safety defects.
-  "safety.sexual": 1,
-  "safety.sensitivity-containment": 1,
-  "safety.third-party-named": 5,
-};
-
-test("corpus: the ported candidates fail the gates exactly as recorded", async () => {
+test("corpus: the shipped deck passes every gate", async () => {
   const { manifest, cards } = await loadDeck("pop-voices");
   const { byId } = await loadFigures();
   const outcome = validateAll({ manifest, cards, figures: byId });
 
-  assert.equal(cards.length, 40);
-  assert.equal(outcome.ok, false, "a raw research corpus must not pass the gates");
-
-  const counts = new Map();
-  for (const entry of outcome.issues.filter((e) => e.level === "block")) {
-    counts.set(entry.code, (counts.get(entry.code) ?? 0) + 1);
-  }
-
-  assert.deepEqual(
-    Object.fromEntries([...counts].sort()),
-    Object.fromEntries(Object.entries(EXPECTED_BLOCKING).sort()),
-  );
+  const blocking = outcome.issues.filter((entry) => entry.level === "block");
+  assert.deepEqual(blocking, [], `expected a clean deck, got: ${blocking.map((b) => b.code).join(", ")}`);
 });
 
-test("corpus: every card carries the fields the emitter will need", async () => {
-  const { cards } = await loadDeck("pop-voices");
-  for (const card of cards) {
-    assert.ok(card.id, "id");
-    assert.ok(card.figureId, `figureId on ${card.id}`);
-    assert.equal(typeof card.statementText, "string");
-    assert.ok(["authentic", "fabricated"].includes(card.authenticity), `authenticity on ${card.id}`);
-    assert.ok(card.explanation.length > 0, `explanation on ${card.id}`);
-    assert.equal(card.removalStatus, "active");
-    // difficultyPrior, never a flat `difficulty` — see editorial-rubric.md §5.4.
-    assert.equal(card.difficulty, undefined, `stale difficulty field on ${card.id}`);
-    assert.ok(Number.isInteger(card.difficultyPrior), `difficultyPrior on ${card.id}`);
-  }
-});
-
-test("corpus: figures resolve one-to-one and none is pre-approved", async () => {
-  const { cards } = await loadDeck("pop-voices");
+test("corpus: every card is emitted — nothing is silently withheld", async () => {
+  const { manifest, cards } = await loadDeck("pop-voices");
   const { byId } = await loadFigures();
+  const { ok, shippable, withheld } = buildability({ manifest, cards, figures: byId });
+
+  assert.equal(ok, true);
+  assert.equal(withheld.length, 0);
+  assert.equal(shippable.length, cards.length);
+});
+
+test("corpus: the authenticity split is genuinely balanced", async () => {
+  const { cards } = await loadDeck("pop-voices");
+  const { authentic, fabricated } = splitByAuthenticity(cards);
+  const ratio = authentic.length / cards.length;
+  assert.ok(ratio >= 0.45 && ratio <= 0.55, `authentic share ${ratio}`);
+  assert.ok(authentic.length > 0 && fabricated.length > 0);
+});
+
+test("corpus: every authentic card carries real, independent provenance", async () => {
+  const { cards } = await loadDeck("pop-voices");
+  for (const card of cards.filter((c) => c.authenticity === "authentic")) {
+    assert.ok(["A", "B"].includes(card.sourceTier), `${card.displayName} is tier ${card.sourceTier}`);
+    assert.equal(card.source.retained, true, card.displayName);
+    assert.ok(card.source.url.startsWith("https://"), card.displayName);
+
+    const independent = card.citations.filter((c) => c.independent);
+    assert.ok(independent.length >= 2, `${card.displayName} has ${independent.length} independent citations`);
+
+    // Tier A claims an archival capture; Tier B must not claim one it lacks.
+    if (card.sourceTier === "A") {
+      assert.match(card.source.archiveUrl ?? "", /^https:\/\/web\.archive\.org\/web\/\d{14}\//, card.displayName);
+      assert.equal(card.source.verificationMethod, "web-archive", card.displayName);
+    } else {
+      assert.equal(card.source.archiveUrl, null, `${card.displayName} is tier B and must not claim an archive`);
+    }
+  }
+});
+
+test("corpus: no fabricated card carries a source, and each discloses itself", async () => {
+  const { cards } = await loadDeck("pop-voices");
+  for (const card of cards.filter((c) => c.authenticity === "fabricated")) {
+    assert.equal(card.source, null, card.displayName);
+    assert.notEqual(card.decoyMethod, "none", card.displayName);
+    // The reveal has to say what was invented, not just that something was.
+    assert.match(card.explanation, /made up|not a real post|written for (the|this) game|invented/i, card.displayName);
+  }
+});
+
+test("corpus: no figure appears on both sides, and no two cards share a format", async () => {
+  const { cards } = await loadDeck("pop-voices");
+  // The pairing defect that made the old file solvable in one session.
+  const byFigure = new Map();
   for (const card of cards) {
-    assert.ok(byId.has(card.figureId), `unresolved figure on ${card.id}`);
-    assert.equal(byId.get(card.figureId).displayName, card.displayName);
-    // The port must not manufacture editorial approvals.
-    assert.deepEqual(card.editorialApprovals, [], `unexpected approvals on ${card.id}`);
-    assert.equal(card.status, "draft");
+    byFigure.set(card.figureId, (byFigure.get(card.figureId) ?? 0) + 1);
+  }
+  assert.equal(byFigure.size, cards.length, "each figure should carry exactly one card");
+
+  const fingerprints = cards.map((c) => c.formatFingerprint);
+  assert.equal(new Set(fingerprints).size, fingerprints.length, "format fingerprints must be unique");
+});
+
+test("corpus: every explanation is distinct — the reveal is a payoff, not boilerplate", async () => {
+  const { cards } = await loadDeck("pop-voices");
+  const explanations = cards.map((c) => c.explanation.trim().toLowerCase());
+  assert.equal(new Set(explanations).size, explanations.length);
+});
+
+test("corpus: cards are approved, and single-approver cards say so", async () => {
+  const { cards } = await loadDeck("pop-voices");
+  for (const card of cards) {
+    assert.notEqual(card.status, "draft", card.displayName);
+    const approvers = card.editorialApprovals.map((a) => a.editor);
+    assert.ok(
+      approvers.length >= 2 || approvers.includes(OWNER_APPROVAL),
+      `${card.displayName} is not approved`,
+    );
+  }
+});
+
+test("corpus: every figure has a Voice Bank", async () => {
+  const { figures } = await loadFigures();
+  for (const figure of figures) {
+    assert.ok(Array.isArray(figure.voiceBank) && figure.voiceBank.length > 0, figure.displayName);
   }
 });

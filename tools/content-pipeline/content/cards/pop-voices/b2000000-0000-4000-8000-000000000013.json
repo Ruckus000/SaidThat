@@ -1,0 +1,39 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000013",
+  "figureId": "c3000000-0000-4000-8000-000000000013",
+  "displayName": "Mark Hamill",
+  "statementText": "Well... that's the wrong screwdriver.",
+  "authenticity": "fabricated",
+  "category": "film-tv",
+  "difficultyPrior": 5,
+  "sensitivity": "everyone",
+  "explanation": "Made up for the game. The dry ellipsis opening matches how he actually posts, so the only invented part is the screwdriver.",
+  "formatFingerprint": "domestic-appliance-defeat",
+  "eraVocabTag": "pre-2015",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": true,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": true,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Drafted with AI assistance, rewritten and owned by the repository owner under ADR-012.",
+  "decoyMethod": "ai_assisted",
+  "source": null
+}

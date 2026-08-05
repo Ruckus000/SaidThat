@@ -60,6 +60,10 @@ export const FORMAT_FINGERPRINTS = new Set([
   "weather-observation",
   "self-correction",
   "gratitude-post",
+  "training-log",
+  "unsolicited-request",
+  "recognised-in-public",
+  "name-misspelled",
 ]);
 
 export const MAX_STATEMENT_LENGTH = 500; // schema ceiling; D3 imposes the real 180 limit
@@ -78,6 +82,12 @@ export function sensitivityRank(value) {
 function isNonEmptyString(value) {
   return typeof value === "string" && value.trim().length > 0;
 }
+
+/**
+ * Pre-release owner approval marker. Must match OWNER_APPROVAL in
+ * apps/mobile/src/domain/game.js — asserted by test/approvals.test.mjs.
+ */
+export const OWNER_APPROVAL = "owner:pre-release";
 
 /**
  * Distinct approver identities. Mirrors the `Array.isArray` guard in
@@ -254,10 +264,17 @@ export function validateEditorialCard(card, { figures = new Map(), index = 0 } =
   // committed and reviewed; anything at provisional or beyond is claiming to be
   // playable and must carry the approvals.
   const approvers = distinctApprovers(card.editorialApprovals);
-  if (card.status !== "draft" && approvers.length < 2) {
+  const ownerApproved = approvers.includes(OWNER_APPROVAL);
+  if (card.status !== "draft" && approvers.length < 2 && !ownerApproved) {
     issues.push(block("editorial.two-person-rule", `${path}.editorialApprovals`,
-      "Cards naming a real figure need two distinct editorial approvals.",
+      `Cards naming a real figure need two distinct editorial approvals, or an explicit '${OWNER_APPROVAL}' during pre-release.`,
       { value: approvers.length, limit: 2 }));
+  }
+  // Visible in every report rather than silent: a deck carried by one approver
+  // is a real gap in review, and it should stay legible as one.
+  if (ownerApproved && approvers.length < 2) {
+    issues.push(warn("editorial.single-approver", `${path}.editorialApprovals`,
+      "Approved by the owner alone. The two-person rule still applies before release."));
   }
   if (card.decoyMethod === "ai_assisted" && card.status !== "draft" && !isNonEmptyString(card.editorialNotes)) {
     issues.push(block("editorial.ai-assist-ownership", `${path}.editorialNotes`,

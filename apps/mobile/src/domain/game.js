@@ -49,9 +49,37 @@ function hasTwoDistinctApprovals(card) {
 }
 
 /**
+ * Pre-release owner approval, amended 2026-08-05 by owner decision.
+ *
+ * The two-person rule stands as the release bar. Before release there is only
+ * one editor, so requiring two meant either shipping nothing or inventing a
+ * second approver — and a fabricated second name is strictly worse than an
+ * honest single one, because it makes the rule look satisfied while providing
+ * none of the review it exists to provide.
+ *
+ * So a lone approval is accepted only when it is explicitly marked as the
+ * owner's. The marker is a distinct value, not a name, so a card cannot slip
+ * through on a coincidental match; and it stays visible in the record, so
+ * "approved by one person" can be told apart from "reviewed by two" at any
+ * point later.
+ */
+export const OWNER_APPROVAL = "owner:pre-release";
+
+function hasOwnerApproval(card) {
+  if (!Array.isArray(card.editorialApprovals)) return false;
+  return card.editorialApprovals.includes(OWNER_APPROVAL);
+}
+
+function isEditoriallyApproved(card) {
+  return hasTwoDistinctApprovals(card) || hasOwnerApproval(card);
+}
+
+/**
  * An authentic record is never playable just because a URL exists. It needs a
- * retained source and two distinct editorial approvals. Local fixtures are
- * allowed only when the caller opts in (Expo development, never a release).
+ * retained source and editorial approval — two distinct approvers, or an
+ * explicit owner approval during pre-release (see OWNER_APPROVAL). Local
+ * fixtures are allowed only when the caller opts in (Expo development, never a
+ * release).
  */
 export function isPlayableCard(card, { allowLocalFixtures = false } = {}) {
   if (!card || typeof card !== "object" || NON_PLAYABLE_STATES.has(card.contentState)) return false;
@@ -61,7 +89,7 @@ export function isPlayableCard(card, { allowLocalFixtures = false } = {}) {
   }
 
   if (card.contentState === "fabricated-for-game") {
-    return hasTwoDistinctApprovals(card);
+    return isEditoriallyApproved(card);
   }
 
   return (
@@ -69,7 +97,7 @@ export function isPlayableCard(card, { allowLocalFixtures = false } = {}) {
     card.sourceRecord?.retained === true &&
     typeof card.sourceRecord.url === "string" &&
     card.sourceRecord.url.startsWith("https://") &&
-    hasTwoDistinctApprovals(card)
+    isEditoriallyApproved(card)
   );
 }
 

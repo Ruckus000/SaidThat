@@ -1,0 +1,67 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000003",
+  "figureId": "c3000000-0000-4000-8000-000000000003",
+  "displayName": "Kim Kardashian",
+  "statementText": "kowabunga dudettes. i'm so pumped to be on this surfing kick. who else surfs out there? gnarly day in the h2o. ridin waves!",
+  "authenticity": "authentic",
+  "category": "reality-tv",
+  "difficultyPrior": 3,
+  "sensitivity": "everyone",
+  "explanation": "August 2010, and unexplained for seven years — in 2017 she said Kourtney had taken her phone. The surfing was never real; the post is.",
+  "formatFingerprint": "sincere-non-sequitur",
+  "eraVocabTag": "pre-2015",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": true,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API.",
+  "decoyMethod": "none",
+  "transcriptionExact": true,
+  "normalizations": [],
+  "sourceTier": "A",
+  "citations": [
+    {
+      "url": "https://www.bustle.com/p/kim-kardashians-old-tweets-included-this-hilarious-catchphrase-way-too-often-9818212",
+      "outlet": "bustle.com",
+      "publishedAt": "2010-08-29",
+      "isPrimary": false,
+      "independent": true,
+      "independentOf": []
+    },
+    {
+      "url": "https://more.etalk.ca/celebrity/2020/10/20/kim-kardashians-most-perplexing-comments-of-all-time.html",
+      "outlet": "more.etalk.ca",
+      "publishedAt": "2010-08-29",
+      "isPrimary": false,
+      "independent": true,
+      "independentOf": []
+    }
+  ],
+  "source": {
+    "url": "https://web.archive.org/web/20260721221915/https://twitter.com/KimKardashian/status/22396212024",
+    "archiveUrl": "https://web.archive.org/web/20260721221915/https://twitter.com/KimKardashian/status/22396212024",
+    "publishedAt": "2010-08-29",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "web-archive",
+    "retained": true
+  }
+}

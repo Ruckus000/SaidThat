@@ -56,6 +56,9 @@ export function deriveContentState(card) {
 
 export function toRuntimeCard(card) {
   const contentState = deriveContentState(card);
+  // Emitted as plain strings because isPlayableCard counts distinct entries of
+  // the array itself. The owner marker survives verbatim so the runtime rule
+  // and the editorial record agree on who approved.
   const approvals = Array.isArray(card.editorialApprovals)
     ? [...new Set(card.editorialApprovals.filter((e) => e?.decision !== "reject").map((e) => e?.editor ?? e))]
     : [];

@@ -1,0 +1,67 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000006",
+  "figureId": "c3000000-0000-4000-8000-000000000006",
+  "displayName": "Ryan Reynolds",
+  "statementText": "Uh... It's Chimichanga Time.",
+  "authenticity": "authentic",
+  "category": "movies",
+  "difficultyPrior": 4,
+  "sensitivity": "everyone",
+  "explanation": "December 2014, the week Deadpool was confirmed. Chimichangas are the character's running gag, which is exactly why it reads invented.",
+  "formatFingerprint": "self-deprecating-career-reference",
+  "eraVocabTag": "pre-2015",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": true,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": true,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API.",
+  "decoyMethod": "none",
+  "transcriptionExact": true,
+  "normalizations": [],
+  "sourceTier": "A",
+  "citations": [
+    {
+      "url": "https://web.archive.org/web/20150321100604/https://twitter.com/VancityReynolds/status/540594148097916928",
+      "outlet": "web.archive.org",
+      "publishedAt": "2014-12-05",
+      "isPrimary": true,
+      "independent": true,
+      "independentOf": []
+    },
+    {
+      "url": "https://www.buzzfeed.com/mjs538/funny-celeb-tweets",
+      "outlet": "buzzfeed.com",
+      "publishedAt": "2014-12-05",
+      "isPrimary": false,
+      "independent": true,
+      "independentOf": []
+    }
+  ],
+  "source": {
+    "url": "https://web.archive.org/web/20150321100604/https://twitter.com/VancityReynolds/status/540594148097916928",
+    "archiveUrl": "https://web.archive.org/web/20150321100604/https://twitter.com/VancityReynolds/status/540594148097916928",
+    "publishedAt": "2014-12-05",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "web-archive",
+    "retained": true
+  }
+}

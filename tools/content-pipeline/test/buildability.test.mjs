@@ -184,23 +184,18 @@ test("validateCard: per-card gates are exactly schema, read-aloud and safety", (
   assert.ok(res.issues.some((i) => i.code === "read-aloud.url"));
 });
 
-test("build: the real corpus withholds every card, and says why", async () => {
+test("build: the real corpus is fully shippable", async () => {
+  // Inverted golden. This used to assert all 40 ported cards were withheld —
+  // 27 on gate failures, 13 gate-clean but stuck at draft. That corpus was
+  // replaced by verified records, so the assertion is now that nothing is
+  // withheld at all, and any regression shows up as a withheld card.
   const { manifest: real, cards } = await loadDeck("pop-voices");
   const { byId } = await loadFigures();
   const outcome = buildability({ manifest: real, cards, figures: byId });
 
-  assert.equal(outcome.ok, false);
-  assert.equal(outcome.reason, "no-shippable-cards");
-  assert.equal(outcome.shippable.length, 0);
-  assert.equal(outcome.withheld.length, 40);
-
-  // 27 fail their own gates; the other 13 are clean but still at draft.
-  const blocked = outcome.withheld.filter((w) => w.reason === "blocked");
-  assert.equal(blocked.length, 27);
-  assert.equal(outcome.withheld.filter((w) => w.reason === "status:draft").length, 13);
-
-  // Every gate-clean card is fabricated, which is why promoting them alone
-  // could not produce a deck: the authentic ratio would be zero.
-  const cleanIds = new Set(outcome.withheld.filter((w) => w.reason !== "blocked").map((w) => w.card.id));
-  assert.ok([...cleanIds].every((id) => cards.find((c) => c.id === id).authenticity === "fabricated"));
+  assert.equal(outcome.ok, true);
+  assert.equal(outcome.reason, null);
+  assert.deepEqual(outcome.withheld, []);
+  assert.equal(outcome.shippable.length, cards.length);
+  assert.ok(outcome.shippable.length >= 10, "a run needs ten cards");
 });

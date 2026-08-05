@@ -140,13 +140,28 @@ test("emit: the rendered module is valid JS exporting the expected shape", async
   assert.match(rendered, /do not edit by hand/);
 });
 
-test("emit: the committed bundle is empty while the corpus is still in draft", async () => {
+test("emit: the committed bundle carries the verified deck", async () => {
   const generated = await readFile(path.join(REPO_ROOT, "apps/mobile/src/content/deck.generated.js"), "utf8");
   const mod = await import(`data:text/javascript,${encodeURIComponent(generated)}`);
-  // Not a stub: build.mjs refuses to emit a deck that fails validation, so an
-  // empty bundle is the honest result until the editorial pass lands.
-  assert.deepEqual(mod.generatedCards, []);
-  assert.deepEqual(mod.generatedTombstones, []);
+
+  assert.ok(mod.generatedCards.length >= 10, "a run needs ten cards");
+  assert.match(mod.GENERATED_DECK_VERSION, /^\d+\.\d+\.\d+$/);
+  assert.match(mod.GENERATED_SOURCE_SHA256, /^[0-9a-f]{64}$/);
+
+  // Both halves reach the bundle, and only authentic cards carry a source.
+  const authentic = mod.generatedCards.filter((c) => c.authentic);
+  assert.ok(authentic.length > 0 && authentic.length < mod.generatedCards.length);
+  for (const card of mod.generatedCards) {
+    assert.equal(card.authentic, card.contentState === "authentic");
+    if (card.authentic) assert.ok(card.sourceRecord.url.startsWith("https://"), card.person);
+    else assert.equal(card.sourceRecord, undefined, card.person);
+  }
+  // Editorial-only fields must never reach a device.
+  for (const card of mod.generatedCards) {
+    for (const field of ["editorialNotes", "citations", "rubric", "calibration", "difficultyPrior"]) {
+      assert.equal(field in card, false, `${field} leaked into the bundle`);
+    }
+  }
 });
 
 test("emit: catalog.js keeps the fixture array inline for the policy test", async () => {
