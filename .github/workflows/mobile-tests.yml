@@ -51,6 +51,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       mobile: ${{ steps.filter.outputs.mobile }}
+      content: ${{ steps.filter.outputs.content }}
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v3
@@ -60,6 +61,36 @@ jobs:
             mobile:
               - 'apps/mobile/**'
               - '.github/workflows/mobile-tests.yml'
+            content:
+              - 'tools/content-pipeline/**'
+              - '.github/workflows/mobile-tests.yml'
+
+  # Separate job, not a step in `test`: the content pipeline is dependency-free
+  # and runs under plain `node --test`, so making it wait on `npm ci --prefix
+  # apps/mobile` would pay a full install to run zero-dependency tests. It also
+  # keeps the two filters independent — a card-only change must not skip the
+  # gates just because no mobile file moved.
+  content-pipeline:
+    needs: changes
+    if: needs.changes.outputs.content == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Includes corpus.test.mjs, which asserts the CURRENT corpus state against
+      # the gates. The ported candidates do not pass yet — 20 authentic cards
+      # carry Tier C provenance and the deck leaks two exclusive style markers —
+      # so the golden pins the failure rather than pretending it is clean.
+      #
+      # Once the editorial pass (CP-04) lands, replace that golden with a live
+      # `node tools/content-pipeline/bin/validate.mjs --deck pop-voices` step
+      # here, so CI enforces the gate directly instead of a recorded snapshot.
+      - name: Pipeline unit tests
+        run: node --test tools/content-pipeline/test/
 
   test:
     needs: changes

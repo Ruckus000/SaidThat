@@ -4,8 +4,9 @@
 
 ## Scope guardrails
 
-- Work only under `apps/mobile/` unless a task explicitly changes an adjacent repository-owned test or policy file.
-- Keep all playable cards local, fabricated or explicitly simulated-authentic fixtures, and visibly labeled. Do not use public-figure names, real-post text, images, source URLs, or editorial candidates in the app.
+- Work only under `apps/mobile/` unless a task explicitly changes an adjacent repository-owned test or policy file, or is part of the build-time content pipeline under `tools/content-pipeline/`.
+- Keep all playable cards local and visibly labeled. **Amended 2026-08-04 (owner decision):** curated public-figure cards may now ship in the bundle, replacing the earlier prohibition on public-figure names, real-post text, source URLs, and editorial candidates. They are admitted only through `tools/content-pipeline/`, which requires Tier A/B provenance with two independent citations, a retained https source record, two distinct editorial approvals, and a clean pass of the safety, read-aloud, composition and tell-leakage gates. Fixture-only dev records remain in the bundle behind the existing `__DEV__` gate and are still fixture-only. Images and profile photos remain excluded.
+- Fabricated cards stay labeled as fabricated on reveal, and the reveal must keep `SIMULATED AUTHENTIC` distinct from `AUTHENTIC`. No content change may collapse those.
 - No accounts, Supabase, public uploads, live social APIs, telemetry, ads, payments, or remote report delivery.
 - Tap-only is a complete first-class route. Any sensor enhancement is optional and must preserve exactly-one-commit behavior and have deterministic fallback coverage.
 - Do not call the MVP release-ready, accessible, validated, source-verified, or legally cleared.
@@ -31,6 +32,22 @@
 | 6 | MVP-06 | Expand the bundled fixture deck with original non-public-figure prompts and deterministic deck validation/rotation coverage. | Every record is fixture-only; withheld records remain unplayable; no real claim or source enters the bundle. | MVP-03 |
 | 7 | MVP-07 | Add Android export smoke coverage and a manual native verification checklist template for later release evidence. | `expo export` succeeds for iOS and Android; checklist makes no pass claim. | MVP-04, MVP-05 |
 
+## Curated-content queue (added 2026-08-04)
+
+Ordered tasks for the content pipeline and the cards it produces. `MVP-11` is a hard gate: no public-figure content may reach `apps/mobile/` before it passes.
+
+| Order | ID | Focus | Completion evidence | Dependency |
+| --- | --- | --- | --- | --- |
+| 8 | MVP-08 | Build `tools/content-pipeline/` — schema, provenance tiers, read-aloud, safety, composition and tell-leakage gates, with the candidate corpus ported as `draft`. | `node --test tools/content-pipeline/test/` green; `validate.mjs` exits non-zero on the raw corpus. | None |
+| 9 | MVP-09 | Editorial pass: break same-figure pairs, re-source to Tier A/B, rewrite decoys, distinct explanations, reach the pool floor. | `validate.mjs --deck pop-voices` exits 0; leave-one-out leakage at or below 0.58 with no exclusive class marker. | MVP-08 |
+| 10 | MVP-10 | Accept `contentState: "authentic"` in `validateDeck.js`, add tombstone precedence. | A well-formed authentic record validates; one without a retained https source does not; `game.test.mjs` unchanged. | MVP-08 |
+| 11 | MVP-11 | Emit the runtime bundle from editorial records and merge it with the existing fixtures in `catalog.js`. | Emitter covers every derivation-table row; `build.mjs --check` reports no drift; both platform exports succeed. | MVP-09, MVP-10 |
+| 12 | MVP-12 | Report the real source record on reveal and disclose AI-assisted decoys. | `SIMULATED AUTHENTIC` and `AUTHENTIC` remain distinct strings; disclosure renders for `ai_assisted`. | MVP-11 |
+| 13 | MVP-13 | Replace deck shuffling with a seeded run-builder honouring the slot shape and variety constraints. | Same seed yields an identical run; no repeated figure; no three consecutive identical answers; reducer stays pure. | MVP-10 |
+| 14 | MVP-14 | Capture local playtest calibration and export it for editorial import. | Verdict thresholds tested at each boundary; export payload asserted to carry no identity fields; no network path. | MVP-13 |
+
 ## Stop conditions
 
-Stop and report instead of improvising if work would add a networked backend, account, public content, real-person attribution, production analytics, a remote delivery endpoint, or a release claim. Those are outside this MVP authorization.
+Stop and report instead of improvising if work would add a networked backend, account, public user-generated content, production analytics, a remote delivery endpoint, or a release claim. Those are outside this MVP authorization.
+
+Real-person attribution is **no longer** a stop condition, but it is gated: it is authorized only through `tools/content-pipeline/` and only for cards that pass every gate. Hand-editing a public-figure card directly into `apps/mobile/src/content/` bypasses provenance, safety and approval checks and remains a stop condition.

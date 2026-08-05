@@ -144,6 +144,39 @@ test("recap: the rank rates the reading, never the player or the truth", () => {
   expect(screen.getByText("ROOM ORACLE")).toBeOnTheScreen();
 });
 
+test("recap: the laugh pick is absent unless a handler and cards are supplied", () => {
+  // The recap has to keep working with no calibration wired up at all.
+  render(<RecapScreen {...recap} />);
+  expect(screen.queryByText(/BIGGEST REACTION/i)).not.toBeOnTheScreen();
+
+  render(<RecapScreen {...recap} onPickFunniest={() => {}} runCards={[]} />);
+  expect(screen.queryByText(/BIGGEST REACTION/i)).not.toBeOnTheScreen();
+});
+
+test("recap: the laugh pick names a card and reports its selection to assistive tech", async () => {
+  const onPickFunniest = jest.fn();
+  const runCards = [
+    { id: "a", person: "First Figure" },
+    { id: "b", person: "Second Figure" },
+  ];
+  render(
+    <RecapScreen {...recap} runCards={runCards} laughPickId="a" onPickFunniest={onPickFunniest} />,
+  );
+
+  // Selection is carried by accessibilityState, not by colour alone — queried
+  // through the role filter so the assertion fails if the state is dropped.
+  expect(
+    screen.getByRole("button", { name: "Biggest reaction: First Figure", selected: true }),
+  ).toBeOnTheScreen();
+  expect(
+    screen.queryByRole("button", { name: "Biggest reaction: Second Figure", selected: true }),
+  ).not.toBeOnTheScreen();
+
+  // Tapping again moves the pick rather than locking it in.
+  await userEvent.press(screen.getByLabelText("Biggest reaction: Second Figure"));
+  expect(onPickFunniest).toHaveBeenCalledWith("b");
+});
+
 test("recap: a rough run is still encouraging", () => {
   render(<RecapScreen {...recap} correctCount={0} roundsPlayed={3} />);
 

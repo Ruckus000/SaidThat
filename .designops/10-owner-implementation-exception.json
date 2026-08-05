@@ -23,7 +23,7 @@
   ],
   "constraints": [
     "This exception does not convert AI simulation output into participant evidence, accessibility evidence, legal clearance, or a signed DesignOps direction or handoff approval.",
-    "Only the local-first Expo MVP under apps/mobile is authorized; accounts, public UGC, live X integration, multiplayer rooms, political breaking-news decks, and AI celebrity impersonation remain excluded.",
+    "Only the local-first Expo MVP under apps/mobile, plus the build-time content pipeline under tools/content-pipeline, is authorized; accounts, public UGC, live X integration, multiplayer rooms, and political breaking-news decks remain excluded. Amended 2026-08-04 by owner decision: AI may draft decoy text where a named human editor rewrites, approves and owns the shipped line and decoyMethod records ai_assisted (ADR-012); unattributed model impersonation and any decoy that reaches the bundle without two distinct editorial approvals remain excluded.",
     "Release remains fail-closed and still requires signed handoff and release approvals plus current iOS/Android native verification evidence.",
     "Every pull request still requires repository enforcement, GitHub visibility, code review, and security review."
   ]

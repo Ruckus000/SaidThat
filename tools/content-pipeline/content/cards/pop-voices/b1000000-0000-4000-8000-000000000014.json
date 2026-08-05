@@ -1,0 +1,54 @@
+{
+  "id": "b1000000-0000-4000-8000-000000000014",
+  "figureId": "c2000000-0000-4000-8000-000000000017",
+  "displayName": "Cher",
+  "statementText": "Wu Tang Cher Clan",
+  "authenticity": "authentic",
+  "category": "music",
+  "difficultyPrior": 3,
+  "sensitivity": "everyone",
+  "explanation": "Four-word Cher classic (2014).",
+  "formatFingerprint": "band-name-pun",
+  "source": {
+    "url": "https://www.buzzfeed.com/mjs538/funny-celeb-tweets",
+    "archiveUrl": null,
+    "publishedAt": null,
+    "rightsStatus": "unknown",
+    "verificationMethod": "contemporaneous-article",
+    "retained": false
+  },
+  "sourceTier": "C",
+  "citations": [
+    {
+      "url": "https://www.buzzfeed.com/mjs538/funny-celeb-tweets",
+      "outlet": null,
+      "publishedAt": null,
+      "isPrimary": false,
+      "independent": false,
+      "independentOf": []
+    }
+  ],
+  "transcriptionExact": true,
+  "normalizations": [],
+  "decoyMethod": "none",
+  "editorialApprovals": [],
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "eraVocabTag": "pre-2015",
+  "rubric": null,
+  "status": "draft",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "BuzzFeed reprint."
+}

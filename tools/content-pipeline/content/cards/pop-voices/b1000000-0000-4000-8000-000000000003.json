@@ -1,0 +1,54 @@
+{
+  "id": "b1000000-0000-4000-8000-000000000003",
+  "figureId": "c2000000-0000-4000-8000-000000000003",
+  "displayName": "Ryan Reynolds",
+  "statementText": "Uh... It's Chimichanga Time.",
+  "authenticity": "authentic",
+  "category": "movies",
+  "difficultyPrior": 2,
+  "sensitivity": "everyone",
+  "explanation": "December 2014 Deadpool confirmation-era post, archived on the live web.",
+  "formatFingerprint": "unprompted-food-opinion",
+  "source": {
+    "url": "https://web.archive.org/web/20150321100604/https:/twitter.com/VancityReynolds/status/540594148097916928",
+    "archiveUrl": "https://web.archive.org/web/20150321100604/https:/twitter.com/VancityReynolds/status/540594148097916928",
+    "publishedAt": null,
+    "rightsStatus": "unknown",
+    "verificationMethod": "web-archive",
+    "retained": false
+  },
+  "sourceTier": "C",
+  "citations": [
+    {
+      "url": "https://web.archive.org/web/20150321100604/https:/twitter.com/VancityReynolds/status/540594148097916928",
+      "outlet": null,
+      "publishedAt": null,
+      "isPrimary": false,
+      "independent": false,
+      "independentOf": []
+    }
+  ],
+  "transcriptionExact": true,
+  "normalizations": [],
+  "decoyMethod": "none",
+  "editorialApprovals": [],
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "eraVocabTag": "pre-2015",
+  "rubric": null,
+  "status": "draft",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Archive capture of the original post."
+}

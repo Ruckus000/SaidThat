@@ -5,7 +5,15 @@
   "decision": "End additional evidence gathering for the local-first MVP. Treat the simulation-backed Direction and Handoff drafts as sufficient internal implementation guidance and continue building apps/mobile without participant studies or signed Direction/Handoff reviews.",
   "scope": {
     "included": ["apps/mobile/", "fixture-only local content", "Room Beacon primary flow", "Private Relay accessibility and recovery countermodel"],
-    "excluded": ["public uploads", "accounts", "live social feeds", "authentic playable public-figure cards", "release claims"]
+    "excluded": ["public uploads", "accounts", "live social feeds", "unvetted public-figure cards", "release claims"],
+    "amendments": [
+      {
+        "date": "2026-08-04",
+        "authority": "owner decision",
+        "change": "Authentic playable public-figure cards are no longer excluded outright. They are admitted only via tools/content-pipeline/, which enforces Tier A/B provenance with two independent citations, a retained https source record, two distinct editorial approvals, and passing safety, read-aloud, composition and tell-leakage gates. Cards that bypass that pipeline remain excluded, which is what 'unvetted public-figure cards' now names.",
+        "unchanged": "Fabricated cards stay labeled as fabricated on reveal; SIMULATED AUTHENTIC stays distinct from AUTHENTIC; banned content categories, the two-person rule, and the takedown SLA are untouched."
+      }
+    ]
   },
   "evidenceRecords": [
     { "path": ".designops/05-direction-validation/simulation-evidence-ledger.json", "sha256": "975a39b5e9dbfa8fb2519d9d23af837e78f4646ed2f389bcd074e50ac71e21ba" },

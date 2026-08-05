@@ -1,0 +1,34 @@
+{
+  "id": "b1000000-0000-4000-8000-000000000113",
+  "figureId": "c2000000-0000-4000-8000-000000000021",
+  "displayName": "Keanu Reeves",
+  "statementText": "Someone held the elevator. I whispered thank you like it was a secret mission. It was.",
+  "authenticity": "fabricated",
+  "category": "film-tv",
+  "difficultyPrior": 4,
+  "sensitivity": "everyone",
+  "explanation": "Made up for the game — not a real post. (Keanu is also famously light on Twitter.)",
+  "formatFingerprint": "sincere-non-sequitur",
+  "source": null,
+  "decoyMethod": "human",
+  "editorialApprovals": [],
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "eraVocabTag": "pre-2015",
+  "rubric": null,
+  "status": "draft",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Wholesome decoy; hard because soft-spoken brand fits almost anything."
+}

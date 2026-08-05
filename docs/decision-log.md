@@ -114,13 +114,16 @@
 
 ---
 
-## ADR-012 — Human-written decoys; no AI impersonation default
+## ADR-012 — AI-assisted decoy drafting; a named human rewrites and owns every shipped line
 
-- **Decision:** Editorial humans own fabrications.  
-- **Context:** ROP + store deceptive media climate.  
-- **Alternatives:** LLM mass generation.  
-- **Why:** Safety and quality.  
-- **Change if:** Strict licensed AI pipeline with legal approval exists.
+**Amended 2026-08-04 (owner decision).** Supersedes the original "no AI drafting" form of this ADR.
+
+- **Decision:** AI may draft decoy text. A named human editor rewrites it, approves it, and owns it; `decoyMethod` records `human` or `ai_assisted`, and an `ai_assisted` card cannot leave `draft` without an owning editor recorded in `editorialNotes`. The two-person approval rule is unchanged and applies to every card naming a real figure.
+- **Context:** ROP + store deceptive-media climate. The original ADR forbade AI drafting outright; the owner has accepted the volume/quality tradeoff in exchange for the attribution and ownership controls above.
+- **Alternatives:** Brainstorm-only assist (the previous position); unattributed LLM mass generation (rejected — attribution is what makes the rest of the safety model enforceable).
+- **Why:** Decoy volume is the binding constraint on deck size, and deck size is what the run-builder needs to stop repeating runs. Ownership is recorded per card rather than assumed per policy.
+- **Unchanged by this amendment:** the banned content categories, the reveal labeling that keeps fabricated cards labeled as fabricated, the two-person rule, and the takedown SLA. AI assistance changes who *drafts*, not what may ship.
+- **Change if:** attribution or approval data proves unreliable in review, or counsel revises the deceptive-media position.
 
 ---
 

@@ -1,0 +1,34 @@
+{
+  "id": "b1000000-0000-4000-8000-000000000110",
+  "figureId": "c2000000-0000-4000-8000-000000000018",
+  "displayName": "Gordon Ramsay",
+  "statementText": "This avocado toast is so raw it just asked me for a safe word.",
+  "authenticity": "fabricated",
+  "category": "food",
+  "difficultyPrior": 4,
+  "sensitivity": "teen",
+  "explanation": "Made up for the game — not a real post. (Many \"Ramsay tweet\" screenshots online are also fake.)",
+  "formatFingerprint": "sincere-non-sequitur",
+  "source": null,
+  "decoyMethod": "human",
+  "editorialApprovals": [],
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "eraVocabTag": "pre-2015",
+  "rubric": null,
+  "status": "draft",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Intentionally fabricated; teaches players not to trust spicy chef screenshots. Sensitivity teen for mild innuendo."
+}

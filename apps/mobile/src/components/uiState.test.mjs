@@ -14,6 +14,7 @@ import {
   resultStreakLabel,
   recapStatLines,
   resetReportsNotice,
+  decoyDisclosure,
   reviewSourceStatus,
   reviewTruthLabel,
   roundInstruction,
@@ -108,11 +109,15 @@ test("ui: review truth labels stay textual, not color-only", () => {
   );
 });
 
-// The deck is fixture-only today, so this card cannot occur yet. The branch is
-// kept live anyway: a source-verified editorial card must never inherit the
-// simulation copy, and the failure would be silent if only fixtures were tested.
+// A source-verified editorial card must never inherit the simulation copy. The
+// two labels are the only thing distinguishing "a real person posted this" from
+// "we made this up for a dev fixture", so they are asserted separately.
 test("ui: a source-verified authentic card is never labeled a simulation", () => {
-  const productionAuthentic = { authentic: true, contentState: "normal" };
+  const productionAuthentic = {
+    authentic: true,
+    contentState: "authentic",
+    sourceRecord: { retained: true, url: "https://web.archive.org/web/2015/status/1" },
+  };
 
   const label = reviewTruthLabel(productionAuthentic);
   assert.match(label, /AUTHENTIC/);
@@ -122,7 +127,48 @@ test("ui: a source-verified authentic card is never labeled a simulation", () =>
   const status = reviewSourceStatus(productionAuthentic);
   assert.doesNotMatch(status, /simulation/i);
   assert.doesNotMatch(status, /game fixture/i);
-  assert.match(status, /source record/i);
+  // Reports the record actually on the card rather than the old placeholder
+  // copy ("editorial source record required"), which described a state that
+  // could not exist before the pipeline landed.
+  assert.match(status, /verified source on file/i);
+  assert.match(status, /web\.archive\.org/);
+});
+
+test("ui: the source line degrades safely when the URL is absent or malformed", () => {
+  for (const sourceRecord of [undefined, { retained: true, url: "not-a-url" }]) {
+    const status = reviewSourceStatus({ authentic: true, contentState: "authentic", sourceRecord });
+    assert.equal(status, "verified source on file");
+  }
+  // A www prefix is noise in a credibility line.
+  assert.match(
+    reviewSourceStatus({
+      authentic: true,
+      contentState: "authentic",
+      sourceRecord: { retained: true, url: "https://www.example.com/a" },
+    }),
+    /— example\.com$/,
+  );
+});
+
+test("ui: a curated fabricated card says why it has no source", () => {
+  const status = reviewSourceStatus({ authentic: false, contentState: "fabricated-for-game" });
+  assert.match(status, /nobody said it/i);
+  // Dev fixtures keep their own shorter line.
+  assert.equal(
+    reviewSourceStatus({ authentic: false, contentState: "fabricated-for-game", fixtureOnly: true }),
+    "game fixture",
+  );
+});
+
+test("ui: AI-assisted decoys disclose their drafting, and nothing else does", () => {
+  assert.match(
+    decoyDisclosure({ decoyMethod: "ai_assisted" }),
+    /AI assistance.*human editor/i,
+  );
+  assert.equal(decoyDisclosure({ decoyMethod: "human" }), null);
+  assert.equal(decoyDisclosure({ decoyMethod: "none" }), null);
+  assert.equal(decoyDisclosure({}), null);
+  assert.equal(decoyDisclosure(null), null);
 });
 
 // RESET LOCAL SESSION promises to clear room progress AND the queued reports.

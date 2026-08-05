@@ -3,6 +3,8 @@
 **Date:** 2026-07-18  
 **Thesis:** Content quality and safety—not engineering—are the primary product risk.
 
+**See also:** [`content/editorial-rubric.md`](content/editorial-rubric.md) is the normative spec for *what makes a card good* — discovery lanes, source tiers, the six-dimension scoring rubric, decoy craft, deck-level anti-tell properties, and the calibration loop. This document covers process and volume; that one covers quality. Where they disagree, the rubric wins.
+
 ---
 
 ## 1. Ingestion strategy (recommendation)
@@ -19,6 +21,8 @@
 | Scraping | **No** | Unacceptable operational/legal risk |
 
 **Hybrid MVP:** Editors manually create cards as **PR-reviewed JSON** (no CMS until rematch is proven). Authentic cards cite allowed sources; fabricated cards are original writing. Phase 0 ships one bundled deck; Phase 1 may add Supabase packaging without a Next admin.
+
+**Discovery is two stages, and they are different lanes.** Roundups, wikis and editor recall *find* candidates and prove nothing; archives, contemporaneous citations and primary non-post records *prove* them and find nothing. Nothing enters the card file from a lead alone. Source tiers A/B/C and the anti-laundering check are defined in `content/editorial-rubric.md` §1.
 
 ---
 
@@ -64,6 +68,8 @@ flowchart LR
 **Banned:** Crimes, hate, sexual content, medical/financial assertions, election falsehoods, private individuals, minors.  
 **AI:** Optional assist for brainstorming only; human must rewrite and own; do not ship raw model impersonations; disclose `decoy_method`.
 
+**Craft:** the *how* is in `content/editorial-rubric.md` §3. The governing idea: a decoy is a forgery, not a joke — you are matching the craquelure, not painting a better Vermeer. The funniest possible fake is the worst fake, because comedic construction (two-beat shape, terminal button, no wasted words) is a forensic marker a room learns to read by round 4. Write the funny version, then damage it. Calibrate every decoy with the blind mix test and the which-is-funnier test before it ships.
+
 ---
 
 ## 4. Deck taxonomy (MVP)
@@ -108,3 +114,8 @@ Avoid politics pack at launch.
 - Report rate per 1k card impressions  
 - Playtest “laugh score” / rematch by deck  
 - Fabrication screenshot misuse incidents (target: zero serious)  
+
+**Measured, not asserted.** The laugh score is `laughShare` and the split is a Wilson-90 interval on `correctRate`, both defined in `content/editorial-rubric.md` §5 and captured locally by the calibration loop. Two deck-health numbers belong beside them:
+
+- **Tell leakage** — leave-one-out classifier accuracy over surface features alone (target ≤0.58; a deck above 0.62 is partly self-solving).
+- **Deliberation index** — median answer latency ÷ deck median. A card at 50% correct with *low* latency is a room guessing, not a room arguing, and correct-rate alone cannot tell those apart.
