@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { emptyStats } from "../domain/playtestPolicy.js";
+import { emptyStats, pruneStats } from "../domain/playtestPolicy.js";
 
 export const PLAYTEST_KEY = "said-that:playtest-card-stats:v1";
 
@@ -25,7 +25,11 @@ export function createPlaytestStore(storage) {
       if (!parsed || typeof parsed !== "object" || typeof parsed.cards !== "object" || parsed.cards === null) {
         return emptyStats();
       }
-      return { cards: parsed.cards };
+      // Pruned on the way in, so a store that collected fixture data under a
+      // dev build is cleaned the next time anything writes. Doing it here
+      // rather than at export keeps `toExport` a pure projection and means the
+      // stale counts never reach a verdict either.
+      return pruneStats({ cards: parsed.cards });
     } catch {
       // A corrupt local cache must not block play, and must not be a reason to
       // start collecting more.
