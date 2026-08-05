@@ -38,7 +38,7 @@ Ordered tasks for the content pipeline and the cards it produces. `MVP-11` is a 
 
 | Order | ID | Focus | Completion evidence | Dependency |
 | --- | --- | --- | --- | --- |
-| 8 | MVP-08 | Build `tools/content-pipeline/` — schema, provenance tiers, read-aloud, safety, composition and tell-leakage gates, with the candidate corpus ported as `draft`. | `node --test tools/content-pipeline/test/` green; `validate.mjs` exits non-zero on the raw corpus. | None |
+| 8 | MVP-08 | Build `tools/content-pipeline/` — schema, provenance tiers, read-aloud, safety, composition and tell-leakage gates, with the candidate corpus ported as `draft`. | `node --test tools/content-pipeline/test/*.test.mjs` green; `validate.mjs` exits non-zero on the raw corpus. | None |
 | 9 | MVP-09 | Editorial pass: break same-figure pairs, re-source to Tier A/B, rewrite decoys, distinct explanations, reach the pool floor. | `validate.mjs --deck pop-voices` exits 0; leave-one-out leakage at or below 0.58 with no exclusive class marker. | MVP-08 |
 | 10 | MVP-10 | Accept `contentState: "authentic"` in `validateDeck.js`, add tombstone precedence. | A well-formed authentic record validates; one without a retained https source does not; `game.test.mjs` unchanged. | MVP-08 |
 | 11 | MVP-11 | Emit the runtime bundle from editorial records and merge it with the existing fixtures in `catalog.js`. | Emitter covers every derivation-table row; `build.mjs --check` reports no drift; both platform exports succeed. | MVP-09, MVP-10 |

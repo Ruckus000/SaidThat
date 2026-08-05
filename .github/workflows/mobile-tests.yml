@@ -81,8 +81,12 @@ jobs:
         with:
           node-version: 22
 
+      # Globbed, not a bare directory. `node --test <dir>/` walks the directory
+      # on Node 20 but resolves it as a module entry point on Node 22, which
+      # fails with MODULE_NOT_FOUND before a single test runs. The glob is what
+      # both versions agree on, and CI pins Node 22.
       - name: Pipeline unit tests
-        run: node --test tools/content-pipeline/test/
+        run: node --test tools/content-pipeline/test/*.test.mjs
 
       # The gates themselves, against the real corpus. This is what stops a deck
       # that leaks authenticity through surface style, or an authentic card with

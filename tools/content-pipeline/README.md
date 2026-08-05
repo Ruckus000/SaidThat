@@ -20,8 +20,12 @@ node tools/content-pipeline/bin/report.mjs --deck pop-voices
 ```
 
 ```bash
-node --test tools/content-pipeline/test/
+node --test tools/content-pipeline/test/*.test.mjs
 ```
+
+Glob the files rather than passing the directory: `node --test <dir>/` walks
+the directory on Node 20 but resolves it as a module entry point on Node 22,
+failing with `MODULE_NOT_FOUND` before any test runs.
 
 `validate.mjs` exits non-zero on any blocking issue and is the CI gate.
 `report.mjs` never fails — it is what you run *while* rewriting, and it names
