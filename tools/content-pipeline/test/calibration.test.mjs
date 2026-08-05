@@ -122,6 +122,31 @@ test("calibration: both copies of the Wilson interval agree", async () => {
   assert.ok(small[1] - small[0] > large[1] - large[0]);
 });
 
+test("calibration: data for cards outside the deck is dropped, and must be visible", () => {
+  // Confirmed live: a development run mixes dev fixtures into the deck, so the
+  // export carries ids that pop-voices does not contain. Benign there — but the
+  // same silence would hide data gathered against an older deck version, where
+  // a card was retired or re-issued, and an editor would read "no changes
+  // justified" as "the deck is stable".
+  const cards = [{ id: "a", displayName: "A", status: "provisional" }];
+  const totals = mergeExports([
+    exportPayload([
+      { cardId: "a", answered: 40, correct: 22, skips: 0, laughs: 5, groups: 10 },
+      { cardId: "fixture-ember-07", answered: 5, correct: 3, skips: 0, laughs: 0, groups: 1 },
+    ]),
+  ]);
+
+  // The unknown id contributes nothing to any proposal…
+  const proposals = proposeTransitions(cards, totals);
+  assert.deepEqual(proposals.map((p) => p.cardId), ["a"]);
+
+  // …but it is still present in the merged totals, which is what lets the
+  // importer count and report it rather than dropping it silently.
+  assert.equal(totals.size, 2);
+  const known = new Set(cards.map((c) => c.id));
+  assert.deepEqual([...totals.keys()].filter((id) => !known.has(id)), ["fixture-ember-07"]);
+});
+
 test("calibration: a report retires a card regardless of its numbers", () => {
   const perfect = { answered: 40, correct: 22, skips: 0, laughs: 10, groups: 10 };
   assert.equal(verdictFor(perfect), "confirm");

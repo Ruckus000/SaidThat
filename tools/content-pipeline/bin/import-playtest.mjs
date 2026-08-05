@@ -41,8 +41,17 @@ const totals = mergeExports(payloads);
 const { cards } = await loadDeck(args.deck);
 const proposals = proposeTransitions(cards, totals);
 
+// Card ids in the export that this deck does not contain. Dev fixtures are the
+// benign case; the one that matters is data gathered against an older deck
+// version, where a card was retired or re-issued. Silently dropping those would
+// let an editor read "no changes justified" as "the deck is stable" when a
+// chunk of the evidence never applied to it.
+const known = new Set(cards.map((card) => card.id));
+const unmatched = [...totals.keys()].filter((id) => !known.has(id));
+const deckVersions = [...new Set(payloads.map((p) => p.deckVersion).filter(Boolean))];
+
 if (args.json) {
-  process.stdout.write(`${JSON.stringify({ files: files.length, proposals }, null, 2)}\n`);
+  process.stdout.write(`${JSON.stringify({ files: files.length, proposals, unmatched, deckVersions }, null, 2)}\n`);
 } else {
   const counts = new Map();
   for (const card of cards) {
@@ -51,7 +60,24 @@ if (args.json) {
     counts.set(verdict, (counts.get(verdict) ?? 0) + 1);
   }
 
-  process.stdout.write(`${files.length} export(s), ${totals.size} card(s) with data\n\n`);
+  process.stdout.write(
+    `${files.length} export(s), ${totals.size} card(s) with data, ` +
+      `${totals.size - unmatched.length} matched this deck\n`,
+  );
+  if (deckVersions.length > 0) {
+    process.stdout.write(`export deck version(s): ${deckVersions.join(", ")}\n`);
+  }
+  if (unmatched.length > 0) {
+    process.stdout.write(
+      `\n${unmatched.length} card id(s) in the export are not in '${args.deck}' and were ignored:\n`,
+    );
+    for (const id of unmatched.slice(0, 8)) process.stdout.write(`  ${id}\n`);
+    if (unmatched.length > 8) process.stdout.write(`  …and ${unmatched.length - 8} more\n`);
+    process.stdout.write(
+      "  Expected for development fixtures. Otherwise check the export's deck version.\n",
+    );
+  }
+  process.stdout.write("\n");
   process.stdout.write("verdicts:\n");
   for (const [verdict, n] of [...counts].sort((a, b) => b[1] - a[1])) {
     process.stdout.write(`  ${String(n).padStart(4)}  ${verdict}\n`);
