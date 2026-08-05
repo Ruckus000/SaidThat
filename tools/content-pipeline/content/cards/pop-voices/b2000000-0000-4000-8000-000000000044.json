@@ -1,0 +1,39 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000044",
+  "figureId": "c3000000-0000-4000-8000-000000000024",
+  "displayName": "Ice-T",
+  "statementText": "Lol. Somebody just told me a scone is not a biscuit...",
+  "authenticity": "fabricated",
+  "category": "music",
+  "difficultyPrior": 2,
+  "sensitivity": "everyone",
+  "explanation": "Invented. He really does post flat food revelations with a Lol opener; the scone is ours.",
+  "formatFingerprint": "restaurant-report",
+  "eraVocabTag": "2015-2019",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": false,
+    "readsAuthentic": true
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Drafted with AI assistance, rewritten and owned by the repository owner under ADR-012.",
+  "decoyMethod": "ai_assisted",
+  "source": null
+}

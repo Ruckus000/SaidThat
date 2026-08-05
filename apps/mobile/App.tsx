@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
-import { Alert, AppState, View, useWindowDimensions } from "react-native";
+import { Alert, AppState, Share, View, useWindowDimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFonts } from "expo-font";
 import { StatusBar } from "expo-status-bar";
@@ -17,8 +17,8 @@ import { SetupScreen } from "./src/components/SetupScreen";
 import { SettingsScreen } from "./src/components/SettingsScreen";
 import { resetReportsNotice } from "./src/components/presentationLabels";
 import { s } from "./src/components/styles";
-import { catalog, DECK_VERSION } from "./src/content/catalog";
-import { playableFixtureDeck } from "./src/content/validateDeck";
+import { catalog, DECK_VERSION, TOMBSTONES } from "./src/content/catalog";
+import { playableDeck } from "./src/content/validateDeck";
 import {
   MODES,
   STAGES,
@@ -40,9 +40,24 @@ import {
 } from "./src/settings/settingsPolicy";
 import { useReducedMotion } from "./src/theme/motion";
 import { clearReportQueue, queueReport } from "./src/storage/reportQueue";
+import { clearPlaytestStats, loadPlaytestStats, updatePlaytestStats } from "./src/storage/playtestStore";
+import { recordGroup, recordLaugh, recordOutcome, toExport } from "./src/domain/playtestPolicy";
 import { withTimeout } from "./src/storage/withTimeout";
 
 const allowLocalFixtures = typeof __DEV__ !== "undefined" && __DEV__;
+
+/**
+ * Entropy for a run, generated here rather than inside the reducer.
+ *
+ * The reducer must stay a pure function of (state, action) — the chaos tests
+ * depend on replaying an action sequence and getting the same state — so the
+ * randomness lives in the UI and travels as data on the action. A single
+ * integer is enough to reproduce any run exactly, which is what makes the
+ * run-builder testable.
+ */
+function runSeed(): number {
+  return (Date.now() ^ Math.floor(Math.random() * 0xffffffff)) >>> 0;
+}
 
 export default function App() {
   // Load VOLT faces (Bricolage Grotesque display + Inter body/counters). Render
@@ -58,9 +73,10 @@ export default function App() {
     gameReducer,
     undefined,
     () => createSession({
-      cards: playableFixtureDeck(catalog, { allowLocalFixtures }),
+      cards: playableDeck(catalog, { allowLocalFixtures }, TOMBSTONES),
       allowLocalFixtures,
       deckVersion: DECK_VERSION,
+      seed: runSeed(),
     }),
   );
   const [reportBusy, setReportBusy] = useState(false);
@@ -70,6 +86,9 @@ export default function App() {
   const [calibrationUnavailable, setCalibrationUnavailable] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [resetNotice, setResetNotice] = useState<string | null>(null);
+  // Which card the room named as the biggest reaction this run. Cleared on a
+  // new run so the next recap starts unpicked.
+  const [laughPick, setLaughPick] = useState<string | null>(null);
   // Which round's verdict the player has already seen. Held here rather than in
   // ResultScreen because that screen UNMOUNTS on an interruption — backgrounding
   // routes through PAUSED — and a component key cannot preserve state across an
@@ -89,9 +108,55 @@ export default function App() {
   // Tap commits fire the KICK haptic doublet inside the answer control (useFireEvent),
   // so the shared dispatch is haptic-free to avoid a double tick. The tilt path has no
   // press phase, so it fires its own single commit tick.
-  const commitAnswer = useCallback((guessAuthentic: boolean) => {
-    dispatch({ type: "ANSWER", guessAuthentic });
-  }, []);
+  const commitAnswer = useCallback(
+    (guessAuthentic: boolean) => {
+      // Calibration is recorded before dispatch so it reads the card the player
+      // actually answered, and is deliberately not awaited: this is a research
+      // signal, and a wedged storage bridge must never delay a commit the room
+      // is waiting on. Losing a sample is the correct failure here.
+      const answered = currentCard(state);
+      if (answered) {
+        const correct = Boolean(answered.authentic) === guessAuthentic;
+        void updatePlaytestStats((stats) =>
+          recordOutcome(stats, { cardId: answered.id, correct }),
+        ).catch(() => {});
+      }
+      dispatch({ type: "ANSWER", guessAuthentic });
+    },
+    [state],
+  );
+
+  /**
+   * Hands the local calibration aggregates to the OS share sheet.
+   *
+   * This is the entire delivery mechanism: a human exports the file and carries
+   * it to an editor. There is no endpoint, no upload, and no background sync —
+   * which is what makes the capture defensible without a consent flow, since
+   * nothing can leave without someone choosing where it goes.
+   */
+  async function exportPlaytestData() {
+    const stats = await withTimeout(loadPlaytestStats(), { fallback: null });
+    const payload = toExport(stats ?? { cards: {} }, DECK_VERSION);
+    if (payload.cards.length === 0) {
+      Alert.alert("Nothing to export yet", "Play a run first — this only records per-card counts.");
+      return;
+    }
+    try {
+      await Share.share({ message: JSON.stringify(payload, null, 2) });
+    } catch {
+      // Sharing was dismissed or refused. Nothing was written and nothing was
+      // sent, so there is nothing to report and nothing to undo.
+    }
+  }
+
+  /** One optional room-level pick per run. Tapping again moves it. */
+  const pickFunniest = useCallback(
+    (cardId: string) => {
+      setLaughPick(cardId);
+      void updatePlaytestStats((stats) => recordLaugh(stats, { cardId })).catch(() => {});
+    },
+    [],
+  );
   const commitAnswerFromTilt = useCallback(
     (guessAuthentic: boolean) => {
       // The haptic fires only if the reducer actually takes the answer. It used
@@ -115,6 +180,20 @@ export default function App() {
     neutralZ: motionNeutralZ,
     onAnswer: commitAnswerFromTilt,
   });
+
+  // A completed run counts as one group for each card it contained. Groups are
+  // what the promote/retire thresholds are actually gated on: twenty exposures
+  // from one room says far less than twenty from eight, and without this the
+  // verdicts would treat those as identical evidence.
+  useEffect(() => {
+    if (state.stage !== STAGES.RECAP) return;
+    const played = state.cards.slice(0, runLength(state)).map((entry: { id: string }) => entry.id);
+    if (played.length === 0) return;
+    void updatePlaytestStats((stats) => recordGroup(stats, played)).catch(() => {});
+    // Keyed on the recap transition rather than the card list so a re-render
+    // cannot double-count the same run.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.stage]);
 
   useEffect(() => {
     const subscription = AppState.addEventListener("change", (nextState) => {
@@ -199,9 +278,10 @@ export default function App() {
     setShowSettings(false);
     dispatch({
       type: "RESET_LOCAL_SESSION",
-      cards: playableFixtureDeck(catalog, { allowLocalFixtures }),
+      cards: playableDeck(catalog, { allowLocalFixtures }, TOMBSTONES),
       allowLocalFixtures,
       deckVersion: DECK_VERSION,
+      seed: runSeed(),
     });
 
     // Now the durable half, bounded. The confirm promised to clear queued reports
@@ -214,6 +294,18 @@ export default function App() {
     } catch {
       reportsCleared = false;
     }
+
+    // Playtest aggregates are local session data too, so "reset local session"
+    // has to clear them. Bounded and swallowed like the queue: this is a
+    // research signal, and failing to clear it must not turn into a second
+    // failure notice competing with the one the player actually needs.
+    setLaughPick(null);
+    try {
+      await withTimeout(clearPlaytestStats(), { fallback: false });
+    } catch {
+      /* the sample outlives the reset; not worth a notice */
+    }
+
     // Surfaced on Home rather than as a second Alert. The confirm alert is still
     // dismissing when this runs, and iOS drops a modal presented mid-dismissal —
     // which would have silently restored the very bug this notice exists to fix.
@@ -227,14 +319,13 @@ export default function App() {
   }
 
   function playAgain() {
-    // Reshuffle in the UI layer so the reducer stays pure/deterministic.
-    const deck = playableFixtureDeck(catalog, { allowLocalFixtures });
-    for (let i = deck.length - 1; i > 0; i -= 1) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [deck[i], deck[j]] = [deck[j], deck[i]];
-    }
+    // The UI owns the entropy, the reducer owns the selection. Passing a seed
+    // keeps gameReducer a pure function of (state, action) while still giving a
+    // different run each rematch — and makes any run reproducible from one
+    // integer, which is what the run-builder tests rely on.
     setMotionNeutralZ(null);
-    dispatch({ type: "PLAY_AGAIN", cards: deck, allowLocalFixtures });
+    setLaughPick(null);
+    dispatch({ type: "PLAY_AGAIN", seed: runSeed(), allowLocalFixtures });
   }
 
   function setMode(mode: string) {
@@ -309,6 +400,7 @@ export default function App() {
             }}
             notice={resetNotice}
             localFixtures={allowLocalFixtures}
+            deckCards={state.pool}
             reducedMotion={reducedMotion}
             roundsPlayed={state.roundsPlayed}
             correctCount={state.correctCount}
@@ -327,6 +419,7 @@ export default function App() {
             onHaptics={setHapticsEnabled}
             onReset={confirmResetLocalSession}
             onClose={() => setShowSettings(false)}
+            onExportPlaytest={exportPlaytestData}
           />
         )}
         {state.stage === STAGES.SETUP && (
@@ -337,7 +430,10 @@ export default function App() {
             onMode={setMode}
             onRole={(accessRole) => dispatch({ type: "SET_ACCESS_ROLE", accessRole })}
             onMotionOptIn={setMotionOptInEnabled}
-            onStart={() => dispatch({ type: "START_ROUND" })}
+            onStart={() => {
+              setLaughPick(null);
+              dispatch({ type: "START_ROUND", seed: runSeed() });
+            }}
           />
         )}
         {state.stage === STAGES.ROUND && card && (
@@ -395,6 +491,12 @@ export default function App() {
             reducedMotion={reducedMotion}
             onPlayAgain={playAgain}
             onHome={goHome}
+            runCards={state.cards.slice(0, runLength(state)).map((entry: { id: string; person: string }) => ({
+              id: entry.id,
+              person: entry.person,
+            }))}
+            laughPickId={laughPick}
+            onPickFunniest={pickFunniest}
           />
         )}
         {state.stage === STAGES.PRIVATE_SHUTTER && (

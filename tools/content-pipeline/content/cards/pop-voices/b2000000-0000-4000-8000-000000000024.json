@@ -1,0 +1,56 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000024",
+  "figureId": "c3000000-0000-4000-8000-000000000029",
+  "displayName": "F. Murray Abraham",
+  "statementText": "It would be a lie if I told you I didn't know what to say because I've been working on this speech for about twenty-five years.",
+  "authenticity": "authentic",
+  "category": "awards",
+  "difficultyPrior": 2,
+  "sensitivity": "everyone",
+  "explanation": "Opening his Best Actor speech for Amadeus, 1985. The twenty-five years were real.",
+  "formatFingerprint": "celebrity-encounter",
+  "eraVocabTag": "pre-2015",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": true,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API.",
+  "decoyMethod": "none",
+  "transcriptionExact": true,
+  "normalizations": [],
+  "wordingSource": "archive",
+  "sourceTier": "A",
+  "citations": [],
+  "source": {
+    "url": "https://aaspeechesdb.oscars.org/link/057-1/",
+    "archiveUrl": null,
+    "publishedAt": "1985-03-25",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "institutional-archive",
+    "retained": true,
+    "captures": [
+      {
+        "timestamp": "20250226045341"
+      }
+    ]
+  }
+}

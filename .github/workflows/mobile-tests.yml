@@ -51,6 +51,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       mobile: ${{ steps.filter.outputs.mobile }}
+      content: ${{ steps.filter.outputs.content }}
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v3
@@ -60,6 +61,43 @@ jobs:
             mobile:
               - 'apps/mobile/**'
               - '.github/workflows/mobile-tests.yml'
+            content:
+              - 'tools/content-pipeline/**'
+              - '.github/workflows/mobile-tests.yml'
+
+  # Separate job, not a step in `test`: the content pipeline is dependency-free
+  # and runs under plain `node --test`, so making it wait on `npm ci --prefix
+  # apps/mobile` would pay a full install to run zero-dependency tests. It also
+  # keeps the two filters independent — a card-only change must not skip the
+  # gates just because no mobile file moved.
+  content-pipeline:
+    needs: changes
+    if: needs.changes.outputs.content == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Globbed, not a bare directory. `node --test <dir>/` walks the directory
+      # on Node 20 but resolves it as a module entry point on Node 22, which
+      # fails with MODULE_NOT_FOUND before a single test runs. The glob is what
+      # both versions agree on, and CI pins Node 22.
+      - name: Pipeline unit tests
+        run: node --test tools/content-pipeline/test/*.test.mjs
+
+      # The gates themselves, against the real corpus. This is what stops a deck
+      # that leaks authenticity through surface style, or an authentic card with
+      # laundered provenance, from reaching the bundle.
+      - name: Deck gates
+        run: node tools/content-pipeline/bin/validate.mjs --deck pop-voices
+
+      # A card edited without rebuilding would ship stale content, so the
+      # committed bundle must match what the editorial records emit.
+      - name: Deck bundle is current
+        run: node tools/content-pipeline/bin/build.mjs --deck pop-voices --check
 
   test:
     needs: changes

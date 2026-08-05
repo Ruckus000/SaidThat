@@ -23,6 +23,15 @@ jest.mock("../storage/reportQueue", () => ({
   loadQueuedReports: jest.fn(async () => []),
 }));
 
+// Same reason as the report queue above: this module binds AsyncStorage at
+// import time, and the native module is null under jest.
+jest.mock("../storage/playtestStore", () => ({
+  updatePlaytestStats: jest.fn(async () => ({ cards: {} })),
+  loadPlaytestStats: jest.fn(async () => ({ cards: {} })),
+  savePlaytestStats: jest.fn(async () => true),
+  clearPlaytestStats: jest.fn(async () => true),
+}));
+
 jest.mock("expo-font", () => ({
   useFonts: () => [true, null],
   isLoaded: () => true,

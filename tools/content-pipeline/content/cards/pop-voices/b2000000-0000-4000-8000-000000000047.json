@@ -1,0 +1,39 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000047",
+  "figureId": "c3000000-0000-4000-8000-000000000033",
+  "displayName": "Maria Sharapova",
+  "statementText": "I mean, the hotel gym had one treadmill and somebody was reading a book on it.",
+  "authenticity": "fabricated",
+  "category": "sports",
+  "difficultyPrior": 4,
+  "sensitivity": "everyone",
+  "explanation": "Invented. The 'I mean' opener is how she actually starts press answers; the treadmill is ours.",
+  "formatFingerprint": "gym-report",
+  "eraVocabTag": "2015-2019",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": true,
+    "hasConcreteMundaneDetail": true,
+    "readsFabricated": false,
+    "readsAuthentic": true
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Drafted with AI assistance, rewritten and owned by the repository owner under ADR-012.",
+  "decoyMethod": "ai_assisted",
+  "source": null
+}

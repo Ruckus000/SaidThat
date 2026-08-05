@@ -1,0 +1,56 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000022",
+  "figureId": "c3000000-0000-4000-8000-000000000027",
+  "displayName": "Donna Strickland",
+  "statementText": "It is the one time in my life that I worked very, very hard!",
+  "authenticity": "authentic",
+  "category": "science",
+  "difficultyPrior": 5,
+  "sensitivity": "everyone",
+  "explanation": "Her Nobel telephone interview in 2018, describing the PhD work that won the prize.",
+  "formatFingerprint": "small-victory",
+  "eraVocabTag": "2015-2019",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API.",
+  "decoyMethod": "none",
+  "transcriptionExact": true,
+  "normalizations": [],
+  "wordingSource": "archive",
+  "sourceTier": "A",
+  "citations": [],
+  "source": {
+    "url": "https://www.nobelprize.org/prizes/physics/2018/strickland/interview/",
+    "archiveUrl": null,
+    "publishedAt": "2018-10-02",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "official-transcript",
+    "retained": true,
+    "captures": [
+      {
+        "timestamp": "20260308170147"
+      }
+    ]
+  }
+}

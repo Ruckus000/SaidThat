@@ -3,6 +3,31 @@ import { MODES } from "../domain/game.js";
 export const FIXTURE_DISCLOSURE =
   "LOCAL DEVELOPMENT FIXTURES · NOT EDITORIAL CONTENT";
 
+export const MIXED_DECK_DISCLOSURE =
+  "DEVELOPMENT BUILD · EDITORIAL CARDS PLUS LOCAL FIXTURES";
+
+/**
+ * What the deck on this device actually contains.
+ *
+ * This used to be driven by the __DEV__ flag alone, so a development build
+ * asserted "NOT EDITORIAL CONTENT" even after the curated deck landed — by then
+ * the overwhelming majority of playable cards WERE editorial, and the line was
+ * simply false. A disclosure that misdescribes the deck is worse than none: it
+ * is the same failure mode as a fixture reading as source-verified, pointed the
+ * other way.
+ *
+ * Driven by the cards themselves so it cannot drift from them again.
+ */
+export function deckDisclosure(cards, { allowLocalFixtures = false } = {}) {
+  if (!allowLocalFixtures) return null;
+  const list = Array.isArray(cards) ? cards : [];
+  const fixtures = list.filter((card) => card?.fixtureOnly === true).length;
+  const editorial = list.length - fixtures;
+  if (fixtures === 0) return null;
+  if (editorial === 0) return FIXTURE_DISCLOSURE;
+  return MIXED_DECK_DISCLOSURE;
+}
+
 export function headerScoreLabel(score) {
   return `ROOM · ${score}`;
 }
@@ -180,12 +205,43 @@ export function reviewTruthLabel(card) {
   return "FABRICATED FOR THIS GAME";
 }
 
+// Reports where a claim actually comes from. The authentic branch used to read
+// "editorial source record required" — copy written for a state that could not
+// exist yet. Now that curated cards ship it must describe the record on the
+// card, because that line is the only evidence a player is offered for a real
+// claim about a real person.
+//
+// The host is shown rather than the full URL: it fits the review layout, it is
+// the part that carries credibility, and a long archive URL would push the
+// explanation off screen at large text sizes.
 export function reviewSourceStatus(card) {
   if (card.contentState === "fixture-authentic") {
     return "development simulation — not a source-verified production card";
   }
-  if (card.authentic) return "editorial source record required";
+  if (card.authentic) {
+    const host = sourceHost(card.sourceRecord?.url);
+    return host ? `verified source on file — ${host}` : "verified source on file";
+  }
+  if (card.contentState === "fabricated-for-game" && !card.fixtureOnly) {
+    return "written for this game — no source, because nobody said it";
+  }
   return "game fixture";
+}
+
+function sourceHost(url) {
+  if (typeof url !== "string") return null;
+  // Deliberately not `new URL()`: it throws on malformed input, and a bad URL
+  // must degrade to a shorter line rather than crash the reveal.
+  const match = url.match(/^https:\/\/([^/?#]+)/i);
+  return match ? match[1].replace(/^www\./i, "") : null;
+}
+
+// Disclosed on reveal whenever a decoy was drafted with AI help. ADR-012 allows
+// the assist only where a named human rewrote and owns the line, so the player
+// is told the same thing the record says.
+export function decoyDisclosure(card) {
+  if (card?.decoyMethod !== "ai_assisted") return null;
+  return "This decoy was drafted with AI assistance, then rewritten and approved by a human editor.";
 }
 
 export function roundInstruction(mode) {

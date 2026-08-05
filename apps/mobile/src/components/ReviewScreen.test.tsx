@@ -61,6 +61,23 @@ test("review: a simulated fixture is labelled a simulation, never source-verifie
   expect(screen.queryByText("AUTHENTIC · THEY SAID IT")).not.toBeOnTheScreen();
 });
 
+// ADR-012 permits AI-drafted decoys only where the player is told. That makes
+// the disclosure a policy commitment rather than a nicety, so it is asserted on
+// the screen and not only on the label function: the conditional render is the
+// part that can be deleted without any label test noticing.
+test("review: an AI-assisted decoy discloses its drafting on the reveal", () => {
+  render(<ReviewScreen {...base} card={{ ...fabricated, decoyMethod: "ai_assisted" }} />);
+
+  expect(screen.getByText(/drafted with AI assistance/i)).toBeOnTheScreen();
+  expect(screen.getByText(/rewritten and approved by a human editor/i)).toBeOnTheScreen();
+});
+
+test("review: a human-written decoy claims no AI assistance", () => {
+  render(<ReviewScreen {...base} card={{ ...fabricated, decoyMethod: "human" }} />);
+
+  expect(screen.queryByText(/AI assistance/i)).not.toBeOnTheScreen();
+});
+
 test("review: the report policy is stated before anything is reported", () => {
   render(<ReviewScreen {...base} card={fabricated} />);
 

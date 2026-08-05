@@ -1,0 +1,58 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000008",
+  "figureId": "c3000000-0000-4000-8000-000000000015",
+  "displayName": "Albert Brooks",
+  "statementText": "I was in the middle of tweeting a very funny joke  and then a 7.1 earthquake happened and I forgot the punchline.",
+  "authenticity": "authentic",
+  "category": "film-tv",
+  "difficultyPrior": 3,
+  "sensitivity": "everyone",
+  "explanation": "Posted the day after the 2019 Ridgecrest earthquake. The double space after 'joke' is his and is preserved.",
+  "formatFingerprint": "professional-confession",
+  "eraVocabTag": "2015-2019",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": true,
+    "readsFabricated": true,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API. archiveUrl removed (2026-08-05 security review): it held the canonical permalink, not a Wayback capture. Capture timestamps in source.captures are unchanged and were not re-verified — the availability API rate-limited every request.",
+  "decoyMethod": "none",
+  "transcriptionExact": true,
+  "normalizations": [],
+  "wordingSource": "archive",
+  "sourceTier": "A",
+  "citations": [],
+  "source": {
+    "url": "https://twitter.com/AlbertBrooks/status/1147357315894534144",
+    "publishedAt": "2019-07-06",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "archive-double-capture",
+    "retained": true,
+    "captures": [
+      {
+        "timestamp": "20190706164317"
+      },
+      {
+        "timestamp": "20190707193037"
+      }
+    ]
+  }
+}

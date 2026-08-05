@@ -1,0 +1,58 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000013",
+  "figureId": "c3000000-0000-4000-8000-000000000019",
+  "displayName": "Rainn Wilson",
+  "statementText": "Would you rather be Born without a mouth or born with two mouths?",
+  "authenticity": "authentic",
+  "category": "film-tv",
+  "difficultyPrior": 4,
+  "sensitivity": "everyone",
+  "explanation": "December 2018. The stray capital B on the first 'Born' is his, preserved exactly.",
+  "formatFingerprint": "hypothetical-question",
+  "eraVocabTag": "2015-2019",
+  "styleFlags": {
+    "hasNonstandardGrammar": true,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": true,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API. archiveUrl removed (2026-08-05 security review): it held the canonical permalink, not a Wayback capture. Capture timestamps in source.captures are unchanged and were not re-verified — the availability API rate-limited every request.",
+  "decoyMethod": "none",
+  "transcriptionExact": true,
+  "normalizations": [],
+  "wordingSource": "archive",
+  "sourceTier": "A",
+  "citations": [],
+  "source": {
+    "url": "https://twitter.com/RainnWilson/status/1070783820499013632",
+    "publishedAt": "2018-12-06",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "archive-double-capture",
+    "retained": true,
+    "captures": [
+      {
+        "timestamp": "20191201145803"
+      },
+      {
+        "timestamp": "20210718235528"
+      }
+    ]
+  }
+}

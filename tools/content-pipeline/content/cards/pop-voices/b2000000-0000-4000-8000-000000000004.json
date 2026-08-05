@@ -1,0 +1,73 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000004",
+  "figureId": "c3000000-0000-4000-8000-000000000004",
+  "displayName": "Lady Gaga",
+  "statementText": "why do people look at me like I'm crazy when i use coupons at grocery or try bargaining at retail, IM FROM NEW YORK WHERE IS THE SALE RACK",
+  "authenticity": "authentic",
+  "category": "music",
+  "difficultyPrior": 3,
+  "sensitivity": "everyone",
+  "explanation": "December 2012. She has talked about coupon-clipping in interviews since, which is why the caps-lock ending reads as genuine exasperation.",
+  "formatFingerprint": "late-night-confession",
+  "eraVocabTag": "pre-2015",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": true,
+    "hasConcreteMundaneDetail": true,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API. Capture timestamp 20240705023447 transcribed from the recorded Wayback URL into source.captures (2026-08-05 security review); no new archive claim was added.",
+  "decoyMethod": "none",
+  "transcriptionExact": true,
+  "normalizations": [],
+  "wordingSource": "archive",
+  "sourceTier": "A",
+  "citations": [
+    {
+      "url": "https://www.cnbc.com/2017/11/08/lady-gaga-still-bargains-and-uses-coupons-and-you-should-too.html",
+      "outlet": "cnbc.com",
+      "publishedAt": "2012-12-21",
+      "isPrimary": false,
+      "independent": true,
+      "independentOf": []
+    },
+    {
+      "url": "https://x.com/ladygaga/status/282126105073299457",
+      "outlet": "x.com",
+      "publishedAt": "2012-12-21",
+      "isPrimary": false,
+      "independent": true,
+      "independentOf": []
+    }
+  ],
+  "source": {
+    "url": "https://web.archive.org/web/20240705023447/https://twitter.com/ladygaga/status/282126105073299457",
+    "archiveUrl": "https://web.archive.org/web/20240705023447/https://twitter.com/ladygaga/status/282126105073299457",
+    "publishedAt": "2012-12-21",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "web-archive",
+    "retained": true,
+    "captures": [
+      {
+        "timestamp": "20240705023447"
+      }
+    ]
+  }
+}

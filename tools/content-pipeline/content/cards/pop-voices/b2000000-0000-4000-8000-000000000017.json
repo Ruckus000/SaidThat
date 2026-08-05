@@ -1,0 +1,72 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000017",
+  "figureId": "c3000000-0000-4000-8000-000000000023",
+  "displayName": "Alton Brown",
+  "statementText": "I want you to go out right now and buy Fritos and cat food.",
+  "authenticity": "authentic",
+  "category": "food",
+  "difficultyPrior": 4,
+  "sensitivity": "everyone",
+  "explanation": "From a run of posts on the night of 2 November 2020. Delivered flat and never explained.",
+  "formatFingerprint": "late-night-instruction",
+  "eraVocabTag": "2020+",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": true,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API. archiveUrl removed (2026-08-05 security review): it held the canonical permalink, not a Wayback capture. Capture timestamps in source.captures are unchanged and were not re-verified — the availability API rate-limited every request.",
+  "decoyMethod": "none",
+  "transcriptionExact": true,
+  "normalizations": [],
+  "wordingSource": "archive",
+  "sourceTier": "A",
+  "citations": [
+    {
+      "url": "https://www.thewrap.com/alton-brown-vows-to-mainline-moonpies-and-snort-cheese-powder-in-delightful-pre-election-twitter-rant/",
+      "outlet": "thewrap.com",
+      "publishedAt": "2020-11-03",
+      "isPrimary": false,
+      "independent": true,
+      "independentOf": []
+    },
+    {
+      "url": "https://www.themarysue.com/is-alton-brown-okay/",
+      "outlet": "themarysue.com",
+      "publishedAt": "2020-11-03",
+      "isPrimary": false,
+      "independent": true,
+      "independentOf": []
+    }
+  ],
+  "source": {
+    "url": "https://twitter.com/altonbrown/status/1323454104530767872",
+    "publishedAt": "2020-11-03",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "web-archive",
+    "retained": true,
+    "captures": [
+      {
+        "timestamp": "20201103023728"
+      }
+    ]
+  }
+}

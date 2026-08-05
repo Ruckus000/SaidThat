@@ -307,7 +307,16 @@ test("simulation-backed handoff is complete, non-deceptive, and unblocks only th
     assert.equal(digest(content), record.sha256, `stale owner-decision evidence: ${record.path}`);
   }
   assert.ok(decision.scope.included.includes("apps/mobile/"));
-  assert.ok(decision.scope.excluded.includes("authentic playable public-figure cards"));
+  // Amended 2026-08-04: authentic public-figure cards are admitted, but only
+  // through the content pipeline. What stays excluded is the unvetted path —
+  // a card that reaches the bundle without provenance, approvals and gates.
+  assert.ok(decision.scope.excluded.includes("unvetted public-figure cards"));
+  assert.ok(!decision.scope.excluded.includes("authentic playable public-figure cards"));
+  // The amendment must stay on the record rather than being a silent edit.
+  assert.ok(
+    decision.scope.amendments?.some((entry) => entry.authority === "owner decision" && entry.date === "2026-08-04"),
+    "the scope change must be recorded as a dated owner amendment",
+  );
   assert.match(agents, /not an MVP build blocker/);
   assert.match(status, /What is not an MVP prerequisite/);
   assert.match(catalog, /fixtureOnly: true/);

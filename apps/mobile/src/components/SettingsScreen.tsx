@@ -16,6 +16,8 @@ export type SettingsScreenProps = {
   onHaptics: (enabled: boolean) => void;
   onReset: () => void;
   onClose: () => void;
+  /** Omitted hides the export entirely; there is no network path either way. */
+  onExportPlaytest?: () => void;
 };
 
 export function SettingsScreen({
@@ -28,6 +30,7 @@ export function SettingsScreen({
   onHaptics,
   onReset,
   onClose,
+  onExportPlaytest,
 }: SettingsScreenProps) {
   return (
     <ScrollView contentContainerStyle={s.setup}>
@@ -58,6 +61,20 @@ export function SettingsScreen({
         />
       </View>
       <View style={{ flex: 1, minHeight: 24 }} />
+      {/*
+        The only way calibration data ever leaves this device, and it is a
+        deliberate human act every time — the app has no network path for it.
+        Hidden entirely unless a host wires up the handler.
+      */}
+      {onExportPlaytest ? (
+        <>
+          <Text style={s.note}>
+            Playtest data is per-card counts only — no names, no timestamps, nothing about who
+            played. It is never sent anywhere; exporting hands you the file.
+          </Text>
+          <PrimaryButton label="EXPORT PLAYTEST DATA" secondary onPress={onExportPlaytest} />
+        </>
+      ) : null}
       <PrimaryButton label="RESET LOCAL SESSION" destructive onPress={onReset} />
       <PrimaryButton label="DONE" onPress={onClose} />
     </ScrollView>

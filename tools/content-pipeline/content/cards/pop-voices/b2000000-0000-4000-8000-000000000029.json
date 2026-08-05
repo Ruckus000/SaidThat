@@ -1,0 +1,65 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000029",
+  "figureId": "c3000000-0000-4000-8000-000000000034",
+  "displayName": "Geno Auriemma",
+  "statementText": "I didn't record it, and the chances of me watching it are less than zero.",
+  "authenticity": "authentic",
+  "category": "sports",
+  "difficultyPrior": 4,
+  "sensitivity": "everyone",
+  "explanation": "Final Four press conference, 2022, asked if he would watch the alternate telecast.",
+  "formatFingerprint": "press-conference-deadpan",
+  "eraVocabTag": "2020+",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": true,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API.",
+  "decoyMethod": "none",
+  "transcriptionExact": true,
+  "normalizations": [],
+  "wordingSource": "archive",
+  "sourceTier": "A",
+  "citations": [
+    {
+      "url": "https://justwomenssports.com/reads/diana-taurasi-sue-bird-final-four-espn-telecast/",
+      "outlet": "justwomenssports.com",
+      "publishedAt": "2022-04-01",
+      "isPrimary": false,
+      "independent": true,
+      "independentOf": []
+    }
+  ],
+  "source": {
+    "url": "https://www.asapsports.com/show_interview.php?id=175050",
+    "archiveUrl": null,
+    "publishedAt": "2022-04-01",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "official-transcript",
+    "retained": true,
+    "captures": [
+      {
+        "timestamp": "20220402044515"
+      }
+    ]
+  }
+}

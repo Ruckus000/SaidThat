@@ -88,7 +88,7 @@
       "status": "stakeholder-provided",
       "confidence": "high",
       "criticality": "critical",
-      "sha256": "2442b3ea77cb35cfcaeedf56f32db2cea92d3495899f79c8d9e6b03231223288"
+      "sha256": "eae4db52a9762bd9fceebb52fd6b67d899c8480de4cffca5ecd01937b20d06e9"
     },
     {
       "id": "architecture",
@@ -188,7 +188,7 @@
       "status": "stakeholder-provided",
       "confidence": "high",
       "criticality": "high",
-      "sha256": "253617290bba1c322063a6e864b504591799f42dadabd17e97e65ecd08c9d5c7"
+      "sha256": "1d149f2e55ceaf32f1c3cbcefb5613ebb3027da7af8469d181522f3e15b70fba"
     },
     {
       "id": "simulation-evidence-ledger",
@@ -218,7 +218,7 @@
       "status": "stakeholder-provided",
       "confidence": "high",
       "criticality": "critical",
-      "sha256": "7bcc3e608e17eb6154d36750dbb3340add1e2942dc2fdc303df8428f27a12dd7"
+      "sha256": "90457471afa94129f5049c4767ccd1ecd70b246c75c661d56fc4d8dfeb4b3bdb"
     }
   ],
   "users": [

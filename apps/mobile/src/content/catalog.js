@@ -1,11 +1,33 @@
 /**
- * Development fixtures only. They are clearly fabricated and contain no
- * public-figure attribution. Release content must come from the editorial
- * pipeline and satisfy isPlayableCard() without allowLocalFixtures.
+ * The playable catalog: curated cards emitted by the content pipeline, plus the
+ * local development fixtures below.
+ *
+ * The fixtures are clearly fabricated and contain no public-figure attribution.
+ * They stay inert in a release build because isPlayableCard() gates every
+ * `fixtureOnly` record behind allowLocalFixtures, which App.tsx sets from
+ * __DEV__. Curated cards come from deck.generated.js and must satisfy
+ * isPlayableCard() without that flag.
+ *
+ * The fixture array is written inline and verbatim on purpose: the DesignOps
+ * policy test reads this file as text and asserts it still contains
+ * `fixtureOnly: true`, so moving the fixtures into another module would turn CI
+ * red without any behaviour changing.
  */
-export const DECK_VERSION = "0.2.0-local-fixture";
+import {
+  GENERATED_DECK_VERSION,
+  generatedCards,
+  generatedTombstones,
+} from "./deck.generated.js";
 
-export const catalog = [
+/**
+ * Falls back to the fixture version string while no curated cards exist, so a
+ * dev build still reports something meaningful rather than "0.0.0".
+ */
+export const DECK_VERSION = generatedCards.length > 0 ? GENERATED_DECK_VERSION : "0.2.0-local-fixture";
+
+export const TOMBSTONES = generatedTombstones;
+
+const fixtures = [
   {
     id: "fixture-aurora-01",
     quote: "I schedule my best ideas for after the snacks arrive.",
@@ -94,3 +116,9 @@ export const catalog = [
     explanation: "Removed records supersede cached local content.",
   },
 ];
+
+/**
+ * Curated cards first so they lead the pool; the run-builder reorders anyway,
+ * and in a release build the fixtures are filtered out entirely.
+ */
+export const catalog = [...generatedCards, ...fixtures];

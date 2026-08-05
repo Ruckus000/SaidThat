@@ -26,16 +26,37 @@ const home = {
   runComplete: false,
 };
 
-test("home: the fixture disclosure is present whenever local fixtures are on", () => {
-  render(<HomeScreen {...home} />);
+const FIXTURE_CARD = { fixtureOnly: true };
+const EDITORIAL_CARD = { fixtureOnly: false };
+
+test("home: a fixture-only build still says so on the first screen", () => {
+  render(<HomeScreen {...home} deckCards={[FIXTURE_CARD, FIXTURE_CARD]} />);
 
   // Non-negotiable: a fixture build must say so on the first screen.
   expect(screen.getByText(/LOCAL DEVELOPMENT FIXTURES/)).toBeOnTheScreen();
   expect(screen.getByText(/NOT EDITORIAL CONTENT/)).toBeOnTheScreen();
 });
 
+// The disclosure follows the DECK, not the build flag. It previously keyed off
+// __DEV__ alone, so a development build claimed "NOT EDITORIAL CONTENT" while
+// playing 60 source-verified editorial cards — a false statement in the one
+// area this app is most careful about.
+test("home: a deck holding editorial cards never claims the content is not editorial", () => {
+  render(<HomeScreen {...home} deckCards={[EDITORIAL_CARD, FIXTURE_CARD]} />);
+
+  expect(screen.queryByText(/NOT EDITORIAL CONTENT/)).not.toBeOnTheScreen();
+  expect(screen.getByText(/EDITORIAL CARDS PLUS LOCAL FIXTURES/)).toBeOnTheScreen();
+});
+
+test("home: a deck with no fixtures has nothing to disclose", () => {
+  render(<HomeScreen {...home} deckCards={[EDITORIAL_CARD, EDITORIAL_CARD]} />);
+
+  expect(screen.queryByText(/LOCAL DEVELOPMENT FIXTURES/)).not.toBeOnTheScreen();
+  expect(screen.queryByText(/EDITORIAL CARDS PLUS/)).not.toBeOnTheScreen();
+});
+
 test("home: a build without local fixtures shows no disclosure", () => {
-  render(<HomeScreen {...home} localFixtures={false} />);
+  render(<HomeScreen {...home} localFixtures={false} deckCards={[FIXTURE_CARD]} />);
 
   expect(screen.queryByText(/LOCAL DEVELOPMENT FIXTURES/)).not.toBeOnTheScreen();
 });
@@ -142,6 +163,39 @@ test("recap: the rank rates the reading, never the player or the truth", () => {
 
   // 100% -> ROOM ORACLE. A rank is about skill at the game, nothing else.
   expect(screen.getByText("ROOM ORACLE")).toBeOnTheScreen();
+});
+
+test("recap: the laugh pick is absent unless a handler and cards are supplied", () => {
+  // The recap has to keep working with no calibration wired up at all.
+  render(<RecapScreen {...recap} />);
+  expect(screen.queryByText(/BIGGEST REACTION/i)).not.toBeOnTheScreen();
+
+  render(<RecapScreen {...recap} onPickFunniest={() => {}} runCards={[]} />);
+  expect(screen.queryByText(/BIGGEST REACTION/i)).not.toBeOnTheScreen();
+});
+
+test("recap: the laugh pick names a card and reports its selection to assistive tech", async () => {
+  const onPickFunniest = jest.fn();
+  const runCards = [
+    { id: "a", person: "First Figure" },
+    { id: "b", person: "Second Figure" },
+  ];
+  render(
+    <RecapScreen {...recap} runCards={runCards} laughPickId="a" onPickFunniest={onPickFunniest} />,
+  );
+
+  // Selection is carried by accessibilityState, not by colour alone — queried
+  // through the role filter so the assertion fails if the state is dropped.
+  expect(
+    screen.getByRole("button", { name: "Biggest reaction: First Figure", selected: true }),
+  ).toBeOnTheScreen();
+  expect(
+    screen.queryByRole("button", { name: "Biggest reaction: Second Figure", selected: true }),
+  ).not.toBeOnTheScreen();
+
+  // Tapping again moves the pick rather than locking it in.
+  await userEvent.press(screen.getByLabelText("Biggest reaction: Second Figure"));
+  expect(onPickFunniest).toHaveBeenCalledWith("b");
 });
 
 test("recap: a rough run is still encouraging", () => {

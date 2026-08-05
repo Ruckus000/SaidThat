@@ -22,6 +22,15 @@ jest.mock("./src/storage/reportQueue", () => ({
   loadQueuedReports: jest.fn(async () => []),
 }));
 
+// Same reason as the report queue above: this module binds AsyncStorage at
+// import time, and the native module is null under jest.
+jest.mock("./src/storage/playtestStore", () => ({
+  updatePlaytestStats: jest.fn(async () => ({ cards: {} })),
+  loadPlaytestStats: jest.fn(async () => ({ cards: {} })),
+  savePlaytestStats: jest.fn(async () => true),
+  clearPlaytestStats: jest.fn(async () => true),
+}));
+
 // Fonts never resolve under the test renderer, and App gates its whole tree on
 // the loaded flag, so without this every test renders null.
 jest.mock("expo-font", () => ({

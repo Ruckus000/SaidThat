@@ -2,6 +2,7 @@
  * Pure game state. Keep privacy and content-safety rules here so the UI and
  * chaos tests execute the same invariants.
  */
+import { buildRun } from "./runBuilder.js";
 
 export const MODES = {
   ROOM_BEACON: "room-beacon",
@@ -48,9 +49,37 @@ function hasTwoDistinctApprovals(card) {
 }
 
 /**
+ * Pre-release owner approval, amended 2026-08-05 by owner decision.
+ *
+ * The two-person rule stands as the release bar. Before release there is only
+ * one editor, so requiring two meant either shipping nothing or inventing a
+ * second approver — and a fabricated second name is strictly worse than an
+ * honest single one, because it makes the rule look satisfied while providing
+ * none of the review it exists to provide.
+ *
+ * So a lone approval is accepted only when it is explicitly marked as the
+ * owner's. The marker is a distinct value, not a name, so a card cannot slip
+ * through on a coincidental match; and it stays visible in the record, so
+ * "approved by one person" can be told apart from "reviewed by two" at any
+ * point later.
+ */
+export const OWNER_APPROVAL = "owner:pre-release";
+
+function hasOwnerApproval(card) {
+  if (!Array.isArray(card.editorialApprovals)) return false;
+  return card.editorialApprovals.includes(OWNER_APPROVAL);
+}
+
+function isEditoriallyApproved(card) {
+  return hasTwoDistinctApprovals(card) || hasOwnerApproval(card);
+}
+
+/**
  * An authentic record is never playable just because a URL exists. It needs a
- * retained source and two distinct editorial approvals. Local fixtures are
- * allowed only when the caller opts in (Expo development, never a release).
+ * retained source and editorial approval — two distinct approvers, or an
+ * explicit owner approval during pre-release (see OWNER_APPROVAL). Local
+ * fixtures are allowed only when the caller opts in (Expo development, never a
+ * release).
  */
 export function isPlayableCard(card, { allowLocalFixtures = false } = {}) {
   if (!card || typeof card !== "object" || NON_PLAYABLE_STATES.has(card.contentState)) return false;
@@ -60,7 +89,7 @@ export function isPlayableCard(card, { allowLocalFixtures = false } = {}) {
   }
 
   if (card.contentState === "fabricated-for-game") {
-    return hasTwoDistinctApprovals(card);
+    return isEditoriallyApproved(card);
   }
 
   return (
@@ -68,7 +97,7 @@ export function isPlayableCard(card, { allowLocalFixtures = false } = {}) {
     card.sourceRecord?.retained === true &&
     typeof card.sourceRecord.url === "string" &&
     card.sourceRecord.url.startsWith("https://") &&
-    hasTwoDistinctApprovals(card)
+    isEditoriallyApproved(card)
   );
 }
 
@@ -76,9 +105,14 @@ export function playableCards(cards, options) {
   return Array.isArray(cards) ? cards.filter((card) => isPlayableCard(card, options)) : [];
 }
 
-export function createSession({ cards, allowLocalFixtures = false, deckVersion }) {
-  const safeCards = playableCards(cards, { allowLocalFixtures });
+export function createSession({ cards, allowLocalFixtures = false, deckVersion, seed = 1 }) {
+  // `pool` is everything playable; `cards` is the run actually being played.
+  // Keeping both means a rematch rebuilds from the full pool instead of
+  // reshuffling the ten cards the room just saw.
+  const pool = playableCards(cards, { allowLocalFixtures });
+  const safeCards = buildRun(pool, { seed });
   return {
+    pool,
     mode: MODES.ROOM_BEACON,
     accessRole: "holder",
     stage: safeCards.length ? STAGES.HOME : STAGES.CONTENT_UNAVAILABLE,
@@ -214,12 +248,19 @@ export function gameReducer(state, action) {
       return { ...state, mode: action.mode };
     case "SET_ACCESS_ROLE":
       return { ...state, accessRole: action.accessRole };
-    case "START_ROUND":
+    case "START_ROUND": {
       // Every start from setup is a fresh run: reset counters so a previously
       // completed run cannot resume on its last card and re-trigger the recap.
-      return state.cards.length
-        ? { ...state, ...FRESH_RUN, stage: STAGES.ROUND }
+      //
+      // The run is rebuilt here rather than reused. Before this, only PLAY_AGAIN
+      // ever reordered the deck, so the first run of every session played the
+      // deck in file order.
+      const pool = state.pool ?? state.cards;
+      const cards = action.seed === undefined ? state.cards : buildRun(pool, { seed: action.seed });
+      return cards.length
+        ? { ...state, ...FRESH_RUN, cards, stage: STAGES.ROUND }
         : { ...state, stage: STAGES.CONTENT_UNAVAILABLE, fault: "no-safe-playable-content" };
+    }
     case "ANSWER": {
       if (!canCommitAnswer(state)) return state;
       const card = currentCard(state);
@@ -267,16 +308,25 @@ export function gameReducer(state, action) {
       };
     }
     case "PLAY_AGAIN": {
-      // Rematch: keep the room's mode/role, start a brand-new run. An optional
-      // freshly shuffled deck (built in the UI layer) gives variety; fall back to
-      // the current playable cards. Fail closed if nothing is playable.
-      const safeCards = action.cards
+      // Rematch: keep the room's mode/role, build a brand-new run from the full
+      // pool. The seed arrives on the action, so the reducer stays a pure
+      // function of (state, action) while still producing a different run each
+      // time — the UI owns the entropy, this owns the selection.
+      //
+      // `action.cards` remains supported for callers that hand in a fresh deck
+      // (a content refresh), and re-filters it because an unvalidated deck must
+      // never widen what is playable.
+      const pool = action.cards
         ? playableCards(action.cards, { allowLocalFixtures: action.allowLocalFixtures })
-        : state.cards;
+        : state.pool ?? state.cards;
+      if (!pool.length) {
+        return { ...state, stage: STAGES.CONTENT_UNAVAILABLE, fault: "no-safe-playable-content" };
+      }
+      const safeCards = action.seed === undefined ? pool.slice(0, MAX_RUN_ROUNDS) : buildRun(pool, { seed: action.seed });
       if (!safeCards.length) {
         return { ...state, stage: STAGES.CONTENT_UNAVAILABLE, fault: "no-safe-playable-content" };
       }
-      return { ...state, ...FRESH_RUN, cards: safeCards, stage: STAGES.ROUND };
+      return { ...state, ...FRESH_RUN, pool, cards: safeCards, stage: STAGES.ROUND };
     }
     case "REVEAL_PRIVATE_TURN":
       return state.stage === STAGES.PRIVATE_SHUTTER
@@ -333,6 +383,7 @@ export function gameReducer(state, action) {
         cards: action.cards,
         allowLocalFixtures: action.allowLocalFixtures,
         deckVersion: action.deckVersion,
+        seed: action.seed,
       });
     default:
       return state;

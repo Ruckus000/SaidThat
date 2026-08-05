@@ -1,0 +1,39 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000052",
+  "figureId": "c3000000-0000-4000-8000-000000000036",
+  "displayName": "Nigella Lawson",
+  "statementText": "There's a spoon in this house that I like more than the others and I have started hiding it.",
+  "authenticity": "fabricated",
+  "category": "food",
+  "difficultyPrior": 1,
+  "sensitivity": "everyone",
+  "explanation": "Not a real post. The warm sensory domesticity is her register; the spoon is ours.",
+  "formatFingerprint": "kitchen-mishap",
+  "eraVocabTag": "pre-2015",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": true,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Drafted with AI assistance, rewritten and owned by the repository owner under ADR-012.",
+  "decoyMethod": "ai_assisted",
+  "source": null
+}

@@ -1,0 +1,56 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000021",
+  "figureId": "c3000000-0000-4000-8000-000000000026",
+  "displayName": "Geoffrey Hinton",
+  "statementText": "I would say I am someone who doesn't really know what field he's in but would like to understand how the brain works.",
+  "authenticity": "authentic",
+  "category": "science",
+  "difficultyPrior": 4,
+  "sensitivity": "everyone",
+  "explanation": "His Nobel telephone interview, hours after winning the 2024 physics prize.",
+  "formatFingerprint": "career-retrospective",
+  "eraVocabTag": "2020+",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": true,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API.",
+  "decoyMethod": "none",
+  "transcriptionExact": true,
+  "normalizations": [],
+  "wordingSource": "archive",
+  "sourceTier": "A",
+  "citations": [],
+  "source": {
+    "url": "https://www.nobelprize.org/prizes/physics/2024/hinton/interview/",
+    "archiveUrl": null,
+    "publishedAt": "2024-10-08",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "official-transcript",
+    "retained": true,
+    "captures": [
+      {
+        "timestamp": "20260730165922"
+      }
+    ]
+  }
+}

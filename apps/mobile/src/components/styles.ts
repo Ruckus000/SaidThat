@@ -515,6 +515,11 @@ export const s = StyleSheet.create({
   // accessibilityState — correct for assistive tech and invisible to everyone
   // else. This is the seeing half of the same fact.
   reportChipBusy: { opacity: 0.55 },
+  // Selected state for the recap's laugh pick. The border colour is the seeing
+  // half; accessibilityState carries the same fact for assistive tech, and the
+  // chip label never depends on colour to be readable.
+  reportChipSelected: { borderColor: c.lime },
+  reportChipTextSelected: { color: c.lime },
   reportChipText: {
     color: c.textMuted,
     fontFamily: display,

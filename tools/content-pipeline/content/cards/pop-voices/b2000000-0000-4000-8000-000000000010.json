@@ -1,0 +1,58 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000010",
+  "figureId": "c3000000-0000-4000-8000-000000000017",
+  "displayName": "John Cleese",
+  "statementText": "For anyone visiting Los Angeles, I'd like to explain that addresses on North Robertson Blvd are actually to be found to the South of SOUTH Robertson Blvd",
+  "authenticity": "authentic",
+  "category": "film-tv",
+  "difficultyPrior": 4,
+  "sensitivity": "everyone",
+  "explanation": "January 2019. The missing terminal punctuation is his, and the street layout really is like that.",
+  "formatFingerprint": "travel-logistics",
+  "eraVocabTag": "2015-2019",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": true,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API. archiveUrl removed (2026-08-05 security review): it held the canonical permalink, not a Wayback capture. Capture timestamps in source.captures are unchanged and were not re-verified — the availability API rate-limited every request.",
+  "decoyMethod": "none",
+  "transcriptionExact": true,
+  "normalizations": [],
+  "wordingSource": "archive",
+  "sourceTier": "A",
+  "citations": [],
+  "source": {
+    "url": "https://twitter.com/JohnCleese/status/1089028376994562048",
+    "publishedAt": "2019-01-26",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "archive-double-capture",
+    "retained": true,
+    "captures": [
+      {
+        "timestamp": "20190130084415"
+      },
+      {
+        "timestamp": "20200612125616"
+      }
+    ]
+  }
+}

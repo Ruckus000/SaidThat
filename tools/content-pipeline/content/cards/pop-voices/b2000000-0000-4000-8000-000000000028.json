@@ -1,0 +1,65 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000028",
+  "figureId": "c3000000-0000-4000-8000-000000000033",
+  "displayName": "Maria Sharapova",
+  "statementText": "I mean, unless I'm really in my coffin, I'm going to be out there.",
+  "authenticity": "authentic",
+  "category": "sports",
+  "difficultyPrior": 2,
+  "sensitivity": "everyone",
+  "explanation": "Roland Garros press conference, 2015, asked whether illness had made her doubt playing.",
+  "formatFingerprint": "overheard-remark",
+  "eraVocabTag": "2015-2019",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": true,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API.",
+  "decoyMethod": "none",
+  "transcriptionExact": true,
+  "normalizations": [],
+  "wordingSource": "archive",
+  "sourceTier": "A",
+  "citations": [
+    {
+      "url": "https://www.si.com/tennis/2015/05/25/french-open-day-2-recap",
+      "outlet": "si.com",
+      "publishedAt": "2015-05-25",
+      "isPrimary": false,
+      "independent": true,
+      "independentOf": []
+    }
+  ],
+  "source": {
+    "url": "https://www.asapsports.com/show_interview.php?id=110057",
+    "archiveUrl": null,
+    "publishedAt": "2015-05-25",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "official-transcript",
+    "retained": true,
+    "captures": [
+      {
+        "timestamp": "20200924043706"
+      }
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000046",
+  "figureId": "c3000000-0000-4000-8000-000000000032",
+  "displayName": "Mel Brooks",
+  "statementText": "You know, I bought a very expensive coat once. I still have it, and I've still not worn it outside.",
+  "authenticity": "fabricated",
+  "category": "film-tv",
+  "difficultyPrior": 1,
+  "sensitivity": "everyone",
+  "explanation": "Made up for the game. The conversational run-on matches his interview voice; the coat is ours.",
+  "formatFingerprint": "seasonal-confession",
+  "eraVocabTag": "pre-2015",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": true,
+    "hasConcreteMundaneDetail": true,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Drafted with AI assistance, rewritten and owned by the repository owner under ADR-012.",
+  "decoyMethod": "ai_assisted",
+  "source": null
+}

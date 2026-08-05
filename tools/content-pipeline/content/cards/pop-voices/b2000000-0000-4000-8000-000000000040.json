@@ -1,0 +1,39 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000040",
+  "figureId": "c3000000-0000-4000-8000-000000000019",
+  "displayName": "Rainn Wilson",
+  "statementText": "is a sandwich still a sandwich if you're eating it standing up",
+  "authenticity": "fabricated",
+  "category": "film-tv",
+  "difficultyPrior": 2,
+  "sensitivity": "everyone",
+  "explanation": "Not a real post. The unpunctuated would-you-rather register is his; the sandwich question is invented.",
+  "formatFingerprint": "supermarket-observation",
+  "eraVocabTag": "2015-2019",
+  "styleFlags": {
+    "hasNonstandardGrammar": true,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": false,
+    "readsAuthentic": true
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Drafted with AI assistance, rewritten and owned by the repository owner under ADR-012.",
+  "decoyMethod": "ai_assisted",
+  "source": null
+}

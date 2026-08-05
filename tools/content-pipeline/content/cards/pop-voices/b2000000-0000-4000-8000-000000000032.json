@@ -1,0 +1,39 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000032",
+  "figureId": "c3000000-0000-4000-8000-000000000009",
+  "displayName": "Keanu Reeves",
+  "statementText": "someone held the elevator at the hotel today and i said thank you twice",
+  "authenticity": "fabricated",
+  "category": "film-tv",
+  "difficultyPrior": 4,
+  "sensitivity": "everyone",
+  "explanation": "Made up for the game. The small-kindness register is real to his public image; the elevator, the hotel and the second thank-you are ours.",
+  "formatFingerprint": "dialogue-with-stranger",
+  "eraVocabTag": "2020+",
+  "styleFlags": {
+    "hasNonstandardGrammar": true,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": true,
+    "readsFabricated": false,
+    "readsAuthentic": true
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Drafted with AI assistance, rewritten and owned by the repository owner under ADR-012.",
+  "decoyMethod": "ai_assisted",
+  "source": null
+}

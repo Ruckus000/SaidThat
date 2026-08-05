@@ -1,0 +1,39 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000058",
+  "figureId": "c3000000-0000-4000-8000-000000000042",
+  "displayName": "Guy Fieri",
+  "statementText": "THIS SANDWICH HAS A SECOND SANDWICH INSIDE IT! I need everyone to know that!",
+  "authenticity": "fabricated",
+  "category": "food",
+  "difficultyPrior": 1,
+  "sensitivity": "everyone",
+  "explanation": "Invented for the game. The all-caps enthusiasm is his; the recursive sandwich is ours.",
+  "formatFingerprint": "doorbell-incident",
+  "eraVocabTag": "pre-2015",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Drafted with AI assistance, rewritten and owned by the repository owner under ADR-012.",
+  "decoyMethod": "ai_assisted",
+  "source": null
+}

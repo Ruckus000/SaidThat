@@ -1,0 +1,39 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000055",
+  "figureId": "c3000000-0000-4000-8000-000000000039",
+  "displayName": "Jim Gaffigan",
+  "statementText": "ate the entire thing standing over the sink and would do it again tomorrow",
+  "authenticity": "fabricated",
+  "category": "internet-culture",
+  "difficultyPrior": 2,
+  "sensitivity": "everyone",
+  "explanation": "Invented. The lowercase food-guilt register is his; the sink is ours.",
+  "formatFingerprint": "birthday-report",
+  "eraVocabTag": "pre-2015",
+  "styleFlags": {
+    "hasNonstandardGrammar": true,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": false,
+    "readsAuthentic": true
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Drafted with AI assistance, rewritten and owned by the repository owner under ADR-012.",
+  "decoyMethod": "ai_assisted",
+  "source": null
+}

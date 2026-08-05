@@ -5,6 +5,7 @@ import { volt } from "../theme/tokens";
 import { announce } from "../feedback/announce";
 import {
   continueLabel,
+  decoyDisclosure,
   reportStatusMessage,
   reviewSourceStatus,
   reviewTruthLabel,
@@ -19,6 +20,11 @@ export type ReviewCard = {
   quote: string;
   explanation: string;
   contentState: string;
+  /** Present only on curated authentic cards; drives the source line. */
+  sourceRecord?: { retained: boolean; url: string };
+  /** "ai_assisted" triggers the drafting disclosure below the explanation. */
+  decoyMethod?: string;
+  fixtureOnly?: boolean;
 };
 
 export type ReviewScreenProps = {
@@ -48,6 +54,7 @@ export function ReviewScreen({
   const truthColor = authentic ? c.lime : c.pink;
   const next = continueLabel({ roundIndex, totalRounds });
   const statusMessage = reportStatusMessage(reportStatus);
+  const disclosure = decoyDisclosure(card);
 
   // The live region below is Android-only. Without this, a VoiceOver user tapped
   // a report chip and heard nothing at all — the confirmation appeared on screen
@@ -66,6 +73,7 @@ export function ReviewScreen({
         </View>
         <Text style={s.quoteSmall}>“{card.quote}”</Text>
         <Text style={s.copy}>{card.explanation}</Text>
+        {disclosure ? <Text style={s.note}>{disclosure}</Text> : null}
       </FadeIn>
       <Text style={s.note}>Source status: {reviewSourceStatus(card)}.</Text>
       <View style={s.report}>

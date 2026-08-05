@@ -3,6 +3,7 @@ description: Editorial content, truth labeling, reporting, source integrity, and
 globs:
   - "content/**"
   - "packages/content-validation/**"
+  - "tools/content-pipeline/**"
   - "supabase/**"
   - "apps/admin/**"
 alwaysApply: false
@@ -16,6 +17,9 @@ Read `.designops/02-experience-strategy.md`, `docs/content-operations.md`, `docs
 - Fabricated content must never detach from its game labeling in review or sharing.
 - Do not imitate platform verification chrome, social-post screenshots, or news authority cues.
 - Preserve two-person editorial review, source metadata, report context, offline queueing, tombstones, and removal precedence.
-- Do not add live X hydration, scraping, public UGC, harmful fabrications, profile photos, or AI impersonation without a new approved requirement and counsel decision.
+- Do not add live X hydration, scraping, public UGC, harmful fabrications, or profile photos without a new approved requirement and counsel decision.
+- Public-figure cards enter the bundle only through `tools/content-pipeline/`, which enforces Tier A/B provenance, two independent citations, a retained https source record, two distinct editorial approvals, and the safety, read-aloud, composition and tell-leakage gates. Never hand-edit a public-figure card into `apps/mobile/src/content/` — that path skips every one of those checks.
+- AI may draft decoy text only where a named human editor rewrites, approves and owns the shipped line, and `decoyMethod` records `ai_assisted` (ADR-012). Unattributed model impersonation stays excluded.
+- Deck-level style parity is a trust requirement, not a polish one: if surface text alone predicts authenticity, the fabricated half is identifiable without reasoning about the figure.
 - Registered planning sources and their SHA-256 values must remain current.
 
