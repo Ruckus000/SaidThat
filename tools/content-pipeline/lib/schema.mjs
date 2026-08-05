@@ -26,6 +26,22 @@ export const RIGHTS_STATUS = new Set([
   "fair_use_claim",
   "original",
 ]);
+/**
+ * A well-formed Wayback capture URL: host, 14-digit timestamp, then the target.
+ *
+ * Lives here rather than in `bin/verify-candidates.mjs` because the offline
+ * gate and the online checker must agree on what an archive URL even looks
+ * like. They disagreeing is how `source.archiveUrl` came to hold live
+ * twitter.com links on cards that shipped as AUTHENTIC.
+ */
+export const WAYBACK_CAPTURE_RE = /^https?:\/\/web\.archive\.org\/web\/(\d{14})\//;
+
+/** Verification methods whose name is a claim about an archive capture. */
+export const ARCHIVE_METHODS = new Map([
+  ["web-archive", 1],
+  ["archive-double-capture", 2],
+]);
+
 export const VERIFICATION_METHODS = new Set([
   "web-archive",
   "archive-double-capture",
@@ -152,9 +168,39 @@ export function distinctApprovers(approvals) {
   return [...seen];
 }
 
+/**
+ * The registrable host of a citation URL, or null if there isn't one.
+ *
+ * Deliberately not `new URL()`, matching `sourceHost` in the app's
+ * presentationLabels.js: a malformed citation must degrade to "no host" so the
+ * count falls back to conservative. A validator that throws halfway through a
+ * card reports nothing at all, which is the worst outcome for a gate.
+ */
+export function citationHost(url) {
+  const match = typeof url === "string" ? url.match(/^https?:\/\/([^/?#]+)/i) : null;
+  return match ? match[1].toLowerCase().replace(/^www\./, "") : null;
+}
+
+/**
+ * Independent records among the citations.
+ *
+ * `independent` is a hand-typed boolean, so it cannot be the whole test: two
+ * citations to the same outlet are one record no matter what the flag says, and
+ * an outlet that reprints its own wire copy under two URLs is the single most
+ * likely way for the two-record bar at `validateProvenance` to be cleared by
+ * accident. Counting distinct hosts makes the flag a necessary condition rather
+ * than a sufficient one. A citation with no parseable host counts as nothing —
+ * a record you cannot name the origin of is not corroboration.
+ */
 export function independentCitationCount(citations) {
   if (!Array.isArray(citations)) return 0;
-  return citations.filter((entry) => entry && entry.independent === true).length;
+  const hosts = new Set();
+  for (const entry of citations) {
+    if (!entry || entry.independent !== true) continue;
+    const host = citationHost(entry.url);
+    if (host) hosts.add(host);
+  }
+  return hosts.size;
 }
 
 function validateSource(card, path, issues) {
@@ -187,6 +233,14 @@ function validateSource(card, path, issues) {
     issues.push(block("schema.rights-status", `${path}.source.rightsStatus`,
       "Unknown rights status.", { value: source.rightsStatus ?? null }));
   }
+  // A field named archiveUrl must hold an archive. Thirteen cards shipped with
+  // a live twitter.com permalink in it, because nothing read the field at all —
+  // so the name asserted a capture that the record never contained.
+  if (source.archiveUrl != null && !WAYBACK_CAPTURE_RE.test(String(source.archiveUrl))) {
+    issues.push(block("provenance.archive-url-shape", `${path}.source.archiveUrl`,
+      "archiveUrl must be a Wayback capture URL (https://web.archive.org/web/<14-digit timestamp>/...). Put the canonical link in source.url.",
+      { value: source.archiveUrl }));
+  }
 }
 
 /**
@@ -197,9 +251,25 @@ function validateSource(card, path, issues) {
  * of what it SAYS. Conflating them is how an editor ends up trusting an outlet
  * for wording.
  */
+/**
+ * The distinct, well-formed capture timestamps on a source record.
+ *
+ * Deduplicates the TIMESTAMPS, not the entries. Captures are written as
+ * `{ timestamp }` objects everywhere in this corpus, and two object literals
+ * carrying the same timestamp are distinct references — so building the Set
+ * over entries counted one capture pasted twice as two records, which is
+ * exactly the bar `validateProvenance` exists to enforce.
+ */
+export function captureTimestamps(source) {
+  if (!Array.isArray(source?.captures)) return [];
+  const stamps = source.captures
+    .map((entry) => String(entry?.timestamp ?? entry))
+    .filter((stamp) => /^\d{14}$/.test(stamp));
+  return [...new Set(stamps)];
+}
+
 export function captureCount(source) {
-  if (!Array.isArray(source?.captures)) return 0;
-  return new Set(source.captures.filter((c) => /^\d{14}$/.test(String(c?.timestamp ?? c)))).size;
+  return captureTimestamps(source).length;
 }
 
 function validateProvenance(card, path, issues) {
@@ -237,8 +307,32 @@ function validateProvenance(card, path, issues) {
   )
     ? 1
     : 0;
+  // A citation flagged independent but carrying no usable URL counts as nothing
+  // above. Say so directly: otherwise the card fails with "needs two records"
+  // while appearing, to the editor reading the JSON, to have two.
+  for (const [i, entry] of (Array.isArray(card.citations) ? card.citations : []).entries()) {
+    if (entry?.independent === true && !citationHost(entry.url)) {
+      issues.push(block("provenance.citation-url", `${path}.citations[${i}].url`,
+        "A citation offered as an independent record needs a URL with a host — an origin you cannot name is not corroboration.",
+        { value: entry?.url ?? null }));
+    }
+  }
+
   const independent = independentCitationCount(card.citations);
   const captures = captureCount(card.source);
+
+  // A verification method that names an archive must have the captures to show
+  // for it. Six cards declared `web-archive` with an empty `captures` array:
+  // the method field asserted an archive nobody had recorded, and the two-record
+  // bar below was met by citations alone. Read literally, the card claimed a
+  // form of evidence it did not hold.
+  const requiredCaptures = ARCHIVE_METHODS.get(card.source?.verificationMethod) ?? 0;
+  if (requiredCaptures > 0 && captures < requiredCaptures) {
+    issues.push(block("provenance.archive-method-without-capture", `${path}.source.captures`,
+      `verificationMethod '${card.source.verificationMethod}' claims ${requiredCaptures} archive capture(s), but ${captures} distinct capture timestamp(s) are recorded. Record the captures, or name the method the card actually has.`,
+      { value: captures, limit: requiredCaptures }));
+  }
+
   const records = independent + captures + primaryRecord;
   if (records < 2) {
     issues.push(block("provenance.independent-records", `${path}.citations`,

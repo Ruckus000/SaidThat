@@ -304,8 +304,139 @@ test("schema: an unresolvable figureId is rejected", () => {
 });
 
 test("schema: independent citation counting ignores dependent citations", () => {
-  assert.equal(independentCitationCount([{ independent: true }, { independent: false }]), 1);
+  assert.equal(
+    independentCitationCount([
+      { url: "https://a.example/1", independent: true },
+      { url: "https://b.example/2", independent: false },
+    ]),
+    1,
+  );
   assert.equal(independentCitationCount(null), 0);
+});
+
+/**
+ * A minimal authentic card whose provenance is otherwise sound, so each test
+ * below isolates the one gate it is about.
+ */
+function authenticCard(overrides = {}) {
+  return baseCard({
+    authenticity: "authentic",
+    decoyMethod: "none",
+    explanation: "Posted in 2019.",
+    sourceTier: "A",
+    transcriptionExact: true,
+    wordingSource: "archive",
+    citations: [
+      { url: "https://a.example/1", independent: true },
+      { url: "https://b.example/2", independent: true },
+    ],
+    source: {
+      url: "https://twitter.com/a/status/1",
+      retained: true,
+      verificationMethod: "contemporaneous-article",
+      rightsStatus: "fair_use_claim",
+      captures: [],
+    },
+    ...overrides,
+  });
+}
+
+test("schema: the isolated authentic fixture is itself clean", () => {
+  assert.deepEqual(codes(validateEditorialCard(authenticCard(), { figures })), []);
+});
+
+// The flag is a claim; the host is the evidence. Two citations to one outlet
+// are one record however they are flagged, which is the likeliest way for the
+// two-record bar to be cleared without two actual records existing.
+test("schema: citations sharing an outlet count once, whatever the flag says", () => {
+  assert.equal(
+    independentCitationCount([
+      { url: "https://www.today.com/food/one", independent: true },
+      { url: "https://today.com/food/two", independent: true },
+    ]),
+    1,
+  );
+  // An origin you cannot name is not corroboration.
+  assert.equal(independentCitationCount([{ independent: true }]), 0);
+  assert.equal(independentCitationCount([{ url: "not a url", independent: true }]), 0);
+});
+
+test("schema: an independent citation without a usable URL is called out by name", () => {
+  const res = validateEditorialCard(
+    authenticCard({
+      citations: [{ independent: true }, { url: "https://b.example/2", independent: true }],
+    }),
+    { figures },
+  );
+  assert.ok(codes(res).includes("provenance.citation-url"));
+});
+
+// The bar is two DISTINCT captures. Captures are written as `{ timestamp }`
+// objects, and deduplicating the objects rather than the timestamps counted one
+// capture pasted twice as two records.
+test("schema: the same capture recorded twice is one record, not two", () => {
+  const res = validateEditorialCard(
+    authenticCard({
+      citations: [],
+      source: {
+        url: "https://twitter.com/a/status/1",
+        retained: true,
+        verificationMethod: "archive-double-capture",
+        rightsStatus: "fair_use_claim",
+        captures: [{ timestamp: "20190706164317" }, { timestamp: "20190706164317" }],
+      },
+    }),
+    { figures },
+  );
+  const found = codes(res);
+  assert.ok(found.includes("provenance.independent-records"));
+  assert.ok(found.includes("provenance.archive-method-without-capture"));
+});
+
+// A field named archiveUrl must hold an archive. Thirteen shipped cards had a
+// live twitter.com permalink in it, because nothing read the field at all.
+test("schema: archiveUrl must be a Wayback capture URL, not a canonical link", () => {
+  const res = validateEditorialCard(
+    authenticCard({ source: { ...authenticCard().source, archiveUrl: "https://twitter.com/a/status/1" } }),
+    { figures },
+  );
+  assert.ok(codes(res).includes("provenance.archive-url-shape"));
+});
+
+test("schema: a well-formed Wayback archiveUrl passes", () => {
+  const res = validateEditorialCard(
+    authenticCard({
+      source: {
+        ...authenticCard().source,
+        archiveUrl: "https://web.archive.org/web/20190706164317/https://twitter.com/a/status/1",
+      },
+    }),
+    { figures },
+  );
+  assert.deepEqual(codes(res), []);
+});
+
+// The method field names a kind of evidence. Six cards declared `web-archive`
+// with an empty captures array — claiming a form of proof they did not hold.
+test("schema: a verification method naming an archive needs the captures to match", () => {
+  const web = validateEditorialCard(
+    authenticCard({ source: { ...authenticCard().source, verificationMethod: "web-archive" } }),
+    { figures },
+  );
+  assert.ok(codes(web).includes("provenance.archive-method-without-capture"));
+
+  // One capture does not make a double capture.
+  const double = validateEditorialCard(
+    authenticCard({
+      source: {
+        ...authenticCard().source,
+        verificationMethod: "archive-double-capture",
+        captures: [{ timestamp: "20190706164317" }],
+      },
+    }),
+    { figures },
+  );
+  assert.ok(codes(double).includes("provenance.archive-method-without-capture"));
 });
 
 test("schema: deck manifest requires semver and a sensitivity level", () => {

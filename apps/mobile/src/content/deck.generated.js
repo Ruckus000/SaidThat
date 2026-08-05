@@ -10,7 +10,7 @@
  * of them.
  */
 export const GENERATED_DECK_VERSION = "0.3.0";
-export const GENERATED_SOURCE_SHA256 = "817b78b7fcb83799a263b60fcb3d0763d5a53547a2b8ebdcea335faec9060485";
+export const GENERATED_SOURCE_SHA256 = "15ab40e45b6282ddb5c34cb80a0fa2c6c100b98b0cf5c7c73deb55c19124f460";
 
 export const generatedCards = [
   {

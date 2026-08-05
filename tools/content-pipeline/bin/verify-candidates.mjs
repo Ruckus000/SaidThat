@@ -25,6 +25,11 @@
 
 import { readFile } from "node:fs/promises";
 
+// Shared with the offline gates on purpose: this checker and lib/schema.mjs
+// must agree on what a capture URL looks like, or a card can satisfy one and
+// not the other.
+import { WAYBACK_CAPTURE_RE } from "../lib/schema.mjs";
+
 const AVAILABILITY = "https://archive.org/wayback/available?url=";
 const MAX_LENGTH = 180;
 const ORNAMENTS = /[#@]|https?:\/\/|www\.|\n/;
@@ -99,7 +104,7 @@ for (const candidate of candidates) {
   const claimed = candidate.archiveUrl ?? null;
   const target = statusPath(candidate.statusUrl) ?? candidate.sourceUrl ?? null;
 
-  if (claimed && !/^https?:\/\/web\.archive\.org\/web\/\d{14}\//.test(claimed)) {
+  if (claimed && !WAYBACK_CAPTURE_RE.test(claimed)) {
     notes.push("BLOCK archiveUrl is not a well-formed Wayback capture URL");
   }
 

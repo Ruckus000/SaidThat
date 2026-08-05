@@ -33,7 +33,7 @@
     "groups": 0,
     "byAudienceBucket": {}
   },
-  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API.",
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API. archiveUrl removed (2026-08-05 security review): it held the canonical permalink, not a Wayback capture. Capture timestamps in source.captures are unchanged and were not re-verified — the availability API rate-limited every request.",
   "decoyMethod": "none",
   "transcriptionExact": true,
   "normalizations": [],
@@ -42,7 +42,6 @@
   "citations": [],
   "source": {
     "url": "https://twitter.com/JohnCleese/status/1089028376994562048",
-    "archiveUrl": "https://twitter.com/JohnCleese/status/1089028376994562048",
     "publishedAt": "2019-01-26",
     "rightsStatus": "fair_use_claim",
     "verificationMethod": "archive-double-capture",

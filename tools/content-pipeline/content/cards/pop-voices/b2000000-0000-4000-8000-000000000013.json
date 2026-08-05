@@ -33,7 +33,7 @@
     "groups": 0,
     "byAudienceBucket": {}
   },
-  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API.",
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API. archiveUrl removed (2026-08-05 security review): it held the canonical permalink, not a Wayback capture. Capture timestamps in source.captures are unchanged and were not re-verified — the availability API rate-limited every request.",
   "decoyMethod": "none",
   "transcriptionExact": true,
   "normalizations": [],
@@ -42,7 +42,6 @@
   "citations": [],
   "source": {
     "url": "https://twitter.com/RainnWilson/status/1070783820499013632",
-    "archiveUrl": "https://twitter.com/RainnWilson/status/1070783820499013632",
     "publishedAt": "2018-12-06",
     "rightsStatus": "fair_use_claim",
     "verificationMethod": "archive-double-capture",

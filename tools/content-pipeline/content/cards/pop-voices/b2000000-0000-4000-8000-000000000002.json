@@ -33,7 +33,7 @@
     "groups": 0,
     "byAudienceBucket": {}
   },
-  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API.",
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API. Capture timestamp 20230626050301 transcribed from the recorded Wayback URL into source.captures (2026-08-05 security review); no new archive claim was added.",
   "decoyMethod": "none",
   "transcriptionExact": true,
   "normalizations": [],
@@ -64,6 +64,10 @@
     "rightsStatus": "fair_use_claim",
     "verificationMethod": "web-archive",
     "retained": true,
-    "captures": []
+    "captures": [
+      {
+        "timestamp": "20230626050301"
+      }
+    ]
   }
 }

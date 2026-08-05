@@ -33,7 +33,7 @@
     "groups": 0,
     "byAudienceBucket": {}
   },
-  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API.",
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API. archiveUrl removed (2026-08-05 security review): it held the canonical permalink, not a Wayback capture. Capture timestamps in source.captures are unchanged and were not re-verified — the availability API rate-limited every request.",
   "decoyMethod": "none",
   "transcriptionExact": true,
   "normalizations": [],
@@ -51,7 +51,6 @@
   ],
   "source": {
     "url": "https://twitter.com/ConanOBrien/status/1083067173512323073",
-    "archiveUrl": "https://twitter.com/ConanOBrien/status/1083067173512323073",
     "publishedAt": "2019-01-09",
     "rightsStatus": "fair_use_claim",
     "verificationMethod": "web-archive",

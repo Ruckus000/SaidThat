@@ -58,10 +58,14 @@ function card(overrides = {}) {
             { url: "https://a.example/1", independent: true },
             { url: "https://b.example/2", independent: true },
           ],
+          // `contemporaneous-article`, not `web-archive`: this fixture's URL is
+          // not an archive and it records no captures, and a method that names
+          // an archive now has to have the captures to show for it. The two
+          // independent citations above are what carries the provenance bar.
           source: {
             url: "https://a.example/post",
             retained: true,
-            verificationMethod: "web-archive",
+            verificationMethod: "contemporaneous-article",
             rightsStatus: "fair_use_claim",
           },
           decoyMethod: "none",
