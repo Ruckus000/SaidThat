@@ -1,0 +1,65 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000030",
+  "figureId": "c3000000-0000-4000-8000-000000000035",
+  "displayName": "Clayton Kershaw",
+  "statementText": "No, I don't know what analytics group you work for, but no.",
+  "authenticity": "authentic",
+  "category": "sports",
+  "difficultyPrior": 2,
+  "sensitivity": "everyone",
+  "explanation": "World Series media day, 2017, to a reporter asking about slider variation.",
+  "formatFingerprint": "technology-bafflement",
+  "eraVocabTag": "2015-2019",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API.",
+  "decoyMethod": "none",
+  "transcriptionExact": true,
+  "normalizations": [],
+  "wordingSource": "archive",
+  "sourceTier": "A",
+  "citations": [
+    {
+      "url": "https://www.mlb.com/news/dodgers-clayton-kershaw-media-day-interview-c259462680",
+      "outlet": "mlb.com",
+      "publishedAt": "2017-10-23",
+      "isPrimary": false,
+      "independent": true,
+      "independentOf": []
+    }
+  ],
+  "source": {
+    "url": "https://www.asapsports.com/show_interview.php?id=135133",
+    "archiveUrl": null,
+    "publishedAt": "2017-10-23",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "official-transcript",
+    "retained": true,
+    "captures": [
+      {
+        "timestamp": "20250513125105"
+      }
+    ]
+  }
+}

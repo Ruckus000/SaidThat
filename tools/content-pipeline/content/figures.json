@@ -165,5 +165,364 @@
       "long run-ons"
     ],
     "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000015",
+    "displayName": "Albert Brooks",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "sentence case",
+      "deadpan",
+      "single sentence",
+      "self-interrupting"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000016",
+    "displayName": "Steve Martin",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "sentence case",
+      "mock-gravitas",
+      "mundane grievances",
+      "terminal punctuation"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000017",
+    "displayName": "John Cleese",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "long single sentence",
+      "pedantic civic bafflement",
+      "no terminal punctuation"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000018",
+    "displayName": "Conan O'Brien",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "sentence case",
+      "absurdist premise",
+      "oddly specific numbers",
+      "terminal punctuation"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000019",
+    "displayName": "Rainn Wilson",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "stray capitals",
+      "would-you-rather questions",
+      "very short",
+      "no terminal punctuation"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000020",
+    "displayName": "Danny DeVito",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "lowercase openings",
+      "trailing ellipsis",
+      "capitalised nouns",
+      "warm"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000021",
+    "displayName": "Elijah Wood",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "sentence case",
+      "terse",
+      "travel observations",
+      "terminal punctuation"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000022",
+    "displayName": "Martha Stewart",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "sentence case",
+      "typos left in",
+      "earnest complaint",
+      "capitalised brand names"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000023",
+    "displayName": "Alton Brown",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "ALL CAPS declarations",
+      "imperative mood",
+      "food non-sequiturs",
+      "terminal punctuation"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000024",
+    "displayName": "Ice-T",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "sentence case",
+      "Lol opener",
+      "flat denial",
+      "trailing ellipsis"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000025",
+    "displayName": "Dionne Warwick",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "sentence case",
+      "deadpan self-rebrand",
+      "very short",
+      "terminal punctuation"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000026",
+    "displayName": "Geoffrey Hinton",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "spoken register",
+      "hedged self-description",
+      "long clause",
+      "no contractions"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000027",
+    "displayName": "Donna Strickland",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "spoken register",
+      "exclamation",
+      "plain",
+      "self-deprecating"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000028",
+    "displayName": "Robert De Niro",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "spoken register",
+      "flat delivery",
+      "short",
+      "terminal punctuation"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000029",
+    "displayName": "F. Murray Abraham",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "spoken register",
+      "formal",
+      "long sentence",
+      "self-aware"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000030",
+    "displayName": "Edith Head",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "spoken register",
+      "dry",
+      "era-flavoured",
+      "understated"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000031",
+    "displayName": "Fran Lebowitz",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "spoken register",
+      "deadpan logic",
+      "single clause",
+      "no hedging"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000032",
+    "displayName": "Mel Brooks",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "spoken register",
+      "run-on",
+      "business philosophy as punchline",
+      "conversational"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000033",
+    "displayName": "Maria Sharapova",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "spoken register",
+      "I mean opener",
+      "vivid image",
+      "terminal punctuation"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000034",
+    "displayName": "Geno Auriemma",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "spoken register",
+      "deadpan escalation",
+      "flat",
+      "terminal punctuation"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000035",
+    "displayName": "Clayton Kershaw",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "spoken register",
+      "no ... but no shape",
+      "terse",
+      "terminal punctuation"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000036",
+    "displayName": "Nigella Lawson",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "sentence case",
+      "sensory food detail",
+      "warm",
+      "terminal punctuation"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000037",
+    "displayName": "Patrick Stewart",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "sentence case",
+      "formal warmth",
+      "short",
+      "terminal punctuation"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000038",
+    "displayName": "Weird Al Yankovic",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "sentence case",
+      "wordplay",
+      "mild",
+      "terminal punctuation"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000039",
+    "displayName": "Jim Gaffigan",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "lowercase",
+      "food guilt",
+      "self-deprecating",
+      "no terminal punctuation"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000040",
+    "displayName": "Bob Mortimer",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "sentence case",
+      "surreal domestic detail",
+      "gentle",
+      "terminal punctuation"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000041",
+    "displayName": "Ruth Reichl",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "fragment stacking",
+      "morning weather",
+      "food nouns",
+      "terminal periods"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000042",
+    "displayName": "Guy Fieri",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "ALL CAPS bursts",
+      "enthusiasm",
+      "exclamation marks",
+      "food slang"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000043",
+    "displayName": "Richard Osman",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "sentence case",
+      "British understatement",
+      "observational",
+      "terminal punctuation"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000044",
+    "displayName": "Ernie Els",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "spoken register",
+      "self-deprecating age joke",
+      "plain",
+      "terminal punctuation"
+    ],
+    "notes": ""
   }
 ]

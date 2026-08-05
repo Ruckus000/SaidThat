@@ -1,0 +1,39 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000051",
+  "figureId": "c3000000-0000-4000-8000-000000000003",
+  "displayName": "Kim Kardashian",
+  "statementText": "ok so nobody told me you can just ask for the shoes in a different size. years of this.",
+  "authenticity": "fabricated",
+  "category": "reality-tv",
+  "difficultyPrior": 2,
+  "sensitivity": "everyone",
+  "explanation": "Made up. The lowercase run-on enthusiasm matches her 2010-era posts; the shoes are invented.",
+  "formatFingerprint": "shoe-problem",
+  "eraVocabTag": "pre-2015",
+  "styleFlags": {
+    "hasNonstandardGrammar": true,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": true,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": false,
+    "readsAuthentic": true
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Drafted with AI assistance, rewritten and owned by the repository owner under ADR-012.",
+  "decoyMethod": "ai_assisted",
+  "source": null
+}

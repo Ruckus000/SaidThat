@@ -10,7 +10,7 @@
  * of them.
  */
 export const GENERATED_DECK_VERSION = "0.3.0";
-export const GENERATED_SOURCE_SHA256 = "24fc13d8017d60502a90e558695e23a424c85b5c24a02e567d915099c9a4b2b4";
+export const GENERATED_SOURCE_SHA256 = "817b78b7fcb83799a263b60fcb3d0763d5a53547a2b8ebdcea335faec9060485";
 
 export const generatedCards = [
   {
@@ -148,6 +148,443 @@ export const generatedCards = [
   },
   {
     "id": "b2000000-0000-4000-8000-000000000008",
+    "quote": "I was in the middle of tweeting a very funny joke  and then a 7.1 earthquake happened and I forgot the punchline.",
+    "person": "Albert Brooks",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "Posted the day after the 2019 Ridgecrest earthquake. The double space after 'joke' is his and is preserved.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "film-tv",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://twitter.com/AlbertBrooks/status/1147357315894534144"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000009",
+    "quote": "Going out on a limb here, but doorbells and phone rings should be banned in TV commercials.",
+    "person": "Steve Martin",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "January 2020. A real grievance about a real annoyance, delivered with mock-gravitas.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "film-tv",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://twitter.com/SteveMartinToGo/status/1221445322347569152"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000010",
+    "quote": "For anyone visiting Los Angeles, I'd like to explain that addresses on North Robertson Blvd are actually to be found to the South of SOUTH Robertson Blvd",
+    "person": "John Cleese",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "January 2019. The missing terminal punctuation is his, and the street layout really is like that.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "film-tv",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://twitter.com/JohnCleese/status/1089028376994562048"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000011",
+    "quote": "This is the THIRD time I've found Jeff Goldblum in a box of Kellogg's Raisin Bran.",
+    "person": "Conan O'Brien",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "October 2018. The capitalised THIRD is the detail rooms argue over, and it is his.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "internet-culture",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://twitter.com/ConanOBrien/status/1047541859130777611"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000012",
+    "quote": "The only time I regret having 3 cats is fairly often.",
+    "person": "Conan O'Brien",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "January 2019. A joke shape common enough that rooms assume it was written for them.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "internet-culture",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://twitter.com/ConanOBrien/status/1083067173512323073"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000013",
+    "quote": "Would you rather be Born without a mouth or born with two mouths?",
+    "person": "Rainn Wilson",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "December 2018. The stray capital B on the first 'Born' is his, preserved exactly.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "film-tv",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://twitter.com/RainnWilson/status/1070783820499013632"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000014",
+    "quote": "got to go to the dentist today… I need to bring my Blankie",
+    "person": "Danny DeVito",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "August 2011, from his early Twitter era. Lowercase opening, trailing ellipsis, capitalised Blankie — all his.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "movies",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://twitter.com/DannyDeVito/status/105681470424756224"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000015",
+    "quote": "If only America had Autogrill.",
+    "person": "Elijah Wood",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "September 2019. Autogrill is the Italian motorway service chain — a sincere opinion that reads as a bit.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "movies",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://twitter.com/elijahwood/status/1177722012141142017"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000016",
+    "quote": "I am still waiting for an apple rep to come pick up my IPad. No action yey",
+    "person": "Martha Stewart",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "September 2013, during her public standoff with Apple over a broken iPad. The 'yey' typo and 'IPad' capitalisation are hers.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "internet-culture",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://twitter.com/MarthaStewart/status/383211703497785344"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000017",
+    "quote": "I want you to go out right now and buy Fritos and cat food.",
+    "person": "Alton Brown",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "From a run of posts on the night of 2 November 2020. Delivered flat and never explained.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "food",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://twitter.com/altonbrown/status/1323454104530767872"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000018",
+    "quote": "Turn off the lights and run 23 Slim Jims through the juicer.",
+    "person": "Alton Brown",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "Same night, same run. The oddly exact 23 is the detail rooms fixate on.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "food",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://twitter.com/altonbrown/status/1323454897652715520"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000019",
+    "quote": "Lol. I've never eaten a Bagel in my life…",
+    "person": "Ice-T",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "November 2018, and he meant it. The capital B on Bagel is his.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "music",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://twitter.com/FINALLEVEL/status/1060938041429241856"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000020",
+    "quote": "I am now Dionne the Singer.",
+    "person": "Dionne Warwick",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "December 2020, after telling Chance the Rapper to drop 'the Rapper' from his name.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "music",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://twitter.com/dionnewarwick/status/1335345903419330560"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000021",
+    "quote": "I would say I am someone who doesn't really know what field he's in but would like to understand how the brain works.",
+    "person": "Geoffrey Hinton",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "His Nobel telephone interview, hours after winning the 2024 physics prize.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "science",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://www.nobelprize.org/prizes/physics/2024/hinton/interview/"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000022",
+    "quote": "It is the one time in my life that I worked very, very hard!",
+    "person": "Donna Strickland",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "Her Nobel telephone interview in 2018, describing the PhD work that won the prize.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "science",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://www.nobelprize.org/prizes/physics/2018/strickland/interview/"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000023",
+    "quote": "I forgot my lines so the director wrote them down for me.",
+    "person": "Robert De Niro",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "The opening line of his Best Actor speech for Raging Bull, 1981. He then read from notes.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "awards",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://aaspeechesdb.oscars.org/link/053-1/"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000024",
+    "quote": "It would be a lie if I told you I didn't know what to say because I've been working on this speech for about twenty-five years.",
+    "person": "F. Murray Abraham",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "Opening his Best Actor speech for Amadeus, 1985. The twenty-five years were real.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "awards",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://aaspeechesdb.oscars.org/link/057-1/"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000025",
+    "quote": "Just imagine dressing the two handsomest men in the world and then getting this.",
+    "person": "Edith Head",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "Accepting her eighth and final Oscar, for The Sting, 1974. The two men were Newman and Redford.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "awards",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://aaspeechesdb.oscars.org/link/046-7/"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000026",
+    "quote": "I'm playing a judge because I'm hoping to become an actual judge.",
+    "person": "Fran Lebowitz",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "On NPR in 2010, about her recurring judge role on Law & Order. The transcript records laughter after it.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "internet-culture",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://www.npr.org/transcripts/131420458"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000027",
+    "quote": "I've never put my own money in the show, you know. I put my talent on the line, and my money I save for Saturday night restaurants.",
+    "person": "Mel Brooks",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "On Fresh Air in 2013, asked whether the advice in The Producers was his own. It was.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "film-tv",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://www.npr.org/transcripts/256597762"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000028",
+    "quote": "I mean, unless I'm really in my coffin, I'm going to be out there.",
+    "person": "Maria Sharapova",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "Roland Garros press conference, 2015, asked whether illness had made her doubt playing.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "sports",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://www.asapsports.com/show_interview.php?id=110057"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000029",
+    "quote": "I didn't record it, and the chances of me watching it are less than zero.",
+    "person": "Geno Auriemma",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "Final Four press conference, 2022, asked if he would watch the alternate telecast.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "sports",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://www.asapsports.com/show_interview.php?id=175050"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000030",
+    "quote": "No, I don't know what analytics group you work for, but no.",
+    "person": "Clayton Kershaw",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "World Series media day, 2017, to a reporter asking about slider variation.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "sports",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://www.asapsports.com/show_interview.php?id=135133"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000031",
     "quote": "Woke up at 3:40 to train and somebody had already unlocked the gym. I need to know who that was.",
     "person": "Dwayne Johnson",
     "authentic": false,
@@ -162,7 +599,7 @@ export const generatedCards = [
     "tier": "provisional"
   },
   {
-    "id": "b2000000-0000-4000-8000-000000000009",
+    "id": "b2000000-0000-4000-8000-000000000032",
     "quote": "someone held the elevator at the hotel today and i said thank you twice",
     "person": "Keanu Reeves",
     "authentic": false,
@@ -177,7 +614,7 @@ export const generatedCards = [
     "tier": "provisional"
   },
   {
-    "id": "b2000000-0000-4000-8000-000000000010",
+    "id": "b2000000-0000-4000-8000-000000000033",
     "quote": "Someone tagged me in a photo of a sad looking dog and captioned it with my name. It's fair.",
     "person": "James Blunt",
     "authentic": false,
@@ -192,7 +629,7 @@ export const generatedCards = [
     "tier": "provisional"
   },
   {
-    "id": "b2000000-0000-4000-8000-000000000011",
+    "id": "b2000000-0000-4000-8000-000000000034",
     "quote": "Clouds Are Just The Sky Getting Tired I Think Sometimes",
     "person": "Jaden Smith",
     "authentic": false,
@@ -207,7 +644,7 @@ export const generatedCards = [
     "tier": "provisional"
   },
   {
-    "id": "b2000000-0000-4000-8000-000000000012",
+    "id": "b2000000-0000-4000-8000-000000000035",
     "quote": "is a hot dog a taco or am i just tired?",
     "person": "Chrissy Teigen",
     "authentic": false,
@@ -222,7 +659,7 @@ export const generatedCards = [
     "tier": "provisional"
   },
   {
-    "id": "b2000000-0000-4000-8000-000000000013",
+    "id": "b2000000-0000-4000-8000-000000000036",
     "quote": "Well… that's the wrong screwdriver.",
     "person": "Mark Hamill",
     "authentic": false,
@@ -237,12 +674,357 @@ export const generatedCards = [
     "tier": "provisional"
   },
   {
-    "id": "b2000000-0000-4000-8000-000000000014",
+    "id": "b2000000-0000-4000-8000-000000000037",
     "quote": "i been at this game 20 years and they still spell my name wrong on the badge. TWO Gs. TWO! anyway good day",
     "person": "Snoop Dogg",
     "authentic": false,
     "contentState": "fabricated-for-game",
     "explanation": "Not a real post. The caps-lock emphasis and the shrug ending are true to his voice; the badge and the misspelling are invented.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "sports",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000038",
+    "quote": "The hotel gave me a second pillow without being asked. I've been thinking about it since Tuesday.",
+    "person": "Steve Martin",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Invented. Real: the mock-gravitas about small things. Invented: the pillow and the Tuesday.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "film-tv",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000039",
+    "quote": "My dog's learned to open the pantry and has chosen to tell nobody how.",
+    "person": "Conan O'Brien",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Made up for the game. He does post about his animals; this particular betrayal is ours.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "internet-culture",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000040",
+    "quote": "is a sandwich still a sandwich if you're eating it standing up",
+    "person": "Rainn Wilson",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Not a real post. The unpunctuated would-you-rather register is his; the sandwich question is invented.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "film-tv",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000041",
+    "quote": "the neighbours put up a new fence and nobody told me anything about it",
+    "person": "Danny DeVito",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Invented for the game. Lowercase and unpunctuated to match his early posts; the fence is ours.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "movies",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000042",
+    "quote": "The parcel says delivered. It's not delivered. I have looked everywhere including the greenhouse.",
+    "person": "Martha Stewart",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Made up. Real: she genuinely posts customer-service grievances. Invented: the parcel and the capitalised Greenhouse.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "internet-culture",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000043",
+    "quote": "PUT THE KETTLE ON. WE ARE NOT DISCUSSING WHY.",
+    "person": "Alton Brown",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Written for this game. The all-caps imperative is his format; the kettle is invented.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "food",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000044",
+    "quote": "Lol. Somebody just told me a scone is not a biscuit…",
+    "person": "Ice-T",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Invented. He really does post flat food revelations with a Lol opener; the scone is ours.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "music",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000045",
+    "quote": "I've never owned a plant because I refuse to be responsible for something that cannot complain.",
+    "person": "Fran Lebowitz",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Not a real remark. The deadpan logic is her register; the plant is invented.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "internet-culture",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000046",
+    "quote": "You know, I bought a very expensive coat once. I still have it, and I've still not worn it outside.",
+    "person": "Mel Brooks",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Made up for the game. The conversational run-on matches his interview voice; the coat is ours.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "film-tv",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000047",
+    "quote": "I mean, the hotel gym had one treadmill and somebody was reading a book on it.",
+    "person": "Maria Sharapova",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Invented. The 'I mean' opener is how she actually starts press answers; the treadmill is ours.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "sports",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000048",
+    "quote": "I've now been informed that the lift in this building skips the fourth floor for reasons nobody will explain",
+    "person": "John Cleese",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Made up. The pedantic civic bafflement and missing full stop are his; the lift is invented.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "film-tv",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000049",
+    "quote": "I bought a new phone and it already knows more about me than my accountant does.",
+    "person": "Albert Brooks",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Not a real post. The single-sentence deadpan is his shape; the phone is invented.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "film-tv",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000050",
+    "quote": "Got on the wrong train and stayed on it for a while out of politeness.",
+    "person": "Elijah Wood",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Invented for the game. The terse travel-observation register is his; the train is ours.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "movies",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000051",
+    "quote": "ok so nobody told me you can just ask for the shoes in a different size. years of this.",
+    "person": "Kim Kardashian",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Made up. The lowercase run-on enthusiasm matches her 2010-era posts; the shoes are invented.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "reality-tv",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000052",
+    "quote": "There's a spoon in this house that I like more than the others and I have started hiding it.",
+    "person": "Nigella Lawson",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Not a real post. The warm sensory domesticity is her register; the spoon is ours.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "food",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000053",
+    "quote": "I've been given a coffee with my name spelled correctly. A rare and excellent morning.",
+    "person": "Patrick Stewart",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Invented. The formal warmth is his; the coffee is ours.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "film-tv",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000054",
+    "quote": "Lost my umbrella in a shop that only sells umbrellas. Let that one sit for a moment.",
+    "person": "Weird Al Yankovic",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Made up for the game. The mild wordplay shape is his; the umbrella shop is invented.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "music",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000055",
+    "quote": "ate the entire thing standing over the sink and would do it again tomorrow",
+    "person": "Jim Gaffigan",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Invented. The lowercase food-guilt register is his; the sink is ours.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "internet-culture",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000056",
+    "quote": "A man in the queue told me he's had his shoes since 1998 and then walked off before I could respond.",
+    "person": "Bob Mortimer",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Not a real post. The surreal domestic anecdote is his shape; the man and his shoes are invented.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "internet-culture",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000057",
+    "quote": "Grey sky. Wind. Toast. Butter melting properly for once. Staying in.",
+    "person": "Ruth Reichl",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Made up. The fragment-stacked morning report is genuinely her format; this particular morning is ours.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "food",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000058",
+    "quote": "THIS SANDWICH HAS A SECOND SANDWICH INSIDE IT! I need everyone to know that!",
+    "person": "Guy Fieri",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Invented for the game. The all-caps enthusiasm is his; the recursive sandwich is ours.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "food",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000059",
+    "quote": "Someone's parked so badly that I've started to admire it.",
+    "person": "Richard Osman",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Not a real post. The British understatement is his register; the parking is invented.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "internet-culture",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000060",
+    "quote": "I told my physio I'd felt twenty-five and he asked me to walk across the room again.",
+    "person": "Ernie Els",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Made up. The self-deprecating age joke matches how he actually talks in pressers; the physio is ours.",
     "editorialApprovals": [
       "owner:pre-release"
     ],

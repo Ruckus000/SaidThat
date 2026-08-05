@@ -1,14 +1,14 @@
 {
   "id": "b2000000-0000-4000-8000-000000000014",
-  "figureId": "c3000000-0000-4000-8000-000000000014",
-  "displayName": "Snoop Dogg",
-  "statementText": "i been at this game 20 years and they still spell my name wrong on the badge. TWO Gs. TWO! anyway good day",
-  "authenticity": "fabricated",
-  "category": "sports",
-  "difficultyPrior": 1,
+  "figureId": "c3000000-0000-4000-8000-000000000020",
+  "displayName": "Danny DeVito",
+  "statementText": "got to go to the dentist today... I need to bring my Blankie",
+  "authenticity": "authentic",
+  "category": "movies",
+  "difficultyPrior": 2,
   "sensitivity": "everyone",
-  "explanation": "Not a real post. The caps-lock emphasis and the shrug ending are true to his voice; the badge and the misspelling are invented.",
-  "formatFingerprint": "name-misspelled",
+  "explanation": "August 2011, from his early Twitter era. Lowercase opening, trailing ellipsis, capitalised Blankie — all his.",
+  "formatFingerprint": "body-bafflement",
   "eraVocabTag": "pre-2015",
   "styleFlags": {
     "hasNonstandardGrammar": false,
@@ -16,7 +16,7 @@
     "opensMidThought": true,
     "hasConcreteMundaneDetail": true,
     "readsFabricated": false,
-    "readsAuthentic": true
+    "readsAuthentic": false
   },
   "editorialApprovals": [
     {
@@ -33,7 +33,33 @@
     "groups": 0,
     "byAudienceBucket": {}
   },
-  "editorialNotes": "Drafted with AI assistance, rewritten and owned by the repository owner under ADR-012.",
-  "decoyMethod": "ai_assisted",
-  "source": null
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API.",
+  "decoyMethod": "none",
+  "transcriptionExact": true,
+  "normalizations": [],
+  "wordingSource": "archive",
+  "sourceTier": "A",
+  "citations": [
+    {
+      "url": "https://twitter.com/DannyDeVito/status/105681470424756224",
+      "outlet": "twitter.com",
+      "publishedAt": "2011-08-22",
+      "isPrimary": false,
+      "independent": true,
+      "independentOf": []
+    }
+  ],
+  "source": {
+    "url": "https://twitter.com/DannyDeVito/status/105681470424756224",
+    "archiveUrl": "https://twitter.com/DannyDeVito/status/105681470424756224",
+    "publishedAt": "2011-08-22",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "web-archive",
+    "retained": true,
+    "captures": [
+      {
+        "timestamp": "20210820054710"
+      }
+    ]
+  }
 }

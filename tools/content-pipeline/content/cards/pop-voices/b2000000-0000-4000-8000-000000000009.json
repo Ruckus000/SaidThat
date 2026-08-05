@@ -1,22 +1,22 @@
 {
   "id": "b2000000-0000-4000-8000-000000000009",
-  "figureId": "c3000000-0000-4000-8000-000000000009",
-  "displayName": "Keanu Reeves",
-  "statementText": "someone held the elevator at the hotel today and i said thank you twice",
-  "authenticity": "fabricated",
+  "figureId": "c3000000-0000-4000-8000-000000000016",
+  "displayName": "Steve Martin",
+  "statementText": "Going out on a limb here, but doorbells and phone rings should be banned in TV commercials.",
+  "authenticity": "authentic",
   "category": "film-tv",
-  "difficultyPrior": 4,
+  "difficultyPrior": 2,
   "sensitivity": "everyone",
-  "explanation": "Made up for the game. The small-kindness register is real to his public image; the elevator, the hotel and the second thank-you are ours.",
-  "formatFingerprint": "dialogue-with-stranger",
+  "explanation": "January 2020. A real grievance about a real annoyance, delivered with mock-gravitas.",
+  "formatFingerprint": "stubborn-preference",
   "eraVocabTag": "2020+",
   "styleFlags": {
-    "hasNonstandardGrammar": true,
-    "punchlineInFinal20Pct": false,
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": true,
     "opensMidThought": false,
-    "hasConcreteMundaneDetail": true,
+    "hasConcreteMundaneDetail": false,
     "readsFabricated": false,
-    "readsAuthentic": true
+    "readsAuthentic": false
   },
   "editorialApprovals": [
     {
@@ -33,7 +33,27 @@
     "groups": 0,
     "byAudienceBucket": {}
   },
-  "editorialNotes": "Drafted with AI assistance, rewritten and owned by the repository owner under ADR-012.",
-  "decoyMethod": "ai_assisted",
-  "source": null
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API.",
+  "decoyMethod": "none",
+  "transcriptionExact": true,
+  "normalizations": [],
+  "wordingSource": "archive",
+  "sourceTier": "A",
+  "citations": [],
+  "source": {
+    "url": "https://twitter.com/SteveMartinToGo/status/1221445322347569152",
+    "archiveUrl": "https://twitter.com/SteveMartinToGo/status/1221445322347569152",
+    "publishedAt": "2020-01-26",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "archive-double-capture",
+    "retained": true,
+    "captures": [
+      {
+        "timestamp": "20200127032828"
+      },
+      {
+        "timestamp": "20200630052404"
+      }
+    ]
+  }
 }

@@ -65,6 +65,52 @@ export const FORMAT_FINGERPRINTS = new Set([
   "unsolicited-request",
   "recognised-in-public",
   "name-misspelled",
+  "morning-report",
+  "celebrity-encounter",
+  "household-inventory",
+  "overheard-remark",
+  "acceptance-speech-opener",
+  "press-conference-deadpan",
+  "professional-confession",
+  "hypothetical-question",
+  "product-complaint",
+  "late-night-instruction",
+  "unexplained-declaration",
+  "era-lament",
+  "cooking-improvisation",
+  "travel-logistics",
+  "animal-observation",
+  "body-bafflement",
+  "career-retrospective",
+  "small-victory",
+  "mistaken-identity",
+  "stubborn-preference",
+  "kitchen-mishap",
+  "queue-grievance",
+  "sleep-report",
+  "laundry-defeat",
+  "parcel-saga",
+  "neighbour-report",
+  "gym-report",
+  "haircut-report",
+  "phone-battery",
+  "wrong-train",
+  "supermarket-observation",
+  "weather-complaint",
+  "pet-negotiation",
+  "instruction-manual",
+  "birthday-report",
+  "coffee-order",
+  "lost-item",
+  "doorbell-incident",
+  "shoe-problem",
+  "plant-care",
+  "tv-remote",
+  "seasonal-confession",
+  "restaurant-report",
+  "umbrella-incident",
+  "mild-injury",
+  "unread-email",
 ]);
 
 export const MAX_STATEMENT_LENGTH = 500; // schema ceiling; D3 imposes the real 180 limit
@@ -182,12 +228,22 @@ function validateProvenance(card, path, issues) {
   // evidence of wording than any article quote — the capture IS the post. So
   // either pair satisfies the bar, and `wordingSource` below tightens what may
   // supply the string in the first place.
+  // An official verbatim transcript or institutional archive is itself a
+  // primary record — the awarding body's own account of what was said, not a
+  // retelling. Its archive capture is a SECOND record, because it pins what
+  // that page said on a date and so guards against a later silent edit.
+  const primaryRecord = ["official-transcript", "institutional-archive", "licensed-dataset"].includes(
+    card.source?.verificationMethod,
+  )
+    ? 1
+    : 0;
   const independent = independentCitationCount(card.citations);
   const captures = captureCount(card.source);
-  if (independent < 2 && captures < 2) {
+  const records = independent + captures + primaryRecord;
+  if (records < 2) {
     issues.push(block("provenance.independent-records", `${path}.citations`,
-      "Authentic cards need two independent citations, or two archive captures of the canonical URL.",
-      { value: { citations: independent, captures }, limit: 2 }));
+      "Authentic cards need two independent records: citations, archive captures of the canonical URL, or a primary transcript plus its capture.",
+      { value: { citations: independent, captures, primaryRecord }, limit: 2 }));
   }
 
   // Wording must come from a primary record, never from an outlet's retelling.

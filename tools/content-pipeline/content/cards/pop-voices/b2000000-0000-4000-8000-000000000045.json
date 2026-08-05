@@ -1,0 +1,39 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000045",
+  "figureId": "c3000000-0000-4000-8000-000000000031",
+  "displayName": "Fran Lebowitz",
+  "statementText": "I've never owned a plant because I refuse to be responsible for something that cannot complain.",
+  "authenticity": "fabricated",
+  "category": "internet-culture",
+  "difficultyPrior": 4,
+  "sensitivity": "everyone",
+  "explanation": "Not a real remark. The deadpan logic is her register; the plant is invented.",
+  "formatFingerprint": "plant-care",
+  "eraVocabTag": "pre-2015",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": true,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Drafted with AI assistance, rewritten and owned by the repository owner under ADR-012.",
+  "decoyMethod": "ai_assisted",
+  "source": null
+}

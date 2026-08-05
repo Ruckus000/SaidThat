@@ -1,18 +1,18 @@
 {
   "id": "b2000000-0000-4000-8000-000000000011",
-  "figureId": "c3000000-0000-4000-8000-000000000011",
-  "displayName": "Jaden Smith",
-  "statementText": "Clouds Are Just The Sky Getting Tired I Think Sometimes",
-  "authenticity": "fabricated",
+  "figureId": "c3000000-0000-4000-8000-000000000018",
+  "displayName": "Conan O'Brien",
+  "statementText": "This is the THIRD time I've found Jeff Goldblum in a box of Kellogg's Raisin Bran.",
+  "authenticity": "authentic",
   "category": "internet-culture",
-  "difficultyPrior": 4,
+  "difficultyPrior": 3,
   "sensitivity": "everyone",
-  "explanation": "Written for this game. The Title Case aphorism is his format; we deliberately made it a worse aphorism, because a fake that out-writes the real ones is its own tell.",
-  "formatFingerprint": "aphorism",
-  "eraVocabTag": "pre-2015",
+  "explanation": "October 2018. The capitalised THIRD is the detail rooms argue over, and it is his.",
+  "formatFingerprint": "unexplained-declaration",
+  "eraVocabTag": "2015-2019",
   "styleFlags": {
     "hasNonstandardGrammar": false,
-    "punchlineInFinal20Pct": false,
+    "punchlineInFinal20Pct": true,
     "opensMidThought": false,
     "hasConcreteMundaneDetail": false,
     "readsFabricated": false,
@@ -33,7 +33,27 @@
     "groups": 0,
     "byAudienceBucket": {}
   },
-  "editorialNotes": "Drafted with AI assistance, rewritten and owned by the repository owner under ADR-012.",
-  "decoyMethod": "ai_assisted",
-  "source": null
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API.",
+  "decoyMethod": "none",
+  "transcriptionExact": true,
+  "normalizations": [],
+  "wordingSource": "archive",
+  "sourceTier": "A",
+  "citations": [],
+  "source": {
+    "url": "https://twitter.com/ConanOBrien/status/1047541859130777611",
+    "archiveUrl": "https://twitter.com/ConanOBrien/status/1047541859130777611",
+    "publishedAt": "2018-10-03",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "archive-double-capture",
+    "retained": true,
+    "captures": [
+      {
+        "timestamp": "20220313025154"
+      },
+      {
+        "timestamp": "20220314234716"
+      }
+    ]
+  }
 }

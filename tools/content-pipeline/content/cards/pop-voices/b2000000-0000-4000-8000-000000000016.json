@@ -1,0 +1,65 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000016",
+  "figureId": "c3000000-0000-4000-8000-000000000022",
+  "displayName": "Martha Stewart",
+  "statementText": "I am still waiting for an apple rep to come pick up my IPad. No action yey",
+  "authenticity": "authentic",
+  "category": "internet-culture",
+  "difficultyPrior": 2,
+  "sensitivity": "everyone",
+  "explanation": "September 2013, during her public standoff with Apple over a broken iPad. The 'yey' typo and 'IPad' capitalisation are hers.",
+  "formatFingerprint": "product-complaint",
+  "eraVocabTag": "pre-2015",
+  "styleFlags": {
+    "hasNonstandardGrammar": true,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": true,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API.",
+  "decoyMethod": "none",
+  "transcriptionExact": true,
+  "normalizations": [],
+  "wordingSource": "archive",
+  "sourceTier": "A",
+  "citations": [
+    {
+      "url": "https://www.buzzfeednews.com/article/peterlauria/martha-stewart-tweet-shames-apple",
+      "outlet": "buzzfeednews.com",
+      "publishedAt": "2013-09-26",
+      "isPrimary": false,
+      "independent": true,
+      "independentOf": []
+    }
+  ],
+  "source": {
+    "url": "https://twitter.com/MarthaStewart/status/383211703497785344",
+    "archiveUrl": "https://twitter.com/MarthaStewart/status/383211703497785344",
+    "publishedAt": "2013-09-26",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "web-archive",
+    "retained": true,
+    "captures": [
+      {
+        "timestamp": "20160827155159"
+      }
+    ]
+  }
+}

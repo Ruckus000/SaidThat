@@ -49,15 +49,24 @@ test("corpus: every authentic card carries real, independent provenance", async 
     assert.equal(card.source.retained, true, card.displayName);
     assert.ok(card.source.url.startsWith("https://"), card.displayName);
 
-    const independent = card.citations.filter((c) => c.independent);
-    assert.ok(independent.length >= 2, `${card.displayName} has ${independent.length} independent citations`);
+    // Two independent RECORDS, which combine across kinds: citations, archive
+    // captures of the canonical URL, and a primary transcript each count one.
+    // Outlets are unreliable for wording (see editorial-rubric.md §1.3.1), so
+    // requiring two of them specifically would reject the best-sourced cards.
+    const independent = card.citations.filter((c) => c.independent).length;
+    const captures = (card.source.captures ?? []).length;
+    const primary = ["official-transcript", "institutional-archive"].includes(card.source.verificationMethod) ? 1 : 0;
+    assert.ok(
+      independent + captures + primary >= 2,
+      `${card.displayName}: ${independent} citations + ${captures} captures + ${primary} primary`,
+    );
 
-    // Tier A claims an archival capture; Tier B must not claim one it lacks.
-    if (card.sourceTier === "A") {
-      assert.match(card.source.archiveUrl ?? "", /^https:\/\/web\.archive\.org\/web\/\d{14}\//, card.displayName);
-      assert.equal(card.source.verificationMethod, "web-archive", card.displayName);
-    } else {
-      assert.equal(card.source.archiveUrl, null, `${card.displayName} is tier B and must not claim an archive`);
+    // Wording never comes from an article.
+    assert.notEqual(card.wordingSource, "article", card.displayName);
+    // A capture timestamp must be a real 14-digit Wayback stamp, never a
+    // plausible-looking invention.
+    for (const capture of card.source.captures ?? []) {
+      assert.match(String(capture.timestamp), /^\d{14}$/, card.displayName);
     }
   }
 });
@@ -74,12 +83,26 @@ test("corpus: no fabricated card carries a source, and each discloses itself", a
 
 test("corpus: no figure appears on both sides, and no two cards share a format", async () => {
   const { cards } = await loadDeck("pop-voices");
-  // The pairing defect that made the old file solvable in one session.
+  // Pairing a figure is deliberate — it lets a decoy be texture-matched against
+  // that person's real card, and it stops "have I seen this figure before"
+  // being a signal. What must never happen is a figure appearing ONLY as
+  // fabricated: that is a free win once a room notices (P6).
   const byFigure = new Map();
   for (const card of cards) {
-    byFigure.set(card.figureId, (byFigure.get(card.figureId) ?? 0) + 1);
+    const group = byFigure.get(card.figureId) ?? [];
+    group.push(card);
+    byFigure.set(card.figureId, group);
   }
-  assert.equal(byFigure.size, cards.length, "each figure should carry exactly one card");
+  for (const [, group] of byFigure) {
+    if (group.length < 2) continue;
+    const kinds = new Set(group.map((c) => c.authenticity));
+    assert.equal(kinds.size, 2, `${group[0].displayName} has ${group.length} cards of one authenticity`);
+  }
+
+  // Not every figure is paired, on purpose: if they all were, a repeat player
+  // who remembered one card was real could infer the other is fake.
+  const paired = [...byFigure.values()].filter((g) => g.length > 1).length;
+  assert.ok(paired > 0 && paired < byFigure.size, `${paired} of ${byFigure.size} figures paired`);
 
   const fingerprints = cards.map((c) => c.formatFingerprint);
   assert.equal(new Set(fingerprints).size, fingerprints.length, "format fingerprints must be unique");

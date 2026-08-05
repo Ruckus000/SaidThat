@@ -1,0 +1,39 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000038",
+  "figureId": "c3000000-0000-4000-8000-000000000016",
+  "displayName": "Steve Martin",
+  "statementText": "The hotel gave me a second pillow without being asked. I've been thinking about it since Tuesday.",
+  "authenticity": "fabricated",
+  "category": "film-tv",
+  "difficultyPrior": 5,
+  "sensitivity": "everyone",
+  "explanation": "Invented. Real: the mock-gravitas about small things. Invented: the pillow and the Tuesday.",
+  "formatFingerprint": "sleep-report",
+  "eraVocabTag": "2020+",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": true,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": true,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Drafted with AI assistance, rewritten and owned by the repository owner under ADR-012.",
+  "decoyMethod": "ai_assisted",
+  "source": null
+}

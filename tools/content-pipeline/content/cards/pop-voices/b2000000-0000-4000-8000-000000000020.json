@@ -1,0 +1,73 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000020",
+  "figureId": "c3000000-0000-4000-8000-000000000025",
+  "displayName": "Dionne Warwick",
+  "statementText": "I am now Dionne the Singer.",
+  "authenticity": "authentic",
+  "category": "music",
+  "difficultyPrior": 5,
+  "sensitivity": "everyone",
+  "explanation": "December 2020, after telling Chance the Rapper to drop 'the Rapper' from his name.",
+  "formatFingerprint": "self-correction",
+  "eraVocabTag": "2020+",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API.",
+  "decoyMethod": "none",
+  "transcriptionExact": true,
+  "normalizations": [],
+  "wordingSource": "archive",
+  "sourceTier": "A",
+  "citations": [
+    {
+      "url": "https://thegrio.com/2020/12/05/dionne-warwick-chance-the-rapper/",
+      "outlet": "thegrio.com",
+      "publishedAt": "2020-12-05",
+      "isPrimary": false,
+      "independent": true,
+      "independentOf": []
+    },
+    {
+      "url": "https://www.buzzfeed.com/jenniferabidor/dionne-warwick-celeb-tweets",
+      "outlet": "buzzfeed.com",
+      "publishedAt": "2020-12-05",
+      "isPrimary": false,
+      "independent": true,
+      "independentOf": []
+    }
+  ],
+  "source": {
+    "url": "https://twitter.com/dionnewarwick/status/1335345903419330560",
+    "archiveUrl": "https://twitter.com/dionnewarwick/status/1335345903419330560",
+    "publishedAt": "2020-12-05",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "web-archive",
+    "retained": true,
+    "captures": [
+      {
+        "timestamp": "20230506004126"
+      }
+    ]
+  }
+}

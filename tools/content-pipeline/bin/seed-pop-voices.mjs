@@ -27,11 +27,20 @@
  *   node tools/content-pipeline/bin/seed-pop-voices.mjs
  */
 
-import { mkdir, readdir, rm, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { CONTENT_ROOT } from "../lib/deck.mjs";
 import { OWNER_APPROVAL } from "../lib/schema.mjs";
+
+/**
+ * Verified research output, kept as data rather than inlined here so the
+ * provenance of each card is reviewable in one place. Authentic entries carry
+ * the capture timestamps and citations that were actually retrieved.
+ */
+const expansion = JSON.parse(
+  await readFile(new URL("../content/expansion.json", import.meta.url), "utf8"),
+);
 
 const SLUG = "pop-voices";
 const APPROVALS = [{ editor: OWNER_APPROVAL, decision: "approve", at: "2026-08-05" }];
@@ -55,6 +64,36 @@ const FIGURES = [
   ["Chrissy Teigen", ["all lowercase", "food questions", "short", "question marks"]],
   ["Mark Hamill", ["sentence case", "ellipsis", "wry", "terminal punctuation"]],
   ["Snoop Dogg", ["lowercase", "ALL-CAPS emphasis", "exclamation marks", "long run-ons"]],
+  ["Albert Brooks", ["sentence case", "deadpan", "single sentence", "self-interrupting"]],
+  ["Steve Martin", ["sentence case", "mock-gravitas", "mundane grievances", "terminal punctuation"]],
+  ["John Cleese", ["long single sentence", "pedantic civic bafflement", "no terminal punctuation"]],
+  ["Conan O'Brien", ["sentence case", "absurdist premise", "oddly specific numbers", "terminal punctuation"]],
+  ["Rainn Wilson", ["stray capitals", "would-you-rather questions", "very short", "no terminal punctuation"]],
+  ["Danny DeVito", ["lowercase openings", "trailing ellipsis", "capitalised nouns", "warm"]],
+  ["Elijah Wood", ["sentence case", "terse", "travel observations", "terminal punctuation"]],
+  ["Martha Stewart", ["sentence case", "typos left in", "earnest complaint", "capitalised brand names"]],
+  ["Alton Brown", ["ALL CAPS declarations", "imperative mood", "food non-sequiturs", "terminal punctuation"]],
+  ["Ice-T", ["sentence case", "Lol opener", "flat denial", "trailing ellipsis"]],
+  ["Dionne Warwick", ["sentence case", "deadpan self-rebrand", "very short", "terminal punctuation"]],
+  ["Geoffrey Hinton", ["spoken register", "hedged self-description", "long clause", "no contractions"]],
+  ["Donna Strickland", ["spoken register", "exclamation", "plain", "self-deprecating"]],
+  ["Robert De Niro", ["spoken register", "flat delivery", "short", "terminal punctuation"]],
+  ["F. Murray Abraham", ["spoken register", "formal", "long sentence", "self-aware"]],
+  ["Edith Head", ["spoken register", "dry", "era-flavoured", "understated"]],
+  ["Fran Lebowitz", ["spoken register", "deadpan logic", "single clause", "no hedging"]],
+  ["Mel Brooks", ["spoken register", "run-on", "business philosophy as punchline", "conversational"]],
+  ["Maria Sharapova", ["spoken register", "I mean opener", "vivid image", "terminal punctuation"]],
+  ["Geno Auriemma", ["spoken register", "deadpan escalation", "flat", "terminal punctuation"]],
+  ["Clayton Kershaw", ["spoken register", "no ... but no shape", "terse", "terminal punctuation"]],
+  ["Nigella Lawson", ["sentence case", "sensory food detail", "warm", "terminal punctuation"]],
+  ["Patrick Stewart", ["sentence case", "formal warmth", "short", "terminal punctuation"]],
+  ["Weird Al Yankovic", ["sentence case", "wordplay", "mild", "terminal punctuation"]],
+  ["Jim Gaffigan", ["lowercase", "food guilt", "self-deprecating", "no terminal punctuation"]],
+  ["Bob Mortimer", ["sentence case", "surreal domestic detail", "gentle", "terminal punctuation"]],
+  ["Ruth Reichl", ["fragment stacking", "morning weather", "food nouns", "terminal periods"]],
+  ["Guy Fieri", ["ALL CAPS bursts", "enthusiasm", "exclamation marks", "food slang"]],
+  ["Richard Osman", ["sentence case", "British understatement", "observational", "terminal punctuation"]],
+  ["Ernie Els", ["spoken register", "self-deprecating age joke", "plain", "terminal punctuation"]],
 ];
 
 /**
@@ -306,7 +345,8 @@ function buildCard(entry, index, authentic) {
       decoyMethod: "none",
       transcriptionExact: true,
       normalizations: [],
-      sourceTier: entry.archive ? "A" : "B",
+      wordingSource: "archive",
+      sourceTier: entry.archive || (entry.captures ?? []).length > 0 ? "A" : "B",
       citations: entry.citations.map((url) => ({
         url,
         outlet: new URL(url).hostname.replace(/^www\./, ""),
@@ -317,15 +357,41 @@ function buildCard(entry, index, authentic) {
       })),
       source: {
         url: entry.archive ?? entry.citations[0],
-        archiveUrl: entry.archive,
+        archiveUrl: entry.method === "official-transcript" || entry.method === "institutional-archive"
+          ? null
+          : entry.archive ?? null,
         publishedAt: entry.publishedAt,
         rightsStatus: "fair_use_claim",
-        verificationMethod: entry.archive ? "web-archive" : "contemporaneous-article",
+        verificationMethod: entry.method ?? (entry.archive ? "web-archive" : "contemporaneous-article"),
         retained: true,
+        // Capture timestamps confirmed against the Wayback index. Recorded
+        // separately from citations because they answer a different question:
+        // a citation says the statement exists, a capture says what it said.
+        captures: (entry.captures ?? []).map((timestamp) => ({ timestamp })),
       },
     };
   }
   return { ...base, decoyMethod: "ai_assisted", source: null };
+}
+
+/** Expansion entries reuse the shared card builder via a small adapter. */
+function fromExpansion(entry, authentic) {
+  return {
+    figure: entry.figure,
+    text: entry.text,
+    status: entry.source ?? null,
+    archive: authentic ? entry.source : null,
+    publishedAt: entry.publishedAt,
+    citations: entry.citations ?? [],
+    captures: entry.captures ?? [],
+    method: entry.method,
+    category: entry.category,
+    difficultyPrior: entry.difficultyPrior,
+    fingerprint: entry.fingerprint,
+    era: entry.era,
+    explanation: entry.explanation,
+    flags: entry.flags ?? {},
+  };
 }
 
 async function main() {
@@ -335,9 +401,11 @@ async function main() {
     if (name.endsWith(".json")) await rm(path.join(cardDir, name));
   }
 
+  const authentic = [...AUTHENTIC, ...expansion.authentic.map((e) => fromExpansion(e, true))];
+  const fabricated = [...FABRICATED, ...expansion.fabricated.map((e) => fromExpansion(e, false))];
   const cards = [
-    ...AUTHENTIC.map((entry, i) => buildCard(entry, i, true)),
-    ...FABRICATED.map((entry, i) => buildCard(entry, AUTHENTIC.length + i, false)),
+    ...authentic.map((entry, i) => buildCard(entry, i, true)),
+    ...fabricated.map((entry, i) => buildCard(entry, authentic.length + i, false)),
   ];
   for (const card of cards) {
     await writeFile(path.join(cardDir, `${card.id}.json`), `${JSON.stringify(card, null, 2)}\n`);

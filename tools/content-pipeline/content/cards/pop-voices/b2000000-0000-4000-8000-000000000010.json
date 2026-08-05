@@ -1,20 +1,20 @@
 {
   "id": "b2000000-0000-4000-8000-000000000010",
-  "figureId": "c3000000-0000-4000-8000-000000000010",
-  "displayName": "James Blunt",
-  "statementText": "Someone tagged me in a photo of a sad looking dog and captioned it with my name. It's fair.",
-  "authenticity": "fabricated",
-  "category": "internet-culture",
-  "difficultyPrior": 3,
+  "figureId": "c3000000-0000-4000-8000-000000000017",
+  "displayName": "John Cleese",
+  "statementText": "For anyone visiting Los Angeles, I'd like to explain that addresses on North Robertson Blvd are actually to be found to the South of SOUTH Robertson Blvd",
+  "authenticity": "authentic",
+  "category": "film-tv",
+  "difficultyPrior": 4,
   "sensitivity": "everyone",
-  "explanation": "Not a real post. He genuinely replies to his own detractors this way, which is what makes the shape believable — the dog is invented.",
-  "formatFingerprint": "unsolicited-request",
+  "explanation": "January 2019. The missing terminal punctuation is his, and the street layout really is like that.",
+  "formatFingerprint": "travel-logistics",
   "eraVocabTag": "2015-2019",
   "styleFlags": {
     "hasNonstandardGrammar": false,
-    "punchlineInFinal20Pct": true,
-    "opensMidThought": true,
-    "hasConcreteMundaneDetail": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": true,
     "readsFabricated": false,
     "readsAuthentic": false
   },
@@ -33,7 +33,27 @@
     "groups": 0,
     "byAudienceBucket": {}
   },
-  "editorialNotes": "Drafted with AI assistance, rewritten and owned by the repository owner under ADR-012.",
-  "decoyMethod": "ai_assisted",
-  "source": null
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API.",
+  "decoyMethod": "none",
+  "transcriptionExact": true,
+  "normalizations": [],
+  "wordingSource": "archive",
+  "sourceTier": "A",
+  "citations": [],
+  "source": {
+    "url": "https://twitter.com/JohnCleese/status/1089028376994562048",
+    "archiveUrl": "https://twitter.com/JohnCleese/status/1089028376994562048",
+    "publishedAt": "2019-01-26",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "archive-double-capture",
+    "retained": true,
+    "captures": [
+      {
+        "timestamp": "20190130084415"
+      },
+      {
+        "timestamp": "20200612125616"
+      }
+    ]
+  }
 }

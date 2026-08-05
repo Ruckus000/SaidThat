@@ -1,0 +1,39 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000057",
+  "figureId": "c3000000-0000-4000-8000-000000000041",
+  "displayName": "Ruth Reichl",
+  "statementText": "Grey sky. Wind. Toast. Butter melting properly for once. Staying in.",
+  "authenticity": "fabricated",
+  "category": "food",
+  "difficultyPrior": 4,
+  "sensitivity": "everyone",
+  "explanation": "Made up. The fragment-stacked morning report is genuinely her format; this particular morning is ours.",
+  "formatFingerprint": "morning-report",
+  "eraVocabTag": "2015-2019",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": false,
+    "readsAuthentic": true
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Drafted with AI assistance, rewritten and owned by the repository owner under ADR-012.",
+  "decoyMethod": "ai_assisted",
+  "source": null
+}

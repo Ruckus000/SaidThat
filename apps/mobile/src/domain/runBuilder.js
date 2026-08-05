@@ -63,13 +63,18 @@ function figureKey(card) {
  * ten-card one, and a short run is a worse game than a run with one repeat. So
  * they relax last, after everything else has already been given up.
  */
-function violatesHardConstraint(card, chosen, level) {
+function violatesHardConstraint(card, chosen, level, closer) {
+  // The closer is reserved before the body is filled, so it is not in `chosen`
+  // and has to be checked explicitly. Without this the body can pick a second
+  // card from the closer's figure — invisible while every figure had exactly
+  // one card, and immediate once figures are deliberately paired.
+  const taken = closer ? [...chosen, closer] : chosen;
   if (level < 7) {
     const key = figureKey(card);
-    if (chosen.some((entry) => figureKey(entry) === key)) return true;
+    if (taken.some((entry) => figureKey(entry) === key)) return true;
   }
   if (level < 6 && card.formatFingerprint) {
-    if (chosen.some((entry) => entry.formatFingerprint === card.formatFingerprint)) return true;
+    if (taken.some((entry) => entry.formatFingerprint === card.formatFingerprint)) return true;
   }
   return false;
 }
@@ -93,7 +98,7 @@ function violatesHardConstraint(card, chosen, level) {
  * the loop — without it, two authentic cards at the end of the body plus the
  * closer make a three-streak that no in-loop check would ever see.
  */
-function violatesSoftConstraint(card, chosen, slot, level, isFinalBodySlot, strongest, budget) {
+function violatesSoftConstraint(card, chosen, slot, level, isFinalBodySlot, strongest, budget, isPreFinalBodySlot) {
   // Per-class budget. Without it the greedy fill spends its fabricated cards
   // early and arrives at the last slots with only authentic ones left, which
   // forces exactly the three-in-a-row streak the rule above is meant to
@@ -138,7 +143,21 @@ function violatesSoftConstraint(card, chosen, slot, level, isFinalBodySlot, stro
     // budget can be exactly exhausted by this point, leaving an authentic card
     // as the only legal pick and producing A-A-A across the boundary. Fixing
     // the class here removes the possibility rather than reacting to it.
+    // The final body slot is forced fabricated so the authentic closer cannot
+    // complete an A-A-A across the boundary.
     if (isFinalBodySlot && card.authentic) return true;
+    // ...which in turn means the slot before it must NOT be fabricated on top
+    // of a fabricated predecessor, or the forced slot completes an F-F-F that
+    // no later check can undo. The budget reservation below guarantees an
+    // authentic card is still available here to satisfy it.
+    if (
+      isPreFinalBodySlot &&
+      !card.authentic &&
+      chosen.length > 0 &&
+      !chosen[chosen.length - 1].authentic
+    ) {
+      return true;
+    }
     // Rooms read anti-alternation as readily as alternation. Forbidding three
     // in a row pushes hard toward a perfect ABABAB pattern, which is just as
     // guessable — so a strictly alternating tail may not be extended.
@@ -198,7 +217,14 @@ export function buildRun(cards, { length = RUN_LENGTH, seed = 1 } = {}) {
   const bodyLength = closer ? target - 1 : target;
   // Top quality still in play; cards at this level are held back from the
   // opening slots so the run does not peak at slot 0.
-  const strongest = rest.length > 0 ? Math.max(...rest.map(qualityOf)) : null;
+  //
+  // Null when every card shares that quality — otherwise the rule matches the
+  // whole pool, blocks all of slots 0-2, and forces the fill to relax past the
+  // answer-streak rule to find anything at all. A deck with no calibration data
+  // yet is exactly that case, so this is the normal state, not an edge case.
+  const qualities = rest.map(qualityOf);
+  const top = qualities.length > 0 ? Math.max(...qualities) : null;
+  const strongest = top !== null && qualities.some((q) => q < top) ? top : null;
   // Half the run authentic, half fabricated.
   //
   // Two slots are spoken for when a closer exists: the closer itself
@@ -222,9 +248,13 @@ export function buildRun(cards, { length = RUN_LENGTH, seed = 1 } = {}) {
       let bestCost = Infinity;
       for (const card of rest) {
         if (used.has(card)) continue;
-        if (violatesHardConstraint(card, chosen, level)) continue;
+        if (violatesHardConstraint(card, chosen, level, closer)) continue;
         const finalBodySlot = slot === bodyLength - 1 && Boolean(closer);
-        if (level < 5 && violatesSoftConstraint(card, chosen, slot, level, finalBodySlot, strongest, budget)) {
+        const preFinalBodySlot = slot === bodyLength - 2 && Boolean(closer);
+        if (
+          level < 5 &&
+          violatesSoftConstraint(card, chosen, slot, level, finalBodySlot, strongest, budget, preFinalBodySlot)
+        ) {
           continue;
         }
         const cost = slotCost(card, chosen, slot);

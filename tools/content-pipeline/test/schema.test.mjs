@@ -150,7 +150,7 @@ test("schema: two archive captures satisfy the provenance bar", () => {
   assert.deepEqual(codes(res), []);
 });
 
-test("schema: one capture and no citation is allowed but flagged", () => {
+test("schema: one capture plus one independent citation is the original Tier A bar", () => {
   const card = baseCard({
     authenticity: "authentic",
     decoyMethod: "none",
@@ -167,8 +167,60 @@ test("schema: one capture and no citation is allowed but flagged", () => {
       captures: [{ timestamp: "20210820054710" }],
     },
   });
+  // Primary record + independent secondary. Records combine across kinds;
+  // what the rule counts is independent evidence, not evidence of one type.
   const res = validateEditorialCard(card, { figures });
-  assert.ok(codes(res).includes("provenance.independent-records"), "one of each is still not two records");
+  assert.deepEqual(codes(res), []);
+});
+
+test("schema: a primary transcript plus its capture is two records", () => {
+  // An official transcript is the awarding body's own account, not a retelling,
+  // and its capture pins what that page said on a date — so a Nobel interview
+  // or an Academy speech database entry can ship without press coverage, which
+  // is exactly the material no outlet bothers to quote.
+  const res = validateEditorialCard(
+    baseCard({
+      authenticity: "authentic",
+      decoyMethod: "none",
+      explanation: "Said during the 2024 Nobel telephone interview.",
+      sourceTier: "A",
+      transcriptionExact: true,
+      wordingSource: "archive",
+      citations: [],
+      source: {
+        url: "https://www.nobelprize.org/prizes/physics/2024/example/interview/",
+        retained: true,
+        verificationMethod: "official-transcript",
+        rightsStatus: "fair_use_claim",
+        captures: [{ timestamp: "20260730165922" }],
+      },
+    }),
+    { figures },
+  );
+  assert.deepEqual(codes(res), []);
+});
+
+test("schema: a lone transcript with no capture is still short of the bar", () => {
+  const res = validateEditorialCard(
+    baseCard({
+      authenticity: "authentic",
+      decoyMethod: "none",
+      explanation: "Said during an interview.",
+      sourceTier: "A",
+      transcriptionExact: true,
+      wordingSource: "archive",
+      citations: [],
+      source: {
+        url: "https://example.invalid/interview",
+        retained: true,
+        verificationMethod: "official-transcript",
+        rightsStatus: "fair_use_claim",
+        captures: [],
+      },
+    }),
+    { figures },
+  );
+  assert.ok(codes(res).includes("provenance.independent-records"));
 });
 
 test("schema: wording taken from an article is rejected outright", () => {

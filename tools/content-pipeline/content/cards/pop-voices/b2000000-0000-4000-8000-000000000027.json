@@ -1,0 +1,56 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000027",
+  "figureId": "c3000000-0000-4000-8000-000000000032",
+  "displayName": "Mel Brooks",
+  "statementText": "I've never put my own money in the show, you know. I put my talent on the line, and my money I save for Saturday night restaurants.",
+  "authenticity": "authentic",
+  "category": "film-tv",
+  "difficultyPrior": 2,
+  "sensitivity": "everyone",
+  "explanation": "On Fresh Air in 2013, asked whether the advice in The Producers was his own. It was.",
+  "formatFingerprint": "household-inventory",
+  "eraVocabTag": "pre-2015",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": true,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API.",
+  "decoyMethod": "none",
+  "transcriptionExact": true,
+  "normalizations": [],
+  "wordingSource": "archive",
+  "sourceTier": "A",
+  "citations": [],
+  "source": {
+    "url": "https://www.npr.org/transcripts/256597762",
+    "archiveUrl": null,
+    "publishedAt": "2013-12-27",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "official-transcript",
+    "retained": true,
+    "captures": [
+      {
+        "timestamp": "20250623235928"
+      }
+    ]
+  }
+}

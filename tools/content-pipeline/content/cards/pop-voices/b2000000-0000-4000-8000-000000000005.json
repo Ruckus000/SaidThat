@@ -37,6 +37,7 @@
   "decoyMethod": "none",
   "transcriptionExact": true,
   "normalizations": [],
+  "wordingSource": "archive",
   "sourceTier": "A",
   "citations": [
     {
@@ -62,6 +63,7 @@
     "publishedAt": "2018-09-19",
     "rightsStatus": "fair_use_claim",
     "verificationMethod": "web-archive",
-    "retained": true
+    "retained": true,
+    "captures": []
   }
 }

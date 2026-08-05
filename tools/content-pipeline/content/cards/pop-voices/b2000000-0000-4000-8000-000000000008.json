@@ -1,21 +1,21 @@
 {
   "id": "b2000000-0000-4000-8000-000000000008",
-  "figureId": "c3000000-0000-4000-8000-000000000008",
-  "displayName": "Dwayne Johnson",
-  "statementText": "Woke up at 3:40 to train and somebody had already unlocked the gym. I need to know who that was.",
-  "authenticity": "fabricated",
-  "category": "sports",
+  "figureId": "c3000000-0000-4000-8000-000000000015",
+  "displayName": "Albert Brooks",
+  "statementText": "I was in the middle of tweeting a very funny joke  and then a 7.1 earthquake happened and I forgot the punchline.",
+  "authenticity": "authentic",
+  "category": "film-tv",
   "difficultyPrior": 3,
   "sensitivity": "everyone",
-  "explanation": "Invented. Real: he posts pre-dawn training times constantly. Invented: the unlocked gym and the mild paranoia about who beat him there.",
-  "formatFingerprint": "training-log",
+  "explanation": "Posted the day after the 2019 Ridgecrest earthquake. The double space after 'joke' is his and is preserved.",
+  "formatFingerprint": "professional-confession",
   "eraVocabTag": "2015-2019",
   "styleFlags": {
     "hasNonstandardGrammar": false,
-    "punchlineInFinal20Pct": true,
+    "punchlineInFinal20Pct": false,
     "opensMidThought": false,
     "hasConcreteMundaneDetail": true,
-    "readsFabricated": false,
+    "readsFabricated": true,
     "readsAuthentic": false
   },
   "editorialApprovals": [
@@ -33,7 +33,27 @@
     "groups": 0,
     "byAudienceBucket": {}
   },
-  "editorialNotes": "Drafted with AI assistance, rewritten and owned by the repository owner under ADR-012.",
-  "decoyMethod": "ai_assisted",
-  "source": null
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API.",
+  "decoyMethod": "none",
+  "transcriptionExact": true,
+  "normalizations": [],
+  "wordingSource": "archive",
+  "sourceTier": "A",
+  "citations": [],
+  "source": {
+    "url": "https://twitter.com/AlbertBrooks/status/1147357315894534144",
+    "archiveUrl": "https://twitter.com/AlbertBrooks/status/1147357315894534144",
+    "publishedAt": "2019-07-06",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "archive-double-capture",
+    "retained": true,
+    "captures": [
+      {
+        "timestamp": "20190706164317"
+      },
+      {
+        "timestamp": "20190707193037"
+      }
+    ]
+  }
 }

@@ -1,0 +1,56 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000025",
+  "figureId": "c3000000-0000-4000-8000-000000000030",
+  "displayName": "Edith Head",
+  "statementText": "Just imagine dressing the two handsomest men in the world and then getting this.",
+  "authenticity": "authentic",
+  "category": "awards",
+  "difficultyPrior": 4,
+  "sensitivity": "everyone",
+  "explanation": "Accepting her eighth and final Oscar, for The Sting, 1974. The two men were Newman and Redford.",
+  "formatFingerprint": "gratitude-post",
+  "eraVocabTag": "pre-2015",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API.",
+  "decoyMethod": "none",
+  "transcriptionExact": true,
+  "normalizations": [],
+  "wordingSource": "archive",
+  "sourceTier": "A",
+  "citations": [],
+  "source": {
+    "url": "https://aaspeechesdb.oscars.org/link/046-7/",
+    "archiveUrl": null,
+    "publishedAt": "1974-04-02",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "institutional-archive",
+    "retained": true,
+    "captures": [
+      {
+        "timestamp": "20250125162751"
+      }
+    ]
+  }
+}

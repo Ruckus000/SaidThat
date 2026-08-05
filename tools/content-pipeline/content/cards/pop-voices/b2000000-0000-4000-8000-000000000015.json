@@ -1,0 +1,65 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000015",
+  "figureId": "c3000000-0000-4000-8000-000000000021",
+  "displayName": "Elijah Wood",
+  "statementText": "If only America had Autogrill.",
+  "authenticity": "authentic",
+  "category": "movies",
+  "difficultyPrior": 4,
+  "sensitivity": "everyone",
+  "explanation": "September 2019. Autogrill is the Italian motorway service chain — a sincere opinion that reads as a bit.",
+  "formatFingerprint": "travel-complaint",
+  "eraVocabTag": "2015-2019",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API.",
+  "decoyMethod": "none",
+  "transcriptionExact": true,
+  "normalizations": [],
+  "wordingSource": "archive",
+  "sourceTier": "A",
+  "citations": [
+    {
+      "url": "https://twitter.com/elijahwood/status/1177722012141142017",
+      "outlet": "twitter.com",
+      "publishedAt": "2019-09-27",
+      "isPrimary": false,
+      "independent": true,
+      "independentOf": []
+    }
+  ],
+  "source": {
+    "url": "https://twitter.com/elijahwood/status/1177722012141142017",
+    "archiveUrl": "https://twitter.com/elijahwood/status/1177722012141142017",
+    "publishedAt": "2019-09-27",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "web-archive",
+    "retained": true,
+    "captures": [
+      {
+        "timestamp": "20190927231050"
+      }
+    ]
+  }
+}

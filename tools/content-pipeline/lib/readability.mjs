@@ -42,9 +42,19 @@ export function sentenceCount(text) {
   return Math.max(1, parts.length);
 }
 
+/**
+ * Standard abbreviations a reader expands out loud without thinking. They have
+ * no vowels but are not hard to say, so the vowel rule must not catch them.
+ */
+const SPOKEN_ABBREVIATIONS = new Set([
+  "blvd", "st", "rd", "ave", "dr", "mr", "mrs", "ms", "sgt", "jr", "sr",
+  "tv", "dvd", "cd", "pm", "am", "mph", "kg", "km", "ft", "vs", "nyc", "dj",
+]);
+
 export function isUnpronounceable(token) {
   const bare = token.replace(/[^\p{L}\p{N}]/gu, "");
   if (bare.length === 0) return false;
+  if (SPOKEN_ABBREVIATIONS.has(bare.toLowerCase())) return false;
   // Pure numbers are read as numbers, so the vowel rule must not apply to them.
   // A year ("2014") is fine aloud; a long digit string is not.
   if (/^\d+$/.test(bare)) return bare.length >= 5;

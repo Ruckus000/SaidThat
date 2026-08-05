@@ -1,0 +1,39 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000053",
+  "figureId": "c3000000-0000-4000-8000-000000000037",
+  "displayName": "Patrick Stewart",
+  "statementText": "I've been given a coffee with my name spelled correctly. A rare and excellent morning.",
+  "authenticity": "fabricated",
+  "category": "film-tv",
+  "difficultyPrior": 2,
+  "sensitivity": "everyone",
+  "explanation": "Invented. The formal warmth is his; the coffee is ours.",
+  "formatFingerprint": "coffee-order",
+  "eraVocabTag": "2015-2019",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": true,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Drafted with AI assistance, rewritten and owned by the repository owner under ADR-012.",
+  "decoyMethod": "ai_assisted",
+  "source": null
+}

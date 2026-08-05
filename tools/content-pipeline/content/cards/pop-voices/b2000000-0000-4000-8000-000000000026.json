@@ -1,0 +1,56 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000026",
+  "figureId": "c3000000-0000-4000-8000-000000000031",
+  "displayName": "Fran Lebowitz",
+  "statementText": "I'm playing a judge because I'm hoping to become an actual judge.",
+  "authenticity": "authentic",
+  "category": "internet-culture",
+  "difficultyPrior": 3,
+  "sensitivity": "everyone",
+  "explanation": "On NPR in 2010, about her recurring judge role on Law & Order. The transcript records laughter after it.",
+  "formatFingerprint": "mistaken-identity",
+  "eraVocabTag": "pre-2015",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API.",
+  "decoyMethod": "none",
+  "transcriptionExact": true,
+  "normalizations": [],
+  "wordingSource": "archive",
+  "sourceTier": "A",
+  "citations": [],
+  "source": {
+    "url": "https://www.npr.org/transcripts/131420458",
+    "archiveUrl": null,
+    "publishedAt": "2010-11-18",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "official-transcript",
+    "retained": true,
+    "captures": [
+      {
+        "timestamp": "20250621235602"
+      }
+    ]
+  }
+}

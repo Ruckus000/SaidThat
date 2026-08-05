@@ -1,0 +1,56 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000023",
+  "figureId": "c3000000-0000-4000-8000-000000000028",
+  "displayName": "Robert De Niro",
+  "statementText": "I forgot my lines so the director wrote them down for me.",
+  "authenticity": "authentic",
+  "category": "awards",
+  "difficultyPrior": 3,
+  "sensitivity": "everyone",
+  "explanation": "The opening line of his Best Actor speech for Raging Bull, 1981. He then read from notes.",
+  "formatFingerprint": "acceptance-speech-opener",
+  "eraVocabTag": "pre-2015",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": true,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Status URL resolved and Wayback capture confirmed via the availability API.",
+  "decoyMethod": "none",
+  "transcriptionExact": true,
+  "normalizations": [],
+  "wordingSource": "archive",
+  "sourceTier": "A",
+  "citations": [],
+  "source": {
+    "url": "https://aaspeechesdb.oscars.org/link/053-1/",
+    "archiveUrl": null,
+    "publishedAt": "1981-03-31",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "institutional-archive",
+    "retained": true,
+    "captures": [
+      {
+        "timestamp": "20250409040444"
+      }
+    ]
+  }
+}

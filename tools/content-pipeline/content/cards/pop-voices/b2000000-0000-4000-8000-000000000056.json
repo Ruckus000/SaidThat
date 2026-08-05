@@ -1,0 +1,39 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000056",
+  "figureId": "c3000000-0000-4000-8000-000000000040",
+  "displayName": "Bob Mortimer",
+  "statementText": "A man in the queue told me he's had his shoes since 1998 and then walked off before I could respond.",
+  "authenticity": "fabricated",
+  "category": "internet-culture",
+  "difficultyPrior": 4,
+  "sensitivity": "everyone",
+  "explanation": "Not a real post. The surreal domestic anecdote is his shape; the man and his shoes are invented.",
+  "formatFingerprint": "lost-item",
+  "eraVocabTag": "pre-2015",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": true,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-05"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Drafted with AI assistance, rewritten and owned by the repository owner under ADR-012.",
+  "decoyMethod": "ai_assisted",
+  "source": null
+}

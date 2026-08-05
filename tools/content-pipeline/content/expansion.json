@@ -1,0 +1,748 @@
+{
+ "_comment": "Verified research output for the pop-voices expansion. Authentic entries carry the source, capture timestamps and citations that were actually retrieved; nothing here is asserted from memory. Consumed by bin/seed-pop-voices.mjs.",
+ "authentic": [
+  {
+   "figure": "Albert Brooks",
+   "text": "I was in the middle of tweeting a very funny joke  and then a 7.1 earthquake happened and I forgot the punchline.",
+   "source": "https://twitter.com/AlbertBrooks/status/1147357315894534144",
+   "captures": [
+    "20190706164317",
+    "20190707193037"
+   ],
+   "publishedAt": "2019-07-06",
+   "citations": [],
+   "category": "film-tv",
+   "difficultyPrior": 3,
+   "fingerprint": "professional-confession",
+   "era": "2015-2019",
+   "method": "archive-double-capture",
+   "explanation": "Posted the day after the 2019 Ridgecrest earthquake. The double space after 'joke' is his and is preserved.",
+   "flags": {
+    "readsFabricated": true,
+    "hasConcreteMundaneDetail": true
+   }
+  },
+  {
+   "figure": "Steve Martin",
+   "text": "Going out on a limb here, but doorbells and phone rings should be banned in TV commercials.",
+   "source": "https://twitter.com/SteveMartinToGo/status/1221445322347569152",
+   "captures": [
+    "20200127032828",
+    "20200630052404"
+   ],
+   "publishedAt": "2020-01-26",
+   "citations": [],
+   "category": "film-tv",
+   "difficultyPrior": 2,
+   "fingerprint": "stubborn-preference",
+   "era": "2020+",
+   "method": "archive-double-capture",
+   "explanation": "January 2020. A real grievance about a real annoyance, delivered with mock-gravitas.",
+   "flags": {
+    "punchlineInFinal20Pct": true
+   }
+  },
+  {
+   "figure": "John Cleese",
+   "text": "For anyone visiting Los Angeles, I'd like to explain that addresses on North Robertson Blvd are actually to be found to the South of SOUTH Robertson Blvd",
+   "source": "https://twitter.com/JohnCleese/status/1089028376994562048",
+   "captures": [
+    "20190130084415",
+    "20200612125616"
+   ],
+   "publishedAt": "2019-01-26",
+   "citations": [],
+   "category": "film-tv",
+   "difficultyPrior": 4,
+   "fingerprint": "travel-logistics",
+   "era": "2015-2019",
+   "method": "archive-double-capture",
+   "explanation": "January 2019. The missing terminal punctuation is his, and the street layout really is like that.",
+   "flags": {
+    "hasConcreteMundaneDetail": true
+   }
+  },
+  {
+   "figure": "Conan O'Brien",
+   "text": "This is the THIRD time I've found Jeff Goldblum in a box of Kellogg's Raisin Bran.",
+   "source": "https://twitter.com/ConanOBrien/status/1047541859130777611",
+   "captures": [
+    "20220313025154",
+    "20220314234716"
+   ],
+   "publishedAt": "2018-10-03",
+   "citations": [],
+   "category": "internet-culture",
+   "difficultyPrior": 3,
+   "fingerprint": "unexplained-declaration",
+   "era": "2015-2019",
+   "method": "archive-double-capture",
+   "explanation": "October 2018. The capitalised THIRD is the detail rooms argue over, and it is his.",
+   "flags": {
+    "punchlineInFinal20Pct": true
+   }
+  },
+  {
+   "figure": "Conan O'Brien",
+   "text": "The only time I regret having 3 cats is fairly often.",
+   "source": "https://twitter.com/ConanOBrien/status/1083067173512323073",
+   "captures": [
+    "20190109183353"
+   ],
+   "publishedAt": "2019-01-09",
+   "citations": [
+    "https://twitter.com/ConanOBrien/status/1083067173512323073"
+   ],
+   "category": "internet-culture",
+   "difficultyPrior": 2,
+   "fingerprint": "animal-observation",
+   "era": "2015-2019",
+   "method": "web-archive",
+   "explanation": "January 2019. A joke shape common enough that rooms assume it was written for them.",
+   "flags": {
+    "punchlineInFinal20Pct": true
+   }
+  },
+  {
+   "figure": "Rainn Wilson",
+   "text": "Would you rather be Born without a mouth or born with two mouths?",
+   "source": "https://twitter.com/RainnWilson/status/1070783820499013632",
+   "captures": [
+    "20191201145803",
+    "20210718235528"
+   ],
+   "publishedAt": "2018-12-06",
+   "citations": [],
+   "category": "film-tv",
+   "difficultyPrior": 4,
+   "fingerprint": "hypothetical-question",
+   "era": "2015-2019",
+   "method": "archive-double-capture",
+   "explanation": "December 2018. The stray capital B on the first 'Born' is his, preserved exactly.",
+   "flags": {
+    "readsFabricated": true,
+    "hasNonstandardGrammar": true
+   }
+  },
+  {
+   "figure": "Danny DeVito",
+   "text": "got to go to the dentist today... I need to bring my Blankie",
+   "source": "https://twitter.com/DannyDeVito/status/105681470424756224",
+   "captures": [
+    "20210820054710"
+   ],
+   "publishedAt": "2011-08-22",
+   "citations": [
+    "https://twitter.com/DannyDeVito/status/105681470424756224"
+   ],
+   "category": "movies",
+   "difficultyPrior": 2,
+   "fingerprint": "body-bafflement",
+   "era": "pre-2015",
+   "method": "web-archive",
+   "explanation": "August 2011, from his early Twitter era. Lowercase opening, trailing ellipsis, capitalised Blankie \u2014 all his.",
+   "flags": {
+    "hasConcreteMundaneDetail": true,
+    "opensMidThought": true
+   }
+  },
+  {
+   "figure": "Elijah Wood",
+   "text": "If only America had Autogrill.",
+   "source": "https://twitter.com/elijahwood/status/1177722012141142017",
+   "captures": [
+    "20190927231050"
+   ],
+   "publishedAt": "2019-09-27",
+   "citations": [
+    "https://twitter.com/elijahwood/status/1177722012141142017"
+   ],
+   "category": "movies",
+   "difficultyPrior": 4,
+   "fingerprint": "travel-complaint",
+   "era": "2015-2019",
+   "method": "web-archive",
+   "explanation": "September 2019. Autogrill is the Italian motorway service chain \u2014 a sincere opinion that reads as a bit.",
+   "flags": {}
+  },
+  {
+   "figure": "Martha Stewart",
+   "text": "I am still waiting for an apple rep to come pick up my IPad. No action yey",
+   "source": "https://twitter.com/MarthaStewart/status/383211703497785344",
+   "captures": [
+    "20160827155159"
+   ],
+   "publishedAt": "2013-09-26",
+   "citations": [
+    "https://www.buzzfeednews.com/article/peterlauria/martha-stewart-tweet-shames-apple"
+   ],
+   "category": "internet-culture",
+   "difficultyPrior": 2,
+   "fingerprint": "product-complaint",
+   "era": "pre-2015",
+   "method": "web-archive",
+   "explanation": "September 2013, during her public standoff with Apple over a broken iPad. The 'yey' typo and 'IPad' capitalisation are hers.",
+   "flags": {
+    "hasNonstandardGrammar": true,
+    "hasConcreteMundaneDetail": true
+   }
+  },
+  {
+   "figure": "Alton Brown",
+   "text": "I want you to go out right now and buy Fritos and cat food.",
+   "source": "https://twitter.com/altonbrown/status/1323454104530767872",
+   "captures": [
+    "20201103023728"
+   ],
+   "publishedAt": "2020-11-03",
+   "citations": [
+    "https://www.thewrap.com/alton-brown-vows-to-mainline-moonpies-and-snort-cheese-powder-in-delightful-pre-election-twitter-rant/",
+    "https://www.themarysue.com/is-alton-brown-okay/"
+   ],
+   "category": "food",
+   "difficultyPrior": 4,
+   "fingerprint": "late-night-instruction",
+   "era": "2020+",
+   "method": "web-archive",
+   "explanation": "From a run of posts on the night of 2 November 2020. Delivered flat and never explained.",
+   "flags": {
+    "readsFabricated": true
+   }
+  },
+  {
+   "figure": "Alton Brown",
+   "text": "Turn off the lights and run 23 Slim Jims through the juicer.",
+   "source": "https://twitter.com/altonbrown/status/1323454897652715520",
+   "captures": [
+    "20201103024025"
+   ],
+   "publishedAt": "2020-11-03",
+   "citations": [
+    "https://www.thewrap.com/alton-brown-vows-to-mainline-moonpies-and-snort-cheese-powder-in-delightful-pre-election-twitter-rant/",
+    "https://www.themarysue.com/is-alton-brown-okay/"
+   ],
+   "category": "food",
+   "difficultyPrior": 3,
+   "fingerprint": "cooking-improvisation",
+   "era": "2020+",
+   "method": "web-archive",
+   "explanation": "Same night, same run. The oddly exact 23 is the detail rooms fixate on.",
+   "flags": {
+    "hasConcreteMundaneDetail": true
+   }
+  },
+  {
+   "figure": "Ice-T",
+   "text": "Lol. I've never eaten a Bagel in my life...",
+   "source": "https://twitter.com/FINALLEVEL/status/1060938041429241856",
+   "captures": [
+    "20230531090734"
+   ],
+   "publishedAt": "2018-11-09",
+   "citations": [
+    "https://exclaim.ca/film/article/ice-t_claims_he_has_never_eaten_a_bagel_in_his_entire_life"
+   ],
+   "category": "music",
+   "difficultyPrior": 2,
+   "fingerprint": "era-lament",
+   "era": "2015-2019",
+   "method": "web-archive",
+   "explanation": "November 2018, and he meant it. The capital B on Bagel is his.",
+   "flags": {
+    "hasNonstandardGrammar": true
+   }
+  },
+  {
+   "figure": "Dionne Warwick",
+   "text": "I am now Dionne the Singer.",
+   "source": "https://twitter.com/dionnewarwick/status/1335345903419330560",
+   "captures": [
+    "20230506004126"
+   ],
+   "publishedAt": "2020-12-05",
+   "citations": [
+    "https://thegrio.com/2020/12/05/dionne-warwick-chance-the-rapper/",
+    "https://www.buzzfeed.com/jenniferabidor/dionne-warwick-celeb-tweets"
+   ],
+   "category": "music",
+   "difficultyPrior": 5,
+   "fingerprint": "self-correction",
+   "era": "2020+",
+   "method": "web-archive",
+   "explanation": "December 2020, after telling Chance the Rapper to drop 'the Rapper' from his name.",
+   "flags": {}
+  },
+  {
+   "figure": "Geoffrey Hinton",
+   "text": "I would say I am someone who doesn't really know what field he's in but would like to understand how the brain works.",
+   "source": "https://www.nobelprize.org/prizes/physics/2024/hinton/interview/",
+   "captures": [
+    "20260730165922"
+   ],
+   "publishedAt": "2024-10-08",
+   "citations": [],
+   "category": "science",
+   "difficultyPrior": 4,
+   "fingerprint": "career-retrospective",
+   "era": "2020+",
+   "method": "official-transcript",
+   "explanation": "His Nobel telephone interview, hours after winning the 2024 physics prize.",
+   "flags": {
+    "readsFabricated": true
+   }
+  },
+  {
+   "figure": "Donna Strickland",
+   "text": "It is the one time in my life that I worked very, very hard!",
+   "source": "https://www.nobelprize.org/prizes/physics/2018/strickland/interview/",
+   "captures": [
+    "20260308170147"
+   ],
+   "publishedAt": "2018-10-02",
+   "citations": [],
+   "category": "science",
+   "difficultyPrior": 5,
+   "fingerprint": "small-victory",
+   "era": "2015-2019",
+   "method": "official-transcript",
+   "explanation": "Her Nobel telephone interview in 2018, describing the PhD work that won the prize.",
+   "flags": {}
+  },
+  {
+   "figure": "Robert De Niro",
+   "text": "I forgot my lines so the director wrote them down for me.",
+   "source": "https://aaspeechesdb.oscars.org/link/053-1/",
+   "captures": [
+    "20250409040444"
+   ],
+   "publishedAt": "1981-03-31",
+   "citations": [],
+   "category": "awards",
+   "difficultyPrior": 3,
+   "fingerprint": "acceptance-speech-opener",
+   "era": "pre-2015",
+   "method": "institutional-archive",
+   "explanation": "The opening line of his Best Actor speech for Raging Bull, 1981. He then read from notes.",
+   "flags": {
+    "readsFabricated": true
+   }
+  },
+  {
+   "figure": "F. Murray Abraham",
+   "text": "It would be a lie if I told you I didn't know what to say because I've been working on this speech for about twenty-five years.",
+   "source": "https://aaspeechesdb.oscars.org/link/057-1/",
+   "captures": [
+    "20250226045341"
+   ],
+   "publishedAt": "1985-03-25",
+   "citations": [],
+   "category": "awards",
+   "difficultyPrior": 2,
+   "fingerprint": "celebrity-encounter",
+   "era": "pre-2015",
+   "method": "institutional-archive",
+   "explanation": "Opening his Best Actor speech for Amadeus, 1985. The twenty-five years were real.",
+   "flags": {
+    "hasConcreteMundaneDetail": true
+   }
+  },
+  {
+   "figure": "Edith Head",
+   "text": "Just imagine dressing the two handsomest men in the world and then getting this.",
+   "source": "https://aaspeechesdb.oscars.org/link/046-7/",
+   "captures": [
+    "20250125162751"
+   ],
+   "publishedAt": "1974-04-02",
+   "citations": [],
+   "category": "awards",
+   "difficultyPrior": 4,
+   "fingerprint": "gratitude-post",
+   "era": "pre-2015",
+   "method": "institutional-archive",
+   "explanation": "Accepting her eighth and final Oscar, for The Sting, 1974. The two men were Newman and Redford.",
+   "flags": {}
+  },
+  {
+   "figure": "Fran Lebowitz",
+   "text": "I'm playing a judge because I'm hoping to become an actual judge.",
+   "source": "https://www.npr.org/transcripts/131420458",
+   "captures": [
+    "20250621235602"
+   ],
+   "publishedAt": "2010-11-18",
+   "citations": [],
+   "category": "internet-culture",
+   "difficultyPrior": 3,
+   "fingerprint": "mistaken-identity",
+   "era": "pre-2015",
+   "method": "official-transcript",
+   "explanation": "On NPR in 2010, about her recurring judge role on Law & Order. The transcript records laughter after it.",
+   "flags": {}
+  },
+  {
+   "figure": "Mel Brooks",
+   "text": "I've never put my own money in the show, you know. I put my talent on the line, and my money I save for Saturday night restaurants.",
+   "source": "https://www.npr.org/transcripts/256597762",
+   "captures": [
+    "20250623235928"
+   ],
+   "publishedAt": "2013-12-27",
+   "citations": [],
+   "category": "film-tv",
+   "difficultyPrior": 2,
+   "fingerprint": "household-inventory",
+   "era": "pre-2015",
+   "method": "official-transcript",
+   "explanation": "On Fresh Air in 2013, asked whether the advice in The Producers was his own. It was.",
+   "flags": {
+    "hasConcreteMundaneDetail": true
+   }
+  },
+  {
+   "figure": "Maria Sharapova",
+   "text": "I mean, unless I'm really in my coffin, I'm going to be out there.",
+   "source": "https://www.asapsports.com/show_interview.php?id=110057",
+   "captures": [
+    "20200924043706"
+   ],
+   "publishedAt": "2015-05-25",
+   "citations": [
+    "https://www.si.com/tennis/2015/05/25/french-open-day-2-recap"
+   ],
+   "category": "sports",
+   "difficultyPrior": 2,
+   "fingerprint": "overheard-remark",
+   "era": "2015-2019",
+   "method": "official-transcript",
+   "explanation": "Roland Garros press conference, 2015, asked whether illness had made her doubt playing.",
+   "flags": {
+    "opensMidThought": true
+   }
+  },
+  {
+   "figure": "Geno Auriemma",
+   "text": "I didn't record it, and the chances of me watching it are less than zero.",
+   "source": "https://www.asapsports.com/show_interview.php?id=175050",
+   "captures": [
+    "20220402044515"
+   ],
+   "publishedAt": "2022-04-01",
+   "citations": [
+    "https://justwomenssports.com/reads/diana-taurasi-sue-bird-final-four-espn-telecast/"
+   ],
+   "category": "sports",
+   "difficultyPrior": 4,
+   "fingerprint": "press-conference-deadpan",
+   "era": "2020+",
+   "method": "official-transcript",
+   "explanation": "Final Four press conference, 2022, asked if he would watch the alternate telecast.",
+   "flags": {
+    "punchlineInFinal20Pct": true
+   }
+  },
+  {
+   "figure": "Clayton Kershaw",
+   "text": "No, I don't know what analytics group you work for, but no.",
+   "source": "https://www.asapsports.com/show_interview.php?id=135133",
+   "captures": [
+    "20250513125105"
+   ],
+   "publishedAt": "2017-10-23",
+   "citations": [
+    "https://www.mlb.com/news/dodgers-clayton-kershaw-media-day-interview-c259462680"
+   ],
+   "category": "sports",
+   "difficultyPrior": 2,
+   "fingerprint": "technology-bafflement",
+   "era": "2015-2019",
+   "method": "official-transcript",
+   "explanation": "World Series media day, 2017, to a reporter asking about slider variation.",
+   "flags": {}
+  }
+ ],
+ "fabricated": [
+  {
+   "figure": "Steve Martin",
+   "text": "The hotel gave me a second pillow without being asked. I've been thinking about it since Tuesday.",
+   "category": "film-tv",
+   "difficultyPrior": 5,
+   "fingerprint": "sleep-report",
+   "era": "2020+",
+   "explanation": "Invented. Real: the mock-gravitas about small things. Invented: the pillow and the Tuesday.",
+   "flags": {
+    "hasConcreteMundaneDetail": true,
+    "punchlineInFinal20Pct": true
+   }
+  },
+  {
+   "figure": "Conan O'Brien",
+   "text": "My dog's learned to open the pantry and has chosen to tell nobody how.",
+   "category": "internet-culture",
+   "difficultyPrior": 1,
+   "fingerprint": "pet-negotiation",
+   "era": "2015-2019",
+   "explanation": "Made up for the game. He does post about his animals; this particular betrayal is ours.",
+   "flags": {
+    "punchlineInFinal20Pct": true
+   }
+  },
+  {
+   "figure": "Rainn Wilson",
+   "text": "is a sandwich still a sandwich if you're eating it standing up",
+   "category": "film-tv",
+   "difficultyPrior": 2,
+   "fingerprint": "supermarket-observation",
+   "era": "2015-2019",
+   "explanation": "Not a real post. The unpunctuated would-you-rather register is his; the sandwich question is invented.",
+   "flags": {
+    "readsAuthentic": true,
+    "hasNonstandardGrammar": true
+   }
+  },
+  {
+   "figure": "Danny DeVito",
+   "text": "the neighbours put up a new fence and nobody told me anything about it",
+   "category": "movies",
+   "difficultyPrior": 2,
+   "fingerprint": "neighbour-report",
+   "era": "pre-2015",
+   "explanation": "Invented for the game. Lowercase and unpunctuated to match his early posts; the fence is ours.",
+   "flags": {
+    "readsAuthentic": true,
+    "opensMidThought": true
+   }
+  },
+  {
+   "figure": "Martha Stewart",
+   "text": "The parcel says delivered. It's not delivered. I have looked everywhere including the greenhouse.",
+   "category": "internet-culture",
+   "difficultyPrior": 4,
+   "fingerprint": "parcel-saga",
+   "era": "pre-2015",
+   "explanation": "Made up. Real: she genuinely posts customer-service grievances. Invented: the parcel and the capitalised Greenhouse.",
+   "flags": {
+    "hasConcreteMundaneDetail": true
+   }
+  },
+  {
+   "figure": "Alton Brown",
+   "text": "PUT THE KETTLE ON. WE ARE NOT DISCUSSING WHY.",
+   "category": "food",
+   "difficultyPrior": 5,
+   "fingerprint": "instruction-manual",
+   "era": "2020+",
+   "explanation": "Written for this game. The all-caps imperative is his format; the kettle is invented.",
+   "flags": {}
+  },
+  {
+   "figure": "Ice-T",
+   "text": "Lol. Somebody just told me a scone is not a biscuit...",
+   "category": "music",
+   "difficultyPrior": 2,
+   "fingerprint": "restaurant-report",
+   "era": "2015-2019",
+   "explanation": "Invented. He really does post flat food revelations with a Lol opener; the scone is ours.",
+   "flags": {
+    "readsAuthentic": true
+   }
+  },
+  {
+   "figure": "Fran Lebowitz",
+   "text": "I've never owned a plant because I refuse to be responsible for something that cannot complain.",
+   "category": "internet-culture",
+   "difficultyPrior": 4,
+   "fingerprint": "plant-care",
+   "era": "pre-2015",
+   "explanation": "Not a real remark. The deadpan logic is her register; the plant is invented.",
+   "flags": {
+    "punchlineInFinal20Pct": true
+   }
+  },
+  {
+   "figure": "Mel Brooks",
+   "text": "You know, I bought a very expensive coat once. I still have it, and I've still not worn it outside.",
+   "category": "film-tv",
+   "difficultyPrior": 1,
+   "fingerprint": "seasonal-confession",
+   "era": "pre-2015",
+   "explanation": "Made up for the game. The conversational run-on matches his interview voice; the coat is ours.",
+   "flags": {
+    "hasConcreteMundaneDetail": true,
+    "opensMidThought": true
+   }
+  },
+  {
+   "figure": "Maria Sharapova",
+   "text": "I mean, the hotel gym had one treadmill and somebody was reading a book on it.",
+   "category": "sports",
+   "difficultyPrior": 4,
+   "fingerprint": "gym-report",
+   "era": "2015-2019",
+   "explanation": "Invented. The 'I mean' opener is how she actually starts press answers; the treadmill is ours.",
+   "flags": {
+    "readsAuthentic": true,
+    "opensMidThought": true,
+    "hasConcreteMundaneDetail": true
+   }
+  },
+  {
+   "figure": "John Cleese",
+   "text": "I've now been informed that the lift in this building skips the fourth floor for reasons nobody will explain",
+   "category": "film-tv",
+   "difficultyPrior": 4,
+   "fingerprint": "queue-grievance",
+   "era": "2015-2019",
+   "explanation": "Made up. The pedantic civic bafflement and missing full stop are his; the lift is invented.",
+   "flags": {
+    "hasConcreteMundaneDetail": true
+   }
+  },
+  {
+   "figure": "Albert Brooks",
+   "text": "I bought a new phone and it already knows more about me than my accountant does.",
+   "category": "film-tv",
+   "difficultyPrior": 1,
+   "fingerprint": "phone-battery",
+   "era": "2015-2019",
+   "explanation": "Not a real post. The single-sentence deadpan is his shape; the phone is invented.",
+   "flags": {
+    "punchlineInFinal20Pct": true
+   }
+  },
+  {
+   "figure": "Elijah Wood",
+   "text": "Got on the wrong train and stayed on it for a while out of politeness.",
+   "category": "movies",
+   "difficultyPrior": 4,
+   "fingerprint": "wrong-train",
+   "era": "2015-2019",
+   "explanation": "Invented for the game. The terse travel-observation register is his; the train is ours.",
+   "flags": {
+    "readsAuthentic": true
+   }
+  },
+  {
+   "figure": "Kim Kardashian",
+   "text": "ok so nobody told me you can just ask for the shoes in a different size. years of this.",
+   "category": "reality-tv",
+   "difficultyPrior": 2,
+   "fingerprint": "shoe-problem",
+   "era": "pre-2015",
+   "explanation": "Made up. The lowercase run-on enthusiasm matches her 2010-era posts; the shoes are invented.",
+   "flags": {
+    "readsAuthentic": true,
+    "opensMidThought": true,
+    "hasNonstandardGrammar": true
+   }
+  },
+  {
+   "figure": "Nigella Lawson",
+   "text": "There's a spoon in this house that I like more than the others and I have started hiding it.",
+   "category": "food",
+   "difficultyPrior": 1,
+   "fingerprint": "kitchen-mishap",
+   "era": "pre-2015",
+   "explanation": "Not a real post. The warm sensory domesticity is her register; the spoon is ours.",
+   "flags": {
+    "hasConcreteMundaneDetail": true
+   }
+  },
+  {
+   "figure": "Patrick Stewart",
+   "text": "I've been given a coffee with my name spelled correctly. A rare and excellent morning.",
+   "category": "film-tv",
+   "difficultyPrior": 2,
+   "fingerprint": "coffee-order",
+   "era": "2015-2019",
+   "explanation": "Invented. The formal warmth is his; the coffee is ours.",
+   "flags": {
+    "punchlineInFinal20Pct": true
+   }
+  },
+  {
+   "figure": "Weird Al Yankovic",
+   "text": "Lost my umbrella in a shop that only sells umbrellas. Let that one sit for a moment.",
+   "category": "music",
+   "difficultyPrior": 5,
+   "fingerprint": "umbrella-incident",
+   "era": "pre-2015",
+   "explanation": "Made up for the game. The mild wordplay shape is his; the umbrella shop is invented.",
+   "flags": {
+    "punchlineInFinal20Pct": true
+   }
+  },
+  {
+   "figure": "Jim Gaffigan",
+   "text": "ate the entire thing standing over the sink and would do it again tomorrow",
+   "category": "internet-culture",
+   "difficultyPrior": 2,
+   "fingerprint": "birthday-report",
+   "era": "pre-2015",
+   "explanation": "Invented. The lowercase food-guilt register is his; the sink is ours.",
+   "flags": {
+    "readsAuthentic": true,
+    "hasNonstandardGrammar": true
+   }
+  },
+  {
+   "figure": "Bob Mortimer",
+   "text": "A man in the queue told me he's had his shoes since 1998 and then walked off before I could respond.",
+   "category": "internet-culture",
+   "difficultyPrior": 4,
+   "fingerprint": "lost-item",
+   "era": "pre-2015",
+   "explanation": "Not a real post. The surreal domestic anecdote is his shape; the man and his shoes are invented.",
+   "flags": {
+    "hasConcreteMundaneDetail": true
+   }
+  },
+  {
+   "figure": "Ruth Reichl",
+   "text": "Grey sky. Wind. Toast. Butter melting properly for once. Staying in.",
+   "category": "food",
+   "difficultyPrior": 4,
+   "fingerprint": "morning-report",
+   "era": "2015-2019",
+   "explanation": "Made up. The fragment-stacked morning report is genuinely her format; this particular morning is ours.",
+   "flags": {
+    "readsAuthentic": true
+   }
+  },
+  {
+   "figure": "Guy Fieri",
+   "text": "THIS SANDWICH HAS A SECOND SANDWICH INSIDE IT! I need everyone to know that!",
+   "category": "food",
+   "difficultyPrior": 1,
+   "fingerprint": "doorbell-incident",
+   "era": "pre-2015",
+   "explanation": "Invented for the game. The all-caps enthusiasm is his; the recursive sandwich is ours.",
+   "flags": {}
+  },
+  {
+   "figure": "Richard Osman",
+   "text": "Someone's parked so badly that I've started to admire it.",
+   "category": "internet-culture",
+   "difficultyPrior": 2,
+   "fingerprint": "tv-remote",
+   "era": "2015-2019",
+   "explanation": "Not a real post. The British understatement is his register; the parking is invented.",
+   "flags": {
+    "punchlineInFinal20Pct": true
+   }
+  },
+  {
+   "figure": "Ernie Els",
+   "text": "I told my physio I'd felt twenty-five and he asked me to walk across the room again.",
+   "category": "sports",
+   "difficultyPrior": 4,
+   "fingerprint": "mild-injury",
+   "era": "2015-2019",
+   "explanation": "Made up. The self-deprecating age joke matches how he actually talks in pressers; the physio is ours.",
+   "flags": {
+    "punchlineInFinal20Pct": true,
+    "hasConcreteMundaneDetail": true
+   }
+  }
+ ]
+}

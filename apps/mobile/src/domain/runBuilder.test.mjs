@@ -144,6 +144,24 @@ test("run: a pool with one repeated figure still fills the run", () => {
   assert.equal(new Set(run.map((c) => c.id)).size, RUN_LENGTH);
 });
 
+// The greedy fill is not a solver. On the real 60-card deck a small fraction of
+// seeds still produce one three-in-a-row, because the per-class budget can be
+// spent in an order that leaves no legal alternative near the end and the
+// relaxation ladder then gives up the streak rule to return a full-length run.
+//
+// A short run is a worse game than a rare repeated answer, so the ladder is
+// correct to relax. This pins the rate: if it climbs, a constraint has started
+// fighting the budget again rather than the deck merely changing.
+test("run: three-in-a-row is rare on a realistic pool, not merely absent from a few seeds", () => {
+  const deck = pool(60);
+  let violations = 0;
+  for (let seed = 1; seed <= 1000; seed += 1) {
+    if (runQualityReport(buildRun(deck, { seed })).violations.length > 0) violations += 1;
+  }
+  const rate = violations / 1000;
+  assert.ok(rate <= 0.03, `three-in-a-row rate ${rate} exceeds the 3% ceiling`);
+});
+
 test("run: empty and malformed input return an empty run", () => {
   assert.deepEqual(buildRun([], { seed: 1 }), []);
   assert.deepEqual(buildRun(null, { seed: 1 }), []);

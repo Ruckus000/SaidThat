@@ -93,6 +93,11 @@ const COMMON_OPENERS = new Set([
   "one", "two", "first", "last", "next", "every", "another", "not", "now", "then", "once",
   "after", "before", "because", "while", "since", "until", "for", "with", "without", "about",
   "update", "anyway", "honestly", "apparently", "finally", "genuinely", "currently",
+  // Days and months are capitalised everywhere and are never people.
+  "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday",
+  "january", "february", "march", "april", "may", "june", "july",
+  "august", "september", "october", "november", "december",
+  "christmas", "easter", "halloween", "thanksgiving",
 ]);
 
 /** Words safe mid-sentence but suspicious sentence-initially (currently none). */

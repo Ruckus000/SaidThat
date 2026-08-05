@@ -104,19 +104,18 @@ import the other. `test/calibration.test.mjs` asserts the two copies agree.
 
 ## Current corpus state
 
-`pop-voices` ships: 14 cards, 7 authentic / 7 fabricated, every gate green, and
-leave-one-out leakage at 28.6% — below chance, meaning surface style carries no
-authenticity signal.
+`pop-voices` ships **60 cards** — 30 authentic / 30 fabricated across 44
+figures, every gate green, leave-one-out tell leakage 46.7%.
 
-Six of the seven authentic cards carry a Wayback capture confirmed through the
-availability API plus an independent contemporaneous article (Tier A). The
-seventh ships Tier B on two independent outlets and explicitly claims no
-archive rather than inventing one.
+Provenance is mixed by design. Tweets carry Wayback captures of the canonical
+status URL; the non-post quarter comes from Nobel telephone-interview
+transcripts, the Academy's own speech database, NPR and ASAP Sports verbatim
+FastScripts. That lane matters for more than legal comfort: a spoken remark has
+completely different surface texture from a tweet, which widens the authentic
+distribution and makes decoys harder to spot.
 
-The ported candidate corpus that used to live here was replaced rather than
-repaired — 16 of its 20 authentic cards cited a single listicle, one could not
-be verified to exist at all, two failed safety, and all 20 fabricated cards
-shared one explanation. See `docs/content/EDITOR-WORKLIST.md`.
+About a third of figures carry both a real and a fabricated card. That is
+deliberate — it lets a decoy be texture-matched against that person's own real
+card, and it removes "have I seen this figure before" as a signal. The rest are
+single, so a repeat player cannot invert the inference either.
 
-The one real gap is size: 14 cards against a pool floor of ~60, which
-`composition.pool-size` warns about. Runs will repeat sooner than they should.
