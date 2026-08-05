@@ -22,6 +22,34 @@
 export const MAX_TRACKED_CARDS = 400;
 export const PLAYTEST_SCHEMA = "said-that.playtest.v1";
 
+/**
+ * Id prefixes that never belong in calibration data.
+ *
+ * Local fixtures are playable in development and inert in a release build, but
+ * the stats outlive the build: `allowLocalFixtures` decides what is PLAYABLE,
+ * not what was already RECORDED, and nothing cleared the store when a device
+ * moved from a dev build to a release one. A release-config export from a
+ * simulator that had earlier run a dev build carried `fixture-ember-07` and
+ * `fixture-sage-03` alongside real cards — observed, not theorised.
+ *
+ * `import-playtest.mjs` does name and ignore ids it cannot match, so the
+ * contamination was visible rather than silent. The damage is subtler than a
+ * bogus verdict: dev play inflates `groups` and `answered` for the REAL cards
+ * in those runs, and those counts are exactly what the Wilson intervals are
+ * computed from. A card could reach the exposure floor on rehearsal rather than
+ * on rooms.
+ *
+ * The prefixes are load-bearing, not a naming nicety: `validateDeckRecord`
+ * rejects any `fixtureOnly` record whose id does not start with one of them.
+ */
+export const NON_CALIBRATABLE_ID_PREFIXES = ["fixture-", "withheld-"];
+
+/** @param {unknown} cardId */
+export function isCalibratableCardId(cardId) {
+  if (typeof cardId !== "string" || cardId.length === 0) return false;
+  return !NON_CALIBRATABLE_ID_PREFIXES.some((prefix) => cardId.startsWith(prefix));
+}
+
 /** No verdict at all below this much evidence. */
 export const MIN_EXPOSURES = 12;
 export const MIN_GROUPS = 4;
@@ -82,10 +110,38 @@ function cardEntry(stats, cardId) {
  * fresh empty one, and unbounded growth is the failure this cap exists to stop.
  */
 function withCard(stats, cardId, entry) {
+  // The single gate on what may enter the store, which is why the fixture check
+  // lives here rather than in each of the three recorders.
+  if (!isCalibratableCardId(cardId)) return stats;
   if (!(cardId in stats.cards) && Object.keys(stats.cards).length >= MAX_TRACKED_CARDS) {
     return stats;
   }
   return { ...stats, cards: { ...stats.cards, [cardId]: entry } };
+}
+
+/**
+ * Drop entries that should never have been recorded.
+ *
+ * Applied on load, so a device that collected fixture data under a dev build
+ * heals itself the next time anything writes, without the player being asked to
+ * reset. Returns the same object when there is nothing to drop, so the common
+ * case allocates nothing and a caller can cheaply tell whether it changed.
+ *
+ * What this does NOT undo: exposures a REAL card accrued during dev play. Those
+ * counts are indistinguishable from room play once written, so a device used
+ * for development still needs RESET LOCAL SESSION before it collects data
+ * meant for calibration. This removes the ids that were never eligible; it
+ * cannot un-mix the ones that were.
+ *
+ * @param {PlaytestStats} stats
+ * @returns {PlaytestStats}
+ */
+export function pruneStats(stats) {
+  const cards = stats?.cards;
+  if (!cards || typeof cards !== "object") return emptyStats();
+  const keep = Object.keys(cards).filter(isCalibratableCardId);
+  if (keep.length === Object.keys(cards).length) return stats;
+  return { ...stats, cards: Object.fromEntries(keep.map((id) => [id, cards[id]])) };
 }
 
 /**

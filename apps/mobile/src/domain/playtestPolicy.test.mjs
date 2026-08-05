@@ -8,6 +8,8 @@ import {
   cardVerdict,
   derivedStats,
   emptyStats,
+  isCalibratableCardId,
+  pruneStats,
   recordGroup,
   recordLaugh,
   recordOutcome,
@@ -191,4 +193,74 @@ test("store: a refusing backend loses the sample without throwing", async () => 
 
 test("store: the key is versioned", () => {
   assert.match(PLAYTEST_KEY, /:v\d+$/);
+});
+
+/**
+ * Fixture contamination. Local fixtures are inert in a release build, but the
+ * stats outlive the build — a release-config export from a simulator that had
+ * earlier run a dev build carried real fixture ids next to real cards.
+ */
+test("playtest: fixture and withheld ids are never recorded", () => {
+  let stats = emptyStats();
+  for (const cardId of ["fixture-ember-07", "withheld-03"]) {
+    stats = recordOutcome(stats, { cardId, correct: true });
+    stats = recordLaugh(stats, { cardId });
+    stats = recordGroup(stats, [cardId]);
+  }
+  assert.deepEqual(stats.cards, {}, "no recorder may admit a fixture id");
+
+  // A real card in the same run is still recorded — the guard is per-id, not
+  // per-run, or one fixture would discard the whole sample.
+  stats = recordGroup(stats, ["fixture-ember-07", "b2000000-0000-4000-8000-000000000027"]);
+  assert.deepEqual(Object.keys(stats.cards), ["b2000000-0000-4000-8000-000000000027"]);
+});
+
+test("playtest: isCalibratableCardId rejects only the reserved prefixes", () => {
+  assert.equal(isCalibratableCardId("b2000000-0000-4000-8000-000000000027"), true);
+  assert.equal(isCalibratableCardId("fixture-ember-07"), false);
+  assert.equal(isCalibratableCardId("withheld-03"), false);
+  // Not a prefix match, so it stays eligible.
+  assert.equal(isCalibratableCardId("card-fixture-01"), true);
+  for (const bad of ["", null, undefined, 7, {}]) {
+    assert.equal(isCalibratableCardId(bad), false, String(bad));
+  }
+});
+
+test("playtest: pruning drops fixture entries and keeps the object when clean", () => {
+  const clean = { cards: { a: entry({ answered: 1 }) } };
+  assert.equal(pruneStats(clean), clean, "an untouched sample must not be rebuilt");
+
+  const dirty = {
+    cards: { a: entry({ answered: 1 }), "fixture-ember-07": entry({ answered: 9 }) },
+  };
+  assert.deepEqual(Object.keys(pruneStats(dirty).cards), ["a"]);
+  assert.equal(pruneStats(dirty).cards.a.answered, 1, "real counts survive untouched");
+  assert.deepEqual(pruneStats(null).cards, {});
+});
+
+// The migration path: a device that collected fixture data under a dev build
+// heals on load, without asking the player to reset.
+test("store: a sample collected under a dev build is cleaned on load", async () => {
+  const seeded = JSON.stringify({
+    cards: {
+      "b2000000-0000-4000-8000-000000000027": entry({ answered: 2, correct: 1, groups: 1 }),
+      "fixture-ember-07": entry({ answered: 1, correct: 1, groups: 1 }),
+      "fixture-sage-03": entry({ answered: 1, groups: 1 }),
+    },
+  });
+  const storage = memoryStorage(seeded);
+  const store = createPlaytestStore(storage);
+
+  const loaded = await store.loadStats();
+  assert.deepEqual(Object.keys(loaded.cards), ["b2000000-0000-4000-8000-000000000027"]);
+
+  // And the cleaned set is what gets written back, so the fixtures are gone for
+  // good rather than filtered on every read.
+  await store.updateStats((stats) => stats);
+  const persisted = JSON.parse(await storage.getItem(PLAYTEST_KEY));
+  assert.deepEqual(Object.keys(persisted.cards), ["b2000000-0000-4000-8000-000000000027"]);
+
+  // The export is therefore clean too — this is the file an editor receives.
+  const payload = toExport(await store.loadStats(), "0.3.0");
+  assert.ok(!JSON.stringify(payload).includes("fixture-"));
 });
