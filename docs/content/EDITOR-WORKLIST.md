@@ -1,109 +1,110 @@
 # Editor worklist — `pop-voices`
 
-The deck ships. 14 cards, 7 authentic / 7 fabricated, every gate green.
+60 cards, 30 authentic / 30 fabricated, 44 figures. Every gate green.
 
 ```bash
 node tools/content-pipeline/bin/report.mjs --deck pop-voices
 ```
 
 ```
-cards            14 total, 14 shippable
-authentic share  50.0%  (7A / 7F)
-issues           0 blocking, 23 warnings
-leave-one-out accuracy  28.6%  [ok]
+cards            60 total, 60 shippable
+authentic share  50.0%  (30A / 30F)
+issues           0 blocking, 89 warnings
+leave-one-out accuracy  46.7%  [ok]
 ```
 
-Leave-one-out below chance means surface style carries no authenticity signal:
-a player cannot tell real from fake by texture, only by reasoning about the
-figure. That is the property the deck exists to have.
+Leave-one-out below chance means surface style carries no authenticity signal —
+a player cannot win on texture, only by reasoning about the figure. The
+pool-size, figure-variety and non-post-share warnings from the 14-card version
+are all cleared.
 
 ---
 
-## What replaced the candidate file
+## The only thing actually blocking progress
 
-The 40 ported candidates could not ship, and most could not be fixed:
-
-- **16 of 20 authentic cards cited one listicle.** Tier C. None ship.
-- **One did not verify at all.** A Chris Evans line about USB cables returned no
-  evidence of existing. It scored well on every editorial dimension and is very
-  likely a listicle fabrication — which is the argument for the tier system in a
-  single card.
-- **Two failed safety** (the Ramsay innuendo, which also violated the deck's own
-  sensitivity ceiling; and a Taylor Swift card making fabricated claims about
-  identifiable third parties).
-- **Several were dead rounds by the rubric's own scoring** — the Oscars selfie,
-  "just setting up my twttr", the Tony Hawk TSA bit: recall, not reasoning.
-- **All 20 fabricated cards shared one explanation**, so half the deck's payoff
-  moments were the same eleven words.
-
-`bin/seed-pop-voices.mjs` rebuilds the deck from records that verify. Six of the
-seven authentic cards carry a Wayback capture confirmed present through the
-availability API, plus an independent contemporaneous article. The seventh
-(Macaulay Culkin) ships Tier B on two independent outlets and explicitly claims
-no archive.
-
-Every fabricated card is attributed to a figure with **no** authentic card in the
-deck. That is the fix for the pairing defect — the old file paired nearly every
-fake with a real card by the same person, so the room learned "the second one is
-the fake" and stopped arguing.
-
----
-
-## Remaining work
-
-### 1. Grow the pool — the one real gap
-
-`composition.pool-size` warns: 14 cards against a floor of ~60, and 14 figures
-against ~20. At this size the run-builder has little room, so runs will repeat
-sooner than they should. A 14-card deck yields one full 10-card run with only
-four cards held back.
-
-Each new authentic card needs the same treatment: resolve the status URL,
-confirm a capture through
-`https://archive.org/wayback/available?url=twitter.com/<user>/status/<id>`, and
-find an independent contemporaneous article quoting the exact wording. Budget
-roughly three lookups per card, and expect some to fail verification outright.
-
-Each new fabricated card needs a figure not already in the deck, a fingerprint
-not already used, and a distinct explanation.
-
-**Keep the halves matched while you grow.** The current parity is deliberate:
-length buckets, era tags, terminal punctuation, lowercase openings, and the
-presence of exclamation marks, ALL-CAPS bursts and ellipses all sit within
-tolerance across the two classes. Adding six polished fakes and six messy reals
-would reintroduce exactly the leak the old file had. Re-run `report.mjs` after
-every batch and watch the leave-one-out number.
-
-### 2. Replace the owner approvals
-
-All 14 cards carry `owner:pre-release`, and the validator warns on each one. The
-two-person rule is still the release bar (ADR-016). When a second editor exists,
-replace the marker card by card rather than leaving it in place.
-
-### 3. Clear the soft warnings
-
-- Three `safety.possible-third-party` hits — sentence-initial capitalised words
-  the detector cannot distinguish from names. Confirm by eye.
-- One `safety.title-case-unscanned` — the Jaden Smith aphorism. Name detection is
-  skipped on Title Case text, so check it manually.
-- One `read-aloud.clause-count` — the Kim Kardashian card is five sentences.
-  It survives because the beat is distributed rather than terminal, but it is
-  the longest thing in the deck to read aloud.
-
-### 4. Calibrate
-
-The deck has never been played. Every difficulty is still `difficultyPrior` — an
-editorial guess, not a measurement.
+**Nobody has played this with a room yet.** Every difficulty in the deck is
+`difficultyPrior` — an editorial guess. The rubric's whole position is that
+funniness gets measured rather than asserted, and it has not been measured once.
 
 ```bash
 # Settings → EXPORT PLAYTEST DATA, drop the JSON in content/playtest/, then:
 node tools/content-pipeline/bin/import-playtest.mjs --deck pop-voices
 ```
 
-The pass condition is a correct-rate distribution centred near 0.55 with high
-deliberation. A card at 50% with *low* answer latency is a room guessing, not a
-room arguing, and correct-rate alone cannot tell those apart.
+Nothing moves status below **12 exposures across 4 groups**, so expect the first
+one or two sessions to report `insufficient-data` throughout. That is the Wilson
+discipline working, not the tool stalling — it is what stops three groups who
+happen to share a reference from retiring a good card.
 
-Expect the Macaulay Culkin card to come back too easy — it is deliberately the
-slot-1 warm-up. If "is meatball an fruit" lands near 50% with a high laugh share,
-that is the deck working.
+Realistically that means **four to six separate rooms** before the first card
+earns a verdict.
+
+**Use a release build for real data.** A development build mixes the dev fixtures
+into the run, which is why names like "Ember Lane" appear among real figures. The
+importer now reports unmatched card ids, so fixture contamination is visible
+rather than silent — but it is cleaner to avoid it.
+
+What to watch is the **spread**, not the average: correct-rates clustering near
+0.55 with slow answers means the deck is working. Cards at 50% with *fast*
+answers mean a room guessing rather than arguing, and correct-rate alone cannot
+tell those two apart.
+
+---
+
+## Warnings worth an editor's eye (89 total)
+
+None block. Most are one class of thing.
+
+**60 × `editorial.single-approver`** — every card carries `owner:pre-release`.
+The two-person rule is still the release bar (ADR-016). When a second editor
+exists, replace the marker card by card rather than leaving it in place.
+
+**10 × `safety.possible-third-party`** — a sentence-initial capitalised word the
+detector cannot distinguish from a name. Ordinary prose and a real first name
+look identical in that position, so it defers to a human by design. Confirm by
+eye and move on.
+
+**7 × `provenance.single-capture`** — one archive capture and no independent
+citation. The wording is confirmed once rather than cross-checked. These are the
+deep cuts no outlet wrote about, which is exactly why they are good cards; a
+second capture at a different date would clear it.
+
+**5 × `read-aloud.front-loaded`**, **2 × `clause-count`**, **1 × `very-short`**,
+**1 × `long`** — delivery heuristics. Read each aloud once and decide.
+
+**3 × `safety.title-case-unscanned`** — name detection is skipped on Title Case
+text because capitalisation carries no signal there. Check those three by hand.
+
+---
+
+## Material already researched but unused
+
+The sports research lane returned seven verified candidates that never made the
+deck — Mike Tyson on pigeons, Andy Murray at the Beijing village, two early Shaq
+posts, JaVale McGee on McDonald's Monopoly, Michael Owen on the M6, Gary Lineker
+on nosebleed seats. All archive-verified with wording read from the archived page
+rather than an article.
+
+They were cut only for balance: sports was already at three cards and the
+category cap is 35%. If the deck grows past 60, they are the cheapest next batch
+— the verification work is done.
+
+---
+
+## Standing rules when you grow it
+
+- **Keep the halves style-matched.** Length buckets, era, terminal punctuation,
+  lowercase openings, and the presence of `!` / ALL-CAPS / ellipses all sit
+  within tolerance today. Adding polished fakes and messy reals reintroduces
+  exactly the leak the old candidate file had. Re-run `report.mjs` after every
+  batch and watch the leave-one-out number.
+- **Never take wording from an article.** Outlets silently tidy typos, hashtags
+  and line breaks — confirmed on a BuzzFeed transcription that dropped all three.
+  Wording comes from the archive capture (rubric §1.3.1).
+- **Never invent an archive timestamp.** Confirm every one against
+  `https://archive.org/wayback/available?url=…`, or use
+  `bin/verify-candidates.mjs`, which re-checks a candidate file for you. Run it
+  alone; the API rate-limits under concurrent load.
+- **Pair some figures, not all.** A figure with both a real and a fake card lets
+  the decoy be texture-matched against that person's own voice. Pairing *every*
+  figure would let a repeat player who remembers one card infer the other.
