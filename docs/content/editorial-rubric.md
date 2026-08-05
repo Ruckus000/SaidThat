@@ -68,6 +68,33 @@ This is not documentation overhead. **It is the decoy-writing spec** (§3) and t
 - **Tier B — ships with second-editor sign-off.** Two **independent** secondary citations (V2) from distinct outlets, with matching date *and* matching exact wording.
 - **Tier C — never ships as authentic.** One aggregator/listicle/wiki, or two citations that both derive from the same original.
 
+### 1.3.1 Amendment (2026-08-05): captures outrank citations for *wording*
+
+The original rule required two independent **secondary** citations. That assumed
+outlets are reliable for exact wording. They are not.
+
+Checked directly: BuzzFeed's transcription of a Larry King post renders it as a
+clean one-liner, while the archived tweet carries `#itsmy2cents` on its own line
+and a trailing ellipsis. The quotes that looked cleanest in the listicle were the
+ones that had been edited most. Since §1.4 makes typos and casing *the card*, an
+outlet is the worst available source for the string.
+
+So the two jobs are now separated:
+
+| Question | Evidence |
+|---|---|
+| Did this statement exist? | independent citations, or an archive capture |
+| What exactly did it say? | **the archive capture only** |
+
+**Two independent captures of the canonical URL, byte-compared, satisfy the
+provenance bar** in place of two independent articles. A capture *is* the post;
+an article is somebody's retelling of it. `wordingSource: "article"` is rejected
+outright, and a single capture with no independent citation warns.
+
+This is not a relaxation. It raises the bar on wording while allowing the deep
+cuts the rubric asks for — posts obscure enough to be unburned by recall are, by
+definition, posts nobody wrote an article about.
+
 **Anti-laundering check.** Two citations count as one if either holds:
 
 - their quoted wording is character-identical **and** the later one links the earlier;

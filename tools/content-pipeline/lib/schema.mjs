@@ -28,6 +28,7 @@ export const RIGHTS_STATUS = new Set([
 ]);
 export const VERIFICATION_METHODS = new Set([
   "web-archive",
+  "archive-double-capture",
   "contemporaneous-article",
   "official-transcript",
   "licensed-dataset",
@@ -142,6 +143,19 @@ function validateSource(card, path, issues) {
   }
 }
 
+/**
+ * Distinct archive captures of the canonical URL, byte-compared for wording.
+ *
+ * Recorded separately from `citations` because they answer a different
+ * question. A citation is evidence the statement EXISTS; a capture is evidence
+ * of what it SAYS. Conflating them is how an editor ends up trusting an outlet
+ * for wording.
+ */
+export function captureCount(source) {
+  if (!Array.isArray(source?.captures)) return 0;
+  return new Set(source.captures.filter((c) => /^\d{14}$/.test(String(c?.timestamp ?? c)))).size;
+}
+
 function validateProvenance(card, path, issues) {
   if (card.authenticity !== "authentic") return;
   // G7 — Tier C never ships as authentic.
@@ -154,12 +168,36 @@ function validateProvenance(card, path, issues) {
     issues.push(block("provenance.tier-c", `${path}.sourceTier`,
       "Tier C provenance (single aggregator, or citations sharing one origin) never ships as authentic."));
   }
-  // G8 — two independent citations.
+
+  // G8 — two independent records, where an archive capture counts.
+  //
+  // Amended 2026-08-05 on evidence. The original rule demanded two independent
+  // SECONDARY citations, which assumed outlets are reliable for wording. They
+  // are not: BuzzFeed's transcription of a Larry King post silently dropped a
+  // hashtag, a line break and a trailing ellipsis, and the cleanest-looking
+  // quotes were the most heavily edited. Since the rubric treats typos as the
+  // card, an outlet is the worst possible source for the exact string.
+  //
+  // Two independent captures of the canonical URL, byte-compared, are stronger
+  // evidence of wording than any article quote — the capture IS the post. So
+  // either pair satisfies the bar, and `wordingSource` below tightens what may
+  // supply the string in the first place.
   const independent = independentCitationCount(card.citations);
-  if (independent < 2) {
-    issues.push(block("provenance.independent-citations", `${path}.citations`,
-      "Authentic cards need at least two independent citations.",
-      { value: independent, limit: 2 }));
+  const captures = captureCount(card.source);
+  if (independent < 2 && captures < 2) {
+    issues.push(block("provenance.independent-records", `${path}.citations`,
+      "Authentic cards need two independent citations, or two archive captures of the canonical URL.",
+      { value: { citations: independent, captures }, limit: 2 }));
+  }
+
+  // Wording must come from a primary record, never from an outlet's retelling.
+  if (card.wordingSource === "article") {
+    issues.push(block("provenance.wording-from-article", `${path}.wordingSource`,
+      "Exact wording may not be taken from an article — outlets silently tidy typos, hashtags and line breaks."));
+  }
+  if (captures === 1 && independent < 1) {
+    issues.push(warn("provenance.single-capture", `${path}.source.captures`,
+      "One capture and no independent citation: wording is confirmed once rather than cross-checked."));
   }
 }
 

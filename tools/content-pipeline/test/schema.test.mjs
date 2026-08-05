@@ -120,7 +120,83 @@ test("schema: Tier C provenance never ships as authentic", () => {
   );
   const found = codes(res);
   assert.ok(found.includes("provenance.tier-c"));
-  assert.ok(found.includes("provenance.independent-citations"));
+  assert.ok(found.includes("provenance.independent-records"));
+});
+
+// Amended 2026-08-05: outlets silently tidy wording, so two archive captures of
+// the canonical URL are an accepted substitute for two independent articles.
+// The card still has to be Tier A/B — this changes what EVIDENCE counts, not
+// how much.
+test("schema: two archive captures satisfy the provenance bar", () => {
+  const res = validateEditorialCard(
+    baseCard({
+      authenticity: "authentic",
+      decoyMethod: "none",
+      explanation: "Posted in 2019.",
+      sourceTier: "A",
+      transcriptionExact: true,
+      wordingSource: "archive",
+      citations: [],
+      source: {
+        url: "https://web.archive.org/web/20190706164317/https://twitter.com/a/status/1",
+        retained: true,
+        verificationMethod: "archive-double-capture",
+        rightsStatus: "fair_use_claim",
+        captures: [{ timestamp: "20190706164317" }, { timestamp: "20190707193037" }],
+      },
+    }),
+    { figures },
+  );
+  assert.deepEqual(codes(res), []);
+});
+
+test("schema: one capture and no citation is allowed but flagged", () => {
+  const card = baseCard({
+    authenticity: "authentic",
+    decoyMethod: "none",
+    explanation: "Posted in 2011.",
+    sourceTier: "A",
+    transcriptionExact: true,
+    wordingSource: "archive",
+    citations: [{ url: "https://a.example/1", independent: true }],
+    source: {
+      url: "https://web.archive.org/web/20210820054710/https://twitter.com/a/status/1",
+      retained: true,
+      verificationMethod: "web-archive",
+      rightsStatus: "fair_use_claim",
+      captures: [{ timestamp: "20210820054710" }],
+    },
+  });
+  const res = validateEditorialCard(card, { figures });
+  assert.ok(codes(res).includes("provenance.independent-records"), "one of each is still not two records");
+});
+
+test("schema: wording taken from an article is rejected outright", () => {
+  // BuzzFeed's transcription of a Larry King post dropped a hashtag, a line
+  // break and a trailing ellipsis. The rubric treats typos as the card, so an
+  // outlet is the worst available source for the exact string.
+  const res = validateEditorialCard(
+    baseCard({
+      authenticity: "authentic",
+      decoyMethod: "none",
+      explanation: "Posted in 2019.",
+      sourceTier: "A",
+      transcriptionExact: true,
+      wordingSource: "article",
+      citations: [
+        { url: "https://a.example/1", independent: true },
+        { url: "https://b.example/2", independent: true },
+      ],
+      source: {
+        url: "https://a.example/post",
+        retained: true,
+        verificationMethod: "web-archive",
+        rightsStatus: "fair_use_claim",
+      },
+    }),
+    { figures },
+  );
+  assert.ok(codes(res).includes("provenance.wording-from-article"));
 });
 
 test("schema: a single approver does not satisfy the two-person rule", () => {
