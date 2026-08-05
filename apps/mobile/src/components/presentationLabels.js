@@ -3,6 +3,31 @@ import { MODES } from "../domain/game.js";
 export const FIXTURE_DISCLOSURE =
   "LOCAL DEVELOPMENT FIXTURES · NOT EDITORIAL CONTENT";
 
+export const MIXED_DECK_DISCLOSURE =
+  "DEVELOPMENT BUILD · EDITORIAL CARDS PLUS LOCAL FIXTURES";
+
+/**
+ * What the deck on this device actually contains.
+ *
+ * This used to be driven by the __DEV__ flag alone, so a development build
+ * asserted "NOT EDITORIAL CONTENT" even after the curated deck landed — by then
+ * the overwhelming majority of playable cards WERE editorial, and the line was
+ * simply false. A disclosure that misdescribes the deck is worse than none: it
+ * is the same failure mode as a fixture reading as source-verified, pointed the
+ * other way.
+ *
+ * Driven by the cards themselves so it cannot drift from them again.
+ */
+export function deckDisclosure(cards, { allowLocalFixtures = false } = {}) {
+  if (!allowLocalFixtures) return null;
+  const list = Array.isArray(cards) ? cards : [];
+  const fixtures = list.filter((card) => card?.fixtureOnly === true).length;
+  const editorial = list.length - fixtures;
+  if (fixtures === 0) return null;
+  if (editorial === 0) return FIXTURE_DISCLOSURE;
+  return MIXED_DECK_DISCLOSURE;
+}
+
 export function headerScoreLabel(score) {
   return `ROOM · ${score}`;
 }

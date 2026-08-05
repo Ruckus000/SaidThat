@@ -4,6 +4,8 @@ import test from "node:test";
 import {
   CONTENT_UNAVAILABLE_GUARD,
   FIXTURE_DISCLOSURE,
+  MIXED_DECK_DISCLOSURE,
+  deckDisclosure,
   PRIVATE_SHUTTER_RECOVERY,
   accuracyPercent,
   contentUnavailableMessage,
@@ -60,6 +62,31 @@ function privateShutterState() {
 test("ui: fixture disclosure copy is explicit and development-only", () => {
   assert.match(FIXTURE_DISCLOSURE, /LOCAL DEVELOPMENT FIXTURES/);
   assert.match(FIXTURE_DISCLOSURE, /NOT EDITORIAL CONTENT/);
+});
+
+// The disclosure used to key off __DEV__ alone, so a development build asserted
+// "NOT EDITORIAL CONTENT" while playing 60 source-verified editorial cards. A
+// disclosure that misdescribes the deck is the same failure as a fixture reading
+// as source-verified, pointed the other way — so it is derived from the cards.
+test("ui: the deck disclosure describes what is actually in the deck", () => {
+  const fixtureCard = { fixtureOnly: true };
+  const editorialCard = { fixtureOnly: false };
+  const dev = { allowLocalFixtures: true };
+
+  // Fixtures only — the original claim, and still correct.
+  assert.equal(deckDisclosure([fixtureCard, fixtureCard], dev), FIXTURE_DISCLOSURE);
+
+  // Both kinds present: must NOT claim the content is not editorial.
+  const mixed = deckDisclosure([editorialCard, fixtureCard], dev);
+  assert.equal(mixed, MIXED_DECK_DISCLOSURE);
+  assert.doesNotMatch(mixed, /NOT EDITORIAL CONTENT/);
+
+  // No fixtures in the pool: nothing to disclose.
+  assert.equal(deckDisclosure([editorialCard, editorialCard], dev), null);
+
+  // A release build never shows it, whatever the pool holds.
+  assert.equal(deckDisclosure([fixtureCard], { allowLocalFixtures: false }), null);
+  assert.equal(deckDisclosure(null, dev), null);
 });
 
 test("ui: setup role labels follow Room Beacon vs Private Relay", () => {
@@ -211,6 +238,8 @@ test("reward: result copy celebrates skill with a non-color cue and never punish
 test("ui: no label carries an emoji or dingbat character", () => {
   const labels = [
     FIXTURE_DISCLOSURE,
+  MIXED_DECK_DISCLOSURE,
+  deckDisclosure,
     CONTENT_UNAVAILABLE_GUARD,
     PRIVATE_SHUTTER_RECOVERY,
     streakBadgeLabel(4),

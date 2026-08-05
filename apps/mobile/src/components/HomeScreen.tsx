@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Animated, Easing, ScrollView, Text, View, useWindowDimensions } from "react-native";
 
 import { volt } from "../theme/tokens";
-import { FIXTURE_DISCLOSURE, runSummaryLabel } from "./presentationLabels";
+import { deckDisclosure, runSummaryLabel } from "./presentationLabels";
 import { FadeIn } from "./FadeIn";
 import { Mark } from "./Mark";
 import { PrimaryButton } from "./PrimaryButton";
@@ -13,6 +13,8 @@ export type HomeScreenProps = {
   /** Outcome of a local reset that could not fully deliver, shown until acknowledged. */
   notice?: string | null;
   localFixtures: boolean;
+  /** The playable pool, so the disclosure describes the real deck. */
+  deckCards?: { fixtureOnly?: boolean }[];
   reducedMotion: boolean;
   roundsPlayed: number;
   correctCount: number;
@@ -29,6 +31,7 @@ export function HomeScreen({
   onStart,
   notice = null,
   localFixtures,
+  deckCards = [],
   reducedMotion,
   roundsPlayed,
   correctCount,
@@ -36,6 +39,7 @@ export function HomeScreen({
   runComplete,
 }: HomeScreenProps) {
   const summary = runSummaryLabel({ roundsPlayed, correctCount, bestStreak, complete: runComplete });
+  const disclosure = deckDisclosure(deckCards, { allowLocalFixtures: localFixtures });
   const { fontScale } = useWindowDimensions();
   // A 92pt wordmark is wider than the phone once the text scale passes roughly this
   // much, and homeHero clips rather than wraps, so it rendered as "SAI". Dropping to
@@ -155,7 +159,7 @@ export function HomeScreen({
         )}
         <PrimaryButton label="START A ROOM" hero onPress={onStart} />
         <Text style={s.homeFootnote}>No accounts · no feed · everything stays on this phone</Text>
-        {localFixtures && <Text style={s.fixture}>{FIXTURE_DISCLOSURE}</Text>}
+        {disclosure ? <Text style={s.fixture}>{disclosure}</Text> : null}
       </View>
       </ScrollView>
     </FadeIn>

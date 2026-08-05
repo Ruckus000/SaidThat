@@ -26,16 +26,37 @@ const home = {
   runComplete: false,
 };
 
-test("home: the fixture disclosure is present whenever local fixtures are on", () => {
-  render(<HomeScreen {...home} />);
+const FIXTURE_CARD = { fixtureOnly: true };
+const EDITORIAL_CARD = { fixtureOnly: false };
+
+test("home: a fixture-only build still says so on the first screen", () => {
+  render(<HomeScreen {...home} deckCards={[FIXTURE_CARD, FIXTURE_CARD]} />);
 
   // Non-negotiable: a fixture build must say so on the first screen.
   expect(screen.getByText(/LOCAL DEVELOPMENT FIXTURES/)).toBeOnTheScreen();
   expect(screen.getByText(/NOT EDITORIAL CONTENT/)).toBeOnTheScreen();
 });
 
+// The disclosure follows the DECK, not the build flag. It previously keyed off
+// __DEV__ alone, so a development build claimed "NOT EDITORIAL CONTENT" while
+// playing 60 source-verified editorial cards — a false statement in the one
+// area this app is most careful about.
+test("home: a deck holding editorial cards never claims the content is not editorial", () => {
+  render(<HomeScreen {...home} deckCards={[EDITORIAL_CARD, FIXTURE_CARD]} />);
+
+  expect(screen.queryByText(/NOT EDITORIAL CONTENT/)).not.toBeOnTheScreen();
+  expect(screen.getByText(/EDITORIAL CARDS PLUS LOCAL FIXTURES/)).toBeOnTheScreen();
+});
+
+test("home: a deck with no fixtures has nothing to disclose", () => {
+  render(<HomeScreen {...home} deckCards={[EDITORIAL_CARD, EDITORIAL_CARD]} />);
+
+  expect(screen.queryByText(/LOCAL DEVELOPMENT FIXTURES/)).not.toBeOnTheScreen();
+  expect(screen.queryByText(/EDITORIAL CARDS PLUS/)).not.toBeOnTheScreen();
+});
+
 test("home: a build without local fixtures shows no disclosure", () => {
-  render(<HomeScreen {...home} localFixtures={false} />);
+  render(<HomeScreen {...home} localFixtures={false} deckCards={[FIXTURE_CARD]} />);
 
   expect(screen.queryByText(/LOCAL DEVELOPMENT FIXTURES/)).not.toBeOnTheScreen();
 });

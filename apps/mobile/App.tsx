@@ -400,6 +400,7 @@ export default function App() {
             }}
             notice={resetNotice}
             localFixtures={allowLocalFixtures}
+            deckCards={state.pool}
             reducedMotion={reducedMotion}
             roundsPlayed={state.roundsPlayed}
             correctCount={state.correctCount}
