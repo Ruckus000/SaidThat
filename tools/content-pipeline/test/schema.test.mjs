@@ -404,16 +404,18 @@ test("schema: archiveUrl must be a Wayback capture URL, not a canonical link", (
 });
 
 test("schema: a well-formed Wayback archiveUrl passes", () => {
-  const res = validateEditorialCard(
-    authenticCard({
-      source: {
-        ...authenticCard().source,
-        archiveUrl: "https://web.archive.org/web/20190706164317/https://twitter.com/a/status/1",
-      },
-    }),
-    { figures },
-  );
-  assert.deepEqual(codes(res), []);
+  for (const archiveUrl of [
+    "https://web.archive.org/web/20190706164317/https://twitter.com/a/status/1",
+    // The host is case-insensitive, as DNS is.
+    "https://WEB.ARCHIVE.ORG/web/20190706164317/https://twitter.com/a/status/1",
+    "http://web.archive.org/web/20190706164317/https://twitter.com/a/status/1",
+  ]) {
+    const res = validateEditorialCard(
+      authenticCard({ source: { ...authenticCard().source, archiveUrl } }),
+      { figures },
+    );
+    assert.deepEqual(codes(res), [], archiveUrl);
+  }
 });
 
 // The method field names a kind of evidence. Six cards declared `web-archive`

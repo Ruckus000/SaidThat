@@ -34,7 +34,10 @@ export const RIGHTS_STATUS = new Set([
  * like. They disagreeing is how `source.archiveUrl` came to hold live
  * twitter.com links on cards that shipped as AUTHENTIC.
  */
-export const WAYBACK_CAPTURE_RE = /^https?:\/\/web\.archive\.org\/web\/(\d{14})\//;
+// Case-insensitive on the host because DNS is: a capture URL written
+// WEB.ARCHIVE.ORG is the same capture, and rejecting it would send an editor
+// hunting for a provenance fault that isn't there.
+export const WAYBACK_CAPTURE_RE = /^https?:\/\/web\.archive\.org\/web\/(\d{14})\//i;
 
 /** Verification methods whose name is a claim about an archive capture. */
 export const ARCHIVE_METHODS = new Map([
