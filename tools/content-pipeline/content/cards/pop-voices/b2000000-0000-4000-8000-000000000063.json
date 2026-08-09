@@ -1,0 +1,39 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000063",
+  "figureId": "c3000000-0000-4000-8000-000000000001",
+  "displayName": "Post Malone",
+  "statementText": "emergency exit is a great band name, the signs are already up, nobody agrees",
+  "authenticity": "fabricated",
+  "category": "music",
+  "difficultyPrior": 3,
+  "sensitivity": "everyone",
+  "explanation": "Made up. Real: he posts short lower-case thoughts with no punctuation. Invented: the band name and the indifference to it.",
+  "formatFingerprint": "band-name-pun",
+  "eraVocabTag": "2020+",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": true,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-09"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Drafted with AI assistance under ADR-012; rewritten and owned by the repository owner. Lower case with no terminal punctuation is licensed by M5.",
+  "decoyMethod": "ai_assisted",
+  "source": null
+}

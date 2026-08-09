@@ -1,0 +1,64 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000070",
+  "figureId": "c3000000-0000-4000-8000-000000000045",
+  "displayName": "Elon Musk",
+  "statementText": "Tesla stock price is too high imo",
+  "authenticity": "authentic",
+  "category": "internet-culture",
+  "difficultyPrior": 3,
+  "sensitivity": "everyone",
+  "explanation": "Posted in May 2020 and captured the same afternoon. It moved the share price within minutes.",
+  "formatFingerprint": "market-moving-aside",
+  "eraVocabTag": "2020+",
+  "sourceTier": "A",
+  "transcriptionExact": true,
+  "wordingSource": "archive",
+  "citations": [
+    {
+      "url": "https://edition.cnn.com/2020/05/01/investing/musk-stock-too-high-tweet/index.html",
+      "independent": true
+    },
+    {
+      "url": "https://www.vox.com/recode/2020/5/1/21244346/elon-musk-tesla-twitter-stock-price-coronavirus-grimes",
+      "independent": true
+    }
+  ],
+  "source": {
+    "url": "https://twitter.com/elonmusk/status/1256239815256797184",
+    "archiveUrl": "https://web.archive.org/web/20200501151419/https://twitter.com/elonmusk/status/1256239815256797184",
+    "publishedAt": "2020-05-01",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "web-archive",
+    "retained": true,
+    "captures": [
+      {
+        "timestamp": "20200501151419"
+      }
+    ]
+  },
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-09"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Wording transcribed from the Wayback capture, not from an aggregator (rubric 1.3.1).",
+  "decoyMethod": "none"
+}
