@@ -130,6 +130,14 @@ export const FORMAT_FINGERPRINTS = new Set([
   "umbrella-incident",
   "mild-injury",
   "unread-email",
+  // Added 2026-08-09 with the first political and tech-founder figures. P5
+  // makes this vocabulary the hard ceiling on deck size — one shape per card,
+  // deck-wide — so it grows only when a genuinely new shape arrives, never to
+  // make room for a card that could have reused an existing one.
+  "market-moving-aside",
+  "renunciation-announcement",
+  "odd-talent-claim",
+  "notification-purge",
 ]);
 
 export const MAX_STATEMENT_LENGTH = 500; // schema ceiling; D3 imposes the real 180 limit

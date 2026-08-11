@@ -1,0 +1,64 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000072",
+  "figureId": "c3000000-0000-4000-8000-000000000046",
+  "displayName": "Donald Trump",
+  "statementText": "Why would Kim Jong-un insult me by calling me \"old,\" when I would NEVER call him \"short and fat?\" Oh well, I try so hard to be his friend - and maybe someday that will happen!",
+  "authenticity": "authentic",
+  "category": "internet-culture",
+  "difficultyPrior": 3,
+  "sensitivity": "everyone",
+  "explanation": "Posted in November 2017. The archive spells the name Kim Jong-un; aggregators reprint it as Kim Jong Un.",
+  "formatFingerprint": "addressing-another-celebrity",
+  "eraVocabTag": "2015-2019",
+  "sourceTier": "A",
+  "transcriptionExact": true,
+  "wordingSource": "archive",
+  "citations": [
+    {
+      "url": "https://feeds.bbci.co.uk/news/world-us-canada-41958553",
+      "independent": true
+    },
+    {
+      "url": "https://www.nbcnews.com/politics/politics-news/trump-mocks-north-korean-dictator-kim-jong-un-over-old-n819981",
+      "independent": true
+    }
+  ],
+  "source": {
+    "url": "https://twitter.com/realDonaldTrump/status/929511061954297857",
+    "archiveUrl": "https://web.archive.org/web/20171112005842/https://twitter.com/realDonaldTrump/status/929511061954297857",
+    "publishedAt": "2017-11-11",
+    "rightsStatus": "fair_use_claim",
+    "verificationMethod": "web-archive",
+    "retained": true,
+    "captures": [
+      {
+        "timestamp": "20171112005842"
+      }
+    ]
+  },
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-09"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Wording transcribed from the Wayback capture, not from an aggregator (rubric 1.3.1).",
+  "decoyMethod": "none"
+}

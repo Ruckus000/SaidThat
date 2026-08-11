@@ -1,0 +1,39 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000064",
+  "figureId": "c3000000-0000-4000-8000-000000000034",
+  "displayName": "Geno Auriemma",
+  "statementText": "They said it clears Thursday. I stopped believing them. We practice inside.",
+  "authenticity": "fabricated",
+  "category": "sports",
+  "difficultyPrior": 2,
+  "sensitivity": "everyone",
+  "explanation": "Written for this game. Real: the flat press-conference deadpan is his. Invented: the forecast and the surrender to it.",
+  "formatFingerprint": "weather-complaint",
+  "eraVocabTag": "2020+",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": true,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-09"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Drafted with AI assistance under ADR-012; rewritten and owned by the repository owner.",
+  "decoyMethod": "ai_assisted",
+  "source": null
+}

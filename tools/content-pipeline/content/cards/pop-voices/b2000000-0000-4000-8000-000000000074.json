@@ -1,0 +1,39 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000074",
+  "figureId": "c3000000-0000-4000-8000-000000000045",
+  "displayName": "Elon Musk",
+  "statementText": "turned off every notification for a week, nothing happened, considering permanent",
+  "authenticity": "fabricated",
+  "category": "internet-culture",
+  "difficultyPrior": 3,
+  "sensitivity": "everyone",
+  "explanation": "Written for this game. Real: the terse lower-case aside is his register. Invented: the week of silence and the conclusion drawn from it.",
+  "formatFingerprint": "notification-purge",
+  "eraVocabTag": "2020+",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-09"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Drafted with AI assistance under ADR-012; rewritten and owned by the repository owner. Lower case with no terminal punctuation is licensed by M5.",
+  "decoyMethod": "ai_assisted",
+  "source": null
+}

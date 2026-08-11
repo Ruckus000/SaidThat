@@ -1,0 +1,39 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000066",
+  "figureId": "c3000000-0000-4000-8000-000000000026",
+  "displayName": "Geoffrey Hinton",
+  "statementText": "Eleven thousand unread emails, which I have decided is an archive, not a problem",
+  "authenticity": "fabricated",
+  "category": "science",
+  "difficultyPrior": 4,
+  "sensitivity": "everyone",
+  "explanation": "Made up for the game. Real: the mild academic reframing of a mess as a method. Invented: the eleven thousand emails.",
+  "formatFingerprint": "unread-email",
+  "eraVocabTag": "2020+",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": true,
+    "hasConcreteMundaneDetail": true,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-09"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Drafted with AI assistance under ADR-012; rewritten and owned by the repository owner.",
+  "decoyMethod": "ai_assisted",
+  "source": null
+}

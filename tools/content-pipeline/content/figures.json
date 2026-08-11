@@ -524,5 +524,53 @@
       "terminal punctuation"
     ],
     "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000045",
+    "displayName": "Elon Musk",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "terse declaratives",
+      "lower-case imo / afaik hedges",
+      "no terminal punctuation",
+      "abrupt market-moving asides"
+    ],
+    "notes": ""
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000046",
+    "displayName": "Donald Trump",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "Capitalised Nouns mid-sentence",
+      "exclamation close",
+      "direct address of a named rival",
+      "run-on second clause starting Oh well"
+    ],
+    "notes": "Political figure. In scope since the 2026-08-09 amendment to .designops/10-owner-implementation-exception.json removed the political-breaking-news exclusion. The banned-category lexicon still applies in full - election-falsehood in particular - and G11 still blocks a fabricated statement that names a third party, which most of this figure attacks-a-rival register would trip. Prefer archived posts over anything current."
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000047",
+    "displayName": "Ye",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "declarative self-mythology",
+      "no hedging",
+      "present tense",
+      "short unpunctuated bursts"
+    ],
+    "notes": "Requires extra editorial care. The rubric excludes his hate, antisemitic and Hitler posts by name, and the later rants are the bulk of his recent output. Source only from the pre-2016 comic-absurdist material and expect the safety lexicon to reject much of the rest."
+  },
+  {
+    "figureId": "c3000000-0000-4000-8000-000000000048",
+    "displayName": "SZA",
+    "likenessAllowed": true,
+    "voiceBank": [
+      "ALL CAPS bursts",
+      "affectionate profanity",
+      "holiday sign-offs",
+      "decorative emoji - strip as a logged normalization"
+    ],
+    "notes": "Her authentic posts commonly carry teen-or-above sensitivity, which G10 blocks in an everyone-rated deck. Check the deck manifest rating before sourcing."
   }
 ]

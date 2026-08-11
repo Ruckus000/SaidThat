@@ -10,7 +10,7 @@
  * of them.
  */
 export const GENERATED_DECK_VERSION = "0.3.0";
-export const GENERATED_SOURCE_SHA256 = "15ab40e45b6282ddb5c34cb80a0fa2c6c100b98b0cf5c7c73deb55c19124f460";
+export const GENERATED_SOURCE_SHA256 = "08ce009d84fbbcbc61fdf81f50da976bc00552e82d20519d679b2c7be5cf1acb";
 
 export const generatedCards = [
   {
@@ -1029,6 +1029,232 @@ export const generatedCards = [
       "owner:pre-release"
     ],
     "category": "sports",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000061",
+    "quote": "she took four inches off when i said a trim and i just watched it happen",
+    "person": "Kylie Jenner",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Made up. Real: she posts flat little life updates in lower case. Invented: the trim, the four inches, and the silence after.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "reality-tv",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000062",
+    "quote": "he loved my last album, IT WAS NOT MY ALBUM, i said thank you",
+    "person": "Lady Gaga",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Written for this game. Real: she drops into capitals mid-sentence when a story lands. Invented: the fan and the wrong album.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "music",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000063",
+    "quote": "emergency exit is a great band name, the signs are already up, nobody agrees",
+    "person": "Post Malone",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Made up. Real: he posts short lower-case thoughts with no punctuation. Invented: the band name and the indifference to it.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "music",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000064",
+    "quote": "They said it clears Thursday. I stopped believing them. We practice inside.",
+    "person": "Geno Auriemma",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Written for this game. Real: the flat press-conference deadpan is his. Invented: the forecast and the surrender to it.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "sports",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000065",
+    "quote": "The dog has ranked us and I came fourth out of four, I am handling it fine",
+    "person": "Ryan Reynolds",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Invented. Real: he undercuts himself in public constantly. Invented: the dog, the ranking, and the composure about it.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "movies",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000066",
+    "quote": "Eleven thousand unread emails, which I have decided is an archive, not a problem",
+    "person": "Geoffrey Hinton",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Made up for the game. Real: the mild academic reframing of a mess as a method. Invented: the eleven thousand emails.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "science",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000067",
+    "quote": "There is a setting on the machine I have never used. I no longer ask.",
+    "person": "Robert De Niro",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Not a real post. Real: the clipped delivery is his. Invented: the washing machine and the decision to stop asking.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "awards",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000068",
+    "quote": "It hit seventy for nine minutes today, everyone acted accordingly, then it left",
+    "person": "Clayton Kershaw",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Invented for this game. Real: the dry refusal to elaborate is his. Invented: the seventy degrees and the nine minutes.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "sports",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000069",
+    "quote": "At twenty I wanted everything, at forty quiet, now the good chair by the window",
+    "person": "Dionne Warwick",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Made up. Real: she posts plain declarative summings-up. Invented: the ages, the chair, and the window.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "music",
+    "sensitivity": "everyone",
+    "decoyMethod": "ai_assisted",
+    "tier": "provisional"
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000070",
+    "quote": "Tesla stock price is too high imo",
+    "person": "Elon Musk",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "Posted in May 2020 and captured the same afternoon. It moved the share price within minutes.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "internet-culture",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://twitter.com/elonmusk/status/1256239815256797184"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000071",
+    "quote": "I am selling almost all physical possessions. Will own no house.",
+    "person": "Elon Musk",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "Posted minutes before the stock-price line, in the same May 2020 run of messages.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "internet-culture",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://twitter.com/elonmusk/status/1256239554148724737"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000072",
+    "quote": "Why would Kim Jong-un insult me by calling me \"old,\" when I would NEVER call him \"short and fat?\" Oh well, I try so hard to be his friend - and maybe someday that will happen!",
+    "person": "Donald Trump",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "Posted in November 2017. The archive spells the name Kim Jong-un; aggregators reprint it as Kim Jong Un.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "internet-culture",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://twitter.com/realDonaldTrump/status/929511061954297857"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000073",
+    "quote": "i have a really odd talent. i can smell when someone has cavaties! i have never been wrong yet! they dont even have 2 be super close by me",
+    "person": "Kim Kardashian",
+    "authentic": true,
+    "contentState": "authentic",
+    "explanation": "Posted in 2009 and captured eleven days later. The misspelling and the lower case are the card.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "reality-tv",
+    "sensitivity": "everyone",
+    "decoyMethod": "none",
+    "tier": "provisional",
+    "sourceRecord": {
+      "retained": true,
+      "url": "https://twitter.com/KimKardashian/status/3292158043"
+    }
+  },
+  {
+    "id": "b2000000-0000-4000-8000-000000000074",
+    "quote": "turned off every notification for a week, nothing happened, considering permanent",
+    "person": "Elon Musk",
+    "authentic": false,
+    "contentState": "fabricated-for-game",
+    "explanation": "Written for this game. Real: the terse lower-case aside is his register. Invented: the week of silence and the conclusion drawn from it.",
+    "editorialApprovals": [
+      "owner:pre-release"
+    ],
+    "category": "internet-culture",
     "sensitivity": "everyone",
     "decoyMethod": "ai_assisted",
     "tier": "provisional"

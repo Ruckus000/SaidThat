@@ -1,0 +1,39 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000069",
+  "figureId": "c3000000-0000-4000-8000-000000000025",
+  "displayName": "Dionne Warwick",
+  "statementText": "At twenty I wanted everything, at forty quiet, now the good chair by the window",
+  "authenticity": "fabricated",
+  "category": "music",
+  "difficultyPrior": 3,
+  "sensitivity": "everyone",
+  "explanation": "Made up. Real: she posts plain declarative summings-up. Invented: the ages, the chair, and the window.",
+  "formatFingerprint": "age-arc-list",
+  "eraVocabTag": "2020+",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": true,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-09"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Drafted with AI assistance under ADR-012; rewritten and owned by the repository owner.",
+  "decoyMethod": "ai_assisted",
+  "source": null
+}

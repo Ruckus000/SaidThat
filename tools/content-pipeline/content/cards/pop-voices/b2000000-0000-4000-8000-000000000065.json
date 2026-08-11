@@ -1,0 +1,39 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000065",
+  "figureId": "c3000000-0000-4000-8000-000000000006",
+  "displayName": "Ryan Reynolds",
+  "statementText": "The dog has ranked us and I came fourth out of four, I am handling it fine",
+  "authenticity": "fabricated",
+  "category": "movies",
+  "difficultyPrior": 2,
+  "sensitivity": "everyone",
+  "explanation": "Invented. Real: he undercuts himself in public constantly. Invented: the dog, the ranking, and the composure about it.",
+  "formatFingerprint": "pet-report",
+  "eraVocabTag": "2020+",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": true,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-09"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Drafted with AI assistance under ADR-012; rewritten and owned by the repository owner.",
+  "decoyMethod": "ai_assisted",
+  "source": null
+}

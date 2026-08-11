@@ -1,0 +1,39 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000067",
+  "figureId": "c3000000-0000-4000-8000-000000000028",
+  "displayName": "Robert De Niro",
+  "statementText": "There is a setting on the machine I have never used. I no longer ask.",
+  "authenticity": "fabricated",
+  "category": "awards",
+  "difficultyPrior": 3,
+  "sensitivity": "everyone",
+  "explanation": "Not a real post. Real: the clipped delivery is his. Invented: the washing machine and the decision to stop asking.",
+  "formatFingerprint": "laundry-defeat",
+  "eraVocabTag": "2015-2019",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": false,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-09"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Drafted with AI assistance under ADR-012; rewritten and owned by the repository owner.",
+  "decoyMethod": "ai_assisted",
+  "source": null
+}

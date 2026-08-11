@@ -1,0 +1,39 @@
+{
+  "id": "b2000000-0000-4000-8000-000000000061",
+  "figureId": "c3000000-0000-4000-8000-000000000005",
+  "displayName": "Kylie Jenner",
+  "statementText": "she took four inches off when i said a trim and i just watched it happen",
+  "authenticity": "fabricated",
+  "category": "reality-tv",
+  "difficultyPrior": 3,
+  "sensitivity": "everyone",
+  "explanation": "Made up. Real: she posts flat little life updates in lower case. Invented: the trim, the four inches, and the silence after.",
+  "formatFingerprint": "haircut-report",
+  "eraVocabTag": "2020+",
+  "styleFlags": {
+    "hasNonstandardGrammar": false,
+    "punchlineInFinal20Pct": false,
+    "opensMidThought": false,
+    "hasConcreteMundaneDetail": true,
+    "readsFabricated": false,
+    "readsAuthentic": false
+  },
+  "editorialApprovals": [
+    {
+      "editor": "owner:pre-release",
+      "decision": "approve",
+      "at": "2026-08-09"
+    }
+  ],
+  "status": "provisional",
+  "removalStatus": "active",
+  "disputed": false,
+  "calibration": {
+    "exposures": 0,
+    "groups": 0,
+    "byAudienceBucket": {}
+  },
+  "editorialNotes": "Drafted with AI assistance under ADR-012; rewritten and owned by the repository owner. Lower case with no terminal punctuation is licensed by M5.",
+  "decoyMethod": "ai_assisted",
+  "source": null
+}
