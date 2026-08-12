@@ -48,6 +48,26 @@ test("sensor: changing onAnswer identity does not resubscribe", () => {
   expect(mockAddListener).toHaveBeenCalledTimes(1);
 });
 
+test("sensor: the latest onAnswer is used without resubscribing", () => {
+  // Capture the live listener so we can fire a sample after swapping handlers.
+  const listener: { current: ((s: { z: number }) => void) | null } = { current: null };
+  mockAddListener.mockImplementation((cb: (s: { z: number }) => void) => {
+    listener.current = cb;
+    return { remove: jest.fn() };
+  });
+
+  const first = jest.fn();
+  const second = jest.fn();
+  const { rerender } = render(<Harness enabled onAnswer={first} />);
+  rerender(<Harness enabled onAnswer={second} />);
+  expect(mockAddListener).toHaveBeenCalledTimes(1);
+
+  // Strong +z past the commit threshold with neutralZ=0 yields authentic=true.
+  listener.current?.({ z: 0.9 });
+  expect(first).not.toHaveBeenCalled();
+  expect(second).toHaveBeenCalledWith(true);
+});
+
 test("sensor: toggling enabled tears down and resubscribes", () => {
   const onAnswer = jest.fn();
   const remove = jest.fn();
