@@ -1,8 +1,28 @@
 # Technical Architecture
 
-**Date:** 2026-07-18 (revised 2026-07-18 after review)  
+**Date:** 2026-07-18 (revised 2026-08-12 to match shipped MVP)  
 **Client:** React Native + TypeScript  
 **Objective:** Validate local party fun fast — no platform cosplay in Phase 0
+
+---
+
+---
+
+## Shipped MVP stack (authoritative for `apps/mobile/`)
+
+What is actually running today — prefer this over the aspirational Phase 0 table below when they disagree:
+
+| Layer | Shipped |
+|---|---|
+| Mobile | Expo + TypeScript; screen flow is a stage switch in `App.tsx` (no Expo Router) |
+| Session | `useReducer(gameReducer)` with pure rules in `src/domain/` |
+| Content rules | `src/domain/contentRules.js` — run length, content states, report reasons, https/source helpers |
+| Storage | AsyncStorage adapters under `src/storage/` (no SQLite yet) |
+| Deck validation | Pure JS `validateDeck` + `isPlayableCard` (no Zod in the app) |
+| Content pipeline | `tools/content-pipeline/` emits `deck.generated.js`; imports shared https helpers from `contentRules` |
+| Sensors / feedback | `expo-sensors`, `expo-haptics`, local announce helpers |
+
+Defer Expo Router, Zustand, Zod, TanStack Query, and SQLite until a concrete pain or Phase 1 remote requirement appears.
 
 ---
 
@@ -28,11 +48,11 @@
 
 | Include | Exclude |
 |---|---|
-| Expo app + Expo Router | Supabase / CDN deck pipeline |
-| One **bundled** deck (Zod-validated JSON in repo) | Next.js admin CMS |
+| Expo app + stage routing in App (Router optional later) | Supabase / CDN deck pipeline |
+| Bundled deck from content pipeline (pure JS validation) | Next.js admin CMS |
 | Forehead motion + tap fallback | TanStack Query (nothing remote yet) |
-| In-memory / light SQLite for sessions & settings | Report outbox → server |
-| Zustand game session | RevenueCat, push, realtime |
+| AsyncStorage for reports & playtest export | Report outbox → server |
+| `useReducer` game session | RevenueCat, push, realtime |
 | Optional PostHog + Sentry (or debug event log) | Package download/checksum CDN |
 | PostHog kill flags for deck/card ids (if analytics on) | “Optional session sync” |
 
@@ -53,16 +73,16 @@ Accounts, IAP, admin CMS if content volume demands it, multiplayer, etc.
 | Layer | Phase 0 | Phase 1+ | Why |
 |---|---|---|---|
 | Mobile | **Expo development build** | Same | Motion permissions, orientation lock, store-like behavior. Expo Go OK for early UI; **forehead QA requires a dev build** |
-| Navigation | Expo Router | Same | File-based, enough for this app |
-| Session state | **Zustand** | Same | Round/timer/answers — not Redux |
+| Navigation | Stage switch in `App.tsx` | Expo Router if deep links hurt | File-based router is optional until navigation complexity appears |
+| Session state | **`useReducer` + pure `gameReducer`** | Zustand if cross-tree session sharing hurts | Round/timer/answers stay testable without a store library |
 | Server state | — | **TanStack Query** | Manifests, reports only when remote exists |
-| Validation | **Zod** | Same | Deck schema + settings |
+| Validation | **Pure JS `contentRules` / `validateDeck`** | Zod if schema churn hurts | Matches existing Node test idiom |
 | Player names | Controlled inputs | Same | **No React Hook Form** until forms hurt |
 | Motion UI | Reanimated sparingly | Same | Don’t `setState` from 30Hz sensor samples |
 | Sensors | **expo-sensors** `DeviceMotion` | Same | Included in Expo Go, but ship/QA forehead on dev builds ([docs](https://docs.expo.dev/versions/latest/sdk/devicemotion/)) |
 | Haptics | expo-haptics | Same | Answer confirmation |
 | Audio | `expo-audio` optional | Same | Playback cues only; `expo-av` is deprecated |
-| Local DB | Optional settings; prefer simple storage first | **Raw expo-sqlite** | Decks/sessions/outbox — no Drizzle |
+| Local DB | **AsyncStorage** for queue/stats | **Raw expo-sqlite** | Decks/sessions/outbox — no Drizzle |
 | Content authoring | JSON in repo + PR | Packaged JSON + PR | Admin CMS deferred |
 | Backend | None required | **Supabase** when reports/manifests needed | Not a Phase 0 dependency |
 | Analytics / flags | PostHog optional | PostHog | Flags **and** manifest tombstones |
@@ -94,12 +114,12 @@ Do **not** plan on classic “eject.” Use CNG/prebuild if native config is nee
 flowchart TB
   RN[Expo RN App]
   DECK[Bundled deck JSON]
-  ZS[Zustand session]
+  RED[useReducer gameReducer]
   PH[PostHog optional]
   SEN[Sentry optional]
 
   DECK --> RN
-  RN --> ZS
+  RN --> RED
   RN -.-> PH
   RN -.-> SEN
 ```
@@ -142,7 +162,7 @@ flowchart TB
   PH -->|kill flags| RN
 ```
 
-Editors do **not** get a CMS app in Phase 0–1; they open PRs that update deck JSON / packages. CI runs Zod validation.
+Editors do **not** get a CMS app in Phase 0–1; they open PRs that update deck JSON / packages. CI runs the content-pipeline validators (pure JS).
 
 ---
 
@@ -169,8 +189,8 @@ Editors do **not** get a CMS app in Phase 0–1; they open PRs that update deck 
 
 ### Answers / score
 
-- `game-engine` package owns scoring and card sampling  
-- Authenticity fields ship in the package — treat as game data, not a secret  
+- `apps/mobile/src/domain/game.js` owns scoring and stage transitions; `runBuilder.js` owns card sampling for a run  
+- Authenticity fields ship in the bundle — treat as game data, not a secret  
 
 ### Analytics
 

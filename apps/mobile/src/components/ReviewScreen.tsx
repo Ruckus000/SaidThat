@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 
+import { REPORT_REASONS, isDisplayAuthentic } from "../domain/contentRules";
 import { volt } from "../theme/tokens";
 import { announce } from "../feedback/announce";
 import {
@@ -49,7 +50,7 @@ export function ReviewScreen({
   onContinue,
 }: ReviewScreenProps) {
   const truth = reviewTruthLabel(card);
-  const authentic = Boolean(card.authentic || card.contentState === "fixture-authentic");
+  const authentic = isDisplayAuthentic(card);
   const c = volt.color.dark;
   const truthColor = authentic ? c.lime : c.pink;
   const next = continueLabel({ roundIndex, totalRounds });
@@ -82,33 +83,18 @@ export function ReviewScreen({
           Reports save locally with only card ID, reason, deck version, and timestamp. No player identity or free text.
         </Text>
         <View style={s.reportChips}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Report wrong attribution"
-            disabled={reportBusy}
-            onPress={() => onReport("wrong-attribution")}
-            style={[s.reportChip, reportBusy && s.reportChipBusy]}
-          >
-            <Text style={s.reportChipText}>WRONG ATTRIBUTION</Text>
-          </Pressable>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Report harmful content"
-            disabled={reportBusy}
-            onPress={() => onReport("harmful-content")}
-            style={[s.reportChip, reportBusy && s.reportChipBusy]}
-          >
-            <Text style={s.reportChipText}>HARMFUL CONTENT</Text>
-          </Pressable>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Report another issue"
-            disabled={reportBusy}
-            onPress={() => onReport("other")}
-            style={[s.reportChip, reportBusy && s.reportChipBusy]}
-          >
-            <Text style={s.reportChipText}>ANOTHER ISSUE</Text>
-          </Pressable>
+          {REPORT_REASONS.map((reason) => (
+            <Pressable
+              key={reason.code}
+              accessibilityRole="button"
+              accessibilityLabel={reason.accessibilityLabel}
+              disabled={reportBusy}
+              onPress={() => onReport(reason.code)}
+              style={[s.reportChip, reportBusy && s.reportChipBusy]}
+            >
+              <Text style={s.reportChipText}>{reason.chipLabel}</Text>
+            </Pressable>
+          ))}
         </View>
         {statusMessage && (
           <Text

@@ -225,10 +225,9 @@ test("reward: result copy celebrates skill with a non-color cue and never punish
   assert.notEqual(resultMarkName(true), resultMarkName(false));
   assert.ok(markNames().includes(resultMarkName(true)));
   assert.ok(markNames().includes(resultMarkName(false)));
-  assert.equal(resultRewardLabel(true, 1), "+100");
-  assert.equal(resultRewardLabel(true, 3), "+100");
+  assert.equal(resultRewardLabel(true), "+100");
   // A miss reward line is forward-looking, not blaming.
-  assert.match(resultRewardLabel(false, 0), /truth is one tap away/i);
+  assert.match(resultRewardLabel(false), /truth is one tap away/i);
   assert.equal(streakBadgeLabel(1), null);
   assert.match(streakBadgeLabel(4), /STREAK ×4/);
 });

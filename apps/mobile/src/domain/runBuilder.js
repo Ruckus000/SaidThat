@@ -1,3 +1,4 @@
+import { RUN_LENGTH } from "./contentRules.js";
 import { seededShuffle } from "./rng.js";
 
 /**
@@ -16,7 +17,7 @@ import { seededShuffle } from "./rng.js";
  * See docs/content/editorial-rubric.md §6 for why each constraint exists.
  */
 
-export const RUN_LENGTH = 10;
+export { RUN_LENGTH };
 
 /**
  * Difficulty target per slot: warm up, ramp, humble them at 5, peak at 8, hardest

@@ -23,14 +23,17 @@ A Heads Up–inspired social party game. MVP: local forehead play + pass-and-pla
 
 | Area | Choice |
 |---|---|
-| Mobile | Expo (dev client) + TypeScript + Expo Router |
-| State | Zustand (session); TanStack Query only Phase 1+ |
-| Local data | Raw expo-sqlite (Phase 1); Phase 0 may skip |
+| Mobile | Expo (dev client) + TypeScript; stage routing in `App.tsx` (Expo Router deferred) |
+| State | Pure `gameReducer` via `useReducer` in `apps/mobile` (Zustand deferred) |
+| Local data | AsyncStorage report queue + playtest stats (SQLite deferred to Phase 1+) |
+| Validation | Pure JS `validateDeck` / `contentRules` (Zod deferred) |
 | Motion / haptics | expo-sensors, expo-haptics |
-| Content (Phase 0–1) | PR-reviewed JSON — no admin CMS yet |
-| Backend | None in Phase 0; Supabase in Phase 1+ |
-| Analytics | Debug log first; PostHog later |
+| Content | PR-reviewed JSON via `tools/content-pipeline/` → bundled `deck.generated.js` |
+| Backend | None for the local-first MVP; Supabase only when remote reports/manifests exist |
+| Analytics | Debug / local playtest export first; PostHog later |
 | Errors | Sentry before external TestFlight |
+
+The aspirational Phase 0 stack in older planning docs (Expo Router, Zustand, Zod, SQLite) remains a future option. What shipped is the simpler reducer + stage-switch architecture above.
 
 ---
 

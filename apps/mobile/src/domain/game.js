@@ -2,6 +2,15 @@
  * Pure game state. Keep privacy and content-safety rules here so the UI and
  * chaos tests execute the same invariants.
  */
+import {
+  DEFAULT_REPORT_REASON,
+  NON_PLAYABLE_STATES,
+  POINTS_PER_CORRECT,
+  REPORT_REASON_CODES,
+  RUN_LENGTH,
+  hasRetainedHttpsSource,
+  isGuessCorrect,
+} from "./contentRules.js";
 import { buildRun } from "./runBuilder.js";
 
 export const MODES = {
@@ -21,16 +30,12 @@ export const STAGES = {
   CONTENT_UNAVAILABLE: "content-unavailable",
 };
 
-// A run is one pass through the deck, capped so large future decks still make a
-// party-sized run. Cards never repeat within a run because runLength <= deck size.
-export const MAX_RUN_ROUNDS = 10;
+// Alias kept for existing call sites and tests; value lives in contentRules.
+export const MAX_RUN_ROUNDS = RUN_LENGTH;
 
 export function runLength(state) {
   return Math.min(state.cards.length, MAX_RUN_ROUNDS);
 }
-
-const NON_PLAYABLE_STATES = new Set(["disputed", "source-unavailable", "removed"]);
-const REPORT_REASONS = new Set(["wrong-attribution", "harmful-content", "other"]);
 
 /**
  * Two distinct human approvals, counted from a list and nothing else.
@@ -94,9 +99,7 @@ export function isPlayableCard(card, { allowLocalFixtures = false } = {}) {
 
   return (
     card.contentState === "authentic" &&
-    card.sourceRecord?.retained === true &&
-    typeof card.sourceRecord.url === "string" &&
-    card.sourceRecord.url.startsWith("https://") &&
+    hasRetainedHttpsSource(card.sourceRecord) &&
     isEditoriallyApproved(card)
   );
 }
@@ -179,7 +182,7 @@ export function reportPayload(state, reason, now) {
   const card = currentCard(state);
   return {
     cardId: card?.id ?? "unknown",
-    reason: REPORT_REASONS.has(reason) ? reason : "other",
+    reason: REPORT_REASON_CODES.has(reason) ? reason : DEFAULT_REPORT_REASON,
     deckVersion: state.deckVersion,
     timestamp: now,
   };
@@ -264,7 +267,7 @@ export function gameReducer(state, action) {
     case "ANSWER": {
       if (!canCommitAnswer(state)) return state;
       const card = currentCard(state);
-      const correct = Boolean(card?.authentic) === action.guessAuthentic;
+      const correct = isGuessCorrect(card, action.guessAuthentic);
       // Streak is a pure game-skill reward (how many the room read correctly in
       // a row). It never encodes or celebrates a truth verdict, only play skill.
       const streak = correct ? (state.streak ?? 0) + 1 : 0;
@@ -272,7 +275,7 @@ export function gameReducer(state, action) {
         ...state,
         stage: STAGES.RESULT,
         committedRound: state.roundIndex,
-        score: correct ? state.score + 100 : state.score,
+        score: correct ? state.score + POINTS_PER_CORRECT : state.score,
         lastCorrect: correct,
         streak,
         bestStreak: Math.max(state.bestStreak ?? 0, streak),

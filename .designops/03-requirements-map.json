@@ -8,7 +8,7 @@
       "status": "verified",
       "confidence": "high",
       "criticality": "high",
-      "sha256": "103daaa25428c3d28faa064321831a6055ab3605abed81e017ec52c1bb48afc6"
+      "sha256": "92dbe9383df33a767ba5264627614ae3ad7893d8295fe8cb2d62ff459bb39d68"
     },
     {
       "id": "ux-ui-plan",
@@ -98,7 +98,7 @@
       "status": "stakeholder-provided",
       "confidence": "high",
       "criticality": "high",
-      "sha256": "47ff03e0a64e97f61c1d741d98cc125c6448c088daee93fbe71b9bd10865020c"
+      "sha256": "d936b5de162280cba718346f18d13d6d6aa298a34701eedd71cfb34567f79dc1"
     },
     {
       "id": "data-model",

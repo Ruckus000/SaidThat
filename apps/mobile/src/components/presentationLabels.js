@@ -1,4 +1,5 @@
 import { MODES } from "../domain/game.js";
+import { POINTS_PER_CORRECT } from "../domain/contentRules.js";
 
 export const FIXTURE_DISCLOSURE =
   "LOCAL DEVELOPMENT FIXTURES · NOT EDITORIAL CONTENT";
@@ -42,10 +43,9 @@ export function resultKicker(correct) {
   return correct ? "THE ROOM CALLED IT" : "THE ROOM GOT PLAYED";
 }
 
-export function resultRewardLabel(correct, streak) {
+export function resultRewardLabel(correct) {
   if (!correct) return "Streak reset. The truth is one tap away.";
-  if (streak >= 2) return `+100`;
-  return "+100";
+  return `+${POINTS_PER_CORRECT}`;
 }
 
 export function resultStreakLabel(streak) {
