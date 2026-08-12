@@ -3,8 +3,9 @@
  *
  * One place for vocabulary and predicates that used to live in validateDeck,
  * game, runBuilder, ReviewScreen, and presentationLabels. The content pipeline
- * mirrors these rules at emit time; contract tests pin the two sides together
- * without a shared runtime package (the app bundle must not import build tools).
+ * may import this module at build time (tools → app is fine). Keep it Node-safe:
+ * no react-native, expo-*, or other Metro-only imports — pipeline CI loads it
+ * directly. The app bundle must not import build tools the other way.
  */
 
 /** Party-sized run length. Large decks still produce one fixed-length pass. */

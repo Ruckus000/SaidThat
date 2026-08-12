@@ -75,3 +75,11 @@ test("contentRules: fixture id prefixes match playtest exclusion list", () => {
   assert.equal(isFixtureOnlyId("withheld-x"), true);
   assert.equal(isFixtureOnlyId("card-1"), false);
 });
+
+test("contentRules: module stays free of Metro-only imports", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const source = await readFile(new URL("./contentRules.js", import.meta.url), "utf8");
+  assert.doesNotMatch(source, /from\s+["']react-native["']/);
+  assert.doesNotMatch(source, /from\s+["']expo-/);
+});
+

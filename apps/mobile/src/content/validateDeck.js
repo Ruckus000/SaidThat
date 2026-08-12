@@ -22,6 +22,19 @@ export function validateDeckRecord(record) {
     return false;
   }
 
+  // Keep the authenticity flag aligned with contentState so review display
+  // (isDisplayAuthentic) and scoring (isGuessCorrect) cannot disagree on a
+  // malformed record. Bundled fixtures already satisfy this; reject drift.
+  if (
+    (record.contentState === "authentic" || record.contentState === "fixture-authentic") &&
+    record.authentic !== true
+  ) {
+    return false;
+  }
+  if (record.contentState === "fabricated-for-game" && record.authentic !== false) {
+    return false;
+  }
+
   // Structural requirements for a curated card. Deliberately structural only:
   // isPlayableCard remains the single owner of the two-distinct-approvals rule,
   // and duplicating that logic here would let the two drift apart and disagree

@@ -96,6 +96,46 @@ test("deck: a fixture may not claim the authentic state", () => {
   assert.equal(validateDeckRecord({ ...curatedRecord, id: "fixture-x", fixtureOnly: true }), false);
 });
 
+test("deck: fixtureOnly ids must use the shared fixture prefixes", () => {
+  assert.equal(
+    validateDeckRecord({
+      id: "card-not-a-fixture",
+      quote: "q",
+      person: "p",
+      authentic: false,
+      contentState: "fabricated-for-game",
+      fixtureOnly: true,
+    }),
+    false,
+  );
+});
+
+test("deck: authentic flag must match contentState", () => {
+  assert.equal(validateDeckRecord({ ...curatedRecord, authentic: false }), false);
+  assert.equal(
+    validateDeckRecord({
+      id: "fixture-sim",
+      quote: "q",
+      person: "p",
+      authentic: false,
+      contentState: "fixture-authentic",
+      fixtureOnly: true,
+    }),
+    false,
+  );
+  assert.equal(
+    validateDeckRecord({
+      id: "fixture-fab",
+      quote: "q",
+      person: "p",
+      authentic: true,
+      contentState: "fabricated-for-game",
+      fixtureOnly: true,
+    }),
+    false,
+  );
+});
+
 test("deck: tombstoned ids are dropped whatever the record says", () => {
   assert.deepEqual(applyTombstones([{ id: "a" }, { id: "b" }], ["b"]).map((r) => r.id), ["a"]);
   assert.deepEqual(applyTombstones([{ id: "a" }], null).map((r) => r.id), ["a"]);
