@@ -30,6 +30,7 @@ import {
   reportPayload,
   runLength,
 } from "./src/domain/game";
+import { isGuessCorrect } from "./src/domain/contentRules";
 import { commitFeedback } from "./src/feedback/haptics";
 import { calibrateNeutral, readMotionSample, useRoomBeaconMotion } from "./src/sensors/useRoomBeaconMotion";
 import {
@@ -116,7 +117,7 @@ export default function App() {
       // is waiting on. Losing a sample is the correct failure here.
       const answered = currentCard(state);
       if (answered) {
-        const correct = Boolean(answered.authentic) === guessAuthentic;
+        const correct = isGuessCorrect(answered, guessAuthentic);
         void updatePlaytestStats((stats) =>
           recordOutcome(stats, { cardId: answered.id, correct }),
         ).catch(() => {});

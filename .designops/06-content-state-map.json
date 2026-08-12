@@ -36,7 +36,7 @@
       "name": "success",
       "applicability": "applicable",
       "content": "After one answer, the review labels the card as fabricated-for-game or simulated-authentic fixture and explains that fixtures are not source-verified production claims; a locally queued report confirms only local storage.",
-      "implementationRef": "apps/mobile/App.tsx#Review; apps/mobile/src/domain/reportPolicy.js#reportPayload",
+      "implementationRef": "apps/mobile/App.tsx#Review; apps/mobile/src/domain/game.js#reportPayload",
       "recovery": "Continue to the next Room Beacon prompt or reach the Private Relay shutter before the next player sees content.",
       "evidenceRefs": ["task:understand-reveal", "task:continue-session", "source:simulation-evidence-ledger"]
     },

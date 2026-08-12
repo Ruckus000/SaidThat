@@ -185,9 +185,9 @@ export function ResultScreen({
           {resultHeadline(correct).replace(" ", "\n")}
         </Animated.Text>
         {correct ? (
-          <Text style={s.reward}>{resultRewardLabel(correct, streak)}</Text>
+          <Text style={s.reward}>{resultRewardLabel(correct)}</Text>
         ) : (
-          <Text style={s.rewardMiss}>{resultRewardLabel(correct, streak)}</Text>
+          <Text style={s.rewardMiss}>{resultRewardLabel(correct)}</Text>
         )}
         {correct && streakLine && (
           <View style={[s.streakPill, s.pillRow]}>

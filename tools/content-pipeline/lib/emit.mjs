@@ -14,6 +14,8 @@
 
 import { createHash } from "node:crypto";
 
+import { hasRetainedHttpsSource } from "../../../apps/mobile/src/domain/contentRules.js";
+
 /**
  * Unify typography across BOTH classes before emitting.
  *
@@ -48,10 +50,8 @@ export function deriveContentState(card) {
   if (card.removalStatus === "removed") return "removed";
   if (card.disputed === true) return "disputed";
   if (card.authenticity === "fabricated") return "fabricated-for-game";
-  const source = card.source;
-  const hasRetainedHttps =
-    source?.retained === true && typeof source.url === "string" && source.url.startsWith("https://");
-  return hasRetainedHttps ? "authentic" : "source-unavailable";
+  // Shared with apps/mobile isPlayableCard via contentRules.hasRetainedHttpsSource.
+  return hasRetainedHttpsSource(card.source) ? "authentic" : "source-unavailable";
 }
 
 export function toRuntimeCard(card) {

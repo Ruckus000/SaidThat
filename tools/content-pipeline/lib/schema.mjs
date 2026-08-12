@@ -11,6 +11,7 @@
  * truth.
  */
 
+import { isHttpsUrl } from "../../../apps/mobile/src/domain/contentRules.js";
 import { block, result, warn } from "./issues.mjs";
 
 export const AUTHENTICITY = new Set(["authentic", "fabricated"]);
@@ -228,7 +229,7 @@ function validateSource(card, path, issues) {
       "An authentic card requires a source record."));
     return;
   }
-  if (typeof source.url !== "string" || !source.url.startsWith("https://")) {
+  if (!isHttpsUrl(source.url)) {
     issues.push(block("schema.source-url", `${path}.source.url`,
       "Source URL must be an https:// URL.", { value: source.url ?? null }));
   }

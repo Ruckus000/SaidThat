@@ -5,8 +5,6 @@ import { catalog } from "./catalog.js";
 import {
   applyTombstones,
   playableDeck,
-  playableFixtureDeck,
-  rotateDeckIndex,
   validateDeck,
   validateDeckRecord,
 } from "./validateDeck.js";
@@ -18,7 +16,7 @@ test("deck: bundled catalog passes structural validation", () => {
 });
 
 test("deck: playable deck excludes withheld editorial states", () => {
-  const playable = playableFixtureDeck(catalog, { allowLocalFixtures: true });
+  const playable = playableDeck(catalog, { allowLocalFixtures: true });
   assert.ok(playable.length >= 4);
   assert.ok(playable.every((record) => !["disputed", "removed", "source-unavailable"].includes(record.contentState)));
 });
@@ -30,8 +28,8 @@ test("deck: playable deck excludes withheld editorial states", () => {
 // filtered out of it (which is what the missing "authentic" content state used
 // to do, silently).
 test("deck: fixtures are development-only and curated cards ship in release", () => {
-  const dev = playableFixtureDeck(catalog, { allowLocalFixtures: true });
-  const release = playableFixtureDeck(catalog, { allowLocalFixtures: false });
+  const dev = playableDeck(catalog, { allowLocalFixtures: true });
+  const release = playableDeck(catalog, { allowLocalFixtures: false });
 
   assert.ok(release.length > 0, "a release build must have playable content");
   assert.ok(release.every((record) => record.fixtureOnly !== true), "no fixture may ship in release");
@@ -45,13 +43,6 @@ test("deck: fixtures are development-only and curated cards ship in release", ()
       assert.equal(record.sourceRecord?.retained, true, record.id);
     }
   }
-});
-
-test("deck: rotation is deterministic across rematches", () => {
-  const length = playableFixtureDeck(catalog, { allowLocalFixtures: true }).length;
-  assert.equal(rotateDeckIndex(0, length), 0);
-  assert.equal(rotateDeckIndex(length, length), 0);
-  assert.equal(rotateDeckIndex(length + 2, length), 2);
 });
 
 test("deck: malformed records fail validation", () => {

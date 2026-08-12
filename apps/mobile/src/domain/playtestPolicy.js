@@ -19,6 +19,8 @@
  * who happen to follow the same figure can make a five-star card look broken.
  */
 
+import { FIXTURE_ID_PREFIXES } from "./contentRules.js";
+
 export const MAX_TRACKED_CARDS = 400;
 export const PLAYTEST_SCHEMA = "said-that.playtest.v1";
 
@@ -39,10 +41,9 @@ export const PLAYTEST_SCHEMA = "said-that.playtest.v1";
  * computed from. A card could reach the exposure floor on rehearsal rather than
  * on rooms.
  *
- * The prefixes are load-bearing, not a naming nicety: `validateDeckRecord`
- * rejects any `fixtureOnly` record whose id does not start with one of them.
+ * Shared with validateDeck via contentRules.FIXTURE_ID_PREFIXES.
  */
-export const NON_CALIBRATABLE_ID_PREFIXES = ["fixture-", "withheld-"];
+export const NON_CALIBRATABLE_ID_PREFIXES = FIXTURE_ID_PREFIXES;
 
 /** @param {unknown} cardId */
 export function isCalibratableCardId(cardId) {
