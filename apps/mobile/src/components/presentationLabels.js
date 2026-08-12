@@ -181,7 +181,9 @@ export function privateDiscardNotice(recovery) {
     return "The last turn was interrupted, so it was discarded and will not be shown. Nothing was scored for it.";
   }
   if (recovery === "protected-after-commit") {
-    return "The last turn was interrupted after your answer was scored. Your points stay; the prompt will not be shown to the next person.";
+    // Third person on purpose: PrivateShutter is the handoff surface. The next
+    // holder may be reading this, so "your answer" would address the wrong person.
+    return "The last turn was interrupted after an answer was scored. Those points stay on the board; the prompt will not be shown to the next person.";
   }
   return null;
 }

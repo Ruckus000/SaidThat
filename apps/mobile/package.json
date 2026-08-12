@@ -32,7 +32,7 @@
     "export:ios": "expo export --platform ios --output-dir /tmp/said-that-ios-export",
     "export:android": "expo export --platform android --output-dir /tmp/said-that-android-export",
     "test": "npm run test:unit && npm run test:app",
-    "test:unit": "node --experimental-default-type=module --test src/domain/game.test.mjs src/domain/runBuilder.test.mjs src/domain/playtestPolicy.test.mjs src/domain/contentRules.test.mjs src/components/uiState.test.mjs src/components/markPaths.test.mjs src/components/uiIconPaths.test.mjs src/components/deprecatedImports.test.mjs src/components/fontScaling.test.mjs src/sensors/roomBeaconMotion.test.mjs src/settings/settingsPolicy.test.mjs src/storage/reportQueue.test.mjs src/storage/withTimeout.test.mjs src/feedback/interactionPolicy.test.mjs src/content/validateDeck.test.mjs src/release/releasePrep.test.mjs src/theme/contrast.test.mjs",
+    "test:unit": "node --experimental-default-type=module --test src/domain/game.test.mjs src/domain/runBuilder.test.mjs src/domain/playtestPolicy.test.mjs src/domain/contentRules.test.mjs src/domain/reportPolicy.test.mjs src/components/uiState.test.mjs src/components/markPaths.test.mjs src/components/uiIconPaths.test.mjs src/components/deprecatedImports.test.mjs src/components/fontScaling.test.mjs src/sensors/roomBeaconMotion.test.mjs src/settings/settingsPolicy.test.mjs src/storage/reportQueue.test.mjs src/storage/withTimeout.test.mjs src/feedback/interactionPolicy.test.mjs src/content/validateDeck.test.mjs src/release/releasePrep.test.mjs src/theme/contrast.test.mjs",
     "test:app": "jest"
   },
   "jest": {

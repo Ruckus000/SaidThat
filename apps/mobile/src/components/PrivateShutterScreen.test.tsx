@@ -91,6 +91,7 @@ test("private shutter: a scored interruption does not claim nothing was scored",
   const notice = screen.getByText(/last turn was interrupted/i);
   expect(notice).toHaveTextContent(/answer was scored/i);
   expect(notice).not.toHaveTextContent(/Nothing was scored/i);
+  expect(notice).not.toHaveTextContent(/\byour\b/i);
 });
 
 // At a large accessibility text size this block outgrows the viewport. As a fixed

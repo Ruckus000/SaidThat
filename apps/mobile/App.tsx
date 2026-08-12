@@ -253,11 +253,15 @@ export default function App() {
       () => true as const,
       () => false as const,
     );
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
     try {
       const outcome = await Promise.race([
-        write.then((ok) => ({ kind: "settled" as const, ok })),
+        write.then((ok) => {
+          if (timeoutId != null) clearTimeout(timeoutId);
+          return { kind: "settled" as const, ok };
+        }),
         new Promise<{ kind: "timeout" }>((resolve) => {
-          setTimeout(() => resolve({ kind: "timeout" }), DEFAULT_STORAGE_TIMEOUT_MS);
+          timeoutId = setTimeout(() => resolve({ kind: "timeout" }), DEFAULT_STORAGE_TIMEOUT_MS);
         }),
       ]);
       if (attemptId !== reportAttemptRef.current) return;
@@ -280,6 +284,7 @@ export default function App() {
         });
       });
     } catch {
+      if (timeoutId != null) clearTimeout(timeoutId);
       if (attemptId === reportAttemptRef.current) {
         dispatch({ type: "REPORT_FAILED", roundIndex, runId });
       }
