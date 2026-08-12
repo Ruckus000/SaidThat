@@ -1,0 +1,64 @@
+import { render } from "@testing-library/react-native";
+import { useRoomBeaconMotion } from "./useRoomBeaconMotion";
+import { MODES } from "../domain/game";
+
+/**
+ * Proves the Accelerometer subscription is stable across onAnswer identity
+ * changes. Listing onAnswer in the effect deps used to tear down and recreate
+ * the listener on every ANSWER mid-ROUND.
+ */
+
+const mockAddListener = jest.fn();
+const mockSetUpdateInterval = jest.fn();
+jest.mock("expo-sensors", () => ({
+  Accelerometer: {
+    addListener: (...args: unknown[]) => mockAddListener(...args),
+    setUpdateInterval: (...args: unknown[]) => mockSetUpdateInterval(...args),
+  },
+}));
+
+function Harness({
+  enabled,
+  onAnswer,
+}: {
+  enabled: boolean;
+  onAnswer: (guessAuthentic: boolean) => void;
+}) {
+  useRoomBeaconMotion({
+    enabled,
+    mode: MODES.ROOM_BEACON,
+    neutralZ: 0,
+    onAnswer,
+  });
+  return null;
+}
+
+beforeEach(() => {
+  jest.clearAllMocks();
+  mockAddListener.mockReturnValue({ remove: jest.fn() });
+});
+
+test("sensor: changing onAnswer identity does not resubscribe", () => {
+  const first = jest.fn();
+  const second = jest.fn();
+  const { rerender } = render(<Harness enabled onAnswer={first} />);
+  expect(mockAddListener).toHaveBeenCalledTimes(1);
+
+  rerender(<Harness enabled onAnswer={second} />);
+  expect(mockAddListener).toHaveBeenCalledTimes(1);
+});
+
+test("sensor: toggling enabled tears down and resubscribes", () => {
+  const onAnswer = jest.fn();
+  const remove = jest.fn();
+  mockAddListener.mockReturnValue({ remove });
+
+  const { rerender } = render(<Harness enabled onAnswer={onAnswer} />);
+  expect(mockAddListener).toHaveBeenCalledTimes(1);
+
+  rerender(<Harness enabled={false} onAnswer={onAnswer} />);
+  expect(remove).toHaveBeenCalledTimes(1);
+
+  rerender(<Harness enabled onAnswer={onAnswer} />);
+  expect(mockAddListener).toHaveBeenCalledTimes(2);
+});

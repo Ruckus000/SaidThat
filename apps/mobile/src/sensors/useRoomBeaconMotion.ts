@@ -82,6 +82,11 @@ export function useRoomBeaconMotion({
   onAnswer: (guessAuthentic: boolean) => void;
 }) {
   const gateRef = useRef(createMotionGate());
+  // Keep the latest answer callback without putting it in the subscription
+  // effect deps. App recreates onAnswer whenever game state changes; listing
+  // it here tore down and re-created the Accelerometer listener mid-ROUND.
+  const onAnswerRef = useRef(onAnswer);
+  onAnswerRef.current = onAnswer;
 
   useEffect(() => {
     gateRef.current = createMotionGate();
@@ -93,10 +98,10 @@ export function useRoomBeaconMotion({
     const subscription = Accelerometer.addListener((sample) => {
       const result = motionAnswerFromSample(sample, gateRef.current, { neutralZ });
       gateRef.current = result.gate;
-      if (result.answer != null) onAnswer(result.answer);
+      if (result.answer != null) onAnswerRef.current(result.answer);
     });
     return () => subscription.remove();
-  }, [enabled, mode, neutralZ, onAnswer]);
+  }, [enabled, mode, neutralZ]);
 }
 
 export { calibrateNeutral };

@@ -81,7 +81,7 @@ export function HomeScreen({
       <ScrollView contentContainerStyle={s.home}>
       <View style={s.homeHero}>
         <View style={s.homeMark} pointerEvents="none">
-          <Mark name="open" size={300} color={volt.color.dark.lime} decorative />
+          <Mark name="open" size={180} color={volt.color.dark.lime} decorative />
         </View>
         <Text style={s.eyebrowPink}>REAL QUOTES.</Text>
         <Text style={s.eyebrowLime}>TOTAL LIES.</Text>

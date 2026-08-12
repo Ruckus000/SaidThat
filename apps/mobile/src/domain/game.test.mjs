@@ -474,6 +474,41 @@ test("chaos: reset local session returns to a fresh home state", () => {
   assert.equal(state.roundIndex, 0);
 });
 
+test("run: deferRun skips buildRun until START_ROUND", () => {
+  const session = createSession({
+    cards: [fixture, secondFixture],
+    allowLocalFixtures: true,
+    deckVersion: "test",
+    deferRun: true,
+  });
+  assert.equal(session.stage, STAGES.HOME);
+  assert.equal(session.cards.length, 0);
+  assert.equal(session.pool.length, 2);
+  assert.equal(session.fault, null);
+
+  let state = gameReducer(session, { type: "START_ROUND", seed: 7 });
+  assert.equal(state.stage, STAGES.ROUND);
+  assert.ok(state.cards.length >= 1);
+  assert.ok(state.cards.length <= 2);
+
+  state = gameReducer(state, {
+    type: "RESET_LOCAL_SESSION",
+    cards: [fixture, secondFixture],
+    allowLocalFixtures: true,
+    deckVersion: "test",
+    deferRun: true,
+  });
+  assert.equal(state.stage, STAGES.HOME);
+  assert.equal(state.cards.length, 0);
+  assert.equal(state.pool.length, 2);
+});
+
+test("run: deferRun with an empty pool still fails closed", () => {
+  const session = createSession({ cards: [], deckVersion: "test", deferRun: true });
+  assert.equal(session.stage, STAGES.CONTENT_UNAVAILABLE);
+  assert.equal(session.fault, "no-safe-playable-content");
+});
+
 test("chaos: arbitrary event storms do not create invalid stages or duplicate commits", () => {
   const events = [
     { type: "ANSWER", guessAuthentic: false },
