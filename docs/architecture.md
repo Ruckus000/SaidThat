@@ -78,8 +78,8 @@ Accounts, IAP, admin CMS if content volume demands it, multiplayer, etc.
 | Server state | — | **TanStack Query** | Manifests, reports only when remote exists |
 | Validation | **Pure JS `contentRules` / `validateDeck`** | Zod if schema churn hurts | Matches existing Node test idiom |
 | Player names | Controlled inputs | Same | **No React Hook Form** until forms hurt |
-| Motion UI | Reanimated sparingly | Same | Don’t `setState` from 30Hz sensor samples |
-| Sensors | **expo-sensors** `DeviceMotion` | Same | Included in Expo Go, but ship/QA forehead on dev builds ([docs](https://docs.expo.dev/versions/latest/sdk/devicemotion/)) |
+| Motion UI | Core RN `Animated` + `useNativeDriver` | Same | Discrete answer events only; avoid Reanimated on Hermes V1 |
+| Sensors | **expo-sensors** `Accelerometer` (~10 Hz) | Same | Room Beacon tilt; forehead QA on physical devices / dev builds |
 | Haptics | expo-haptics | Same | Answer confirmation |
 | Audio | `expo-audio` optional | Same | Playback cues only; `expo-av` is deprecated |
 | Local DB | **AsyncStorage** for queue/stats | **Raw expo-sqlite** | Decks/sessions/outbox — no Drizzle |
@@ -195,7 +195,7 @@ Editors do **not** get a CMS app in Phase 0–1; they open PRs that update deck 
 ### Analytics
 
 - Prefer `card_id`; avoid logging full statement text  
-- Never emit DeviceMotion samples  
+- Never emit Accelerometer samples  
 
 ### Reports (Phase 1)
 
@@ -315,9 +315,9 @@ Content promotion Phase 0–1: **merge PR → cut build** (or Phase 1: publish p
 - Phase 0 **must** support forehead tilt  
 - Tap-only / no-motion settings and VoiceOver → tap (not Reduce Motion)  
 - OS Reduce Motion: disable confetti/shake animations only  
-- Landscape preferred for forehead; remap axes because Expo DeviceMotion is defined **relative to portrait** ([DeviceMotion docs](https://docs.expo.dev/versions/latest/sdk/devicemotion/))  
-- Unsubscribe sensors whenever round not `ACTIVE`  
-- Keep sensor updates off React render path (refs / JS state machine → emit discrete answer events)
+- Landscape preferred for forehead; Accelerometer `z` is calibrated against a neutral hold (Room Beacon), not DeviceMotion portrait remapping  
+- Unsubscribe sensors whenever round is not active  
+- Keep sensor updates off React render path (refs / JS gate → emit discrete answer events). Do not put the answer callback in subscription effect deps — App recreates it on every game-state change.
 
 ### Starting thresholds (calibrate in playtests)
 
@@ -327,7 +327,7 @@ Content promotion Phase 0–1: **merge PR → cut build** (or Phase 1: publish p
 | Commit angle | 35–45° (Low/Med/High presets) |
 | Debounce / EMA | ~120ms smoothing |
 | Cooldown after accept | ~700ms **and** return-to-neutral |
-| Sample rate | request ~30Hz (`setUpdateInterval` is not a guarantee) |
+| Sample rate | request ~10Hz (`Accelerometer.setUpdateInterval(100)`; not a guarantee) |
 
 ### Permissions / availability
 
@@ -345,7 +345,7 @@ onEnterRound:
   if tapOnly or screenReader or sensorsUnavailable:
     state = DISABLED  // tap UI only
   else
-    subscribe(DeviceMotion @ ~30Hz)
+    subscribe(Accelerometer @ ~10Hz)
     state = WAIT_NEUTRAL   // NOT ARMED — avoid still-tilted false fire
 
 onSample(sample):

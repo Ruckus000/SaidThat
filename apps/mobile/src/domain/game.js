@@ -115,17 +115,29 @@ export function playableCards(cards, options) {
   return Array.isArray(cards) ? cards.filter((card) => isPlayableCard(card, options)) : [];
 }
 
-export function createSession({ cards, allowLocalFixtures = false, deckVersion, seed = 1 }) {
+export function createSession({
+  cards,
+  allowLocalFixtures = false,
+  deckVersion,
+  seed = 1,
+  deferRun = false,
+}) {
   // `pool` is everything playable; `cards` is the run actually being played.
   // Keeping both means a rematch rebuilds from the full pool instead of
   // reshuffling the ten cards the room just saw.
+  //
+  // `deferRun` skips buildRun on cold start / local reset: Home does not need
+  // a sampled run, and START_ROUND builds one when the player actually begins.
   const pool = playableCards(cards, { allowLocalFixtures });
-  const safeCards = buildRun(pool, { seed });
+  // Availability is the pool, not the deferred empty run — otherwise Home is
+  // wrongly blocked whenever buildRun is postponed until START_ROUND.
+  const hasContent = pool.length > 0;
+  const safeCards = deferRun ? [] : buildRun(pool, { seed });
   return {
     pool,
     mode: MODES.ROOM_BEACON,
     accessRole: "holder",
-    stage: safeCards.length ? STAGES.HOME : STAGES.CONTENT_UNAVAILABLE,
+    stage: hasContent ? STAGES.HOME : STAGES.CONTENT_UNAVAILABLE,
     cards: safeCards,
     deckVersion,
     // Identifies this run so a late REPORT_* from a previous rematch cannot
@@ -141,7 +153,7 @@ export function createSession({ cards, allowLocalFixtures = false, deckVersion, 
     resumeStage: null,
     reportStatus: null,
     privateRecovery: null,
-    fault: safeCards.length ? null : "no-safe-playable-content",
+    fault: hasContent ? null : "no-safe-playable-content",
   };
 }
 
@@ -280,8 +292,16 @@ export function gameReducer(state, action) {
       // The run is rebuilt here rather than reused. Before this, only PLAY_AGAIN
       // ever reordered the deck, so the first run of every session played the
       // deck in file order.
+      //
+      // When createSession used deferRun, state.cards is empty until here — so
+      // a missing seed still builds from the pool rather than starting empty.
       const pool = state.pool ?? state.cards;
-      const cards = action.seed === undefined ? state.cards : buildRun(pool, { seed: action.seed });
+      const cards =
+        action.seed !== undefined
+          ? buildRun(pool, { seed: action.seed })
+          : state.cards.length
+            ? state.cards
+            : buildRun(pool, { seed: 1 });
       const runId = action.seed === undefined ? state.runId : action.seed;
       return cards.length
         ? { ...state, ...FRESH_RUN, cards, stage: STAGES.ROUND, runId }
@@ -417,6 +437,8 @@ export function gameReducer(state, action) {
         allowLocalFixtures: action.allowLocalFixtures,
         deckVersion: action.deckVersion,
         seed: action.seed,
+        // Same cold-path deferral as App mount: reset lands on Home.
+        deferRun: action.deferRun === true,
       });
     default:
       return state;

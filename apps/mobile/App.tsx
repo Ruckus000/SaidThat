@@ -78,6 +78,8 @@ export default function App() {
       allowLocalFixtures,
       deckVersion: DECK_VERSION,
       seed: runSeed(),
+      // Home never needs a sampled run; START_ROUND builds it on first play.
+      deferRun: true,
     }),
   );
   const [reportBusy, setReportBusy] = useState(false);
@@ -113,26 +115,30 @@ export default function App() {
   const motionLockedByDevice = reducedMotionForcedByDevice({ reducedMotionPreference, deviceReducedMotion });
   const card = currentCard(state);
 
+  // Stable tilt path: refs hold the latest state/haptics so commitAnswerFromTilt
+  // identity does not churn every ANSWER and force Accelerometer resubscribe.
+  const stateRef = useRef(state);
+  stateRef.current = state;
+  const hapticsEnabledRef = useRef(hapticsEnabled);
+  hapticsEnabledRef.current = hapticsEnabled;
+
   // Tap commits fire the KICK haptic doublet inside the answer control (useFireEvent),
   // so the shared dispatch is haptic-free to avoid a double tick. The tilt path has no
   // press phase, so it fires its own single commit tick.
-  const commitAnswer = useCallback(
-    (guessAuthentic: boolean) => {
-      // Calibration is recorded before dispatch so it reads the card the player
-      // actually answered, and is deliberately not awaited: this is a research
-      // signal, and a wedged storage bridge must never delay a commit the room
-      // is waiting on. Losing a sample is the correct failure here.
-      const answered = currentCard(state);
-      if (answered) {
-        const correct = isGuessCorrect(answered, guessAuthentic);
-        void updatePlaytestStats((stats) =>
-          recordOutcome(stats, { cardId: answered.id, correct }),
-        ).catch(() => {});
-      }
-      dispatch({ type: "ANSWER", guessAuthentic });
-    },
-    [state],
-  );
+  const commitAnswer = useCallback((guessAuthentic: boolean) => {
+    // Calibration is recorded before dispatch so it reads the card the player
+    // actually answered, and is deliberately not awaited: this is a research
+    // signal, and a wedged storage bridge must never delay a commit the room
+    // is waiting on. Losing a sample is the correct failure here.
+    const answered = currentCard(stateRef.current);
+    if (answered) {
+      const correct = isGuessCorrect(answered, guessAuthentic);
+      void updatePlaytestStats((stats) =>
+        recordOutcome(stats, { cardId: answered.id, correct }),
+      ).catch(() => {});
+    }
+    dispatch({ type: "ANSWER", guessAuthentic });
+  }, []);
 
   /**
    * Hands the local calibration aggregates to the OS share sheet.
@@ -187,11 +193,11 @@ export default function App() {
       //
       // Asked of the reducer's own predicate rather than re-stated here, so the
       // two cannot drift into disagreeing about what counts as a commit.
-      if (!canCommitAnswer(state)) return;
-      commitFeedback(hapticsAllowed({ hapticsEnabled }));
+      if (!canCommitAnswer(stateRef.current)) return;
+      commitFeedback(hapticsAllowed({ hapticsEnabled: hapticsEnabledRef.current }));
       commitAnswer(guessAuthentic);
     },
-    [hapticsEnabled, commitAnswer, state],
+    [commitAnswer],
   );
 
   const onMotionUnavailable = useCallback(() => {
@@ -351,6 +357,7 @@ export default function App() {
       allowLocalFixtures,
       deckVersion: DECK_VERSION,
       seed: runSeed(),
+      deferRun: true,
     });
 
     // Now the durable half, bounded. The confirm promised to clear queued reports
