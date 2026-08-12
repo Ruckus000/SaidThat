@@ -37,6 +37,11 @@ jest.mock("expo-font", () => ({
   isLoaded: () => true,
 }));
 
+jest.mock("expo-splash-screen", () => ({
+  preventAutoHideAsync: jest.fn(async () => {}),
+  hideAsync: jest.fn(async () => {}),
+}));
+
 jest.mock("react-native-safe-area-context", () =>
   require("react-native-safe-area-context/jest/mock").default,
 );
