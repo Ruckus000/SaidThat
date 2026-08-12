@@ -18,6 +18,8 @@ export type SettingsScreenProps = {
   onClose: () => void;
   /** Omitted hides the export entirely; there is no network path either way. */
   onExportPlaytest?: () => void;
+  /** True while a share sheet (or its timeout) is in flight. */
+  exportBusy?: boolean;
 };
 
 export function SettingsScreen({
@@ -31,6 +33,7 @@ export function SettingsScreen({
   onReset,
   onClose,
   onExportPlaytest,
+  exportBusy = false,
 }: SettingsScreenProps) {
   return (
     <ScrollView contentContainerStyle={s.setup}>
@@ -72,7 +75,12 @@ export function SettingsScreen({
             Playtest data is per-card counts only — no names, no timestamps, nothing about who
             played. It is never sent anywhere; exporting hands you the file.
           </Text>
-          <PrimaryButton label="EXPORT PLAYTEST DATA" secondary onPress={onExportPlaytest} />
+          <PrimaryButton
+            label={exportBusy ? "EXPORTING…" : "EXPORT PLAYTEST DATA"}
+            secondary
+            disabled={exportBusy}
+            onPress={onExportPlaytest}
+          />
         </>
       ) : null}
       <PrimaryButton label="RESET LOCAL SESSION" destructive onPress={onReset} />

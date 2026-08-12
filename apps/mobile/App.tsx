@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { Alert, AppState, Share, View, useWindowDimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFonts } from "expo-font";
@@ -43,7 +43,7 @@ import { useReducedMotion } from "./src/theme/motion";
 import { clearReportQueue, queueReport } from "./src/storage/reportQueue";
 import { clearPlaytestStats, loadPlaytestStats, updatePlaytestStats } from "./src/storage/playtestStore";
 import { recordGroup, recordLaugh, recordOutcome, toExport } from "./src/domain/playtestPolicy";
-import { withTimeout } from "./src/storage/withTimeout";
+import { DEFAULT_STORAGE_TIMEOUT_MS, withTimeout } from "./src/storage/withTimeout";
 
 const allowLocalFixtures = typeof __DEV__ !== "undefined" && __DEV__;
 
@@ -81,6 +81,7 @@ export default function App() {
     }),
   );
   const [reportBusy, setReportBusy] = useState(false);
+  const [exportBusy, setExportBusy] = useState(false);
   const [motionOptIn, setMotionOptIn] = useState(false);
   const [motionNeutralZ, setMotionNeutralZ] = useState<number | null>(null);
   const [calibrationReading, setCalibrationReading] = useState(false);
@@ -94,7 +95,13 @@ export default function App() {
   // ResultScreen because that screen UNMOUNTS on an interruption — backgrounding
   // routes through PAUSED — and a component key cannot preserve state across an
   // unmount. Keyed by round so the next one still gets its suspense beat.
+  // Cleared on every fresh run: rematch resets roundIndex to 0, so a stale
+  // revealedRound === 0 would skip the beat on the new run's first card.
   const [revealedRound, setRevealedRound] = useState<number | null>(null);
+  // Monotonic id so a late report settle from a superseded attempt cannot
+  // overwrite UI status after rematch/continue, while a late success for the
+  // *current* attempt can still upgrade a silent timeout to "saved".
+  const reportAttemptRef = useRef(0);
   const [reducedMotionPreference, setReducedMotionPreference] = useState(false);
   const [noMotion, setNoMotion] = useState(false);
   const [hapticsEnabled, setHapticsEnabled] = useState(true);
@@ -136,17 +143,29 @@ export default function App() {
    * nothing can leave without someone choosing where it goes.
    */
   async function exportPlaytestData() {
-    const stats = await withTimeout(loadPlaytestStats(), { fallback: null });
-    const payload = toExport(stats ?? { cards: {} }, DECK_VERSION);
-    if (payload.cards.length === 0) {
-      Alert.alert("Nothing to export yet", "Play a run first — this only records per-card counts.");
-      return;
-    }
+    if (exportBusy) return;
+    setExportBusy(true);
     try {
-      await Share.share({ message: JSON.stringify(payload, null, 2) });
+      const stats = await withTimeout(loadPlaytestStats(), { fallback: null });
+      const payload = toExport(stats ?? { cards: {} }, DECK_VERSION);
+      if (payload.cards.length === 0) {
+        Alert.alert("Nothing to export yet", "Play a run first — this only records per-card counts.");
+        return;
+      }
+      // Bounded like report/reset: a wedged share sheet must not latch the button
+      // forever, and a double-tap must not stack sheets.
+      const opened = await withTimeout(
+        Share.share({ message: JSON.stringify(payload, null, 2) }).then(() => true),
+        { fallback: false },
+      );
+      if (!opened) {
+        Alert.alert("Export did not open", "Try again. Nothing left this device.");
+      }
     } catch {
       // Sharing was dismissed or refused. Nothing was written and nothing was
       // sent, so there is nothing to report and nothing to undo.
+    } finally {
+      setExportBusy(false);
     }
   }
 
@@ -175,20 +194,31 @@ export default function App() {
     [hapticsEnabled, commitAnswer, state],
   );
 
+  const onMotionUnavailable = useCallback(() => {
+    setMotionNeutralZ(null);
+    setCalibrationUnavailable(true);
+  }, []);
+
   useRoomBeaconMotion({
     enabled: motionAllowed({ motionOptIn, noMotion }) && state.stage === STAGES.ROUND,
     mode: state.mode,
     neutralZ: motionNeutralZ,
     onAnswer: commitAnswerFromTilt,
+    onUnavailable: onMotionUnavailable,
   });
 
   // A completed run counts as one group for each card it contained. Groups are
   // what the promote/retire thresholds are actually gated on: twenty exposures
   // from one room says far less than twenty from eight, and without this the
   // verdicts would treat those as identical evidence.
+  //
+  // Slice by roundsPlayed (answered cards), not runLength: a final-round
+  // private interrupt without an answer ends in RECAP with an incomplete count.
   useEffect(() => {
     if (state.stage !== STAGES.RECAP) return;
-    const played = state.cards.slice(0, runLength(state)).map((entry: { id: string }) => entry.id);
+    const played = state.cards
+      .slice(0, state.roundsPlayed ?? 0)
+      .map((entry: { id: string }) => entry.id);
     if (played.length === 0) return;
     void updatePlaytestStats((stats) => recordGroup(stats, played)).catch(() => {});
     // Keyed on the recap transition rather than the card list so a re-render
@@ -213,19 +243,46 @@ export default function App() {
     // then would be attached to a card nobody reported. The reducer drops a stale
     // one; the report itself is already written either way.
     const roundIndex = state.roundIndex;
+    const runId = state.runId;
+    const attemptId = ++reportAttemptRef.current;
+    const payload = reportPayload(state, reason, new Date().toISOString());
+    // Keep the underlying write observable after a UI timeout so a late success
+    // can still surface "saved" for this attempt — without claiming failure while
+    // the write is merely slow. Queue dedupe covers a user retry of the same chip.
+    const write = queueReport(payload).then(
+      () => true as const,
+      () => false as const,
+    );
     try {
-      // Bounded for the same reason the reset is. `finally` looks like it
-      // guarantees the busy flag is released, and it does — for a promise that
-      // SETTLES. A wedged native bridge neither resolves nor rejects, so the
-      // await never returned, `finally` never ran, and all three report chips
-      // stayed disabled for the rest of the session with no way to retry.
-      const queued = await withTimeout(
-        queueReport(reportPayload(state, reason, new Date().toISOString())).then(() => true),
-        { fallback: false },
-      );
-      dispatch({ type: queued ? "REPORT_QUEUED" : "REPORT_FAILED", roundIndex });
+      const outcome = await Promise.race([
+        write.then((ok) => ({ kind: "settled" as const, ok })),
+        new Promise<{ kind: "timeout" }>((resolve) => {
+          setTimeout(() => resolve({ kind: "timeout" }), DEFAULT_STORAGE_TIMEOUT_MS);
+        }),
+      ]);
+      if (attemptId !== reportAttemptRef.current) return;
+      if (outcome.kind === "settled") {
+        dispatch({
+          type: outcome.ok ? "REPORT_QUEUED" : "REPORT_FAILED",
+          roundIndex,
+          runId,
+        });
+        return;
+      }
+      // Timed out: release the chips, but if this attempt's write lands later
+      // and nothing superseded it, upgrade to an honest saved/failed status.
+      void write.then((ok) => {
+        if (attemptId !== reportAttemptRef.current) return;
+        dispatch({
+          type: ok ? "REPORT_QUEUED" : "REPORT_FAILED",
+          roundIndex,
+          runId,
+        });
+      });
     } catch {
-      dispatch({ type: "REPORT_FAILED", roundIndex });
+      if (attemptId === reportAttemptRef.current) {
+        dispatch({ type: "REPORT_FAILED", roundIndex, runId });
+      }
     } finally {
       setReportBusy(false);
     }
@@ -250,7 +307,10 @@ export default function App() {
 
   function setNoMotionEnabled(enabled: boolean) {
     setNoMotion(enabled);
-    if (enabled) setMotionNeutralZ(null);
+    if (enabled) {
+      setMotionNeutralZ(null);
+      setCalibrationUnavailable(false);
+    }
   }
 
   function confirmResetLocalSession() {
@@ -276,7 +336,10 @@ export default function App() {
     // was written to fix, one layer down.
     setMotionOptIn(false);
     setMotionNeutralZ(null);
+    setCalibrationUnavailable(false);
     setShowSettings(false);
+    setRevealedRound(null);
+    reportAttemptRef.current += 1;
     dispatch({
       type: "RESET_LOCAL_SESSION",
       cards: playableDeck(catalog, { allowLocalFixtures }, TOMBSTONES),
@@ -316,6 +379,9 @@ export default function App() {
 
   function goHome() {
     setMotionNeutralZ(null);
+    setCalibrationUnavailable(false);
+    setRevealedRound(null);
+    reportAttemptRef.current += 1;
     dispatch({ type: "GO_HOME" });
   }
 
@@ -325,7 +391,10 @@ export default function App() {
     // different run each rematch — and makes any run reproducible from one
     // integer, which is what the run-builder tests rely on.
     setMotionNeutralZ(null);
+    setCalibrationUnavailable(false);
     setLaughPick(null);
+    setRevealedRound(null);
+    reportAttemptRef.current += 1;
     dispatch({ type: "PLAY_AGAIN", seed: runSeed(), allowLocalFixtures });
   }
 
@@ -333,14 +402,22 @@ export default function App() {
     if (mode !== MODES.ROOM_BEACON) {
       setMotionOptIn(false);
       setMotionNeutralZ(null);
+      setCalibrationUnavailable(false);
     }
     dispatch({ type: "SET_MODE", mode });
   }
 
   function setMotionOptInEnabled(enabled: boolean) {
     setMotionOptIn(enabled);
-    if (!enabled) setMotionNeutralZ(null);
+    if (!enabled) {
+      setMotionNeutralZ(null);
+      setCalibrationUnavailable(false);
+    }
   }
+
+  const markRoundRevealed = useCallback(() => {
+    setRevealedRound(state.roundIndex);
+  }, [state.roundIndex]);
 
   if (!fontsLoaded && !fontError) {
     // Fonts still loading: hold on the calm canvas (no unstyled text flash).
@@ -421,6 +498,7 @@ export default function App() {
             onReset={confirmResetLocalSession}
             onClose={() => setShowSettings(false)}
             onExportPlaytest={exportPlaytestData}
+            exportBusy={exportBusy}
           />
         )}
         {state.stage === STAGES.SETUP && (
@@ -433,6 +511,8 @@ export default function App() {
             onMotionOptIn={setMotionOptInEnabled}
             onStart={() => {
               setLaughPick(null);
+              setRevealedRound(null);
+              reportAttemptRef.current += 1;
               dispatch({ type: "START_ROUND", seed: runSeed() });
             }}
           />
@@ -466,7 +546,7 @@ export default function App() {
             reducedMotion={reducedMotion}
             haptics={hapticsAllowed({ hapticsEnabled })}
             initiallyRevealed={revealedRound === state.roundIndex}
-            onRevealed={() => setRevealedRound(state.roundIndex)}
+            onRevealed={markRoundRevealed}
             onReview={() => dispatch({ type: "OPEN_REVIEW" })}
             onContinue={() => dispatch({ type: "NEXT_ROUND" })}
           />
@@ -492,17 +572,19 @@ export default function App() {
             reducedMotion={reducedMotion}
             onPlayAgain={playAgain}
             onHome={goHome}
-            runCards={state.cards.slice(0, runLength(state)).map((entry: { id: string; person: string }) => ({
-              id: entry.id,
-              person: entry.person,
-            }))}
+            runCards={state.cards
+              .slice(0, state.roundsPlayed ?? 0)
+              .map((entry: { id: string; person: string }) => ({
+                id: entry.id,
+                person: entry.person,
+              }))}
             laughPickId={laughPick}
             onPickFunniest={pickFunniest}
           />
         )}
         {state.stage === STAGES.PRIVATE_SHUTTER && (
           <PrivateShutterScreen
-            discardedPriorTurn={state.privateRecovery === "discarded-prior-turn"}
+            privateRecovery={state.privateRecovery}
             onReady={() => dispatch({ type: "REVEAL_PRIVATE_TURN" })}
           />
         )}

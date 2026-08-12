@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
 import { Accelerometer } from "expo-sensors";
+import { useEffect, useRef } from "react";
 
 import { MODES } from "../domain/game";
 import {
@@ -75,13 +75,18 @@ export function useRoomBeaconMotion({
   mode,
   neutralZ,
   onAnswer,
+  onUnavailable,
 }: {
   enabled: boolean;
   mode: string;
   neutralZ: number | null;
   onAnswer: (guessAuthentic: boolean) => void;
+  /** Live subscribe failed; leave tilt off and keep tap answers available. */
+  onUnavailable?: () => void;
 }) {
   const gateRef = useRef(createMotionGate());
+  const onUnavailableRef = useRef(onUnavailable);
+  onUnavailableRef.current = onUnavailable;
 
   useEffect(() => {
     gateRef.current = createMotionGate();
@@ -89,13 +94,29 @@ export function useRoomBeaconMotion({
 
   useEffect(() => {
     if (!enabled || mode !== MODES.ROOM_BEACON || neutralZ == null) return undefined;
-    Accelerometer.setUpdateInterval(100);
-    const subscription = Accelerometer.addListener((sample) => {
-      const result = motionAnswerFromSample(sample, gateRef.current, { neutralZ });
-      gateRef.current = result.gate;
-      if (result.answer != null) onAnswer(result.answer);
-    });
-    return () => subscription.remove();
+    // Calibration already wraps addListener in try/catch. The live path did not,
+    // so a denied permission or null native module after a successful calibrate
+    // (or a flaky driver) threw inside the effect and took down ErrorBoundary —
+    // "START OVER" on an optional tilt feature while taps were fine.
+    let subscription: { remove: () => void } | null = null;
+    try {
+      Accelerometer.setUpdateInterval(100);
+      subscription = Accelerometer.addListener((sample) => {
+        const result = motionAnswerFromSample(sample, gateRef.current, { neutralZ });
+        gateRef.current = result.gate;
+        if (result.answer != null) onAnswer(result.answer);
+      });
+    } catch {
+      onUnavailableRef.current?.();
+      return undefined;
+    }
+    return () => {
+      try {
+        subscription?.remove();
+      } catch {
+        // Same posture as calibration: a stuck remove must not crash the tree.
+      }
+    };
   }, [enabled, mode, neutralZ, onAnswer]);
 }
 

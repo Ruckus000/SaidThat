@@ -26,6 +26,12 @@ const fixture = {
   fixtureOnly: true,
 };
 
+// Display and scoring both key off authentic + contentState. Spreading
+// authentic:true onto a fabricated-for-game fixture is no longer playable.
+function authenticFixture(id) {
+  return { ...fixture, id, authentic: true, contentState: "fixture-authentic" };
+}
+
 // Two cards so a NEXT_ROUND from the first round is a non-final round (exercises
 // the Private Relay handoff shutter rather than ending the run).
 const secondFixture = { ...fixture, id: "fixture-2" };
@@ -45,6 +51,26 @@ test("chaos: unapproved, disputed, removed, and malformed authentic records fail
   assert.equal(isPlayableCard({ contentState: "fabricated-for-game", editorialApprovals: ["same", "same"] }), false);
   assert.equal(isPlayableCard({ ...fixture, authentic: true, contentState: "fixture-authentic" }), false);
   assert.equal(isPlayableCard({ ...fixture, authentic: true, contentState: "fixture-authentic" }, { allowLocalFixtures: true }), true);
+  // Display/score mismatch: contentState claims authentic, flag says fabricated.
+  assert.equal(
+    isPlayableCard({
+      contentState: "authentic",
+      authentic: false,
+      sourceRecord: { retained: true, url: "https://example.com" },
+      editorialApprovals: ["one", "two"],
+    }),
+    false,
+  );
+  assert.equal(
+    isPlayableCard({ ...fixture, authentic: true }, { allowLocalFixtures: true }),
+    false,
+    "fabricated-for-game with authentic:true is not playable",
+  );
+  assert.equal(
+    isPlayableCard({ ...fixture, authentic: false, contentState: "fixture-authentic" }, { allowLocalFixtures: true }),
+    false,
+    "fixture-authentic with authentic:false is not playable",
+  );
 });
 
 // Pre-release owner approval, amended 2026-08-05. The two-person rule is still
@@ -55,12 +81,20 @@ test("chaos: unapproved, disputed, removed, and malformed authentic records fail
 test("chaos: a lone approval passes only when it is the explicit owner marker", () => {
   const authentic = (editorialApprovals) => ({
     contentState: "authentic",
+    authentic: true,
     sourceRecord: { retained: true, url: "https://example.com" },
     editorialApprovals,
   });
 
   assert.equal(isPlayableCard(authentic([OWNER_APPROVAL])), true);
-  assert.equal(isPlayableCard({ contentState: "fabricated-for-game", editorialApprovals: [OWNER_APPROVAL] }), true);
+  assert.equal(
+    isPlayableCard({
+      contentState: "fabricated-for-game",
+      authentic: false,
+      editorialApprovals: [OWNER_APPROVAL],
+    }),
+    true,
+  );
 
   // Names that merely look owner-ish must not clear the bar.
   for (const impostor of ["owner", "Ruckus", "owner:", "OWNER:PRE-RELEASE"]) {
@@ -70,7 +104,12 @@ test("chaos: a lone approval passes only when it is the explicit owner marker", 
   assert.equal(isPlayableCard(authentic(OWNER_APPROVAL)), false, "a bare string is not an approvals list");
   // Everything else about the card is still required.
   assert.equal(
-    isPlayableCard({ contentState: "authentic", sourceRecord: { retained: false }, editorialApprovals: [OWNER_APPROVAL] }),
+    isPlayableCard({
+      contentState: "authentic",
+      authentic: true,
+      sourceRecord: { retained: false },
+      editorialApprovals: [OWNER_APPROVAL],
+    }),
     false,
     "owner approval does not substitute for a retained source",
   );
@@ -85,6 +124,7 @@ test("chaos: a lone approval passes only when it is the explicit owner marker", 
 test("chaos: an approvals field that is not a list of approvals fails closed", () => {
   const productionAuthentic = (editorialApprovals) => ({
     contentState: "authentic",
+    authentic: true,
     sourceRecord: { retained: true, url: "https://example.com" },
     editorialApprovals,
   });
@@ -185,7 +225,7 @@ test("chaos: duplicate taps score only once", () => {
 
 test("reward: streak counts consecutive correct reads and resets on a miss", () => {
   // Three distinct cards so the run spans three rounds before any recap.
-  const cards = [0, 1, 2].map((n) => ({ ...fixture, id: `authentic-${n}`, authentic: true }));
+  const cards = [0, 1, 2].map((n) => authenticFixture(`authentic-${n}`));
   let state = createSession({ cards, allowLocalFixtures: true, deckVersion: "test" });
   state = gameReducer(state, { type: "START_ROUND" });
 
@@ -214,7 +254,7 @@ test("reward: streak counts consecutive correct reads and resets on a miss", () 
 });
 
 test("reward: run stats count plays and correct reads without double counting", () => {
-  const cards = [0, 1].map((n) => ({ ...fixture, id: `authentic-${n}`, authentic: true }));
+  const cards = [0, 1].map((n) => authenticFixture(`authentic-${n}`));
   let state = createSession({ cards, allowLocalFixtures: true, deckVersion: "test" });
   state = gameReducer(state, { type: "START_ROUND" });
 
@@ -245,8 +285,8 @@ test("reward: reset clears the streak alongside the score", () => {
 });
 
 test("run: a full pass through the deck ends in recap, and play again resets the run", () => {
-  const a1 = { ...fixture, id: "a1", authentic: true };
-  const a2 = { ...fixture, id: "a2", authentic: true };
+  const a1 = authenticFixture("a1");
+  const a2 = authenticFixture("a2");
   let state = createSession({ cards: [a1, a2], allowLocalFixtures: true, deckVersion: "test" });
   state = gameReducer(state, { type: "START_ROUND" });
 
@@ -275,7 +315,7 @@ test("run: a full pass through the deck ends in recap, and play again resets the
 });
 
 test("run: play again fails closed when the provided deck has nothing playable", () => {
-  const a1 = { ...fixture, id: "a1", authentic: true };
+  const a1 = authenticFixture("a1");
   let state = createSession({ cards: [a1], allowLocalFixtures: true, deckVersion: "test" });
   state = gameReducer(state, { type: "START_ROUND" });
   state = gameReducer(state, { type: "ANSWER", guessAuthentic: true });
@@ -298,8 +338,8 @@ test("run: play again fails closed when the provided deck has nothing playable",
 });
 
 test("run: private relay ends the final round in recap, not a shutter", () => {
-  const a1 = { ...fixture, id: "a1", authentic: true };
-  const a2 = { ...fixture, id: "a2", authentic: true };
+  const a1 = authenticFixture("a1");
+  const a2 = authenticFixture("a2");
   let state = createSession({ cards: [a1, a2], allowLocalFixtures: true, deckVersion: "test" });
   state = gameReducer(state, { type: "SET_MODE", mode: MODES.PRIVATE_RELAY });
   state = gameReducer(state, { type: "START_ROUND" });
@@ -319,7 +359,7 @@ test("run: private relay ends the final round in recap, not a shutter", () => {
 });
 
 test("run: starting again after a completed run resets instead of re-looping the last card", () => {
-  const a1 = { ...fixture, id: "a1", authentic: true };
+  const a1 = authenticFixture("a1");
   let state = createSession({ cards: [a1], allowLocalFixtures: true, deckVersion: "test" });
   state = gameReducer(state, { type: "START_ROUND" });
   state = gameReducer(state, { type: "ANSWER", guessAuthentic: true });
@@ -434,6 +474,37 @@ test("chaos: a report confirmation cannot land against a later card", () => {
   assert.equal(gameReducer(state, { type: "REPORT_QUEUED" }).reportStatus, "queued");
 });
 
+// Rematch resets roundIndex to 0. A late REPORT_QUEUED from the previous run's
+// round 0 would otherwise match the new run and show "Saved locally" on a card
+// nobody reported in this run. runId is the scope that survives a rematch.
+test("chaos: a report confirmation cannot land against a rematched run", () => {
+  let state = started();
+  const priorRunId = state.runId;
+  const priorRound = state.roundIndex;
+  assert.equal(priorRound, 0);
+
+  state = gameReducer(state, { type: "PLAY_AGAIN", seed: 99, allowLocalFixtures: true });
+  assert.equal(state.roundIndex, 0);
+  assert.notEqual(state.runId, priorRunId);
+
+  const late = gameReducer(state, {
+    type: "REPORT_QUEUED",
+    roundIndex: priorRound,
+    runId: priorRunId,
+  });
+  assert.equal(late.reportStatus, null, "a prior-run confirmation is dropped");
+  assert.equal(late, state, "and the state is returned untouched, not rebuilt");
+
+  assert.equal(
+    gameReducer(state, {
+      type: "REPORT_QUEUED",
+      roundIndex: state.roundIndex,
+      runId: state.runId,
+    }).reportStatus,
+    "queued",
+  );
+});
+
 test("chaos: report records minimize data and corrupted decks halt play", () => {
   let state = started();
   assert.deepEqual(reportPayload(state, "wrong-attribution", "2026-07-20T00:00:00.000Z"), {
@@ -441,6 +512,8 @@ test("chaos: report records minimize data and corrupted decks halt play", () => 
     reason: "wrong-attribution",
     deckVersion: "test",
     timestamp: "2026-07-20T00:00:00.000Z",
+    runId: state.runId,
+    roundIndex: state.roundIndex,
   });
   state = gameReducer(state, { type: "SIMULATE_CORRUPT_DECK" });
   assert.equal(state.stage, STAGES.CONTENT_UNAVAILABLE);
@@ -559,4 +632,51 @@ test("pause: an interruption still fails closed, discarding the private turn", (
   assert.equal(interrupted.stage, STAGES.PRIVATE_SHUTTER);
   assert.equal(interrupted.privateRecovery, "discarded-prior-turn");
   assert.notEqual(interrupted.roundIndex, before.roundIndex, "the interrupted turn is discarded, not resumed");
+});
+
+// After a scored answer, backgrounding must not claim "Nothing was scored".
+test("chaos: private interrupt after a committed answer keeps the score and names the recovery", () => {
+  let state = started(MODES.PRIVATE_RELAY);
+  state = gameReducer(state, { type: "ANSWER", guessAuthentic: false });
+  assert.equal(state.stage, STAGES.RESULT);
+  assert.equal(state.score, 100);
+  assert.equal(state.roundsPlayed, 1);
+
+  const interrupted = gameReducer(state, { type: "APP_BACKGROUND" });
+  assert.equal(interrupted.stage, STAGES.PRIVATE_SHUTTER);
+  assert.equal(interrupted.privateRecovery, "protected-after-commit");
+  assert.equal(interrupted.score, 100, "points already earned stay");
+  assert.equal(interrupted.roundsPlayed, 1);
+});
+
+test("chaos: private interrupt from review after a commit is protected-after-commit", () => {
+  let state = started(MODES.PRIVATE_RELAY);
+  state = gameReducer(state, { type: "ANSWER", guessAuthentic: false });
+  state = gameReducer(state, { type: "OPEN_REVIEW" });
+  const interrupted = gameReducer(state, { type: "APP_BACKGROUND" });
+  assert.equal(interrupted.privateRecovery, "protected-after-commit");
+  assert.equal(interrupted.score, state.score);
+});
+
+// Final-round unanswered discard ends the run without counting the blank card.
+test("chaos: final-round unanswered private discard ends incomplete without inflating recap", () => {
+  let state = started(MODES.PRIVATE_RELAY);
+  const total = runLength(state);
+  while (state.roundIndex < total - 1) {
+    state = gameReducer(state, { type: "ANSWER", guessAuthentic: false });
+    state = gameReducer(state, { type: "NEXT_ROUND" });
+    if (state.stage === STAGES.PRIVATE_SHUTTER) {
+      state = gameReducer(state, { type: "REVEAL_PRIVATE_TURN" });
+    }
+  }
+  assert.equal(state.roundIndex, total - 1);
+  assert.equal(state.roundsPlayed, total - 1);
+  assert.equal(state.committedRound, null, "sanity: final card unanswered");
+
+  state = gameReducer(state, { type: "APP_BACKGROUND" });
+  assert.equal(state.stage, STAGES.RECAP);
+  assert.equal(state.roundsPlayed, total - 1, "the unanswered final card is not a completed play");
+  assert.ok(state.roundsPlayed < total, "Home must not claim a full completed run");
+  // Callers slice recap by roundsPlayed — answered prefix only.
+  assert.equal(state.cards.slice(0, state.roundsPlayed).length, state.roundsPlayed);
 });
