@@ -210,3 +210,42 @@ test("result: the beat still runs for a round whose verdict has not been seen", 
 
   expect(screen.getByText("LOCKING IT IN…")).toBeOnTheScreen();
 });
+
+// App's onRevealed used to be an inline lambda, so remembering the round
+// re-rendered ResultScreen with a new callback identity and the reveal effect
+// ran again — double haptic, double announce for one verdict.
+test("result: parent re-render from onRevealed does not double-announce", () => {
+  const spoken = jest
+    .spyOn(AccessibilityInfo, "announceForAccessibility")
+    .mockImplementation(() => {});
+  spoken.mockClear();
+
+  let revealed = false;
+  const { rerender } = render(
+    <ResultScreen
+      {...base}
+      correct
+      reducedMotion
+      initiallyRevealed={false}
+      onRevealed={() => {
+        revealed = true;
+      }}
+    />,
+  );
+  expect(spoken).toHaveBeenCalledTimes(1);
+
+  rerender(
+    <ResultScreen
+      {...base}
+      correct
+      reducedMotion
+      initiallyRevealed={revealed}
+      onRevealed={() => {
+        revealed = true;
+      }}
+    />,
+  );
+  expect(spoken).toHaveBeenCalledTimes(1);
+
+  spoken.mockRestore();
+});

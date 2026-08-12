@@ -169,12 +169,21 @@ export function contentUnavailableMessage(fault) {
 export const CONTENT_UNAVAILABLE_GUARD =
   "Disputed, removed, and source-unavailable records are never used as binary game prompts.";
 
-// Stated only when a turn was actually discarded, so the shutter's standing
-// reassurance does not have to carry the news of a specific loss. Names what
-// happened and why, without blaming the player for an interruption.
-export function privateDiscardNotice(discardedPriorTurn) {
-  if (!discardedPriorTurn) return null;
-  return "The last turn was interrupted, so it was discarded and will not be shown. Nothing was scored for it.";
+// Stated only when a turn was actually interrupted mid-private-play, so the
+// shutter's standing reassurance does not have to carry the news of a specific
+// loss. Names what happened and why, without blaming the player.
+//
+// Accepts the reducer's privateRecovery kind (or the legacy boolean true for
+// "discarded-prior-turn") so scored interruptions are not mislabeled as
+// "Nothing was scored".
+export function privateDiscardNotice(recovery) {
+  if (recovery === true || recovery === "discarded-prior-turn") {
+    return "The last turn was interrupted, so it was discarded and will not be shown. Nothing was scored for it.";
+  }
+  if (recovery === "protected-after-commit") {
+    return "The last turn was interrupted after your answer was scored. Your points stay; the prompt will not be shown to the next person.";
+  }
+  return null;
 }
 
 export const PRIVATE_SHUTTER_RECOVERY =

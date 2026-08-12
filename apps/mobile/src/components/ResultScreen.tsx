@@ -74,6 +74,12 @@ export function ResultScreen({
   const pulse = useRef(new Animated.Value(0)).current;
   const next = continueLabel({ roundIndex, totalRounds });
   const streakLine = resultStreakLabel(streak);
+  // Parent re-renders from onRevealed create a new callback identity every time.
+  // Holding the latest in a ref and ignoring identity in the effect deps means
+  // feedback/announce fire once per mount, not once per parent render.
+  const onRevealedRef = useRef(onRevealed);
+  onRevealedRef.current = onRevealed;
+  const revealFeedbackFired = useRef(false);
 
   useEffect(() => {
     // Already on screen — either reduced motion, or this round's verdict was
@@ -116,8 +122,9 @@ export function ResultScreen({
   const restored = useRef(initiallyRevealed).current;
 
   useEffect(() => {
-    if (!revealed) return;
-    onRevealed?.();
+    if (!revealed || revealFeedbackFired.current) return;
+    revealFeedbackFired.current = true;
+    onRevealedRef.current?.();
     // Feedback and the announcement belong to a verdict ARRIVING. Firing them on
     // a restored screen buzzed a second time for one answer and told VoiceOver a
     // new verdict had landed — half the reason the replay was worth fixing.
@@ -127,7 +134,7 @@ export function ResultScreen({
     // reader focus to it. Both halves are strings already on screen — the
     // headline and its kicker — joined, never a separately-worded line.
     announce(`${resultHeadline(correct)} ${resultKicker(correct)}`);
-  }, [revealed, haptics, correct, restored, onRevealed]);
+  }, [revealed, haptics, correct, restored]);
 
   if (!revealed) {
     return (

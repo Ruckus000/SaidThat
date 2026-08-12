@@ -184,7 +184,40 @@ test("app: a storage backend that never answers still releases the report chips"
     () => expect(screen.getByLabelText("Report wrong attribution")).toBeEnabled(),
     { timeout: 6000 },
   );
-  expect(await screen.findByText(/Could not save the report/i)).toBeOnTheScreen();
+  // A timeout is not a known failure. Claiming "Could not save" while the write
+  // may still land (or never settle) was the false-failure bug this path fixed.
+  expect(screen.queryByText(/Could not save the report/i)).not.toBeOnTheScreen();
+  expect(screen.queryByText(/Saved locally/i)).not.toBeOnTheScreen();
+}, 15000);
+
+test("app: a report that settles after the timeout still shows saved, not failure", async () => {
+  const { queueReport } = require("./src/storage/reportQueue");
+  let resolveWrite: (value: number) => void = () => {};
+  (queueReport as jest.Mock).mockImplementation(
+    () =>
+      new Promise<number>((resolve) => {
+        resolveWrite = resolve;
+      }),
+  );
+
+  render(<App />);
+  fireEvent.press(await screen.findByText("START A ROOM"));
+  fireEvent.press(await screen.findByText("LET'S PLAY"));
+  fireEvent.press(await screen.findByText("SAID IT"));
+  fireEvent.press(await screen.findByText("SEE THE TRUTH", {}, { timeout: 3000 }));
+
+  fireEvent.press(await screen.findByLabelText("Report wrong attribution"));
+  await waitFor(
+    () => expect(screen.getByLabelText("Report wrong attribution")).toBeEnabled(),
+    { timeout: 6000 },
+  );
+  expect(screen.queryByText(/Could not save the report/i)).not.toBeOnTheScreen();
+
+  await act(async () => {
+    resolveWrite(1);
+  });
+  expect(await screen.findByText(/Saved locally/i)).toBeOnTheScreen();
+  expect(screen.queryByText(/Could not save the report/i)).not.toBeOnTheScreen();
 }, 15000);
 
 
@@ -214,4 +247,29 @@ test("app: an interruption after the verdict does not replay the suspense beat",
   fireEvent.press(screen.getByText("RESUME SAFELY"));
   expect(screen.queryByText("LOCKING IT IN…")).not.toBeOnTheScreen();
   expect(screen.getByText("SEE THE TRUTH")).toBeOnTheScreen();
+}, 15000);
+
+// Rematch (or leave-and-restart) resets roundIndex to 0. Without clearing
+// revealedRound, initiallyRevealed stays true for round 0 and skips the beat.
+test("app: starting a new run after a revealed verdict restores the suspense beat", async () => {
+  render(<App />);
+  fireEvent.press(await screen.findByText("START A ROOM"));
+  fireEvent.press(await screen.findByText("LET'S PLAY"));
+  fireEvent.press(await screen.findByText("SAID IT"));
+  await screen.findByText("SEE THE TRUTH", {}, { timeout: 3000 });
+
+  const handler = (AppState.addEventListener as jest.Mock).mock.calls.at(-1)?.[1];
+  await act(async () => {
+    handler?.("inactive");
+  });
+  fireEvent.press(await screen.findByText("LEAVE THE ROOM"));
+  await screen.findByText("START A ROOM");
+
+  fireEvent.press(screen.getByText("START A ROOM"));
+  fireEvent.press(await screen.findByText("LET'S PLAY"));
+  fireEvent.press(await screen.findByText("SAID IT"));
+
+  // Synchronous: if the beat was skipped we would already see SEE THE TRUTH.
+  expect(screen.getByText("LOCKING IT IN…")).toBeOnTheScreen();
+  expect(screen.queryByText("SEE THE TRUTH")).not.toBeOnTheScreen();
 }, 15000);

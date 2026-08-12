@@ -86,6 +86,13 @@ test("private shutter: the discard notice appears only when a turn was really di
   expect(notice).toHaveTextContent(/Nothing was scored for it/i);
 });
 
+test("private shutter: a scored interruption does not claim nothing was scored", () => {
+  render(<PrivateShutterScreen onReady={jest.fn()} privateRecovery="protected-after-commit" />);
+  const notice = screen.getByText(/last turn was interrupted/i);
+  expect(notice).toHaveTextContent(/answer was scored/i);
+  expect(notice).not.toHaveTextContent(/Nothing was scored/i);
+});
+
 // At a large accessibility text size this block outgrows the viewport. As a fixed
 // View the button below it was pushed off-screen, leaving the protected handoff
 // with no way forward — a run stuck behind a shutter that cannot be dismissed.
