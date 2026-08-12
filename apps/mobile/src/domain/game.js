@@ -118,6 +118,9 @@ export function createSession({ cards, allowLocalFixtures = false, deckVersion, 
     stage: safeCards.length ? STAGES.HOME : STAGES.CONTENT_UNAVAILABLE,
     cards: safeCards,
     deckVersion,
+    // Identifies this run so a late REPORT_* from a previous rematch cannot
+    // attach "Saved locally" to a new run that happens to share roundIndex 0.
+    runId: seed,
     roundIndex: 0,
     score: 0,
     streak: 0,
@@ -257,8 +260,9 @@ export function gameReducer(state, action) {
       // deck in file order.
       const pool = state.pool ?? state.cards;
       const cards = action.seed === undefined ? state.cards : buildRun(pool, { seed: action.seed });
+      const runId = action.seed === undefined ? state.runId : action.seed;
       return cards.length
-        ? { ...state, ...FRESH_RUN, cards, stage: STAGES.ROUND }
+        ? { ...state, ...FRESH_RUN, cards, stage: STAGES.ROUND, runId }
         : { ...state, stage: STAGES.CONTENT_UNAVAILABLE, fault: "no-safe-playable-content" };
     }
     case "ANSWER": {
@@ -326,7 +330,8 @@ export function gameReducer(state, action) {
       if (!safeCards.length) {
         return { ...state, stage: STAGES.CONTENT_UNAVAILABLE, fault: "no-safe-playable-content" };
       }
-      return { ...state, ...FRESH_RUN, pool, cards: safeCards, stage: STAGES.ROUND };
+      const runId = action.seed === undefined ? state.runId : action.seed;
+      return { ...state, ...FRESH_RUN, pool, cards: safeCards, stage: STAGES.ROUND, runId };
     }
     case "REVEAL_PRIVATE_TURN":
       return state.stage === STAGES.PRIVATE_SHUTTER
@@ -366,12 +371,18 @@ export function gameReducer(state, action) {
     // nothing about that card was. The write itself is unaffected: only the
     // misattributed display is dropped.
     //
-    // A missing roundIndex is treated as current, so a caller that does not
+    // roundIndex alone is not enough across a rematch: PLAY_AGAIN / START_ROUND
+    // reset roundIndex to 0, so a late write from the previous run's round 0
+    // would match the new run. runId closes that hole.
+    //
+    // A missing roundIndex/runId is treated as current, so a caller that does not
     // supply one keeps the old behaviour rather than silently losing its status.
     case "REPORT_QUEUED":
+      if (action.runId != null && action.runId !== state.runId) return state;
       if (action.roundIndex != null && action.roundIndex !== state.roundIndex) return state;
       return { ...state, reportStatus: "queued" };
     case "REPORT_FAILED":
+      if (action.runId != null && action.runId !== state.runId) return state;
       if (action.roundIndex != null && action.roundIndex !== state.roundIndex) return state;
       return { ...state, reportStatus: "failed" };
     case "SIMULATE_CORRUPT_DECK":

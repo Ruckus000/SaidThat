@@ -434,6 +434,37 @@ test("chaos: a report confirmation cannot land against a later card", () => {
   assert.equal(gameReducer(state, { type: "REPORT_QUEUED" }).reportStatus, "queued");
 });
 
+// Rematch resets roundIndex to 0. A late REPORT_QUEUED from the previous run's
+// round 0 would otherwise match the new run and show "Saved locally" on a card
+// nobody reported in this run. runId is the scope that survives a rematch.
+test("chaos: a report confirmation cannot land against a rematched run", () => {
+  let state = started();
+  const priorRunId = state.runId;
+  const priorRound = state.roundIndex;
+  assert.equal(priorRound, 0);
+
+  state = gameReducer(state, { type: "PLAY_AGAIN", seed: 99, allowLocalFixtures: true });
+  assert.equal(state.roundIndex, 0);
+  assert.notEqual(state.runId, priorRunId);
+
+  const late = gameReducer(state, {
+    type: "REPORT_QUEUED",
+    roundIndex: priorRound,
+    runId: priorRunId,
+  });
+  assert.equal(late.reportStatus, null, "a prior-run confirmation is dropped");
+  assert.equal(late, state, "and the state is returned untouched, not rebuilt");
+
+  assert.equal(
+    gameReducer(state, {
+      type: "REPORT_QUEUED",
+      roundIndex: state.roundIndex,
+      runId: state.runId,
+    }).reportStatus,
+    "queued",
+  );
+});
+
 test("chaos: report records minimize data and corrupted decks halt play", () => {
   let state = started();
   assert.deepEqual(reportPayload(state, "wrong-attribution", "2026-07-20T00:00:00.000Z"), {

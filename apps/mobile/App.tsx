@@ -47,6 +47,15 @@ import { withTimeout } from "./src/storage/withTimeout";
 const allowLocalFixtures = typeof __DEV__ !== "undefined" && __DEV__;
 
 /**
+ * How long App waits on expo-font before rendering with platform fallbacks.
+ *
+ * A hung native font loader previously left a permanent blank SafeAreaView —
+ * fontsLoaded false, fontError null, no timeout. Generous against a slow device
+ * flash; short enough that a wedged load cannot strand the room.
+ */
+export const FONT_LOAD_TIMEOUT_MS = 4000;
+
+/**
  * Entropy for a run, generated here rather than inside the reducer.
  *
  * The reducer must stay a pure function of (state, action) — the chaos tests
@@ -61,12 +70,13 @@ function runSeed(): number {
 
 export default function App() {
   // Load VOLT faces (Bricolage Grotesque display + Inter body/counters). Render
-  // is gated on load so text never flashes in a fallback face; on a load error we fall
-  // through to the platform system face rather than showing nothing.
+  // is gated on load so text never flashes in a fallback face; on a load error
+  // or a hung loader we fall through and let the platform substitute faces.
   const [fontsLoaded, fontError] = useFonts({
     Inter: require("./assets/fonts/InterVariable.ttf"),
     BricolageGrotesque: require("./assets/fonts/BricolageGrotesque.ttf"),
   });
+  const [fontTimedOut, setFontTimedOut] = useState(false);
   // Re-renders when the system text size changes; see the key below.
   const { fontScale } = useWindowDimensions();
   const [state, dispatch] = useReducer(
@@ -80,6 +90,7 @@ export default function App() {
     }),
   );
   const [reportBusy, setReportBusy] = useState(false);
+  const [exportBusy, setExportBusy] = useState(false);
   const [motionOptIn, setMotionOptIn] = useState(false);
   const [motionNeutralZ, setMotionNeutralZ] = useState<number | null>(null);
   const [calibrationReading, setCalibrationReading] = useState(false);
@@ -93,6 +104,8 @@ export default function App() {
   // ResultScreen because that screen UNMOUNTS on an interruption — backgrounding
   // routes through PAUSED — and a component key cannot preserve state across an
   // unmount. Keyed by round so the next one still gets its suspense beat.
+  // Cleared on every fresh run: rematch resets roundIndex to 0, so a stale
+  // revealedRound === 0 would skip the beat on the new run's first card.
   const [revealedRound, setRevealedRound] = useState<number | null>(null);
   const [reducedMotionPreference, setReducedMotionPreference] = useState(false);
   const [noMotion, setNoMotion] = useState(false);
@@ -104,6 +117,12 @@ export default function App() {
   const reducedMotion = reducedMotionActive({ reducedMotionPreference, deviceReducedMotion });
   const motionLockedByDevice = reducedMotionForcedByDevice({ reducedMotionPreference, deviceReducedMotion });
   const card = currentCard(state);
+
+  useEffect(() => {
+    if (fontsLoaded || fontError || fontTimedOut) return undefined;
+    const timer = setTimeout(() => setFontTimedOut(true), FONT_LOAD_TIMEOUT_MS);
+    return () => clearTimeout(timer);
+  }, [fontsLoaded, fontError, fontTimedOut]);
 
   // Tap commits fire the KICK haptic doublet inside the answer control (useFireEvent),
   // so the shared dispatch is haptic-free to avoid a double tick. The tilt path has no
@@ -135,17 +154,29 @@ export default function App() {
    * nothing can leave without someone choosing where it goes.
    */
   async function exportPlaytestData() {
-    const stats = await withTimeout(loadPlaytestStats(), { fallback: null });
-    const payload = toExport(stats ?? { cards: {} }, DECK_VERSION);
-    if (payload.cards.length === 0) {
-      Alert.alert("Nothing to export yet", "Play a run first — this only records per-card counts.");
-      return;
-    }
+    if (exportBusy) return;
+    setExportBusy(true);
     try {
-      await Share.share({ message: JSON.stringify(payload, null, 2) });
+      const stats = await withTimeout(loadPlaytestStats(), { fallback: null });
+      const payload = toExport(stats ?? { cards: {} }, DECK_VERSION);
+      if (payload.cards.length === 0) {
+        Alert.alert("Nothing to export yet", "Play a run first — this only records per-card counts.");
+        return;
+      }
+      // Bounded like report/reset: a wedged share sheet must not latch the button
+      // forever, and a double-tap must not stack sheets.
+      const opened = await withTimeout(
+        Share.share({ message: JSON.stringify(payload, null, 2) }).then(() => true),
+        { fallback: false },
+      );
+      if (!opened) {
+        Alert.alert("Export did not open", "Try again. Nothing left this device.");
+      }
     } catch {
       // Sharing was dismissed or refused. Nothing was written and nothing was
       // sent, so there is nothing to report and nothing to undo.
+    } finally {
+      setExportBusy(false);
     }
   }
 
@@ -174,11 +205,17 @@ export default function App() {
     [hapticsEnabled, commitAnswer, state],
   );
 
+  const onMotionUnavailable = useCallback(() => {
+    setMotionNeutralZ(null);
+    setCalibrationUnavailable(true);
+  }, []);
+
   useRoomBeaconMotion({
     enabled: motionAllowed({ motionOptIn, noMotion }) && state.stage === STAGES.ROUND,
     mode: state.mode,
     neutralZ: motionNeutralZ,
     onAnswer: commitAnswerFromTilt,
+    onUnavailable: onMotionUnavailable,
   });
 
   // A completed run counts as one group for each card it contained. Groups are
@@ -212,6 +249,7 @@ export default function App() {
     // then would be attached to a card nobody reported. The reducer drops a stale
     // one; the report itself is already written either way.
     const roundIndex = state.roundIndex;
+    const runId = state.runId;
     try {
       // Bounded for the same reason the reset is. `finally` looks like it
       // guarantees the busy flag is released, and it does — for a promise that
@@ -222,9 +260,9 @@ export default function App() {
         queueReport(reportPayload(state, reason, new Date().toISOString())).then(() => true),
         { fallback: false },
       );
-      dispatch({ type: queued ? "REPORT_QUEUED" : "REPORT_FAILED", roundIndex });
+      dispatch({ type: queued ? "REPORT_QUEUED" : "REPORT_FAILED", roundIndex, runId });
     } catch {
-      dispatch({ type: "REPORT_FAILED", roundIndex });
+      dispatch({ type: "REPORT_FAILED", roundIndex, runId });
     } finally {
       setReportBusy(false);
     }
@@ -276,6 +314,7 @@ export default function App() {
     setMotionOptIn(false);
     setMotionNeutralZ(null);
     setShowSettings(false);
+    setRevealedRound(null);
     dispatch({
       type: "RESET_LOCAL_SESSION",
       cards: playableDeck(catalog, { allowLocalFixtures }, TOMBSTONES),
@@ -315,6 +354,7 @@ export default function App() {
 
   function goHome() {
     setMotionNeutralZ(null);
+    setRevealedRound(null);
     dispatch({ type: "GO_HOME" });
   }
 
@@ -325,6 +365,7 @@ export default function App() {
     // integer, which is what the run-builder tests rely on.
     setMotionNeutralZ(null);
     setLaughPick(null);
+    setRevealedRound(null);
     dispatch({ type: "PLAY_AGAIN", seed: runSeed(), allowLocalFixtures });
   }
 
@@ -341,7 +382,7 @@ export default function App() {
     if (!enabled) setMotionNeutralZ(null);
   }
 
-  if (!fontsLoaded && !fontError) {
+  if (!fontsLoaded && !fontError && !fontTimedOut) {
     // Fonts still loading: hold on the calm canvas (no unstyled text flash).
     return (
       <SafeAreaView style={s.safe}>
@@ -420,6 +461,7 @@ export default function App() {
             onReset={confirmResetLocalSession}
             onClose={() => setShowSettings(false)}
             onExportPlaytest={exportPlaytestData}
+            exportBusy={exportBusy}
           />
         )}
         {state.stage === STAGES.SETUP && (
@@ -432,6 +474,7 @@ export default function App() {
             onMotionOptIn={setMotionOptInEnabled}
             onStart={() => {
               setLaughPick(null);
+              setRevealedRound(null);
               dispatch({ type: "START_ROUND", seed: runSeed() });
             }}
           />
@@ -508,7 +551,9 @@ export default function App() {
         {state.stage === STAGES.PAUSED && (
           <PausedScreen onResume={() => dispatch({ type: "RESUME_ROOM" })} onLeave={goHome} />
         )}
-        {state.stage === STAGES.CONTENT_UNAVAILABLE && <ContentUnavailableScreen fault={state.fault} />}
+        {state.stage === STAGES.CONTENT_UNAVAILABLE && (
+          <ContentUnavailableScreen fault={state.fault} onHome={goHome} />
+        )}
       </View>
     </SafeAreaView>
   );
