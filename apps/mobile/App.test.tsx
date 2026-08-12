@@ -38,6 +38,11 @@ jest.mock("expo-font", () => ({
   isLoaded: () => true,
 }));
 
+jest.mock("expo-splash-screen", () => ({
+  preventAutoHideAsync: jest.fn(async () => {}),
+  hideAsync: jest.fn(async () => {}),
+}));
+
 // Safe-area insets come from a native module. The package ships its own mock,
 // which supplies fixed frame/insets so SafeAreaProvider resolves synchronously —
 // without it the provider renders nothing until it measures, and every query

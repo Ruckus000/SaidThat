@@ -2,6 +2,7 @@ import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { Alert, AppState, Share, View, useWindowDimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 
 import { ContentUnavailableScreen } from "./src/components/ContentUnavailableScreen";
@@ -32,6 +33,7 @@ import {
 } from "./src/domain/game";
 import { isGuessCorrect } from "./src/domain/contentRules";
 import { commitFeedback } from "./src/feedback/haptics";
+import { markStartup } from "./src/perf/startupMarks";
 import { calibrateNeutral, readMotionSample, useRoomBeaconMotion } from "./src/sensors/useRoomBeaconMotion";
 import {
   hapticsAllowed,
@@ -46,6 +48,10 @@ import { recordGroup, recordLaugh, recordOutcome, toExport } from "./src/domain/
 import { withTimeout } from "./src/storage/withTimeout";
 
 const allowLocalFixtures = typeof __DEV__ !== "undefined" && __DEV__;
+
+// Keep the native splash up until fonts are ready so the font gate is not a
+// blank SafeArea flash. Failures still hide — system faces are the fallback.
+SplashScreen.preventAutoHideAsync().catch(() => {});
 
 /**
  * Entropy for a run, generated here rather than inside the reducer.
@@ -73,14 +79,18 @@ export default function App() {
   const [state, dispatch] = useReducer(
     gameReducer,
     undefined,
-    () => createSession({
-      cards: playableDeck(catalog, { allowLocalFixtures }, TOMBSTONES),
-      allowLocalFixtures,
-      deckVersion: DECK_VERSION,
-      seed: runSeed(),
-      // Home never needs a sampled run; START_ROUND builds it on first play.
-      deferRun: true,
-    }),
+    () => {
+      const session = createSession({
+        cards: playableDeck(catalog, { allowLocalFixtures }, TOMBSTONES),
+        allowLocalFixtures,
+        deckVersion: DECK_VERSION,
+        seed: runSeed(),
+        // Home never needs a sampled run; START_ROUND builds it on first play.
+        deferRun: true,
+      });
+      markStartup("session-ready");
+      return session;
+    },
   );
   const [reportBusy, setReportBusy] = useState(false);
   const [motionOptIn, setMotionOptIn] = useState(false);
@@ -114,6 +124,27 @@ export default function App() {
   stateRef.current = state;
   const hapticsEnabledRef = useRef(hapticsEnabled);
   hapticsEnabledRef.current = hapticsEnabled;
+  const fontsMarkedRef = useRef(false);
+  const homeMarkedRef = useRef(false);
+  const firstRoundMarkedRef = useRef(false);
+
+  useEffect(() => {
+    if (!fontsLoaded && !fontError) return undefined;
+    if (!fontsMarkedRef.current) {
+      fontsMarkedRef.current = true;
+      markStartup("fonts-ready");
+    }
+    SplashScreen.hideAsync().catch(() => {});
+    return undefined;
+  }, [fontsLoaded, fontError]);
+
+  useEffect(() => {
+    if (homeMarkedRef.current) return undefined;
+    if ((!fontsLoaded && !fontError) || state.stage !== STAGES.HOME) return undefined;
+    homeMarkedRef.current = true;
+    markStartup("home-interactive");
+    return undefined;
+  }, [fontsLoaded, fontError, state.stage]);
 
   // Tap commits fire the KICK haptic doublet inside the answer control (useFireEvent),
   // so the shared dispatch is haptic-free to avoid a double tick. The tilt path has no
@@ -440,6 +471,10 @@ export default function App() {
             onMotionOptIn={setMotionOptInEnabled}
             onStart={() => {
               setLaughPick(null);
+              if (!firstRoundMarkedRef.current) {
+                firstRoundMarkedRef.current = true;
+                markStartup("first-round");
+              }
               dispatch({ type: "START_ROUND", seed: runSeed() });
             }}
           />
