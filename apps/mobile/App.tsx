@@ -54,6 +54,15 @@ const allowLocalFixtures = typeof __DEV__ !== "undefined" && __DEV__;
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
 /**
+ * How long App waits on expo-font before rendering with platform fallbacks.
+ *
+ * A hung native font loader previously left a permanent blank SafeAreaView —
+ * fontsLoaded false, fontError null, no timeout. Generous against a slow device
+ * flash; short enough that a wedged load cannot strand the room.
+ */
+export const FONT_LOAD_TIMEOUT_MS = 4000;
+
+/**
  * Entropy for a run, generated here rather than inside the reducer.
  *
  * The reducer must stay a pure function of (state, action) — the chaos tests
@@ -74,6 +83,8 @@ export default function App() {
     Inter: require("./assets/fonts/InterVariable.ttf"),
     BricolageGrotesque: require("./assets/fonts/BricolageGrotesque.ttf"),
   });
+  const [fontTimedOut, setFontTimedOut] = useState(false);
+  const fontsReady = fontsLoaded || Boolean(fontError) || fontTimedOut;
   // Re-renders when the system text size changes; see the key below.
   const { fontScale } = useWindowDimensions();
   const [state, dispatch] = useReducer(
@@ -136,22 +147,28 @@ export default function App() {
   const firstRoundMarkedRef = useRef(false);
 
   useEffect(() => {
-    if (!fontsLoaded && !fontError) return undefined;
+    if (fontsReady) return undefined;
+    const timer = setTimeout(() => setFontTimedOut(true), FONT_LOAD_TIMEOUT_MS);
+    return () => clearTimeout(timer);
+  }, [fontsReady]);
+
+  useEffect(() => {
+    if (!fontsReady) return undefined;
     if (!fontsMarkedRef.current) {
       fontsMarkedRef.current = true;
       markStartup("fonts-ready");
     }
     SplashScreen.hideAsync().catch(() => {});
     return undefined;
-  }, [fontsLoaded, fontError]);
+  }, [fontsReady]);
 
   useEffect(() => {
     if (homeMarkedRef.current) return undefined;
-    if ((!fontsLoaded && !fontError) || state.stage !== STAGES.HOME) return undefined;
+    if (!fontsReady || state.stage !== STAGES.HOME) return undefined;
     homeMarkedRef.current = true;
     markStartup("home-interactive");
     return undefined;
-  }, [fontsLoaded, fontError, state.stage]);
+  }, [fontsReady, state.stage]);
 
   // Tap commits fire the KICK haptic doublet inside the answer control (useFireEvent),
   // so the shared dispatch is haptic-free to avoid a double tick. The tilt path has no
@@ -462,8 +479,8 @@ export default function App() {
     setRevealedRound(state.roundIndex);
   }, [state.roundIndex]);
 
-  if (!fontsLoaded && !fontError) {
-    // Fonts still loading: hold on the calm canvas (no unstyled text flash).
+  if (!fontsReady) {
+    // Fonts still loading: hold native splash / calm canvas (no unstyled text flash).
     return (
       <SafeAreaView style={s.safe}>
         <StatusBar style="light" />
@@ -638,7 +655,9 @@ export default function App() {
         {state.stage === STAGES.PAUSED && (
           <PausedScreen onResume={() => dispatch({ type: "RESUME_ROOM" })} onLeave={goHome} />
         )}
-        {state.stage === STAGES.CONTENT_UNAVAILABLE && <ContentUnavailableScreen fault={state.fault} />}
+        {state.stage === STAGES.CONTENT_UNAVAILABLE && (
+          <ContentUnavailableScreen fault={state.fault} onHome={goHome} />
+        )}
       </View>
     </SafeAreaView>
   );
