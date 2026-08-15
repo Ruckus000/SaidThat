@@ -18,7 +18,7 @@ export type SettingsScreenProps = {
   onClose: () => void;
   /** Omitted hides the export entirely; there is no network path either way. */
   onExportPlaytest?: () => void;
-  /** True while a share sheet (or its timeout) is in flight. */
+  /** True while the OS share sheet is open. */
   exportBusy?: boolean;
 };
 

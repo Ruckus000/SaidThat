@@ -206,15 +206,12 @@ export default function App() {
         Alert.alert("Nothing to export yet", "Play a run first — this only records per-card counts.");
         return;
       }
-      // Bounded like report/reset: a wedged share sheet must not latch the button
-      // forever, and a double-tap must not stack sheets.
-      const opened = await withTimeout(
-        Share.share({ message: JSON.stringify(payload, null, 2) }).then(() => true),
-        { fallback: false },
-      );
-      if (!opened) {
-        Alert.alert("Export did not open", "Try again. Nothing left this device.");
-      }
+      // Share.share resolves when the sheet is dismissed, not when it opens.
+      // A storage-length timeout would fire during a normal share and look like
+      // failure while the sheet is still on screen — then finally would release
+      // exportBusy and a second tap could stack sheets. Hold busy until the
+      // sheet settles; that is what actually prevents a double-tap.
+      await Share.share({ message: JSON.stringify(payload, null, 2) });
     } catch {
       // Sharing was dismissed or refused. Nothing was written and nothing was
       // sent, so there is nothing to report and nothing to undo.

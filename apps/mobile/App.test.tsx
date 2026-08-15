@@ -1,4 +1,4 @@
-import { Alert, AppState } from "react-native";
+import { Alert, AppState, Share } from "react-native";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react-native";
 
 import App from "./App";
@@ -52,8 +52,10 @@ jest.mock("react-native-safe-area-context", () =>
 );
 
 import { clearReportQueue } from "./src/storage/reportQueue";
+import { loadPlaytestStats } from "./src/storage/playtestStore";
 
 const mockClearReportQueue = clearReportQueue as jest.MockedFunction<typeof clearReportQueue>;
+const mockLoadPlaytestStats = loadPlaytestStats as jest.MockedFunction<typeof loadPlaytestStats>;
 
 /**
  * Alert is a native module: RNTL cannot press its buttons, so the destructive
@@ -88,6 +90,7 @@ async function openSettings() {
 beforeEach(() => {
   jest.clearAllMocks();
   mockClearReportQueue.mockImplementation(async () => {});
+  mockLoadPlaytestStats.mockResolvedValue({ cards: {} });
 });
 
 test("app: the settings sheet reaches the destructive reset", async () => {
@@ -278,3 +281,37 @@ test("app: starting a new run after a revealed verdict restores the suspense bea
   expect(screen.getByText("LOCKING IT IN…")).toBeOnTheScreen();
   expect(screen.queryByText("SEE THE TRUTH")).not.toBeOnTheScreen();
 }, 15000);
+
+// Share.share resolves when the sheet is dismissed, not when it opens. A 3s
+// storage-style timeout used to fire during a normal share, alert "did not
+// open", and release exportBusy so a second tap could stack sheets.
+test("app: a share sheet that stays open past the storage bound is not a failed export", async () => {
+  mockLoadPlaytestStats.mockResolvedValue({
+    cards: { "card-a": { answered: 1, correct: 1, skips: 0, laughs: 0, groups: 1 } },
+  });
+  let resolveShare: () => void = () => {};
+  const share = jest.spyOn(Share, "share").mockImplementation(
+    () =>
+      new Promise((resolve) => {
+        resolveShare = () => resolve({ action: "sharedAction" });
+      }),
+  );
+  const alert = jest.spyOn(Alert, "alert").mockImplementation(() => {});
+
+  await openSettings();
+  fireEvent.press(screen.getByText("EXPORT PLAYTEST DATA"));
+
+  await waitFor(() => expect(screen.getByText("EXPORTING…")).toBeOnTheScreen());
+
+  await act(async () => {
+    await new Promise((r) => setTimeout(r, 3500));
+  });
+  expect(alert.mock.calls.map((call) => call[0])).not.toContain("Export did not open");
+  expect(screen.getByText("EXPORTING…")).toBeOnTheScreen();
+
+  await act(async () => {
+    resolveShare();
+  });
+  await waitFor(() => expect(screen.getByText("EXPORT PLAYTEST DATA")).toBeOnTheScreen());
+  share.mockRestore();
+}, 10000);
