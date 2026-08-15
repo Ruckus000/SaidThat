@@ -56,7 +56,7 @@ test("private shutter: the handoff ritual renders with its one action", async ()
 // player cannot see the previous turn. The reducer is tested for this; that the
 // SCREEN shows nothing was never asserted until now.
 test("private shutter: no card, quote, verdict or score reaches the next player", () => {
-  render(<PrivateShutterScreen onReady={jest.fn()} discardedPriorTurn />);
+  render(<PrivateShutterScreen onReady={jest.fn()} privateRecovery="discarded-prior-turn" />);
 
   for (const leak of [
     /AUTHENTIC/i,
@@ -80,7 +80,7 @@ test("private shutter: the discard notice appears only when a turn was really di
   expect(screen.getByText(/prior prompt and result are protected/i)).toBeOnTheScreen();
   quiet.unmount();
 
-  render(<PrivateShutterScreen onReady={jest.fn()} discardedPriorTurn />);
+  render(<PrivateShutterScreen onReady={jest.fn()} privateRecovery="discarded-prior-turn" />);
   const notice = screen.getByText(/last turn was interrupted/i);
   expect(notice).toBeOnTheScreen();
   expect(notice).toHaveTextContent(/Nothing was scored for it/i);
@@ -98,7 +98,7 @@ test("private shutter: a scored interruption does not claim nothing was scored",
 // View the button below it was pushed off-screen, leaving the protected handoff
 // with no way forward — a run stuck behind a shutter that cannot be dismissed.
 test("shutter: the body scrolls, and the one action that advances it does not", () => {
-  render(<PrivateShutterScreen onReady={() => {}} discardedPriorTurn />);
+  render(<PrivateShutterScreen onReady={() => {}} privateRecovery="discarded-prior-turn" />);
 
   const scroller = screen.UNSAFE_getByType(ScrollView);
   const scrolledText = scroller

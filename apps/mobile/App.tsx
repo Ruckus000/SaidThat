@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
-import { Alert, AppState, Share, View, useWindowDimensions } from "react-native";
+import { Alert, AppState, View, useWindowDimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
@@ -34,7 +34,8 @@ import {
 import { isGuessCorrect } from "./src/domain/contentRules";
 import { commitFeedback } from "./src/feedback/haptics";
 import { markStartup } from "./src/perf/startupMarks";
-import { calibrateNeutral, readMotionSample, useRoomBeaconMotion } from "./src/sensors/useRoomBeaconMotion";
+import { useMotionCalibration } from "./src/sensors/useMotionCalibration";
+import { useRoomBeaconMotion } from "./src/sensors/useRoomBeaconMotion";
 import {
   hapticsAllowed,
   motionAllowed,
@@ -42,10 +43,12 @@ import {
   reducedMotionForcedByDevice,
 } from "./src/settings/settingsPolicy";
 import { useReducedMotion } from "./src/theme/motion";
-import { clearReportQueue, queueReport } from "./src/storage/reportQueue";
-import { clearPlaytestStats, loadPlaytestStats, updatePlaytestStats } from "./src/storage/playtestStore";
-import { recordGroup, recordLaugh, recordOutcome, toExport } from "./src/domain/playtestPolicy";
-import { DEFAULT_STORAGE_TIMEOUT_MS, withTimeout } from "./src/storage/withTimeout";
+import { clearReportQueue } from "./src/storage/reportQueue";
+import { clearPlaytestStats, updatePlaytestStats } from "./src/storage/playtestStore";
+import { recordGroup, recordLaugh, recordOutcome } from "./src/domain/playtestPolicy";
+import { usePlaytestExport } from "./src/storage/usePlaytestExport";
+import { useQueuedReport } from "./src/storage/useQueuedReport";
+import { withTimeout } from "./src/storage/withTimeout";
 
 const allowLocalFixtures = typeof __DEV__ !== "undefined" && __DEV__;
 
@@ -103,12 +106,7 @@ export default function App() {
       return session;
     },
   );
-  const [reportBusy, setReportBusy] = useState(false);
-  const [exportBusy, setExportBusy] = useState(false);
   const [motionOptIn, setMotionOptIn] = useState(false);
-  const [motionNeutralZ, setMotionNeutralZ] = useState<number | null>(null);
-  const [calibrationReading, setCalibrationReading] = useState(false);
-  const [calibrationUnavailable, setCalibrationUnavailable] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [resetNotice, setResetNotice] = useState<string | null>(null);
   // Which card the room named as the biggest reaction this run. Cleared on a
@@ -121,10 +119,6 @@ export default function App() {
   // Cleared on every fresh run: rematch resets roundIndex to 0, so a stale
   // revealedRound === 0 would skip the beat on the new run's first card.
   const [revealedRound, setRevealedRound] = useState<number | null>(null);
-  // Monotonic id so a late report settle from a superseded attempt cannot
-  // overwrite UI status after rematch/continue, while a late success for the
-  // *current* attempt can still upgrade a silent timeout to "saved".
-  const reportAttemptRef = useRef(0);
   const [reducedMotionPreference, setReducedMotionPreference] = useState(false);
   const [noMotion, setNoMotion] = useState(false);
   const [hapticsEnabled, setHapticsEnabled] = useState(true);
@@ -135,6 +129,25 @@ export default function App() {
   const reducedMotion = reducedMotionActive({ reducedMotionPreference, deviceReducedMotion });
   const motionLockedByDevice = reducedMotionForcedByDevice({ reducedMotionPreference, deviceReducedMotion });
   const card = currentCard(state);
+  const {
+    motionNeutralZ,
+    calibrationReading,
+    calibrationUnavailable,
+    calibrate: calibrateMotion,
+    onUnavailable: onMotionUnavailable,
+    clearCalibration,
+  } = useMotionCalibration();
+  const { exportBusy, exportPlaytestData } = usePlaytestExport(DECK_VERSION);
+  const buildReportPayload = useCallback(
+    (reason: string) => reportPayload(state, reason, new Date().toISOString()),
+    [state],
+  );
+  const { reportBusy, report, invalidatePending } = useQueuedReport({
+    roundIndex: state.roundIndex,
+    runId: state.runId,
+    buildPayload: buildReportPayload,
+    dispatch,
+  });
 
   // Stable tilt path: refs hold the latest state/haptics so commitAnswerFromTilt
   // identity does not churn every ANSWER and force Accelerometer resubscribe.
@@ -188,49 +201,6 @@ export default function App() {
     dispatch({ type: "ANSWER", guessAuthentic });
   }, []);
 
-  /**
-   * Hands the local calibration aggregates to the OS share sheet.
-   *
-   * This is the entire delivery mechanism: a human exports the file and carries
-   * it to an editor. There is no endpoint, no upload, and no background sync —
-   * which is what makes the capture defensible without a consent flow, since
-   * nothing can leave without someone choosing where it goes.
-   */
-  async function exportPlaytestData() {
-    if (exportBusy) return;
-    setExportBusy(true);
-    try {
-      const stats = await withTimeout(loadPlaytestStats(), { fallback: null });
-      const payload = toExport(stats ?? { cards: {} }, DECK_VERSION);
-      if (payload.cards.length === 0) {
-        Alert.alert("Nothing to export yet", "Play a run first — this only records per-card counts.");
-        return;
-      }
-      // Bounded like report/reset: a wedged share sheet must not latch the button
-      // forever, and a double-tap must not stack sheets.
-      const opened = await withTimeout(
-        Share.share({ message: JSON.stringify(payload, null, 2) }).then(() => true),
-        { fallback: false },
-      );
-      if (!opened) {
-        Alert.alert("Export did not open", "Try again. Nothing left this device.");
-      }
-    } catch {
-      // Sharing was dismissed or refused. Nothing was written and nothing was
-      // sent, so there is nothing to report and nothing to undo.
-    } finally {
-      setExportBusy(false);
-    }
-  }
-
-  /** One optional room-level pick per run. Tapping again moves it. */
-  const pickFunniest = useCallback(
-    (cardId: string) => {
-      setLaughPick(cardId);
-      void updatePlaytestStats((stats) => recordLaugh(stats, { cardId })).catch(() => {});
-    },
-    [],
-  );
   const commitAnswerFromTilt = useCallback(
     (guessAuthentic: boolean) => {
       // The haptic fires only if the reducer actually takes the answer. It used
@@ -248,10 +218,14 @@ export default function App() {
     [commitAnswer],
   );
 
-  const onMotionUnavailable = useCallback(() => {
-    setMotionNeutralZ(null);
-    setCalibrationUnavailable(true);
-  }, []);
+  /** One optional room-level pick per run. Tapping again moves it. */
+  const pickFunniest = useCallback(
+    (cardId: string) => {
+      setLaughPick(cardId);
+      void updatePlaytestStats((stats) => recordLaugh(stats, { cardId })).catch(() => {});
+    },
+    [],
+  );
 
   useRoomBeaconMotion({
     enabled: motionAllowed({ motionOptIn, noMotion }) && state.stage === STAGES.ROUND,
@@ -289,87 +263,9 @@ export default function App() {
     return () => subscription.remove();
   }, []);
 
-  async function report(reason: string) {
-    if (reportBusy) return;
-    setReportBusy(true);
-    // Captured before the await, and carried on the action. The player can reach
-    // the next card while the write is in flight, and a confirmation that lands
-    // then would be attached to a card nobody reported. The reducer drops a stale
-    // one; the report itself is already written either way.
-    const roundIndex = state.roundIndex;
-    const runId = state.runId;
-    const attemptId = ++reportAttemptRef.current;
-    const payload = reportPayload(state, reason, new Date().toISOString());
-    // Keep the underlying write observable after a UI timeout so a late success
-    // can still surface "saved" for this attempt — without claiming failure while
-    // the write is merely slow. Queue dedupe covers a user retry of the same chip.
-    const write = queueReport(payload).then(
-      () => true as const,
-      () => false as const,
-    );
-    let timeoutId: ReturnType<typeof setTimeout> | undefined;
-    try {
-      const outcome = await Promise.race([
-        write.then((ok) => {
-          if (timeoutId != null) clearTimeout(timeoutId);
-          return { kind: "settled" as const, ok };
-        }),
-        new Promise<{ kind: "timeout" }>((resolve) => {
-          timeoutId = setTimeout(() => resolve({ kind: "timeout" }), DEFAULT_STORAGE_TIMEOUT_MS);
-        }),
-      ]);
-      if (attemptId !== reportAttemptRef.current) return;
-      if (outcome.kind === "settled") {
-        dispatch({
-          type: outcome.ok ? "REPORT_QUEUED" : "REPORT_FAILED",
-          roundIndex,
-          runId,
-        });
-        return;
-      }
-      // Timed out: release the chips, but if this attempt's write lands later
-      // and nothing superseded it, upgrade to an honest saved/failed status.
-      void write.then((ok) => {
-        if (attemptId !== reportAttemptRef.current) return;
-        dispatch({
-          type: ok ? "REPORT_QUEUED" : "REPORT_FAILED",
-          roundIndex,
-          runId,
-        });
-      });
-    } catch {
-      if (timeoutId != null) clearTimeout(timeoutId);
-      if (attemptId === reportAttemptRef.current) {
-        dispatch({ type: "REPORT_FAILED", roundIndex, runId });
-      }
-    } finally {
-      setReportBusy(false);
-    }
-  }
-
-  async function calibrateMotion() {
-    // The read is bounded and never rejects, so this cannot hang and cannot throw
-    // — but it CAN legitimately come back empty on a device with no accelerometer
-    // or a denied permission. Say so, rather than leaving a button that silently
-    // does nothing. Tap is unaffected either way.
-    if (calibrationReading) return;
-    setCalibrationReading(true);
-    setCalibrationUnavailable(false);
-    const neutral = calibrateNeutral(await readMotionSample());
-    setCalibrationReading(false);
-    if (neutral == null) {
-      setCalibrationUnavailable(true);
-      return;
-    }
-    setMotionNeutralZ(neutral);
-  }
-
   function setNoMotionEnabled(enabled: boolean) {
     setNoMotion(enabled);
-    if (enabled) {
-      setMotionNeutralZ(null);
-      setCalibrationUnavailable(false);
-    }
+    if (enabled) clearCalibration();
   }
 
   function confirmResetLocalSession() {
@@ -394,11 +290,10 @@ export default function App() {
     // destructive action did nothing at all. That is the same bug this function
     // was written to fix, one layer down.
     setMotionOptIn(false);
-    setMotionNeutralZ(null);
-    setCalibrationUnavailable(false);
+    clearCalibration();
     setShowSettings(false);
     setRevealedRound(null);
-    reportAttemptRef.current += 1;
+    invalidatePending();
     dispatch({
       type: "RESET_LOCAL_SESSION",
       cards: playableDeck(catalog, { allowLocalFixtures }, TOMBSTONES),
@@ -438,10 +333,9 @@ export default function App() {
   }
 
   function goHome() {
-    setMotionNeutralZ(null);
-    setCalibrationUnavailable(false);
+    clearCalibration();
     setRevealedRound(null);
-    reportAttemptRef.current += 1;
+    invalidatePending();
     dispatch({ type: "GO_HOME" });
   }
 
@@ -450,29 +344,24 @@ export default function App() {
     // keeps gameReducer a pure function of (state, action) while still giving a
     // different run each rematch — and makes any run reproducible from one
     // integer, which is what the run-builder tests rely on.
-    setMotionNeutralZ(null);
-    setCalibrationUnavailable(false);
+    clearCalibration();
     setLaughPick(null);
     setRevealedRound(null);
-    reportAttemptRef.current += 1;
+    invalidatePending();
     dispatch({ type: "PLAY_AGAIN", seed: runSeed(), allowLocalFixtures });
   }
 
   function setMode(mode: string) {
     if (mode !== MODES.ROOM_BEACON) {
       setMotionOptIn(false);
-      setMotionNeutralZ(null);
-      setCalibrationUnavailable(false);
+      clearCalibration();
     }
     dispatch({ type: "SET_MODE", mode });
   }
 
   function setMotionOptInEnabled(enabled: boolean) {
     setMotionOptIn(enabled);
-    if (!enabled) {
-      setMotionNeutralZ(null);
-      setCalibrationUnavailable(false);
-    }
+    if (!enabled) clearCalibration();
   }
 
   const markRoundRevealed = useCallback(() => {
@@ -572,7 +461,7 @@ export default function App() {
             onStart={() => {
               setLaughPick(null);
               setRevealedRound(null);
-              reportAttemptRef.current += 1;
+              invalidatePending();
               if (!firstRoundMarkedRef.current) {
                 firstRoundMarkedRef.current = true;
                 markStartup("first-round");
@@ -592,8 +481,8 @@ export default function App() {
             streak={state.streak}
             motionOptIn={motionAllowed({ motionOptIn, noMotion })}
             motionCalibrated={motionNeutralZ != null}
-          calibrationReading={calibrationReading}
-          calibrationUnavailable={calibrationUnavailable}
+            calibrationReading={calibrationReading}
+            calibrationUnavailable={calibrationUnavailable}
             reducedMotion={reducedMotion}
             haptics={hapticsAllowed({ hapticsEnabled })}
             onCalibrate={calibrateMotion}

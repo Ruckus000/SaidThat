@@ -1,6 +1,6 @@
 # Phase 0 deck schema (planning)
 
-**Status:** Spec only — runtime package lives under `packages/content-validation` after DesignOps implementation gate opens.  
+**Status:** Historical planning schema. Runtime validation now lives in `tools/content-pipeline/` and `apps/mobile/src/domain/` (`contentRules.js`, `isPlayableCard`, `validateDeck.js`). There is no `packages/content-validation` package.  
 **Package / brand id (engineering):** `SaidThat` (`com.saidthat.app` provisional)
 
 ## Zod shape (canonical)
@@ -44,7 +44,7 @@ export type Card = z.infer<typeof CardSchema>;
 ## Empty deck skeleton
 
 See `phase0-deck.empty.json` for a valid empty-ish structure (zero cards) used to lock the file shape.  
-Playable candidates (researched) are in `phase0-deck.candidates.json` — **not yet wired into the app**.
+Playable candidates (researched) are in `phase0-deck.candidates.json` — **historical research corpus**, not the live deck. The shipped bundle is `apps/mobile/src/content/deck.generated.js`, emitted from `tools/content-pipeline/`.
 
 ## Rules for this deck
 

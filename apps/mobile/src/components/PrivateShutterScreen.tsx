@@ -10,26 +10,18 @@ export type PrivateRecovery = "discarded-prior-turn" | "protected-after-commit";
 
 export type PrivateShutterScreenProps = {
   onReady: () => void;
-  /**
-   * Why this shutter is showing a recovery notice. Prefer the reducer kind;
-   * `discardedPriorTurn` remains as a boolean alias for the unanswered case.
-   */
+  /** Why this shutter is showing a recovery notice. */
   privateRecovery?: PrivateRecovery | null;
-  /** @deprecated Prefer privateRecovery="discarded-prior-turn". */
-  discardedPriorTurn?: boolean;
 };
 
 export function PrivateShutterScreen({
   onReady,
   privateRecovery = null,
-  discardedPriorTurn = false,
 }: PrivateShutterScreenProps) {
   // The discard used to be silent: the reducer recorded it and nothing read the
   // flag, so a player whose turn was thrown away by a notification was told only
   // that it "was discarded" hypothetically, in copy shown on every handoff.
-  const recovery =
-    privateRecovery ?? (discardedPriorTurn ? "discarded-prior-turn" : null);
-  const notice = privateDiscardNotice(recovery);
+  const notice = privateDiscardNotice(privateRecovery);
   return (
     <View style={{ flex: 1 }}>
       <View style={s.shutterPill}>
