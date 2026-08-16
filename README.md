@@ -5,7 +5,7 @@
 
 **Project status:** Local-first fixture MVP in active development. `apps/mobile` contains the playable Expo baseline: Room Beacon, Private Relay, fixture-only cards, offline report queueing, and deterministic resilience tests. The owner-authorized MVP path permits this scoped work now; see [MVP build status](.designops/mvp-build-status.md) and [the Cursor task queue](docs/mvp-build-queue.md).
 
-**Repository-control status:** Local DesignOps checks and tracked Git hooks are fail-closed. `main` is also remotely protected: the active "Protect main" ruleset requires a pull request, one approving review, and a passing `enforce` check, and dismisses approvals when the branch is pushed to. Use feature branches and pull requests, and note that an author cannot approve their own PR. See [DesignOps enforcement](tools/designops/README.md) and the "Remote GitHub status" section of [AGENTS.md](AGENTS.md).
+**Repository-control status:** Local DesignOps checks and tracked Git hooks are fail-closed. `main` is also remotely protected: the active "Protect main" ruleset requires a pull request and a passing `enforce` check, and blocks force pushes and deletions. It does not require an approving review — that is a process rule this repository imposes on itself, not something GitHub enforces, so a green merge button is not review approval. See [DesignOps enforcement](tools/designops/README.md) and the "Remote GitHub status" section of [AGENTS.md](AGENTS.md).
 
 **Phase 0 content (planning):** researched card candidates live under [`docs/content/`](docs/content/) with sources. Analytics for first playable build: **debug event log only** (no PostHog yet).
 

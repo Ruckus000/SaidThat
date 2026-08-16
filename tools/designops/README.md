@@ -29,9 +29,9 @@ After an explicit human decision, the agent may prepare an unsigned review draft
 
 The repository has the `DESIGNOPS_REVIEWER_PUBLIC_KEY_PEM` Actions secret and a successful `DesignOps policy` workflow run. The workflow validates changed ranges and exposes the policy result in GitHub Actions.
 
-Branch protection is **active**. The repository ruleset "Protect main" (id `19183364`) targets `refs/heads/main` and requires a pull request, one approving review, and a passing `enforce` status check; it dismisses stale approvals on push and blocks force pushes and deletions, with no bypass actors. See the root `AGENTS.md` "Remote GitHub status" section for the full rule table and its consequences for agents.
+Branch protection is **active**. The repository ruleset "Protect main" (id `19183364`) targets `refs/heads/main` and requires a pull request and a passing `enforce` status check; it blocks force pushes and deletions, with no bypass actors. See the root `AGENTS.md` "Remote GitHub status" section for the full rule table.
 
-Two gaps remain inside that gate: `require_code_owner_review` is `false`, so CODEOWNERS still only routes review requests rather than requiring one, and `enforce` is the only required status check — the `Mobile tests` jobs are not, so they cannot block a merge on their own.
+What that gate does **not** cover: `required_approving_review_count` is `0` (an author cannot approve their own PR, and this is a single-owner repository, so a nonzero count deadlocked every merge), `require_code_owner_review` is `false`, and `enforce` is the only required status check — the `Mobile tests` jobs cannot block a merge on their own. The code review and security review below are therefore enforced by practice, not by GitHub.
 
 Current operating practice:
 
@@ -40,7 +40,7 @@ Current operating practice:
 3. Confirm the `DesignOps policy / enforce` result for the pull request before merging.
 4. Complete and resolve an evidence-based code review and security review before merging. Review the diff against `main`, run the smallest relevant checks, and assess correctness, maintainability, integration impact, secrets/data exposure, authorization, and unsafe defaults. A green workflow alone is not merge approval; once the DesignOps result and both reviews are clear, an authorized agent may merge without a separate human merge decision.
 
-Remaining hardening for the ruleset: turn on `require_code_owner_review`, and add the `Mobile tests` jobs to the required status checks so a failing test suite blocks a merge the way the DesignOps check already does.
+Remaining hardening for the ruleset: add the `Mobile tests` jobs to the required status checks so a failing test suite blocks a merge the way the DesignOps check already does. Restoring a required approval (and `require_code_owner_review`) needs a second reviewing account first, or every merge deadlocks again.
 
 ## Release evidence
 

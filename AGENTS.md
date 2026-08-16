@@ -73,17 +73,16 @@ What it enforces today:
 | Rule | Effect |
 | --- | --- |
 | `pull_request` | Direct pushes to `main` are refused; changes must arrive by pull request. |
-| `required_approving_review_count: 1` | One approving review is genuinely required before merge. |
-| `dismiss_stale_reviews_on_push: true` | Any push to the PR branch dismisses existing approvals. |
+| `required_approving_review_count: 0` | GitHub does **not** require an approving review — see below. |
+| `dismiss_stale_reviews_on_push: true` | A push to the PR branch dismisses existing approvals. With zero required, this no longer blocks a merge. |
 | `required_status_checks` | The `enforce` check (DesignOps policy) must pass, with `strict` on, so the branch must also be current with `main`. |
 | `non_fast_forward`, `deletion` | Force pushes and branch deletion are blocked. |
 
-`bypass_actors` is empty: nobody is exempt, including the repository owner.
+`bypass_actors` is empty: nobody is exempt, including the repository owner. The gate applies uniformly rather than carving out an admin who can merge past a red `enforce`.
 
-Two consequences that catch agents out:
+**The approval count is deliberately zero, and that makes the review requirement below load-bearing.** It was `1`, which was unsatisfiable in practice: this is a single-owner repository, GitHub refuses to let an author approve their own pull request, and agents operate as that same account — so every PR deadlocked with `the base branch policy prohibits the merge`. Owner decision 2026-08-16: drop the count to zero rather than add a bypass actor, because a bypass actor exempts its holder from *every* rule in the ruleset, including the `enforce` status check. Keeping the count at zero preserves the DesignOps gate for everyone.
 
-- **You cannot approve your own pull request.** GitHub refuses an author's approval, so an agent operating as the PR author cannot satisfy the one-approval rule and cannot merge. `gh pr merge` fails with `the base branch policy prohibits the merge`. Stop and report that the PR needs an approving review from another account; do not reach for `--admin` to route around the rule.
-- **Push last, approve after.** Because stale reviews are dismissed on push, an approval obtained before a further commit is silently discarded. Land the final commit first, then request review.
+The consequence: **no remote control now requires the code and security review.** GitHub enforces that a PR exists and that `enforce` is green, and nothing more. The "Mandatory pre-merge review" section below is a process rule that agents and humans must honour on their own; a merge is not authorized just because GitHub permits it.
 
 Note that `gh api repos/.../branches/main/protection` returns `404 Branch not protected`. That legacy endpoint does not report rulesets and is **not** evidence that `main` is unprotected — use `gh api repos/.../rulesets` instead.
 
