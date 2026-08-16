@@ -66,11 +66,28 @@ Without it, `node --test tools/designops/enforce.test.mjs` fails two tests that 
 
 ## Remote GitHub status
 
-This private repository's current GitHub plan cannot enforce a ruleset or protected branch. Do not assume that `main` is remotely protected or that GitHub will block a direct push or merge.
+`main` **is** remotely protected. The active repository ruleset **"Protect main"** (id `19183364`, `enforcement: "active"`) targets `refs/heads/main` and is a real remote gate — it will block a merge, not merely report on one.
 
-The repository-owned enforcement command, signed reviews, and installed local Git hooks are the authoritative local controls. GitHub Actions reports the DesignOps result, and CODEOWNERS routes review requests, but neither is a remote merge or push gate today. Use feature branches and pull requests, inspect the DesignOps workflow result before merging, and never treat a green workflow as proof that GitHub enforced the merge path.
+What it enforces today:
 
-If this repository later gains an eligible GitHub plan, configure and activate branch protection before describing remote enforcement as active. Cursor rules and commands provide context; they do not replace local gates.
+| Rule | Effect |
+| --- | --- |
+| `pull_request` | Direct pushes to `main` are refused; changes must arrive by pull request. |
+| `required_approving_review_count: 1` | One approving review is genuinely required before merge. |
+| `dismiss_stale_reviews_on_push: true` | Any push to the PR branch dismisses existing approvals. |
+| `required_status_checks` | The `enforce` check (DesignOps policy) must pass, with `strict` on, so the branch must also be current with `main`. |
+| `non_fast_forward`, `deletion` | Force pushes and branch deletion are blocked. |
+
+`bypass_actors` is empty: nobody is exempt, including the repository owner.
+
+Two consequences that catch agents out:
+
+- **You cannot approve your own pull request.** GitHub refuses an author's approval, so an agent operating as the PR author cannot satisfy the one-approval rule and cannot merge. `gh pr merge` fails with `the base branch policy prohibits the merge`. Stop and report that the PR needs an approving review from another account; do not reach for `--admin` to route around the rule.
+- **Push last, approve after.** Because stale reviews are dismissed on push, an approval obtained before a further commit is silently discarded. Land the final commit first, then request review.
+
+Note that `gh api repos/.../branches/main/protection` returns `404 Branch not protected`. That legacy endpoint does not report rulesets and is **not** evidence that `main` is unprotected — use `gh api repos/.../rulesets` instead.
+
+Scope of the remote gate: only `enforce` is a required status check. The `Mobile tests` workflow jobs (`test`, `changes`) are **not** required, so a red mobile test suite will not by itself block a merge. `require_code_owner_review` is also `false`, so CODEOWNERS still only routes review requests rather than requiring one. The repository-owned enforcement command, signed reviews, and installed local Git hooks remain the authoritative controls for everything the ruleset does not cover, and a green workflow is still not the same thing as a completed review. Cursor rules and commands provide context; they do not replace local gates.
 
 ## Mandatory pre-merge review
 
