@@ -80,7 +80,7 @@ export function ReviewScreen({
       <View style={s.report}>
         <Text style={s.sectionLabel}>SEE A CONTENT ISSUE?</Text>
         <Text style={s.note}>
-          Reports save locally with only card ID, reason, deck version, and timestamp. No player identity or free text.
+          Reports save locally with only card ID, reason, deck version, timestamp, and a local run/round stamp for this device. No player identity or free text.
         </Text>
         <View style={s.reportChips}>
           {REPORT_REASONS.map((reason) => (

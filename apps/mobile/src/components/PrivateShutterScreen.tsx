@@ -6,17 +6,22 @@ import { Mark } from "./Mark";
 import { PrimaryButton } from "./PrimaryButton";
 import { s } from "./styles";
 
+export type PrivateRecovery = "discarded-prior-turn" | "protected-after-commit";
+
 export type PrivateShutterScreenProps = {
   onReady: () => void;
-  /** True when the reducer actually discarded a protected turn to get here. */
-  discardedPriorTurn?: boolean;
+  /** Why this shutter is showing a recovery notice. */
+  privateRecovery?: PrivateRecovery | null;
 };
 
-export function PrivateShutterScreen({ onReady, discardedPriorTurn = false }: PrivateShutterScreenProps) {
+export function PrivateShutterScreen({
+  onReady,
+  privateRecovery = null,
+}: PrivateShutterScreenProps) {
   // The discard used to be silent: the reducer recorded it and nothing read the
   // flag, so a player whose turn was thrown away by a notification was told only
   // that it "was discarded" hypothetically, in copy shown on every handoff.
-  const notice = privateDiscardNotice(discardedPriorTurn);
+  const notice = privateDiscardNotice(privateRecovery);
   return (
     <View style={{ flex: 1 }}>
       <View style={s.shutterPill}>

@@ -83,7 +83,7 @@ test("review: the report policy is stated before anything is reported", () => {
 
   // Data minimisation is a stated invariant; the player is told it up front.
   const policy = screen.getByText(/Reports save locally/i);
-  expect(policy).toHaveTextContent(/card ID, reason, deck version, and timestamp/i);
+  expect(policy).toHaveTextContent(/card ID, reason, deck version, timestamp, and a local run\/round stamp/i);
   expect(policy).toHaveTextContent(/No player identity or free text/i);
 });
 

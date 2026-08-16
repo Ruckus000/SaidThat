@@ -7,7 +7,7 @@
 - Build and revise every in-scope feature under `apps/mobile/`.
 - Use Room Beacon as the primary visual/interaction direction and Private Relay as the equal access and recovery countermodel.
 - Use the simulation-backed content-state map, Design DNA, tokens, proposal spec, and demo spec as implementation guidance.
-- Use fixture-only content that is clearly labeled and has no public-figure claim.
+- Use fixture-only content that is clearly labeled **and** curated public-figure cards admitted only through `tools/content-pipeline/` (owner amendment 2026-08-04). Unvetted public-figure cards remain excluded.
 
 ## What is not an MVP prerequisite
 

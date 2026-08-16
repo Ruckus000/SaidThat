@@ -1,5 +1,5 @@
 # Creative territories
 
-**Status:** Draft — not started
+**Status:** Populated. `territories.json` records the three territories; `.designops/05-selected-direction.json` selects Room Beacon as the primary model with Private Relay as the countermodel.
 
-Exactly three genuinely divergent, evidence-traceable territories belong here after strategy framing is explicitly reviewed. No fonts, colors, layout systems, component styles, or visual motifs are approved yet.
+These records are simulation-backed implementation guidance under the owner MVP exception. They are not a signed Direction approval or human-validated visual direction.

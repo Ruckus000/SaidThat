@@ -89,16 +89,23 @@ function isEditoriallyApproved(card) {
 export function isPlayableCard(card, { allowLocalFixtures = false } = {}) {
   if (!card || typeof card !== "object" || NON_PLAYABLE_STATES.has(card.contentState)) return false;
 
-  if (card.fixtureOnly && ["fabricated-for-game", "fixture-authentic"].includes(card.contentState)) {
-    return allowLocalFixtures;
+  // Display (`isDisplayAuthentic`) and scoring (`isGuessCorrect`) must agree.
+  // A fixture-authentic card with authentic:false (or an authentic editorial
+  // card with authentic:false) would label lime and score as fabricated.
+  if (card.fixtureOnly && card.contentState === "fabricated-for-game") {
+    return allowLocalFixtures && card.authentic === false;
+  }
+  if (card.fixtureOnly && card.contentState === "fixture-authentic") {
+    return allowLocalFixtures && card.authentic === true;
   }
 
   if (card.contentState === "fabricated-for-game") {
-    return isEditoriallyApproved(card);
+    return card.authentic === false && isEditoriallyApproved(card);
   }
 
   return (
     card.contentState === "authentic" &&
+    card.authentic === true &&
     hasRetainedHttpsSource(card.sourceRecord) &&
     isEditoriallyApproved(card)
   );
@@ -108,30 +115,49 @@ export function playableCards(cards, options) {
   return Array.isArray(cards) ? cards.filter((card) => isPlayableCard(card, options)) : [];
 }
 
-export function createSession({ cards, allowLocalFixtures = false, deckVersion, seed = 1 }) {
+export function createSession({
+  cards,
+  allowLocalFixtures = false,
+  deckVersion,
+  seed = 1,
+  deferRun = false,
+}) {
   // `pool` is everything playable; `cards` is the run actually being played.
   // Keeping both means a rematch rebuilds from the full pool instead of
   // reshuffling the ten cards the room just saw.
+  //
+  // `deferRun` skips buildRun on cold start / local reset: Home does not need
+  // a sampled run, and START_ROUND builds one when the player actually begins.
   const pool = playableCards(cards, { allowLocalFixtures });
-  const safeCards = buildRun(pool, { seed });
+  // Availability is the pool, not the deferred empty run — otherwise Home is
+  // wrongly blocked whenever buildRun is postponed until START_ROUND.
+  const hasContent = pool.length > 0;
+  const safeCards = deferRun ? [] : buildRun(pool, { seed });
   return {
     pool,
     mode: MODES.ROOM_BEACON,
     accessRole: "holder",
-    stage: safeCards.length ? STAGES.HOME : STAGES.CONTENT_UNAVAILABLE,
+    stage: hasContent ? STAGES.HOME : STAGES.CONTENT_UNAVAILABLE,
     cards: safeCards,
     deckVersion,
+    // Identifies this run so a late REPORT_* from a previous rematch cannot
+    // attach "Saved locally" to a new run that happens to share roundIndex 0.
+    runId: seed,
     roundIndex: 0,
     score: 0,
     streak: 0,
     bestStreak: 0,
     roundsPlayed: 0,
+    // The ids actually answered, in play order. A count cannot stand in for
+    // this: a Private Relay interrupt advances roundIndex without scoring, so
+    // answered cards are not a contiguous prefix of `cards`.
+    playedCardIds: [],
     correctCount: 0,
     committedRound: null,
     resumeStage: null,
     reportStatus: null,
     privateRecovery: null,
-    fault: safeCards.length ? null : "no-safe-playable-content",
+    fault: hasContent ? null : "no-safe-playable-content",
   };
 }
 
@@ -185,6 +211,10 @@ export function reportPayload(state, reason, now) {
     reason: REPORT_REASON_CODES.has(reason) ? reason : DEFAULT_REPORT_REASON,
     deckVersion: state.deckVersion,
     timestamp: now,
+    // Local queue only: scopes a timed-out retry so one chip press cannot stack
+    // two durable entries when the first write lands late.
+    runId: state.runId,
+    roundIndex: state.roundIndex,
   };
 }
 
@@ -192,17 +222,25 @@ function protectPrivateState(state, resumeStage) {
   if (state.mode !== MODES.PRIVATE_RELAY) return { ...state, stage: STAGES.PAUSED, resumeStage };
   // There is no identity proof on a shared phone. On interruption, retaining
   // a private card/result would let the next person reveal it. Fail closed by
-  // discarding that private turn and presenting a fresh protected turn.
+  // advancing past that private turn before any resume.
   //
-  // The discard costs a card, so it must respect the run boundary exactly as
-  // NEXT_ROUND does. Without this, an interruption on the last round advanced
+  // The advance costs a card slot, so it must respect the run boundary exactly
+  // as NEXT_ROUND does. Without this, an interruption on the last round advanced
   // roundIndex past the end: currentCard wraps modulo the deck and re-serves a
   // card the room already played (and already saw the truth for), the pill reads
   // "ROUND 8 / 7", and answering it inflates the recap past the run length.
+  //
+  // Recovery copy must tell the truth about scoring: an unanswered interrupt
+  // discarded the turn (nothing scored); an interrupt after ANSWER keeps the
+  // points and only hides the prompt from the next person.
+  const answered = state.committedRound === state.roundIndex;
+  const recovery = answered ? "protected-after-commit" : "discarded-prior-turn";
   const nextIndex = state.roundIndex + 1;
   if (nextIndex >= runLength(state)) {
     // Nothing protected is left to hand off. Recap holds no card, so it needs
     // no shutter — the same reasoning NEXT_ROUND uses at the run boundary.
+    // Unanswered final cards are not "completed": callers must slice recap by
+    // roundsPlayed, not runLength.
     return {
       ...state,
       stage: STAGES.RECAP,
@@ -221,7 +259,7 @@ function protectPrivateState(state, resumeStage) {
     committedRound: null,
     lastCorrect: null,
     reportStatus: null,
-    privateRecovery: "discarded-prior-turn",
+    privateRecovery: recovery,
   };
 }
 
@@ -233,6 +271,7 @@ const FRESH_RUN = {
   streak: 0,
   bestStreak: 0,
   roundsPlayed: 0,
+  playedCardIds: [],
   correctCount: 0,
   committedRound: null,
   reportStatus: null,
@@ -258,10 +297,19 @@ export function gameReducer(state, action) {
       // The run is rebuilt here rather than reused. Before this, only PLAY_AGAIN
       // ever reordered the deck, so the first run of every session played the
       // deck in file order.
+      //
+      // When createSession used deferRun, state.cards is empty until here — so
+      // a missing seed still builds from the pool rather than starting empty.
       const pool = state.pool ?? state.cards;
-      const cards = action.seed === undefined ? state.cards : buildRun(pool, { seed: action.seed });
+      const cards =
+        action.seed !== undefined
+          ? buildRun(pool, { seed: action.seed })
+          : state.cards.length
+            ? state.cards
+            : buildRun(pool, { seed: 1 });
+      const runId = action.seed === undefined ? state.runId : action.seed;
       return cards.length
-        ? { ...state, ...FRESH_RUN, cards, stage: STAGES.ROUND }
+        ? { ...state, ...FRESH_RUN, cards, stage: STAGES.ROUND, runId }
         : { ...state, stage: STAGES.CONTENT_UNAVAILABLE, fault: "no-safe-playable-content" };
     }
     case "ANSWER": {
@@ -280,6 +328,11 @@ export function gameReducer(state, action) {
         streak,
         bestStreak: Math.max(state.bestStreak ?? 0, streak),
         roundsPlayed: (state.roundsPlayed ?? 0) + 1,
+        // Recorded here rather than derived from roundsPlayed at read time:
+        // recap and the playtest group record both need the cards the room
+        // actually answered, and a private-relay discard breaks any attempt to
+        // recover that set by slicing `cards` to a count.
+        playedCardIds: [...(state.playedCardIds ?? []), card.id],
         correctCount: (state.correctCount ?? 0) + (correct ? 1 : 0),
       };
     }
@@ -329,7 +382,8 @@ export function gameReducer(state, action) {
       if (!safeCards.length) {
         return { ...state, stage: STAGES.CONTENT_UNAVAILABLE, fault: "no-safe-playable-content" };
       }
-      return { ...state, ...FRESH_RUN, pool, cards: safeCards, stage: STAGES.ROUND };
+      const runId = action.seed === undefined ? state.runId : action.seed;
+      return { ...state, ...FRESH_RUN, pool, cards: safeCards, stage: STAGES.ROUND, runId };
     }
     case "REVEAL_PRIVATE_TURN":
       return state.stage === STAGES.PRIVATE_SHUTTER
@@ -369,12 +423,18 @@ export function gameReducer(state, action) {
     // nothing about that card was. The write itself is unaffected: only the
     // misattributed display is dropped.
     //
-    // A missing roundIndex is treated as current, so a caller that does not
+    // roundIndex alone is not enough across a rematch: PLAY_AGAIN / START_ROUND
+    // reset roundIndex to 0, so a late write from the previous run's round 0
+    // would match the new run. runId closes that hole.
+    //
+    // A missing roundIndex/runId is treated as current, so a caller that does not
     // supply one keeps the old behaviour rather than silently losing its status.
     case "REPORT_QUEUED":
+      if (action.runId != null && action.runId !== state.runId) return state;
       if (action.roundIndex != null && action.roundIndex !== state.roundIndex) return state;
       return { ...state, reportStatus: "queued" };
     case "REPORT_FAILED":
+      if (action.runId != null && action.runId !== state.runId) return state;
       if (action.roundIndex != null && action.roundIndex !== state.roundIndex) return state;
       return { ...state, reportStatus: "failed" };
     case "SIMULATE_CORRUPT_DECK":
@@ -387,6 +447,8 @@ export function gameReducer(state, action) {
         allowLocalFixtures: action.allowLocalFixtures,
         deckVersion: action.deckVersion,
         seed: action.seed,
+        // Same cold-path deferral as App mount: reset lands on Home.
+        deferRun: action.deferRun === true,
       });
     default:
       return state;

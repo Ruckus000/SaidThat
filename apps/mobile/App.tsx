@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useReducer, useState } from "react";
-import { Alert, AppState, Share, View, useWindowDimensions } from "react-native";
+import { useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { Alert, AppState, View, useWindowDimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 
 import { ContentUnavailableScreen } from "./src/components/ContentUnavailableScreen";
@@ -32,7 +33,9 @@ import {
 } from "./src/domain/game";
 import { isGuessCorrect } from "./src/domain/contentRules";
 import { commitFeedback } from "./src/feedback/haptics";
-import { calibrateNeutral, readMotionSample, useRoomBeaconMotion } from "./src/sensors/useRoomBeaconMotion";
+import { markStartup } from "./src/perf/startupMarks";
+import { useMotionCalibration } from "./src/sensors/useMotionCalibration";
+import { useRoomBeaconMotion } from "./src/sensors/useRoomBeaconMotion";
 import {
   hapticsAllowed,
   motionAllowed,
@@ -40,12 +43,27 @@ import {
   reducedMotionForcedByDevice,
 } from "./src/settings/settingsPolicy";
 import { useReducedMotion } from "./src/theme/motion";
-import { clearReportQueue, queueReport } from "./src/storage/reportQueue";
-import { clearPlaytestStats, loadPlaytestStats, updatePlaytestStats } from "./src/storage/playtestStore";
-import { recordGroup, recordLaugh, recordOutcome, toExport } from "./src/domain/playtestPolicy";
+import { clearReportQueue } from "./src/storage/reportQueue";
+import { clearPlaytestStats, updatePlaytestStats } from "./src/storage/playtestStore";
+import { recordGroup, recordLaugh, recordOutcome } from "./src/domain/playtestPolicy";
+import { usePlaytestExport } from "./src/storage/usePlaytestExport";
+import { useQueuedReport } from "./src/storage/useQueuedReport";
 import { withTimeout } from "./src/storage/withTimeout";
 
 const allowLocalFixtures = typeof __DEV__ !== "undefined" && __DEV__;
+
+// Keep the native splash up until fonts are ready so the font gate is not a
+// blank SafeArea flash. Failures still hide — system faces are the fallback.
+SplashScreen.preventAutoHideAsync().catch(() => {});
+
+/**
+ * How long App waits on expo-font before rendering with platform fallbacks.
+ *
+ * A hung native font loader previously left a permanent blank SafeAreaView —
+ * fontsLoaded false, fontError null, no timeout. Generous against a slow device
+ * flash; short enough that a wedged load cannot strand the room.
+ */
+export const FONT_LOAD_TIMEOUT_MS = 4000;
 
 /**
  * Entropy for a run, generated here rather than inside the reducer.
@@ -68,23 +86,27 @@ export default function App() {
     Inter: require("./assets/fonts/InterVariable.ttf"),
     BricolageGrotesque: require("./assets/fonts/BricolageGrotesque.ttf"),
   });
+  const [fontTimedOut, setFontTimedOut] = useState(false);
+  const fontsReady = fontsLoaded || Boolean(fontError) || fontTimedOut;
   // Re-renders when the system text size changes; see the key below.
   const { fontScale } = useWindowDimensions();
   const [state, dispatch] = useReducer(
     gameReducer,
     undefined,
-    () => createSession({
-      cards: playableDeck(catalog, { allowLocalFixtures }, TOMBSTONES),
-      allowLocalFixtures,
-      deckVersion: DECK_VERSION,
-      seed: runSeed(),
-    }),
+    () => {
+      const session = createSession({
+        cards: playableDeck(catalog, { allowLocalFixtures }, TOMBSTONES),
+        allowLocalFixtures,
+        deckVersion: DECK_VERSION,
+        seed: runSeed(),
+        // Home never needs a sampled run; START_ROUND builds it on first play.
+        deferRun: true,
+      });
+      markStartup("session-ready");
+      return session;
+    },
   );
-  const [reportBusy, setReportBusy] = useState(false);
   const [motionOptIn, setMotionOptIn] = useState(false);
-  const [motionNeutralZ, setMotionNeutralZ] = useState<number | null>(null);
-  const [calibrationReading, setCalibrationReading] = useState(false);
-  const [calibrationUnavailable, setCalibrationUnavailable] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [resetNotice, setResetNotice] = useState<string | null>(null);
   // Which card the room named as the biggest reaction this run. Cleared on a
@@ -94,6 +116,8 @@ export default function App() {
   // ResultScreen because that screen UNMOUNTS on an interruption — backgrounding
   // routes through PAUSED — and a component key cannot preserve state across an
   // unmount. Keyed by round so the next one still gets its suspense beat.
+  // Cleared on every fresh run: rematch resets roundIndex to 0, so a stale
+  // revealedRound === 0 would skip the beat on the new run's first card.
   const [revealedRound, setRevealedRound] = useState<number | null>(null);
   const [reducedMotionPreference, setReducedMotionPreference] = useState(false);
   const [noMotion, setNoMotion] = useState(false);
@@ -105,59 +129,78 @@ export default function App() {
   const reducedMotion = reducedMotionActive({ reducedMotionPreference, deviceReducedMotion });
   const motionLockedByDevice = reducedMotionForcedByDevice({ reducedMotionPreference, deviceReducedMotion });
   const card = currentCard(state);
+  const {
+    motionNeutralZ,
+    calibrationReading,
+    calibrationUnavailable,
+    calibrate: calibrateMotion,
+    onUnavailable: onMotionUnavailable,
+    clearCalibration,
+  } = useMotionCalibration();
+  const { exportBusy, exportPlaytestData } = usePlaytestExport(DECK_VERSION);
+  const buildReportPayload = useCallback(
+    (reason: string) => reportPayload(state, reason, new Date().toISOString()),
+    [state],
+  );
+  const { reportBusy, report, invalidatePending } = useQueuedReport({
+    roundIndex: state.roundIndex,
+    runId: state.runId,
+    buildPayload: buildReportPayload,
+    dispatch,
+  });
+
+  // Stable tilt path: refs hold the latest state/haptics so commitAnswerFromTilt
+  // identity does not churn every ANSWER and force Accelerometer resubscribe.
+  const stateRef = useRef(state);
+  stateRef.current = state;
+  const hapticsEnabledRef = useRef(hapticsEnabled);
+  hapticsEnabledRef.current = hapticsEnabled;
+  const fontsMarkedRef = useRef(false);
+  const homeMarkedRef = useRef(false);
+  const firstRoundMarkedRef = useRef(false);
+
+  useEffect(() => {
+    if (fontsReady) return undefined;
+    const timer = setTimeout(() => setFontTimedOut(true), FONT_LOAD_TIMEOUT_MS);
+    return () => clearTimeout(timer);
+  }, [fontsReady]);
+
+  useEffect(() => {
+    if (!fontsReady) return undefined;
+    if (!fontsMarkedRef.current) {
+      fontsMarkedRef.current = true;
+      markStartup("fonts-ready");
+    }
+    SplashScreen.hideAsync().catch(() => {});
+    return undefined;
+  }, [fontsReady]);
+
+  useEffect(() => {
+    if (homeMarkedRef.current) return undefined;
+    if (!fontsReady || state.stage !== STAGES.HOME) return undefined;
+    homeMarkedRef.current = true;
+    markStartup("home-interactive");
+    return undefined;
+  }, [fontsReady, state.stage]);
 
   // Tap commits fire the KICK haptic doublet inside the answer control (useFireEvent),
   // so the shared dispatch is haptic-free to avoid a double tick. The tilt path has no
   // press phase, so it fires its own single commit tick.
-  const commitAnswer = useCallback(
-    (guessAuthentic: boolean) => {
-      // Calibration is recorded before dispatch so it reads the card the player
-      // actually answered, and is deliberately not awaited: this is a research
-      // signal, and a wedged storage bridge must never delay a commit the room
-      // is waiting on. Losing a sample is the correct failure here.
-      const answered = currentCard(state);
-      if (answered) {
-        const correct = isGuessCorrect(answered, guessAuthentic);
-        void updatePlaytestStats((stats) =>
-          recordOutcome(stats, { cardId: answered.id, correct }),
-        ).catch(() => {});
-      }
-      dispatch({ type: "ANSWER", guessAuthentic });
-    },
-    [state],
-  );
-
-  /**
-   * Hands the local calibration aggregates to the OS share sheet.
-   *
-   * This is the entire delivery mechanism: a human exports the file and carries
-   * it to an editor. There is no endpoint, no upload, and no background sync —
-   * which is what makes the capture defensible without a consent flow, since
-   * nothing can leave without someone choosing where it goes.
-   */
-  async function exportPlaytestData() {
-    const stats = await withTimeout(loadPlaytestStats(), { fallback: null });
-    const payload = toExport(stats ?? { cards: {} }, DECK_VERSION);
-    if (payload.cards.length === 0) {
-      Alert.alert("Nothing to export yet", "Play a run first — this only records per-card counts.");
-      return;
+  const commitAnswer = useCallback((guessAuthentic: boolean) => {
+    // Calibration is recorded before dispatch so it reads the card the player
+    // actually answered, and is deliberately not awaited: this is a research
+    // signal, and a wedged storage bridge must never delay a commit the room
+    // is waiting on. Losing a sample is the correct failure here.
+    const answered = currentCard(stateRef.current);
+    if (answered) {
+      const correct = isGuessCorrect(answered, guessAuthentic);
+      void updatePlaytestStats((stats) =>
+        recordOutcome(stats, { cardId: answered.id, correct }),
+      ).catch(() => {});
     }
-    try {
-      await Share.share({ message: JSON.stringify(payload, null, 2) });
-    } catch {
-      // Sharing was dismissed or refused. Nothing was written and nothing was
-      // sent, so there is nothing to report and nothing to undo.
-    }
-  }
+    dispatch({ type: "ANSWER", guessAuthentic });
+  }, []);
 
-  /** One optional room-level pick per run. Tapping again moves it. */
-  const pickFunniest = useCallback(
-    (cardId: string) => {
-      setLaughPick(cardId);
-      void updatePlaytestStats((stats) => recordLaugh(stats, { cardId })).catch(() => {});
-    },
-    [],
-  );
   const commitAnswerFromTilt = useCallback(
     (guessAuthentic: boolean) => {
       // The haptic fires only if the reducer actually takes the answer. It used
@@ -168,11 +211,20 @@ export default function App() {
       //
       // Asked of the reducer's own predicate rather than re-stated here, so the
       // two cannot drift into disagreeing about what counts as a commit.
-      if (!canCommitAnswer(state)) return;
-      commitFeedback(hapticsAllowed({ hapticsEnabled }));
+      if (!canCommitAnswer(stateRef.current)) return;
+      commitFeedback(hapticsAllowed({ hapticsEnabled: hapticsEnabledRef.current }));
       commitAnswer(guessAuthentic);
     },
-    [hapticsEnabled, commitAnswer, state],
+    [commitAnswer],
+  );
+
+  /** One optional room-level pick per run. Tapping again moves it. */
+  const pickFunniest = useCallback(
+    (cardId: string) => {
+      setLaughPick(cardId);
+      void updatePlaytestStats((stats) => recordLaugh(stats, { cardId })).catch(() => {});
+    },
+    [],
   );
 
   useRoomBeaconMotion({
@@ -180,15 +232,20 @@ export default function App() {
     mode: state.mode,
     neutralZ: motionNeutralZ,
     onAnswer: commitAnswerFromTilt,
+    onUnavailable: onMotionUnavailable,
   });
 
   // A completed run counts as one group for each card it contained. Groups are
   // what the promote/retire thresholds are actually gated on: twenty exposures
   // from one room says far less than twenty from eight, and without this the
   // verdicts would treat those as identical evidence.
+  //
+  // Read the answered ids the reducer recorded, rather than slicing `cards` to
+  // a count: a private-relay interrupt advances the round without scoring, so
+  // the answered cards are not a contiguous prefix of the run.
   useEffect(() => {
     if (state.stage !== STAGES.RECAP) return;
-    const played = state.cards.slice(0, runLength(state)).map((entry: { id: string }) => entry.id);
+    const played = state.playedCardIds ?? [];
     if (played.length === 0) return;
     void updatePlaytestStats((stats) => recordGroup(stats, played)).catch(() => {});
     // Keyed on the recap transition rather than the card list so a re-render
@@ -205,52 +262,9 @@ export default function App() {
     return () => subscription.remove();
   }, []);
 
-  async function report(reason: string) {
-    if (reportBusy) return;
-    setReportBusy(true);
-    // Captured before the await, and carried on the action. The player can reach
-    // the next card while the write is in flight, and a confirmation that lands
-    // then would be attached to a card nobody reported. The reducer drops a stale
-    // one; the report itself is already written either way.
-    const roundIndex = state.roundIndex;
-    try {
-      // Bounded for the same reason the reset is. `finally` looks like it
-      // guarantees the busy flag is released, and it does — for a promise that
-      // SETTLES. A wedged native bridge neither resolves nor rejects, so the
-      // await never returned, `finally` never ran, and all three report chips
-      // stayed disabled for the rest of the session with no way to retry.
-      const queued = await withTimeout(
-        queueReport(reportPayload(state, reason, new Date().toISOString())).then(() => true),
-        { fallback: false },
-      );
-      dispatch({ type: queued ? "REPORT_QUEUED" : "REPORT_FAILED", roundIndex });
-    } catch {
-      dispatch({ type: "REPORT_FAILED", roundIndex });
-    } finally {
-      setReportBusy(false);
-    }
-  }
-
-  async function calibrateMotion() {
-    // The read is bounded and never rejects, so this cannot hang and cannot throw
-    // — but it CAN legitimately come back empty on a device with no accelerometer
-    // or a denied permission. Say so, rather than leaving a button that silently
-    // does nothing. Tap is unaffected either way.
-    if (calibrationReading) return;
-    setCalibrationReading(true);
-    setCalibrationUnavailable(false);
-    const neutral = calibrateNeutral(await readMotionSample());
-    setCalibrationReading(false);
-    if (neutral == null) {
-      setCalibrationUnavailable(true);
-      return;
-    }
-    setMotionNeutralZ(neutral);
-  }
-
   function setNoMotionEnabled(enabled: boolean) {
     setNoMotion(enabled);
-    if (enabled) setMotionNeutralZ(null);
+    if (enabled) clearCalibration();
   }
 
   function confirmResetLocalSession() {
@@ -275,14 +289,17 @@ export default function App() {
     // destructive action did nothing at all. That is the same bug this function
     // was written to fix, one layer down.
     setMotionOptIn(false);
-    setMotionNeutralZ(null);
+    clearCalibration();
     setShowSettings(false);
+    setRevealedRound(null);
+    invalidatePending();
     dispatch({
       type: "RESET_LOCAL_SESSION",
       cards: playableDeck(catalog, { allowLocalFixtures }, TOMBSTONES),
       allowLocalFixtures,
       deckVersion: DECK_VERSION,
       seed: runSeed(),
+      deferRun: true,
     });
 
     // Now the durable half, bounded. The confirm promised to clear queued reports
@@ -315,7 +332,9 @@ export default function App() {
   }
 
   function goHome() {
-    setMotionNeutralZ(null);
+    clearCalibration();
+    setRevealedRound(null);
+    invalidatePending();
     dispatch({ type: "GO_HOME" });
   }
 
@@ -324,26 +343,32 @@ export default function App() {
     // keeps gameReducer a pure function of (state, action) while still giving a
     // different run each rematch — and makes any run reproducible from one
     // integer, which is what the run-builder tests rely on.
-    setMotionNeutralZ(null);
+    clearCalibration();
     setLaughPick(null);
+    setRevealedRound(null);
+    invalidatePending();
     dispatch({ type: "PLAY_AGAIN", seed: runSeed(), allowLocalFixtures });
   }
 
   function setMode(mode: string) {
     if (mode !== MODES.ROOM_BEACON) {
       setMotionOptIn(false);
-      setMotionNeutralZ(null);
+      clearCalibration();
     }
     dispatch({ type: "SET_MODE", mode });
   }
 
   function setMotionOptInEnabled(enabled: boolean) {
     setMotionOptIn(enabled);
-    if (!enabled) setMotionNeutralZ(null);
+    if (!enabled) clearCalibration();
   }
 
-  if (!fontsLoaded && !fontError) {
-    // Fonts still loading: hold on the calm canvas (no unstyled text flash).
+  const markRoundRevealed = useCallback(() => {
+    setRevealedRound(state.roundIndex);
+  }, [state.roundIndex]);
+
+  if (!fontsReady) {
+    // Fonts still loading: hold native splash / calm canvas (no unstyled text flash).
     return (
       <SafeAreaView style={s.safe}>
         <StatusBar style="light" />
@@ -421,6 +446,7 @@ export default function App() {
             onReset={confirmResetLocalSession}
             onClose={() => setShowSettings(false)}
             onExportPlaytest={exportPlaytestData}
+            exportBusy={exportBusy}
           />
         )}
         {state.stage === STAGES.SETUP && (
@@ -433,6 +459,12 @@ export default function App() {
             onMotionOptIn={setMotionOptInEnabled}
             onStart={() => {
               setLaughPick(null);
+              setRevealedRound(null);
+              invalidatePending();
+              if (!firstRoundMarkedRef.current) {
+                firstRoundMarkedRef.current = true;
+                markStartup("first-round");
+              }
               dispatch({ type: "START_ROUND", seed: runSeed() });
             }}
           />
@@ -448,8 +480,8 @@ export default function App() {
             streak={state.streak}
             motionOptIn={motionAllowed({ motionOptIn, noMotion })}
             motionCalibrated={motionNeutralZ != null}
-          calibrationReading={calibrationReading}
-          calibrationUnavailable={calibrationUnavailable}
+            calibrationReading={calibrationReading}
+            calibrationUnavailable={calibrationUnavailable}
             reducedMotion={reducedMotion}
             haptics={hapticsAllowed({ hapticsEnabled })}
             onCalibrate={calibrateMotion}
@@ -466,7 +498,7 @@ export default function App() {
             reducedMotion={reducedMotion}
             haptics={hapticsAllowed({ hapticsEnabled })}
             initiallyRevealed={revealedRound === state.roundIndex}
-            onRevealed={() => setRevealedRound(state.roundIndex)}
+            onRevealed={markRoundRevealed}
             onReview={() => dispatch({ type: "OPEN_REVIEW" })}
             onContinue={() => dispatch({ type: "NEXT_ROUND" })}
           />
@@ -492,24 +524,33 @@ export default function App() {
             reducedMotion={reducedMotion}
             onPlayAgain={playAgain}
             onHome={goHome}
-            runCards={state.cards.slice(0, runLength(state)).map((entry: { id: string; person: string }) => ({
-              id: entry.id,
-              person: entry.person,
-            }))}
+            // Only cards the room actually answered are offered for the
+            // funniest pick, in the order they were played.
+            runCards={(state.playedCardIds ?? [])
+              .map((id: string) =>
+                state.cards.find((entry: { id: string }) => entry.id === id),
+              )
+              .filter(Boolean)
+              .map((entry: { id: string; person: string }) => ({
+                id: entry.id,
+                person: entry.person,
+              }))}
             laughPickId={laughPick}
             onPickFunniest={pickFunniest}
           />
         )}
         {state.stage === STAGES.PRIVATE_SHUTTER && (
           <PrivateShutterScreen
-            discardedPriorTurn={state.privateRecovery === "discarded-prior-turn"}
+            privateRecovery={state.privateRecovery}
             onReady={() => dispatch({ type: "REVEAL_PRIVATE_TURN" })}
           />
         )}
         {state.stage === STAGES.PAUSED && (
           <PausedScreen onResume={() => dispatch({ type: "RESUME_ROOM" })} onLeave={goHome} />
         )}
-        {state.stage === STAGES.CONTENT_UNAVAILABLE && <ContentUnavailableScreen fault={state.fault} />}
+        {state.stage === STAGES.CONTENT_UNAVAILABLE && (
+          <ContentUnavailableScreen fault={state.fault} onHome={goHome} />
+        )}
       </View>
     </SafeAreaView>
   );

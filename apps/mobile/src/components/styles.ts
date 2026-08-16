@@ -345,8 +345,9 @@ export const s = StyleSheet.create({
   homeHero: { flex: 1, justifyContent: "center", gap: 8, position: "relative", overflow: "hidden" },
   homeMark: {
     position: "absolute",
-    right: -70,
-    top: -20,
+    // Sized for the 180px decorative Mark (was -70/-20 at 300px).
+    right: -40,
+    top: -8,
     opacity: 0.09,
     transform: [{ rotate: "12deg" }],
   },

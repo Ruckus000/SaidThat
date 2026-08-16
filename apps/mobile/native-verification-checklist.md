@@ -87,10 +87,35 @@ maximum):
 
 ## Performance (record measurements, do not assert pass here)
 
-- [ ] Cold start time: ______ seconds
-- [ ] Cached first round ready: ______ seconds
-- [ ] Active round maintains smooth interaction (note device model)
+Targets (DesignOps / architecture): cold start → Home **&lt; 2.5s**; first
+playable ROUND **&lt; 5s**; active play **60 fps**; no memory growth across 10
+rematches. Simulator and Expo Go timings are **invalid** for release evidence —
+use a mid-tier physical iPhone and a mid-tier physical Android, preferably a
+dev client / release-like build.
 
+### How to measure (dev builds)
+
+In `__DEV__`, the app logs `[startup] <label>: +<ms>` via
+`apps/mobile/src/perf/startupMarks.js`:
+
+| Label | Meaning |
+| --- | --- |
+| `session-ready` | `createSession` finished (pool ready; run may be deferred) |
+| `fonts-ready` | expo-font loaded (or failed through to system face) |
+| `home-interactive` | Home is on screen after the font gate |
+| `first-round` | First `START_ROUND` dispatched this process |
+
+Record wall-clock cold start with a stopwatch as well (icon tap → Home
+readable). Prefer matching the stopwatch to `home-interactive` on device.
+
+- [ ] Cold start time: ______ seconds (device / OS: ________)
+- [ ] Cached first round ready: ______ seconds (device / OS: ________)
+- [ ] Active round maintains smooth interaction (note device model): ________
+- [ ] 10 rematches: no obvious memory growth (Instruments / Android Profiler note): ________
+
+Lazy-loading non-HOME screens stays **deferred** until a physical cold start
+still misses &lt; 2.5s after splash + deferred `buildRun` + smaller Home Mark.
+Do not invent times here from a cloud agent or simulator.
 ## Evidence log (fill during manual runs)
 
 | Platform | Check | Device / OS | Result | Artifact path |

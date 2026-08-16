@@ -1,5 +1,5 @@
 import { ScrollView, Text } from "react-native";
-import { render, screen } from "@testing-library/react-native";
+import { fireEvent, render, screen } from "@testing-library/react-native";
 
 import { ContentUnavailableScreen } from "./ContentUnavailableScreen";
 
@@ -39,6 +39,13 @@ test("content-unavailable: the withheld-record guard is stated whatever the faul
     ).toBeOnTheScreen();
     view.unmount();
   }
+});
+
+test("content-unavailable: recovery offers an on-screen return home", () => {
+  const onHome = jest.fn();
+  render(<ContentUnavailableScreen fault="corrupt-deck" onHome={onHome} />);
+  fireEvent.press(screen.getByRole("button", { name: "BACK HOME" }));
+  expect(onHome).toHaveBeenCalledTimes(1);
 });
 
 // This is the screen a player reads when nothing else works, and the guard line

@@ -5,17 +5,17 @@ feed, public upload, telemetry, or remote report delivery.
 
 ## Content safety
 
-The bundled cards are development-only fixtures. They are visibly marked in the
-app and do not name public figures; two use a **simulated-authentic** truth
-state solely to exercise the game mechanic. `src/domain/game.js` refuses
-to play an authentic card unless it has a retained HTTPS source record and two
-distinct editorial approvals. This repository does not create those human
-approvals; release content remains blocked until the editorial workflow exists.
+The bundled deck mixes `__DEV__` fixtures (visibly marked, never shipped as
+editorial) with curated public-figure cards emitted by `tools/content-pipeline/`.
+`src/domain/game.js` refuses to play an authentic card unless it has a retained
+HTTPS source record and two distinct editorial approvals (or the explicit
+pre-release owner marker). Cards that bypass that pipeline stay unplayable.
 
 Disputed, removed, and source-unavailable records are excluded from binary
 play. Reports are queued locally with only `cardId`, reason category, deck
-version, and timestamp. The local queue is capped at 100 records. No identity,
-statement text, source URL, free text, motion data, or transcript is persisted.
+version, timestamp, and a local run/round stamp. The local queue is capped at
+100 records. No identity, statement text, source URL, free text, motion data,
+or transcript is persisted.
 
 ## Resilience and chaos checks
 
