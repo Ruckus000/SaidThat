@@ -38,7 +38,7 @@
       "status": "stakeholder-provided",
       "confidence": "high",
       "criticality": "critical",
-      "sha256": "d13c4cf4ede00ff1453676590f24adecaed2dd0abbe332c0adc9bf12c6bb1186"
+      "sha256": "00556d02858984299a9b8ab8cb8fe978049dbb0ca4539bbd898c60a9ff110a1c"
     },
     {
       "id": "market-research",
@@ -68,7 +68,7 @@
       "status": "stakeholder-provided",
       "confidence": "medium",
       "criticality": "critical",
-      "sha256": "e4a6a5a80925ed26ed9f492cd42e488c8b0aecc1c90827146b3720a505315222"
+      "sha256": "2853e3692fdd1bf2d854d11c0d26480af436f0e8bbb14a20a3d1c6a362b7105f"
     },
     {
       "id": "legal-risks",
@@ -208,7 +208,7 @@
       "status": "stakeholder-provided",
       "confidence": "high",
       "criticality": "critical",
-      "sha256": "6091d4259791011cee1683cadec5737cf82e6bb9b7d9263265b88050235eb7e6"
+      "sha256": "1fabe110fadd88fde7cb3512e4cade7811d7b3804f4bb0b672415936220ff0ae"
     },
     {
       "id": "mvp-build-queue",

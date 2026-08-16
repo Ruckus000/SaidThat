@@ -1,6 +1,6 @@
 # Product Brief — Did They Tweet That?
 
-**Status:** Planning complete — no production code yet  
+**Status:** Planning complete. A scoped local-first Expo MVP is in progress under `apps/mobile/` (owner implementation exception). This brief is strategy context, not a claim that the app is release-ready.  
 **Date:** 2026-07-18  
 **Classification:** Internal product strategy (not legal advice)
 

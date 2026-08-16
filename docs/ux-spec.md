@@ -4,6 +4,8 @@
 **Platform:** React Native (iOS + Android)  
 **Visual direction:** Bold, fast, playful, high contrast, legible at distance; optimized for dark rooms and forehead play.
 
+**Hypothesis banner:** Screen inventory, accessibility behaviors, and motion notes below remain useful requirements. The token table, font names, hex colors, radius, and stylistic avoid-list are **unvalidated visual hypotheses**. Do not implement them as approved direction. Shipped MVP visuals are Room Beacon / VOLT in [`docs/ux-design-direction.md`](./ux-design-direction.md) and `.designops/08-design-system/tokens.json`.
+
 ---
 
 ## 1. Visual system (direction)
