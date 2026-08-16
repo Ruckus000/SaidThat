@@ -148,6 +148,10 @@ export function createSession({
     streak: 0,
     bestStreak: 0,
     roundsPlayed: 0,
+    // The ids actually answered, in play order. A count cannot stand in for
+    // this: a Private Relay interrupt advances roundIndex without scoring, so
+    // answered cards are not a contiguous prefix of `cards`.
+    playedCardIds: [],
     correctCount: 0,
     committedRound: null,
     resumeStage: null,
@@ -267,6 +271,7 @@ const FRESH_RUN = {
   streak: 0,
   bestStreak: 0,
   roundsPlayed: 0,
+  playedCardIds: [],
   correctCount: 0,
   committedRound: null,
   reportStatus: null,
@@ -323,6 +328,11 @@ export function gameReducer(state, action) {
         streak,
         bestStreak: Math.max(state.bestStreak ?? 0, streak),
         roundsPlayed: (state.roundsPlayed ?? 0) + 1,
+        // Recorded here rather than derived from roundsPlayed at read time:
+        // recap and the playtest group record both need the cards the room
+        // actually answered, and a private-relay discard breaks any attempt to
+        // recover that set by slicing `cards` to a count.
+        playedCardIds: [...(state.playedCardIds ?? []), card.id],
         correctCount: (state.correctCount ?? 0) + (correct ? 1 : 0),
       };
     }

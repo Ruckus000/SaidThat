@@ -240,13 +240,12 @@ export default function App() {
   // from one room says far less than twenty from eight, and without this the
   // verdicts would treat those as identical evidence.
   //
-  // Slice by roundsPlayed (answered cards), not runLength: a final-round
-  // private interrupt without an answer ends in RECAP with an incomplete count.
+  // Read the answered ids the reducer recorded, rather than slicing `cards` to
+  // a count: a private-relay interrupt advances the round without scoring, so
+  // the answered cards are not a contiguous prefix of the run.
   useEffect(() => {
     if (state.stage !== STAGES.RECAP) return;
-    const played = state.cards
-      .slice(0, state.roundsPlayed ?? 0)
-      .map((entry: { id: string }) => entry.id);
+    const played = state.playedCardIds ?? [];
     if (played.length === 0) return;
     void updatePlaytestStats((stats) => recordGroup(stats, played)).catch(() => {});
     // Keyed on the recap transition rather than the card list so a re-render
@@ -525,8 +524,13 @@ export default function App() {
             reducedMotion={reducedMotion}
             onPlayAgain={playAgain}
             onHome={goHome}
-            runCards={state.cards
-              .slice(0, state.roundsPlayed ?? 0)
+            // Only cards the room actually answered are offered for the
+            // funniest pick, in the order they were played.
+            runCards={(state.playedCardIds ?? [])
+              .map((id: string) =>
+                state.cards.find((entry: { id: string }) => entry.id === id),
+              )
+              .filter(Boolean)
               .map((entry: { id: string; person: string }) => ({
                 id: entry.id,
                 person: entry.person,

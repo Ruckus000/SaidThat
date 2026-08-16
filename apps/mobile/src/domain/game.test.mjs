@@ -401,6 +401,63 @@ test("chaos: backgrounding private content enters a shutter, not a spoiler state
 // on leaving or on starting a new run, so a flag that survived either would make
 // the next handoff claim a loss that never happened. The words on that screen are
 // only true if the flag belongs to the run in front of the player.
+// Recap and the playtest group record both ask "which cards did the room
+// actually answer?". Deriving that by slicing `cards` to a count is only right
+// while answered rounds are a contiguous prefix — and a Private Relay interrupt
+// breaks exactly that, advancing roundIndex without scoring. Sliced, the run
+// above credits the discarded card and drops the one that was answered after it.
+test("chaos: a private discard does not shift the answered-card record", () => {
+  const cards = ["a", "b", "c", "d"].map((id) => ({ ...fixture, id }));
+  let state = createSession({ cards, allowLocalFixtures: true, deckVersion: "test" });
+  state = gameReducer(state, { type: "SET_MODE", mode: MODES.PRIVATE_RELAY });
+  state = gameReducer(state, { type: "START_ROUND" });
+
+  const answered = [];
+  const answer = () => {
+    answered.push(currentCard(state).id);
+    state = gameReducer(state, { type: "ANSWER", guessAuthentic: false });
+    state = gameReducer(state, { type: "NEXT_ROUND" });
+    if (state.stage === STAGES.PRIVATE_SHUTTER) {
+      state = gameReducer(state, { type: "REVEAL_PRIVATE_TURN" });
+    }
+  };
+
+  answer();
+
+  // Interrupted before answering: the turn is discarded, so this card was never
+  // played and must not appear in the record.
+  const discarded = currentCard(state).id;
+  state = gameReducer(state, { type: "APP_BACKGROUND" });
+  assert.equal(state.privateRecovery, "discarded-prior-turn");
+  state = gameReducer(state, { type: "REVEAL_PRIVATE_TURN" });
+
+  answer();
+
+  assert.deepEqual(state.playedCardIds, answered, "only answered cards, in play order");
+  assert.equal(state.playedCardIds.includes(discarded), false, "the discarded card is not played");
+  assert.equal(state.roundsPlayed, answered.length);
+  // The count still advances past the discard, which is why it cannot be used
+  // as an index range into `cards`.
+  assert.notDeepEqual(
+    state.cards.slice(0, state.roundsPlayed).map((entry) => entry.id),
+    answered,
+  );
+});
+
+test("chaos: a fresh run clears the answered-card record", () => {
+  const played = gameReducer(started(MODES.ROOM_BEACON), { type: "ANSWER", guessAuthentic: false });
+  assert.equal(played.playedCardIds.length, 1);
+  assert.deepEqual(gameReducer(played, { type: "START_ROUND" }).playedCardIds, []);
+  assert.deepEqual(
+    gameReducer(played, {
+      type: "PLAY_AGAIN",
+      cards: [fixture, secondFixture],
+      allowLocalFixtures: true,
+    }).playedCardIds,
+    [],
+  );
+});
+
 test("chaos: a discard notice belongs to its own run and never follows the player", () => {
   const interrupted = gameReducer(started(MODES.PRIVATE_RELAY), { type: "APP_BACKGROUND" });
   assert.equal(interrupted.privateRecovery, "discarded-prior-turn", "the discard is recorded");
