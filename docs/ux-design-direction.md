@@ -124,10 +124,12 @@ subpaths so each carries its own fill — lead comma lime `#CDF244`, trail comma
 
 This follows directly from the rule above that identity rests on THE MARK rather than on a
 swappable font: the icon is the same silhouette already sitting behind the SAID THAT?
-wordmark on Home, so it survives a font change intact. It is also, deliberately, the *only*
-place the two signal colours appear at equal weight — the one-lime-signal-per-screen rule
-governs screens, and an icon is not a screen. Nothing here encodes truth: the split marks
-the two things a player can say, never which one is real.
+wordmark on Home, so it survives a font change intact. Pairing lime and pink at equal weight
+is allowed here for the same reason it is allowed in Home's `REAL QUOTES. / TOTAL LIES.`
+eyebrows: the one-lime-signal-per-screen rule governs *current action and current context*,
+and an icon has neither. The colours follow the answer buttons — lime is `SAID IT`, pink is
+`TOTAL LIE` (`answerReal` / `answerFake` in `styles.ts`). Nothing here encodes truth: the
+split marks the two things a player can say, never which one is real.
 
 The composition source is `apps/mobile/assets/brand/split-mark.svg`; the committed PNGs were
 rendered from it. On Android's monochrome layer the split necessarily collapses to a single
