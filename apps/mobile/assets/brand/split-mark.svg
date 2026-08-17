@@ -1,0 +1,28 @@
+<!--
+  THE SPLIT — the app icon composition.
+
+  The geometry is MARK_PATHS.open from src/components/markPaths.js, kept on that
+  module's viewBox (0 0 100 100) and cut into its two comma subpaths so each can
+  carry its own fill. Lead comma is the lime signal, trail comma the pink accent:
+  the two answers, SAID IT and TOTAL LIE, held in one glyph.
+
+  Colours are dark.lime / dark.pink from src/theme/palette.js on dark.canvas.
+
+  This file is the source the committed PNGs in ../ were rendered from. Nothing
+  imports it at runtime — if the glyph in markPaths.js ever changes, the paths
+  below and the PNGs both need re-cutting by hand.
+
+  Glyph bounding box within the viewBox: x 20..83, y 26..73 (63 x 47).
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <path
+    id="lead"
+    fill="#CDF244"
+    d="M20,58 C20,40 32,28 48,26 L44,37 C36,39 32,45 32,51 L45,51 L45,73 L20,73 Z"
+  />
+  <path
+    id="trail"
+    fill="#FF4FA0"
+    d="M55,58 C55,40 67,28 83,26 L79,37 C71,39 67,45 67,51 L80,51 L80,73 L55,73 Z"
+  />
+</svg>
