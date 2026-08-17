@@ -116,6 +116,25 @@ stage), default 20, secondary 18 — rather than reproducing the prototype's per
 Dynamic Type is preserved (`allowFontScaling` stays on). Render is gated on the font `loaded`
 flag with a system-face fallback so text never renders invisible.
 
+## The mark as icon
+
+The app icon is **THE SPLIT**: `MARK_PATHS.open` on `#0B0E13`, cut into its two comma
+subpaths so each carries its own fill — lead comma lime `#CDF244`, trail comma pink
+`#FF4FA0`. The two answers, SAID IT and TOTAL LIE, held in one glyph.
+
+This follows directly from the rule above that identity rests on THE MARK rather than on a
+swappable font: the icon is the same silhouette already sitting behind the SAID THAT?
+wordmark on Home, so it survives a font change intact. Pairing lime and pink at equal weight
+is allowed here for the same reason it is allowed in Home's `REAL QUOTES. / TOTAL LIES.`
+eyebrows: the one-lime-signal-per-screen rule governs *current action and current context*,
+and an icon has neither. The colours follow the answer buttons — lime is `SAID IT`, pink is
+`TOTAL LIE` (`answerReal` / `answerFake` in `styles.ts`). Nothing here encodes truth: the
+split marks the two things a player can say, never which one is real.
+
+The composition source is `apps/mobile/assets/brand/split-mark.svg`; the committed PNGs were
+rendered from it. On Android's monochrome layer the split necessarily collapses to a single
+tinted colour, which costs nothing — the silhouette is the identity.
+
 ## Depth & motion
 
 Depth is **tonal + emissive**, never shadow-spam: lime glow shadows on the lit element,
