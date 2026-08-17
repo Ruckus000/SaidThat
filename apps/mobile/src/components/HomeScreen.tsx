@@ -83,8 +83,15 @@ export function HomeScreen({
         <View style={s.homeMark} pointerEvents="none">
           <Mark name="open" size={180} color={volt.color.dark.lime} decorative />
         </View>
-        <Text style={s.eyebrowPink}>REAL QUOTES.</Text>
-        <Text style={s.eyebrowLime}>TOTAL LIES.</Text>
+        {/*
+          These two lines are the first thing a player reads, and they are the same
+          two concepts the answer buttons are: lime is SAID IT (`s.answerReal`), pink
+          is TOTAL LIE (`s.answerFake`). They shipped inverted, which taught the
+          reverse of the association the round then asks the player to use. Keep the
+          colours tied to the words, not to the line order.
+        */}
+        <Text style={s.eyebrowLime}>REAL QUOTES.</Text>
+        <Text style={s.eyebrowPink}>TOTAL LIES.</Text>
         <Text style={[s.heroTitle, hugeText && s.heroTitleCompact]}>{"SAID\nTHAT?"}</Text>
         <Text style={s.copy}>One phone. One room. Call the bluff before the reveal burns you.</Text>
         {summary && <Text style={s.runSummary}>{summary}</Text>}
