@@ -7,9 +7,11 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.jphilistin12.said-that"
     },
     "android": {
+      "package": "com.jphilistin12.saidthat",
       "adaptiveIcon": {
         "backgroundColor": "#0B0E13",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -31,6 +33,12 @@
           "backgroundColor": "#0B0E13"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "9ddf1311-9179-4d4b-9185-dc72892f3ea9"
+      }
+    },
+    "owner": "jphilistin12"
   }
 }
