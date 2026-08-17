@@ -39,5 +39,13 @@ npm run export:android
 
 See `native-verification-checklist.md` for the manual device verification template. It makes no release pass claim.
 
+## Brand assets
+
+The icon, splash and favicon PNGs in `assets/` are THE SPLIT — `MARK_PATHS.open` with its two
+commas in lime and pink on `#0B0E13`. The composition lives in `assets/brand/split-mark.svg`,
+which nothing imports at runtime; it is the source the PNGs were rendered from. Changing the
+`open` glyph in `src/components/markPaths.js` does not regenerate them — the SVG and the PNGs
+both need re-cutting by hand. See "The mark as icon" in `docs/ux-design-direction.md`.
+
 Native iOS/Android accessibility and lifecycle evidence is still required for
 release under the repository's DesignOps policy.
