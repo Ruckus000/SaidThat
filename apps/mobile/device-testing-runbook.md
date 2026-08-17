@@ -26,6 +26,24 @@ is not evidence that the app is accessible, source-verified, or legally cleared.
   bumping in `app.json` is the usual way that upload fails at 11pm. Flip to
   `"local"` if you would rather see the number in git; you then own the bumping.
 
+## Export compliance
+
+`app.json` declares `ios.infoPlist.ITSAppUsesNonExemptEncryption: false`. Without
+it, every TestFlight upload stalls until someone answers the export-compliance
+question by hand in App Store Connect.
+
+The basis, as of 2026-08-17: the shipped source has **no network call sites**
+(`fetch`, `XMLHttpRequest`, `WebSocket`, `axios` — none) and **no cryptographic
+API use**. The app makes no HTTPS requests at all, so there is no traffic to
+encrypt. The `https://` strings in `deck.generated.js` are source-record text
+rendered on the reveal screen; nothing fetches them. Local storage is
+AsyncStorage, unencrypted.
+
+**Re-check this declaration before adding networking, an account system, remote
+reports, or analytics.** Any of those changes the answer, and the declaration is
+made in the account holder's name to a US export regime — it is not a formality.
+Nothing here is legal advice.
+
 ## What is NOT configured, and needs a human
 
 These steps need credentials or a paid account. An agent must not perform them:
