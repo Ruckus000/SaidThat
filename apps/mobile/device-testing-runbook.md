@@ -89,6 +89,15 @@ eas submit --platform ios --latest
 
 Then add testers in App Store Connect under TestFlight → Internal Testing.
 
+First run done 2026-08-17: version 1.0.0, build 2, from commit `a8d3b87`.
+`ascAppId` 6802286345 is now recorded in `eas.json`, so submits no longer need
+interactive mode. The distribution certificate and provisioning profile live on
+EAS, so builds do not either. Both were one-time.
+
+Note that `eas submit` reporting `finished` means EAS finished handing the
+binary to App Store Connect. Apple still processes it afterwards, and a build
+is not installable until that completes — check TestFlight, not the CLI.
+
 ## Route C — ad-hoc device builds, no TestFlight
 
 For a handful of known phones, skipping App Store Connect entirely. Each device
