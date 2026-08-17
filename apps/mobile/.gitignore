@@ -17,6 +17,10 @@ expo-env.d.ts
 *.p12
 *.key
 *.mobileprovision
+# Written by `eas credentials` in local mode. Names the .p12/.p8 next to it AND
+# carries their passwords in plaintext, so the extension rules above do not
+# cover it. Ignored before anyone follows the credentials step in the runbook.
+credentials.json
 
 # Metro
 .metro-health-check*

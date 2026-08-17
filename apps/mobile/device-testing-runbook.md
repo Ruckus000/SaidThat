@@ -17,6 +17,10 @@ is not evidence that the app is accessible, source-verified, or legally cleared.
 - `app.json` — `ios.bundleIdentifier` and `android.package` are committed, so
   every machine builds the same identity. Without them, a teammate's prebuild
   invents a different id and installs a *second* copy of the app.
+- **EAS project linked** (owner decision 2026-08-16) —
+  `@jphilistin12/said-that`, project `9ddf1311-9179-4d4b-9185-dc72892f3ea9`,
+  recorded in `app.json` as `extra.eas.projectId` and `owner`. Do not run
+  `eas init` again; it is already done.
 - `appVersionSource: "remote"` with `autoIncrement` on `production` — EAS owns
   the build number. TestFlight hard-rejects a duplicate build number, and manual
   bumping in `app.json` is the usual way that upload fails at 11pm. Flip to
@@ -28,14 +32,17 @@ These steps need credentials or a paid account. An agent must not perform them:
 
 1. **Apple Developer Program membership** ($99/yr). Required for *any* install on
    a device you do not physically own, and for TestFlight.
-2. **`eas init`** — registers this repo against an EAS project and writes
-   `extra.eas.projectId` into `app.json`. Creates persistent state on the Expo
-   account, so it is a deliberate human step.
-3. **Apple credentials** — `eas credentials` or letting `eas build` generate a
+2. **Apple credentials** — `eas credentials` or letting `eas build` generate a
    distribution certificate and provisioning profile. Requires signing in to
-   Apple with the account holder's own Apple ID.
-4. **Device registration** for ad-hoc `preview` builds — `eas device:create`
+   Apple with the account holder's own Apple ID. In local mode this writes
+   `credentials.json`, which carries the certificate password in plaintext; it
+   is gitignored, and it must stay that way.
+3. **Device registration** for ad-hoc `preview` builds — `eas device:create`
    generates a registration link; each tester opens it on their phone once.
+
+Registering the bundle identifier with Apple is the irreversible step. Until the
+first build runs, `com.jphilistin12.said-that` is local config and free to
+change. Afterwards it can never be renamed or reused.
 
 ## Route A — free, no Apple account, your own phone only
 
@@ -58,7 +65,6 @@ Beta App Review**, which matters — see the content note below.
 
 ```bash
 cd apps/mobile
-eas init
 eas build --platform ios --profile production
 eas submit --platform ios --latest
 ```
@@ -95,6 +101,18 @@ than most. Do not treat these as paperwork:
   treats accessibility as a release requirement, not polish.
 - **Legal.** See `docs/legal-and-platform-risks.md`. Nothing in this repo is
   legal advice or clearance.
+
+## What a cloud build sends, and where
+
+`eas build` uploads the project to Expo's build servers. That includes the
+bundled deck — real public-figure names, their quotes, and the retained source
+URLs. It is a private repository today, so this adds Expo as a second party
+holding that content, alongside GitHub.
+
+This does not change the app's own behaviour: the runtime still has no network
+call sites, and "everything stays on this phone" remains true of the shipped
+binary. It is the *build pipeline* that leaves the machine, not player data.
+Use `eas build --local` if that trade is ever unacceptable.
 
 ## Cost note
 
