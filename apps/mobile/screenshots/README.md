@@ -71,7 +71,7 @@ Use filenames as stable IDs when referencing shots in the redesign.
 
 ### `01-home.png` — Home
 
-Entry surface. Lime **SAID THAT?** wordmark, `ROOM · 0` pill, SVG settings gear, pink/lime eyebrows **REAL QUOTES. / TOTAL LIES.**, the 92pt **SAID / THAT?** hero over a raked background MARK, a rotated lime **REAL OR FAKE** marquee, primary CTA **START A ROOM**, privacy strip, and the amber **LOCAL DEVELOPMENT FIXTURES** banner.
+Entry surface. Lime **SAID THAT?** wordmark, `ROOM · 0` pill, SVG settings gear, lime/pink eyebrows **REAL QUOTES. / TOTAL LIES.** (matching the answer buttons), the 92pt **SAID / THAT?** hero over a raked background MARK, a rotated lime **REAL OR FAKE** marquee, primary CTA **START A ROOM**, privacy strip, and the amber **LOCAL DEVELOPMENT FIXTURES** banner.
 
 **Redesign focus:** brand-first first viewport; keep fixture honesty and privacy claims legible; one clear CTA.
 

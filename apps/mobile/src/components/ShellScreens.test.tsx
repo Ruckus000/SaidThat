@@ -5,6 +5,7 @@ import { HomeScreen } from "./HomeScreen";
 import { RecapScreen } from "./RecapScreen";
 import { SettingsScreen } from "./SettingsScreen";
 import { SetupScreen } from "./SetupScreen";
+import { s } from "./styles";
 
 /**
  * RC-3 of the render sweep: the shell a run is wrapped in — Home, Setup, Recap,
@@ -73,6 +74,22 @@ test("home: a run in progress is summarised, a fresh install is not", () => {
 
   rerender(<HomeScreen {...home} roundsPlayed={3} correctCount={2} bestStreak={2} />);
   expect(screen.getByText(/THIS RUN/)).toHaveTextContent(/3 READS/);
+});
+
+// Home is where the colour association is learned, and the round is where it is
+// spent. These shipped inverted — REAL QUOTES. in pink, TOTAL LIES. in lime — so
+// the first screen taught the reverse of the answer buttons. Asserted against
+// `answerReal`/`answerFake` rather than literal hexes, so a palette change moves
+// both together and only a re-inversion can fail this.
+test("home: the eyebrows carry the same colours the answer buttons do", () => {
+  render(<HomeScreen {...home} />);
+
+  expect(screen.getByText("REAL QUOTES.").props.style).toEqual(
+    expect.objectContaining({ color: s.answerReal.backgroundColor }),
+  );
+  expect(screen.getByText("TOTAL LIES.").props.style).toEqual(
+    expect.objectContaining({ color: s.answerFake.backgroundColor }),
+  );
 });
 
 test("home: the reset notice appears only when a reset left something behind", () => {
